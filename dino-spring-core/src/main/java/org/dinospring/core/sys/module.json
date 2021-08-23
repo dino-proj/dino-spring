@@ -1,0 +1,48 @@
+{
+  "name": "configuration-sample",
+  "displayName": "Configuration Sample",
+  "description": "How to contribute and use configurations in VS Code",
+  "version": "0.0.1",
+  "dependModules": ["core"],
+  "devConf": [],
+  "conf": [
+    {
+      "title": "Configuration Samples",
+      "properties": [
+        {
+          "id": "conf.view.showOnWindowOpen",
+          "type": "string",
+          "enum": ["explorer", "search", "scm", "debug", "extensions"],
+          "default": "explorer",
+          "description": "Window configuration: View to show always when a window opens",
+          "scope": "window"
+        },
+        {
+          "id": "conf.resource.insertEmptyLastLine",
+          "type": "object",
+          "default": {},
+          "description": "%conf.resource.insertEmptyLastLine-description%",
+          "scope": "resource"
+        },
+        {
+          "id": "conf.language.showSize",
+          "type": "boolean",
+          "default": false,
+          "description": "%conf.language.showSize-description%",
+          "scope": "language-overridable"
+        }
+      ]
+    }
+  ],
+  "i18in": {
+    "default": "@en",
+    "en": {
+      "conf.resource.insertEmptyLastLine-description": "Resource configuration: Configure files using glob patterns to have an empty last line always",
+      "conf.language.showSize-description": "Shows the size of the document"
+    },
+    "zh-CN": {
+      "conf.resource.insertEmptyLastLine-description": "文件最后插入空行",
+      "conf.language.showSize-description": "显示文档大小"
+    }
+  }
+}

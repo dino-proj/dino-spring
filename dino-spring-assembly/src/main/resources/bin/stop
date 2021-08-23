@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+echo $0
+bin=`which $0`
+echo $bin
+#bin=`dirname ${bin}`
+bin=`cd "$bin" > /dev/null; pwd`
+echo $bin
+APP_DIR=$(cd -P -- $bin/.. && pwd -P)
+
+sh $APP_DIR/bin/app.sh stop core

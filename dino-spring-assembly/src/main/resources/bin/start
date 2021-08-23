@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+echo $0
+bin=`which $0`
+echo $bin
+#bin=`dirname ${bin}`
+bin=`cd "$bin" > /dev/null; pwd`
+echo $bin
+APP_DIR=$(cd -P -- $bin/.. && pwd -P)
+
+export APP_LOG_DIR=/data/logs
+
+export MEMORY_SIZE="1G"
+
+export APP_JAVA_OPTS="-Dspring.profiles.active=@spring.profiles.active@"
+
+#export MAIN_CLASS=
+
+sh $APP_DIR/bin/app.sh start @app.name@

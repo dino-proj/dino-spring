@@ -39,8 +39,9 @@
     <mongo.version>3.12.9</mongo.version>
     <mariadb.version>2.7.1</mariadb.version>
 
-    <!-- managedDep filesystem-->
+    <!-- managedDep io -->
     <minio.version>8.3.0</minio.version>
+    <okhttp3.version>4.9.1</okhttp3.version>
 
     <!-- managedDep servlet-api -->
     <servlet-api.version>4.0.1</servlet-api.version>
@@ -201,6 +202,13 @@
         <version>${minio.version}</version>
       </dependency>
 
+      <!-- okhttp3 -->
+      <dependency>
+        <groupId>com.squareup.okhttp3</groupId>
+        <artifactId>okhttp</artifactId>
+        <version>${okhttp3.version}</version>
+      </dependency>
+
       <!-- tools-weixin-java-sdk -->
       <dependency>
         <groupId>com.github.binarywang</groupId>
@@ -235,6 +243,7 @@
         <version>${servlet-api.version}</version>
         <scope>provided</scope>
       </dependency>
+
       <!--lombok依赖-->
       <dependency>
         <groupId>org.projectlombok</groupId>

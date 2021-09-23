@@ -39,7 +39,7 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
   private TokenRepository tokenRepository;
 
   @Override
-  public CURDRepositoryBase<TokenEntity, String> getRepository() {
+  public CURDRepositoryBase<TokenEntity, String> repository() {
     return tokenRepository;
   }
 

@@ -30,7 +30,7 @@ public interface Service<T, K extends Serializable> {
      *
      * @return BaseMapper
      */
-    CURDRepositoryBase<T, K> getRepository();
+    CURDRepositoryBase<T, K> repository();
 
     /**
      * 获取 entity 的 class
@@ -54,7 +54,7 @@ public interface Service<T, K extends Serializable> {
      */
     @Transactional(rollbackFor = Exception.class)
     default <S extends T> S save(S entity) {
-        return getRepository().save(entity);
+        return repository().save(entity);
     }
 
     /**
@@ -104,7 +104,7 @@ public interface Service<T, K extends Serializable> {
      */
     @Transactional(rollbackFor = Exception.class)
     default boolean removeById(K id) {
-        getRepository().deleteById(id);
+        repository().deleteById(id);
         return true;
     }
 
@@ -117,7 +117,7 @@ public interface Service<T, K extends Serializable> {
         if (CollectionUtils.isEmpty(idList)) {
             return;
         }
-        getRepository().deleteAllById(idList);
+        repository().deleteAllById(idList);
     }
 
     /**
@@ -126,7 +126,7 @@ public interface Service<T, K extends Serializable> {
      * @param entity 实体对象
      */
     default <S extends T> S updateById(S entity) {
-        return getRepository().save(entity);
+        return repository().save(entity);
     }
 
     /**
@@ -166,7 +166,7 @@ public interface Service<T, K extends Serializable> {
      * @param id 主键ID
      */
     default T getById(K id) {
-        return getRepository().findById(id).orElse(null);
+        return repository().findById(id).orElse(null);
     }
 
     /**
@@ -175,7 +175,7 @@ public interface Service<T, K extends Serializable> {
      * @param id 主键ID
      */
     default <O> O getById(K id, Class<O> clazz) {
-        return this.projection(clazz, getRepository().findById(id).orElse(null));
+        return this.projection(clazz, repository().findById(id).orElse(null));
     }
 
     /**
@@ -184,7 +184,7 @@ public interface Service<T, K extends Serializable> {
      * @see Wrappers#emptyWrapper()
      */
     default List<T> list() {
-        return getRepository().findAll();
+        return repository().findAll();
     }
 
     /**
@@ -195,7 +195,7 @@ public interface Service<T, K extends Serializable> {
      * @return
      */
     default List<T> listLimit(int limit, int offset) {
-        return getRepository().findAll(new LimitOffsetPageable(offset, limit)).getContent();
+        return repository().findAll(new LimitOffsetPageable(offset, limit)).getContent();
     }
 
     /**
@@ -214,18 +214,18 @@ public interface Service<T, K extends Serializable> {
      * @param idList 主键ID列表
      */
     default List<T> listByIds(Collection<K> idList) {
-        return getRepository().findAllById(idList);
+        return repository().findAllById(idList);
     }
 
     default Page<T> listPage(Pageable page) {
-        return getRepository().findAll(page);
+        return repository().findAll(page);
     }
 
     default Page<T> listPage(SearchQuery search, Pageable page) {
-        var sql = getRepository().newSelect("t");
+        var sql = repository().newSelect("t");
         search.buildSql(sql);
 
-        return getRepository().queryPage(sql, page);
+        return repository().queryPage(sql, page);
     }
 
     /**
@@ -234,7 +234,7 @@ public interface Service<T, K extends Serializable> {
      * @see Wrappers#emptyWrapper()
      */
     default long count() {
-        return getRepository().count();
+        return repository().count();
     }
 
     /**
@@ -242,7 +242,7 @@ public interface Service<T, K extends Serializable> {
      *
      */
     default <S extends T> long count(Example<S> example) {
-        return getRepository().count(example);
+        return repository().count(example);
     }
 
 }

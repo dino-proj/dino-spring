@@ -67,9 +67,17 @@
 			<artifactId>shiro-spring-boot-web-starter</artifactId>
 		</dependency>
 
+		<!-- database -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- file system -->
+		<dependency>
+			<groupId>io.minio</groupId>
+			<artifactId>minio</artifactId>
 			<scope>provided</scope>
 		</dependency>
 

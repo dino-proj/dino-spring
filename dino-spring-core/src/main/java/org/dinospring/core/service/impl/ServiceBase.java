@@ -83,7 +83,7 @@ public abstract class ServiceBase<T, K extends Serializable> implements Service<
 
 	@Override
 	public Class<T> getEntityClass() {
-		return getRepository().getEntityClass();
+		return repository().getEntityClass();
 	}
 
 	/**
@@ -134,7 +134,7 @@ public abstract class ServiceBase<T, K extends Serializable> implements Service<
 			return null;
 		}
 		beforeSaveEntity(entity);
-		return getRepository().save(entity);
+		return repository().save(entity);
 	}
 
 	/**
@@ -151,7 +151,7 @@ public abstract class ServiceBase<T, K extends Serializable> implements Service<
 		var saveCount = new AtomicInteger(0);
 		BatchUtils.executeBatch(entityList, batchSize, b -> {
 			beforeSaveEntities(b);
-			saveCount.addAndGet(getRepository().saveAll(b).size());
+			saveCount.addAndGet(repository().saveAll(b).size());
 		});
 		return saveCount.get() == entityList.size();
 	}

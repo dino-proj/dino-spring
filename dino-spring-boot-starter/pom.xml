@@ -25,7 +25,7 @@
 
     <!-- managedDep tools -->
     <httpclient.version>4.5.13</httpclient.version>
-    <jakarta.validation-api.version>3.0.0</jakarta.validation-api.version>
+    <okhttp3.version>4.9.1</okhttp3.version>
 
     <!-- secrity -->
     <shiro.version>1.7.1</shiro.version>
@@ -73,6 +73,13 @@
         <artifactId>httpclient</artifactId>
         <version>${httpclient.version}</version>
       </dependency>
+      <!-- tools-okhttp3 -->
+      <dependency>
+        <groupId>com.squareup.okhttp3</groupId>
+        <artifactId>okhttp</artifactId>
+        <version>${okhttp3.version}</version>
+      </dependency>
+
       <!-- secrity -->
       <dependency>
         <groupId>org.apache.shiro</groupId>

@@ -14,7 +14,7 @@ public class TenantServiceImpl extends ServiceBase<TenantEntity, String> impleme
   private TenantRepository tenantRepository;
 
   @Override
-  public CURDRepositoryBase<TenantEntity, String> getRepository() {
+  public CURDRepositoryBase<TenantEntity, String> repository() {
     return tenantRepository;
   }
 

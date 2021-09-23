@@ -25,7 +25,7 @@ public class PageService extends ServiceBase<PageEntity, Long> {
   ObjectMapper objectMapper;
 
   @Override
-  public CURDRepositoryBase<PageEntity, Long> getRepository() {
+  public CURDRepositoryBase<PageEntity, Long> repository() {
     return pageRepository;
   }
 

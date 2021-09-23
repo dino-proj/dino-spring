@@ -27,7 +27,7 @@ public class DictionaryServiceImpl extends ServiceBase<Dictionary, Long> impleme
   private DictItemRepository dictItemRepository;
 
   @Override
-  public CURDRepositoryBase<Dictionary, Long> getRepository() {
+  public CURDRepositoryBase<Dictionary, Long> repository() {
     return dictionaryRepository;
   }
 

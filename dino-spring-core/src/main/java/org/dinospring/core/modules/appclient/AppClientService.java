@@ -19,7 +19,7 @@ public class AppClientService extends ServiceBase<AppClientEntity, String> {
   }
 
   @Override
-  public CURDRepositoryBase<AppClientEntity, String> getRepository() {
+  public CURDRepositoryBase<AppClientEntity, String> repository() {
     return appClientRepository;
   }
 

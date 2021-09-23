@@ -63,6 +63,8 @@ public interface Status {
 
         FAIL_SERVICE_UNAVAILABLE(5003, "服务不可用"),
 
+        FAIL_IO_EXCEPTION(5004, "系统IO异常"),
+
         CACHE_EMPTY(9999, "缓存清空");
 
         private final int iCode;

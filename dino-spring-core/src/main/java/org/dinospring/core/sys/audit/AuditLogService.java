@@ -12,7 +12,7 @@ public class AuditLogService extends ServiceBase<AuditLogEntity, Long> {
   private AuditLogRepository auditLogRepository;
 
   @Override
-  public CURDRepositoryBase<AuditLogEntity, Long> getRepository() {
+  public CURDRepositoryBase<AuditLogEntity, Long> repository() {
     return auditLogRepository;
   }
 

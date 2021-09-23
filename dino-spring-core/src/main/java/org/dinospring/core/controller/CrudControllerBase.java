@@ -17,7 +17,7 @@ import org.dinospring.core.annotion.param.ParamTenant;
 import org.dinospring.core.service.SearchQuery;
 import org.dinospring.core.service.Service;
 import org.dinospring.core.vo.VoBase;
-import org.dinospring.data.domain.TenantableEntityBase;
+import org.dinospring.data.domain.EntityBase;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.util.CastUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +30,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 
-public interface CrudControllerBase<S extends Service<E, K>, E extends TenantableEntityBase<K>, VO extends VoBase<K>, SRC extends SearchQuery, REQ, K extends Serializable> {
+public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBase<K>, VO extends VoBase<K>, SRC extends SearchQuery, REQ, K extends Serializable> {
 
   S service();
 
@@ -43,11 +43,15 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends Tenantabl
   }
 
   default List<VO> processVo(@Nonnull Collection<VO> voList) {
-    voList.forEach(vo -> processVo(vo));
+    voList.forEach(CrudControllerBase.this::processVo);
     if (List.class.isAssignableFrom(voList.getClass())) {
       return CastUtils.cast(voList);
     }
     return List.copyOf(voList);
+  }
+
+  default REQ processReq(String tenantId, PostBody<REQ> req, K id) {
+    return req.getBody();
   }
 
   @Operation(summary = "列表")
@@ -76,9 +80,11 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends Tenantabl
   @PostMapping("add")
   default Response<VO> add(@PathVariable("tenant_id") String tenantId, @RequestBody PostBody<REQ> req) {
 
-    Assert.notNull(req.getBody(), Status.CODE.FAIL_INVALID_PARAM);
+    var body = processReq(tenantId, req, null);
 
-    E item = service().projection(entityClass(), req.getBody());
+    Assert.notNull(body, Status.CODE.FAIL_INVALID_PARAM);
+
+    E item = service().projection(entityClass(), body);
 
     item = service().save(item);
 
@@ -91,12 +97,14 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends Tenantabl
   default Response<VO> update(@PathVariable("tenant_id") String tenantId, @RequestParam K id,
       @RequestBody PostBody<REQ> req) {
 
-    Assert.notNull(req.getBody(), Status.CODE.FAIL_INVALID_PARAM);
+    var body = processReq(tenantId, req, id);
+
+    Assert.notNull(body, Status.CODE.FAIL_INVALID_PARAM);
 
     E item = service().getById(id);
     Assert.notNull(item, Status.CODE.FAIL_NOT_FOUND);
 
-    BeanUtils.copyProperties(req.getBody(), item);
+    BeanUtils.copyProperties(body, item);
 
     item = service().updateById(item);
     return Response.success(processVo(service().projection(voClass(), item)));

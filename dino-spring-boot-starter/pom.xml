@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.5.3</version>
+    <version>2.5.5</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
   <groupId>org.dinospring</groupId>
@@ -16,8 +16,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>11</java.version>
-
-    <dino-spring.version>1.0.0.RELEASE</dino-spring.version>
 
     <!-- managedDep persistent-->
     <hibernate.version>5.5.3.Final</hibernate.version>
@@ -31,11 +29,11 @@
     <shiro.version>1.7.1</shiro.version>
 
     <!-- open api-->
-    <springdoc.version>1.5.9</springdoc.version>
-    <knife4j.version>3.0.2</knife4j.version>
+    <springdoc.version>1.5.10</springdoc.version>
+    <knife4j.version>3.0.3</knife4j.version>
 
     <!-- weixin sdk -->
-    <weixin-java.version>4.1.0</weixin-java.version>
+    <weixin-java.version>4.1.9.B</weixin-java.version>
   </properties>
 
   <dependencyManagement>
@@ -43,7 +41,7 @@
       <dependency>
         <groupId>org.dino</groupId>
         <artifactId>dino-dependencies-root</artifactId>
-        <version>${dino-spring.version}</version>
+        <version>${project.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -179,7 +177,7 @@
     <dependency>
       <groupId>org.dino</groupId>
       <artifactId>dino-utils</artifactId>
-      <version>${dino-spring.version}</version>
+      <version>${project.version}</version>
     </dependency>
 
     <!-- spring doc openAPI-->

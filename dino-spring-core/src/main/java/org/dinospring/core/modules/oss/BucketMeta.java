@@ -21,4 +21,8 @@ public class BucketMeta {
   public static BucketMeta of(String name, Date createAt) {
     return new BucketMeta(name, createAt);
   }
+
+  public static BucketMeta of(String name, long createAt) {
+    return new BucketMeta(name, new Date(createAt));
+  }
 }

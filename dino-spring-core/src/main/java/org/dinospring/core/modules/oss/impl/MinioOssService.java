@@ -1,4 +1,4 @@
-package org.dinospring.core.modules.oss;
+package org.dinospring.core.modules.oss.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +12,10 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.dinospring.core.modules.oss.BucketMeta;
+import org.dinospring.core.modules.oss.ObjectMeta;
+import org.dinospring.core.modules.oss.OssModuleProperties;
+import org.dinospring.core.modules.oss.OssService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;

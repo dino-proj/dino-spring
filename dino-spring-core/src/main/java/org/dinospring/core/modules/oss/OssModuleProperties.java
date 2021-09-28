@@ -1,5 +1,6 @@
 package org.dinospring.core.modules.oss;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,15 +10,20 @@ import lombok.Data;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "dinospring.module.oss")
+@ConfigurationProperties(prefix = OssModuleProperties.PREFIX)
 public class OssModuleProperties {
+  public static final String PREFIX = "dinospring.module.oss";
+
+  /**
+   * 配置Minio
+   */
   private MinioProperties minio;
 
   @Bean
+  @ConditionalOnClass(MinioClient.class)
   public MinioClient minioClient(OssModuleProperties fsProps) {
-    MinioClient minioClient = MinioClient.builder().endpoint(fsProps.minio.getUri())
+    return MinioClient.builder().endpoint(fsProps.minio.getUri())
         .credentials(fsProps.minio.getAccessKey(), fsProps.minio.getSecretKey()).build();
-    return minioClient;
   }
 
   @Data
@@ -36,5 +42,19 @@ public class OssModuleProperties {
      * Secret key秘钥
      */
     private String secretKey;
+  }
+
+  /**
+   * 配置本地oss存储
+   */
+  private LocalProperties local;
+
+  @Data
+  public static class LocalProperties {
+
+    /**
+     * 本地存储文件夹路径
+     */
+    private String baseDir;
   }
 }

@@ -9,17 +9,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.core.modules.oss.BucketMeta;
 import org.dinospring.core.modules.oss.ObjectMeta;
-import org.dinospring.core.modules.oss.OssModuleProperties;
 import org.dinospring.core.modules.oss.OssService;
+import org.dinospring.core.modules.oss.config.MinioProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.stereotype.Service;
 
 import io.minio.BucketExistsArgs;
 import io.minio.CopyObjectArgs;
@@ -41,13 +40,15 @@ import io.minio.errors.ServerException;
 import io.minio.errors.XmlParserException;
 import io.minio.messages.Item;
 
-@Service
-@ConditionalOnClass(MinioClient.class)
-@AutoConfigureAfter(OssModuleProperties.class)
 public class MinioOssService implements OssService {
 
   @Autowired
   private MinioClient minioClient;
+
+  public MinioOssService(@Nonnull MinioProperties properties) {
+    minioClient = MinioClient.builder().endpoint(properties.getUri())
+        .credentials(properties.getAccessKey(), properties.getSecretKey()).build();
+  }
 
   @Override
   public boolean hasBucket(String bucketName) throws IOException {

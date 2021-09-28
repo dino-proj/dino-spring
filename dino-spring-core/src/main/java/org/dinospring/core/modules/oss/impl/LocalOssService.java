@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
+import javax.annotation.Nonnull;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.IteratorUtils;
@@ -21,26 +21,15 @@ import org.apache.commons.io.file.PathUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.dinospring.core.modules.oss.BucketMeta;
 import org.dinospring.core.modules.oss.ObjectMeta;
-import org.dinospring.core.modules.oss.OssModuleProperties;
 import org.dinospring.core.modules.oss.OssService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Service;
+import org.dinospring.core.modules.oss.config.LocalOssProperties;
 
-@Service
-@ConditionalOnProperty(prefix = OssModuleProperties.PREFIX, name = "local.base-dir")
-@AutoConfigureAfter(OssModuleProperties.class)
 public class LocalOssService implements OssService {
-
-  @Autowired
-  private OssModuleProperties ossModuleProperties;
 
   private Path basePath;
 
-  @PostConstruct
-  public void init() throws IOException {
-    basePath = Path.of(ossModuleProperties.getLocal().getBaseDir());
+  public LocalOssService(@Nonnull LocalOssProperties properties) throws IOException {
+    basePath = Path.of(properties.getBaseDir());
     PathUtils.createParentDirectories(basePath);
   }
 

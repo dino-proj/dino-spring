@@ -17,6 +17,12 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>11</java.version>
 
+    <dino-spring.version>1.0.0.RELEASE</dino-spring.version>
+
+    <!-- plugin -->
+    <maven-pmd-plugin.version>3.15.0</maven-pmd-plugin.version>
+    <p3c-pmd.version>2.1.1</p3c-pmd.version>
+
     <!-- managedDep persistent-->
     <hibernate.version>5.5.3.Final</hibernate.version>
     <hibernate-types.version>2.12.0</hibernate-types.version>
@@ -110,8 +116,8 @@
 
       <!-- DINO spring -->
       <dependency>
-        <groupId>org.dino</groupId>
-        <artifactId>dino-assembly</artifactId>
+        <groupId>org.dinospring</groupId>
+        <artifactId>dino-spring-assembly</artifactId>
         <version>${dino-spring.version}</version>
       </dependency>
 
@@ -293,8 +299,8 @@
           </configuration>
           <dependencies>
             <dependency>
-              <groupId>org.dino</groupId>
-              <artifactId>dino-assembly</artifactId>
+              <groupId>org.dinospring</groupId>
+              <artifactId>dino-spring-assembly</artifactId>
               <version>${dino-spring.version}</version>
             </dependency>
           </dependencies>
@@ -311,9 +317,48 @@
             </execution>
           </executions>
         </plugin>
+
+        <plugin>
+          <artifactId>maven-pmd-plugin</artifactId>
+          <version>${maven-pmd-plugin.version}</version>
+          <configuration>
+            <targetJdk>11</targetJdk>
+            <rulesets>
+              <ruleset>rulesets/java/dinospring-all.xml</ruleset>
+            </rulesets>
+            <printFailingErrors>true</printFailingErrors>
+          </configuration>
+          <executions>
+            <execution>
+              <id>validate</id>
+              <phase>validate</phase>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+          <dependencies>
+            <dependency>
+              <groupId>org.dinospring</groupId>
+              <artifactId>dino-spring-assembly</artifactId>
+              <version>${dino-spring.version}</version>
+            </dependency>
+            <!-- 需要使用阿里的一些xml文件，因此需要这里增加p3c的依赖 -->
+            <dependency>
+              <groupId>com.alibaba.p3c</groupId>
+              <artifactId>p3c-pmd</artifactId>
+              <version>${p3c-pmd.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
       </plugins>
     </pluginManagement>
 
+    <plugins>
+      <plugin>
+        <artifactId>maven-pmd-plugin</artifactId>
+      </plugin>
+    </plugins>
   </build>
 
   <profiles>

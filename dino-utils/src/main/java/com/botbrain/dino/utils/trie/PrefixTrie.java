@@ -24,7 +24,7 @@ public class PrefixTrie<T> implements Iterable<T> {
 
   /**
    * 将一个词串添加到前缀树上，如果这个词已经存在，这会覆盖原来的值
-   * 
+   *
    * @param word  要添加的单词，单词会被归一化处理，比如大写转小写等
    * @param value 这次词对应的值信息
    */
@@ -34,7 +34,7 @@ public class PrefixTrie<T> implements Iterable<T> {
 
   /**
    * 将一个词串添加到前缀树上，如果这个词已经存在，这会覆盖原来的值
-   * 
+   *
    * @param word  要添加的单词，单词会被归一化处理，比如大写转小写等
    * @param value 这次词对应的值信息
    * @param onExist 当之前的值已经存在时的操作
@@ -65,7 +65,7 @@ public class PrefixTrie<T> implements Iterable<T> {
 
   /**
    * 最小匹配，当匹配到第一个时就返回，如果不能匹配则返回null
-   * 
+   *
    * @param str 要匹配的字符串信息，匹配过程中会跳过忽略词
    * @return 返回匹配到的模式串
    */
@@ -75,7 +75,7 @@ public class PrefixTrie<T> implements Iterable<T> {
 
   /**
    * 最小匹配，当匹配到第一个时就返回，如果不能匹配则返回null
-   * 
+   *
    * @param str 要匹配的字符串信息，匹配过程中会跳过忽略词
    * @return 返回匹配到的模式串
    */
@@ -106,7 +106,7 @@ public class PrefixTrie<T> implements Iterable<T> {
 
   /**
    * 最大匹配，如果没有匹配任何字符，则返回null
-   * 
+   *
    * @param str
    * @return
    */
@@ -116,7 +116,7 @@ public class PrefixTrie<T> implements Iterable<T> {
 
   /**
    * 最大匹配，如果没有匹配任何字符，则返回null
-   * 
+   *
    * @param str
    * @return
    */
@@ -150,7 +150,7 @@ public class PrefixTrie<T> implements Iterable<T> {
 
   /**
    * 完整匹配，只有当str全部匹配到一个节点时，才返回那个节点上的数据。
-   * 
+   *
    * @param str
    * @return
    */
@@ -160,7 +160,7 @@ public class PrefixTrie<T> implements Iterable<T> {
 
   /**
    * 完整匹配，只有当str全部匹配到一个节点时，才返回那个节点上的数据。
-   * 
+   *
    * @param str
    * @return
    */
@@ -212,9 +212,9 @@ public class PrefixTrie<T> implements Iterable<T> {
   /**
    * 返回一个迭代器，这个迭代器可以遍历从头开始能匹配的词，长度从短到长 第一个结果等于
    * {@link #matchFirst(CharSequence)的结果， 最后一个结果等于 {
-   * 
+   *
    * @link #matchDeepest(CharSequence)}的结果 不会返回null
-   * 
+   *
    * @param str 要匹配的字符串
    * @return 返回一个迭代器，可以匹配所有的次，第一个是最短的匹配，最后一个是最长匹配
    */
@@ -225,9 +225,9 @@ public class PrefixTrie<T> implements Iterable<T> {
   /**
    * 返回一个迭代器，这个迭代器可以遍历从头开始能匹配的词，长度从短到长 第一个结果等于
    * {@link #matchFirst(CharSequence)的结果， 最后一个结果等于 {
-   * 
+   *
    * @link #matchDeepest(CharSequence)}的结果 不会返回null
-   * 
+   *
    * @param str 要匹配的字符串
    * @return 返回一个迭代器，可以匹配所有的次，第一个是最短的匹配，最后一个是最长匹配
    */
@@ -344,7 +344,7 @@ public class PrefixTrie<T> implements Iterable<T> {
 
     /**
      * 获取在目标字符串上的匹配结果，其中包含忽略词，比如“毛*泽定”，“*”作为忽略词也会包含在里面
-     * 
+     *
      * @return 匹配结果字符串
      */
     public CharSequence getMatched() {
@@ -353,7 +353,7 @@ public class PrefixTrie<T> implements Iterable<T> {
 
     /**
      * 获取原字典传入的原始词，这个词没有被做任何处理，大小写转换等都没有
-     * 
+     *
      * @return 请不要修改返回串里面的内容
      */
     public CharSequence getWord() {
@@ -442,8 +442,9 @@ public class PrefixTrie<T> implements Iterable<T> {
     }
 
     public T next() {
-      if (value == null)
+      if (value == null) {
         throw new NoSuchElementException();
+      }
       T v = value;
       findNext();
       return v;

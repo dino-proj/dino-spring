@@ -15,8 +15,10 @@ public class NamingUtils {
    * @return 驼峰
    */
   public static String toCamel(String name) {
-    if (StringUtils.isBlank(name))
-      return name; // garbage in, garbage out
+    if (StringUtils.isBlank(name)) {
+      // garbage in, garbage out
+      return name;
+    }
     StringBuilder result = new StringBuilder();
     boolean nextIsUpper = false;
     if (name.length() > 1 && name.charAt(1) == '_') {
@@ -42,7 +44,7 @@ public class NamingUtils {
 
   /**
    * 将名字转为下划线风格的命名
-   * 
+   *
      * <ul><li>&quot;userName&quot; 转换为 &quot;user_name&quot;</li>
      * <li>&quot;UserName&quot; 转换为 &quot;user_name&quot;</li>
      * <li>&quot;USER_NAME&quot; 转换为 &quot;user_name&quot;</li>
@@ -52,7 +54,7 @@ public class NamingUtils {
      * <li>&quot;USER&quot; 转换为 &quot;user&quot;</li>
      * <li>&quot;_user&quot; 转换为 &quot;user&quot;</li>
      * <li>&quot;_User&quot; 转换为 &quot;user&quot;</li>
-     * <li>&quot;__user&quot; 转换为 &quot;_user&quot; 
+     * <li>&quot;__user&quot; 转换为 &quot;_user&quot;
      * (两个下划线，只保留一个)</li>
      * <li>&quot;user__name&quot; 转换为 &quot;user__name&quot;
      * (保持不变, 两个下划线)</li></ul>
@@ -61,16 +63,17 @@ public class NamingUtils {
    * @return
    */
   public static String toSnake(String name) {
-    if (name == null)
-      return name; // garbage in, garbage out
+    if (name == null) {
+      return name;
+    }
     int length = name.length();
     StringBuilder result = new StringBuilder(length * 2);
     int resultLength = 0;
     boolean wasPrevTranslated = false;
     for (int i = 0; i < length; i++) {
       char c = name.charAt(i);
-      if (i > 0 || c != '_') // skip first starting underscore
-      {
+      // skip first starting underscore
+      if (i > 0 || c != '_') {
         if (Character.isUpperCase(c)) {
           if (!wasPrevTranslated && resultLength > 0 && result.charAt(resultLength - 1) != '_') {
             result.append('_');
@@ -89,7 +92,7 @@ public class NamingUtils {
   }
 
   /**
-   * 从
+   * 从Method中获取Property属性
    */
   public static String methodToProperty(String name) {
     if (name.startsWith("is")) {

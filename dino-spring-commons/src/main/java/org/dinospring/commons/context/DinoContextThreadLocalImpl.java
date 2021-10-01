@@ -1,11 +1,11 @@
 // Copyright 2021 dinospring.cn
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,40 +25,44 @@ import org.dinospring.commons.sys.User;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.util.CastUtils;
 
+/**
+ * {@link #DinoContext} 的ThreadLocal版本的实现
+ * @author tuuboo
+ */
 public class DinoContextThreadLocalImpl implements DinoContext {
-  private static final ThreadLocal<Map<String, Object>> resources = new InheritableThreadLocalMap<>();
+  private static final ThreadLocal<Map<String, Object>> RESOURCES = new InheritableThreadLocalMap<>();
   private static final String KEY_CURRENT_TENANT = DinoContextThreadLocalImpl.class.getName() + "_CURRENT_TENANT";
   private static final String KEY_CURRENT_USER = DinoContextThreadLocalImpl.class.getName() + "_CURRENT_USER";
 
   private static ApplicationContext applicationContext;
 
   public static Tenant getCurrentTenant() {
-    return CastUtils.cast(MapUtils.getObject(resources.get(), KEY_CURRENT_TENANT));
+    return CastUtils.cast(MapUtils.getObject(RESOURCES.get(), KEY_CURRENT_TENANT));
   }
 
   public static void setCurrentTenant(Tenant tenant) {
     ensureResourcesInitialized();
     if (tenant == null) {
-      resources.get().remove(KEY_CURRENT_TENANT);
+      RESOURCES.get().remove(KEY_CURRENT_TENANT);
     } else {
-      resources.get().put(KEY_CURRENT_TENANT, tenant);
+      RESOURCES.get().put(KEY_CURRENT_TENANT, tenant);
     }
   }
 
   public static void remove() {
-    resources.remove();
+    RESOURCES.remove();
   }
 
   public static <T extends User<?>> T getCurrentUser() {
-    return CastUtils.cast(MapUtils.getObject(resources.get(), KEY_CURRENT_USER));
+    return CastUtils.cast(MapUtils.getObject(RESOURCES.get(), KEY_CURRENT_USER));
   }
 
   public static <T extends User<?>> void setCurrentUser(T user) {
     ensureResourcesInitialized();
     if (user == null) {
-      resources.get().remove(KEY_CURRENT_USER);
+      RESOURCES.get().remove(KEY_CURRENT_USER);
     } else {
-      resources.get().put(KEY_CURRENT_USER, user);
+      RESOURCES.get().put(KEY_CURRENT_USER, user);
     }
   }
 
@@ -71,8 +75,8 @@ public class DinoContextThreadLocalImpl implements DinoContext {
   }
 
   private static void ensureResourcesInitialized() {
-    if (resources.get() == null) {
-      resources.set(new HashMap<>());
+    if (RESOURCES.get() == null) {
+      RESOURCES.set(new HashMap<>());
     }
   }
 

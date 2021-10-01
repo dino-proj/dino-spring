@@ -103,11 +103,13 @@ public class LimitOffsetPageable implements Pageable, Serializable {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o)
+    if (this == o) {
       return true;
+    }
 
-    if (!(o instanceof LimitOffsetPageable))
+    if (!(o instanceof LimitOffsetPageable)) {
       return false;
+    }
 
     LimitOffsetPageable that = (LimitOffsetPageable) o;
 

@@ -76,7 +76,7 @@ public class DinoContextThreadLocalImpl implements DinoContext {
 
   private static void ensureResourcesInitialized() {
     if (RESOURCES.get() == null) {
-      RESOURCES.set(new HashMap<>());
+      RESOURCES.set(new HashMap<>(16));
     }
   }
 

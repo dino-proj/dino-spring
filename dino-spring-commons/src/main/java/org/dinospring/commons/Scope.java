@@ -1,11 +1,11 @@
 // Copyright 2021 dinospring.cn
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,9 +23,11 @@ import lombok.AllArgsConstructor;
 
 /**
  * scope 接口，用于定义scope范围
+ * @author tuuboo
  */
 public interface Scope extends Serializable {
-  /** 
+
+  /**
    * scope 的名字
    * @return
    */
@@ -53,7 +55,14 @@ public interface Scope extends Serializable {
 
   @AllArgsConstructor
   enum DEFAULT implements Scope {
-    SYS("sys", 0), TENANT("tenant", 1), PAGE("page", 2), USER("user", 3);
+    //系统级
+    SYS("sys", 0),
+    //租户级
+    TENANT("tenant", 1),
+    //页面级
+    PAGE("page", 2),
+    //用户级
+    USER("user", 3);
 
     private static final Scope[] EMPTY_ARRAY = new Scope[0];
 

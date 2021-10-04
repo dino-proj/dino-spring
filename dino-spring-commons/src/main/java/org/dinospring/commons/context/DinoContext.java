@@ -33,6 +33,8 @@ public interface DinoContext {
 
   /**
    * 设置当前用户
+   * @param <K>
+   * @param user
    */
   <K extends Serializable> void currentUser(User<K> user);
 
@@ -44,6 +46,7 @@ public interface DinoContext {
 
   /**
    * 设置当前租户信息
+   * @param tenant
    */
   void currentTenant(Tenant tenant);
 }

@@ -1,56 +1,49 @@
-# You can override the included template(s) by including variable overrides
-# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
-# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/#customizing-settings
-# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
-# Note that environment variables can be set in several places
-# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 image: 10.10.23.161:5000/botbrain/maven:latest
+
 stages:
-- deploy
-- test
+  - deploy
+
 variables:
-  MVN_OPT: "--settings /usr/share/maven/ref/settings.xml"
-  BUILD_OPT: "-Dmaven.test.skip=true"
-  DEPLOY_OPT: "-DaltDeploymentRepository=botbrain-repo-releases::default::http://mvn.botbrain.ai/nexus/content/repositories/releases"
+  MVN_OPT: --settings /usr/share/maven/ref/settings.xml
+  BUILD_OPT: -Dmaven.test.skip=true
+  DEPLOY_OPT: '-DaltDeploymentRepository=botbrain-repo-releases::default::http://mvn.botbrain.ai/nexus/content/repositories/releases'
+
+# 打包
 deploy:
   stage: deploy
   only:
-  - tags
+    - tags
   tags:
-  - maven
+    - maven
   script:
-  - cd dino-dependencies-root
-  - echo "=============== 开始部署 dino-dependencies-root  ==============="
-  - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
-  - cd ..
-  - cd dino-spring-assembly
-  - echo "=============== 开始部署 dino-spring-assembly  ==============="
-  - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
-  - cd ..
-  - cd dino-spring-boot-starter
-  - echo "=============== 开始部署 dino-spring-boot-starter  ==============="
-  - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
-  - cd ..
-  - cd dino-spring-cloud-starter
-  - echo "=============== 开始部署 dino-spring-cloud-starter  ==============="
-  - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
-  - cd ..
-  - cd dino-utils
-  - echo "=============== 开始部署 dino-utils  ==============="
-  - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
-  - cd ..
-  - cd dino-spring-commons
-  - echo "=============== 开始部署 dino-spring-commons  ==============="
-  - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
-  - cd ..
-  - cd dino-spring-data
-  - echo "=============== 开始部署 dino-spring-data  ==============="
-  - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
-  - cd ..
-  - cd dino-spring-core
-  - echo "=============== 开始部署 dino-spring-core  ==============="
-  - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
-sast:
-  stage: test
-include:
-- template: Security/SAST.gitlab-ci.yml
+    - cd dino-dependencies-root
+    - echo "=============== 开始部署 dino-dependencies-root  ==============="
+    - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+    - cd ..
+    - cd dino-spring-assembly
+    - echo "=============== 开始部署 dino-spring-assembly  ==============="
+    - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+    - cd ..
+    - cd dino-spring-boot-starter
+    - echo "=============== 开始部署 dino-spring-boot-starter  ==============="
+    - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+    - cd ..
+    - cd dino-spring-cloud-starter
+    - echo "=============== 开始部署 dino-spring-cloud-starter  ==============="
+    - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+    - cd ..
+    - cd dino-utils
+    - echo "=============== 开始部署 dino-utils  ==============="
+    - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+    - cd ..
+    - cd dino-spring-commons
+    - echo "=============== 开始部署 dino-spring-commons  ==============="
+    - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+    - cd ..
+    - cd dino-spring-data
+    - echo "=============== 开始部署 dino-spring-data  ==============="
+    - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+    - cd ..
+    - cd dino-spring-core
+    - echo "=============== 开始部署 dino-spring-core  ==============="
+    - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT

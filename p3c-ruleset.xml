@@ -16,7 +16,9 @@
   </rule>
   <rule ref="rulesets/java/ali-exception.xml"></rule>
   <rule ref="rulesets/java/ali-flowcontrol.xml"></rule>
-  <rule ref="rulesets/java/ali-naming.xml"></rule>
+  <rule ref="rulesets/java/ali-naming.xml">
+    <exclude name="AbstractClassShouldStartWithAbstractNamingRule" />
+  </rule>
   <rule ref="rulesets/java/ali-oop.xml"></rule>
   <rule ref="rulesets/java/ali-orm.xml"></rule>
   <rule ref="rulesets/java/ali-other.xml"></rule>

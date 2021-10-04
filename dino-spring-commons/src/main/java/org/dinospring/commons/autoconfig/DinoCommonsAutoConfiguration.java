@@ -16,10 +16,13 @@ package org.dinospring.commons.autoconfig;
 
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.context.DinoContext;
+import org.dinospring.commons.context.DinoContextThreadLocalImpl;
+import org.springframework.beans.BeansException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,8 +33,19 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
-@Order(1)
-public class DinoCommonsAutoConfiguration {
+public class DinoCommonsAutoConfiguration implements ApplicationContextAware {
+
+  @Override
+  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    ContextHelper.setApplicationContext(applicationContext);
+
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  public DinoContext dinoContext() {
+    return new DinoContextThreadLocalImpl();
+  }
 
   @Bean
   @ConditionalOnMissingBean

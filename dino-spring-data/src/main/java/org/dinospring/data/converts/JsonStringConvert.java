@@ -1,11 +1,11 @@
 // Copyright 2021 dinospring.cn
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,29 +22,35 @@ import javax.persistence.Converter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.NullNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ *
+ * @author tuuboo
+ */
+
 @Slf4j
 @Converter(autoApply = true)
-public class JsonStringConvert implements AttributeConverter<JsonNode, Object> {
+public class JsonStringConvert implements AttributeConverter<JsonNode, String> {
   @Autowired
   private ObjectMapper objectMapper;
 
   @Override
-  public Object convertToDatabaseColumn(JsonNode attribute) {
-    return attribute;
+  public String convertToDatabaseColumn(JsonNode attribute) {
+    return attribute.asText();
   }
 
   @Override
-  public JsonNode convertToEntityAttribute(Object dbData) {
+  public JsonNode convertToEntityAttribute(String dbData) {
     if (Objects.isNull(dbData)) {
-      return null;
+      return NullNode.getInstance();
     }
     try {
-      return objectMapper.readTree(objectMapper.writeValueAsString(dbData));
+      return objectMapper.readTree(dbData);
     } catch (JsonProcessingException e) {
       log.error("convert error:{}", dbData, e);
     }

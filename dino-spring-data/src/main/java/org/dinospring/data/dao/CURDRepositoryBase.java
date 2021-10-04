@@ -1,11 +1,11 @@
 // Copyright 2021 dinospring.cn
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,8 +23,13 @@ import org.dinospring.data.domain.TenantableEntityBase;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
+/**
+ *
+ * @author tuuboo
+ */
+
 @NoRepositoryBean
-public interface CURDRepositoryBase<T, K> extends JpaRepository<T, K>, JdbcSelectExecutor<T, K> {
+public interface CurdRepositoryBase<T, K> extends JpaRepository<T, K>, JdbcSelectExecutor<T, K> {
   /**
    * 对查询结果进行处理，自动注入TenantId
    * @param entity
@@ -40,12 +45,12 @@ public interface CURDRepositoryBase<T, K> extends JpaRepository<T, K>, JdbcSelec
 
   /**
    * 对查询结果进行处理，自动注入TenantId
-   * @param entity
+   * @param entities
    * @return
    */
   default List<T> postQuery(List<T> entities) {
     if (CollectionUtils.isNotEmpty(entities)) {
-      entities.forEach(CURDRepositoryBase.this::postQuery);
+      entities.forEach(CurdRepositoryBase.this::postQuery);
     }
     return entities;
   }

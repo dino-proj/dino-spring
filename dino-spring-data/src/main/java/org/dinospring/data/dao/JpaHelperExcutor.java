@@ -1,11 +1,11 @@
 // Copyright 2021 dinospring.cn
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,34 +22,97 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.springframework.data.jpa.repository.Modifying;
 
+/**
+ *
+ * @author tuuboo
+ */
+
 public interface JpaHelperExcutor<T, K> {
 
-  EntityManager getEntityManager();
+  /**
+   * EntityManager
+   * @return
+   */
+  EntityManager entityManager();
 
-  Class<T> getEntityClass();
+  /**
+   * entityClass
+   * @return
+   */
+  Class<T> entityClass();
 
-  Class<K> getKeyClass();
+  /**
+   * keyClass
+   * @return
+   */
+  Class<K> keyClass();
 
+  /**
+   * 返回表名，并根据{@code TenantTable#TenantLevel}分表策略组合表名
+   * @return
+   */
   default String tableName() {
-    return tableName(getEntityClass());
+    return tableName(entityClass());
   }
 
-  <C> String tableName(Class<C> cls);
+  /**
+   * 返回指定Entity的表名，并根据{@code TenantTable#TenantLevel}分表策略组合表名
+   * @param <C>
+   * @param entityClass entity class
+   * @return
+   */
+  <C> String tableName(Class<C> entityClass);
 
+  /**
+   * 将对象转为Json
+   * @param obj
+   * @return
+   * @throws JsonProcessingException
+   */
   String toJson(Object obj) throws JsonProcessingException;
 
+  /**
+   * 从Json中反序列化对象
+   * @param <C>
+   * @param json
+   * @param cls
+   * @return
+   * @throws JsonProcessingException
+   */
   <C> C fromJson(String json, Class<C> cls) throws JsonProcessingException;
 
+  /**
+   * 更新指定列
+   * @param id
+   * @param column
+   * @param value
+   * @return
+   */
   @Modifying
   default boolean updateColumnById(K id, String column, Object value) {
     return updateColumnById(id, Map.of(column, value));
   }
 
+  /**
+   * 更新指定列
+   * @param id
+   * @param column1
+   * @param value1
+   * @param column2
+   * @param value2
+   * @return
+   */
   @Modifying
   default boolean updateColumnById(K id, String column1, Object value1, String column2, Object value2) {
     return updateColumnById(id, Map.of(column1, value1, column2, value2));
   }
 
+  /**
+   * 更新指定列
+   * @param id
+   * @param columnValue
+   * @return
+   */
   @Modifying
   boolean updateColumnById(K id, Map<String, Object> columnValue);
 }

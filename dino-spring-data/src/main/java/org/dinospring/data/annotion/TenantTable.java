@@ -1,11 +1,11 @@
 // Copyright 2021 dinospring.cn
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,6 +21,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ *
+ * @author tuuboo
+ */
+
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
@@ -34,6 +39,13 @@ public @interface TenantTable {
   TenantLevel level() default TenantLevel.TABLE;
 
   enum TenantLevel {
-    SCHEMA, TABLE, ROW, NOT
+    //SCHEMA级别
+    SCHEMA,
+    //TABLE级别，表名为 [tableName][sep][tanentId]
+    TABLE,
+    //ROW级别，字段名为"tenent_id"
+    ROW,
+    //非Tenant表
+    NOT
   }
 }

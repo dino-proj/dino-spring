@@ -1,11 +1,11 @@
 // Copyright 2021 dinospring.cn
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,27 +30,67 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.NoRepositoryBean;
 
+/**
+ *
+ * @author tuuboo
+ */
+
 @NoRepositoryBean
 public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
 
-  Dialect getDialect();
+  /**
+   * 数据库的Dialect
+   * @return
+   */
+  Dialect dialect();
 
+  /**
+   * 针对此Entity的新的查询
+   * @return
+   */
   default SelectSqlBuilder newSelect() {
-    return new SelectSqlBuilder(getDialect());
+    return new SelectSqlBuilder(dialect(), this.tableName());
   }
 
+  /**
+   * 针对此Entity的新的查询
+   * @param tableAlias 表的别名
+   * @return
+   */
   default SelectSqlBuilder newSelect(String tableAlias) {
-    return StringUtils.isEmpty(tableAlias) ? new SelectSqlBuilder(getDialect(), this.tableName())
-        : new SelectSqlBuilder(getDialect(), this.tableName(), tableAlias);
+    return StringUtils.isEmpty(tableAlias) ? new SelectSqlBuilder(dialect(), this.tableName())
+        : new SelectSqlBuilder(dialect(), this.tableName(), tableAlias);
   }
 
+  /**
+   * 生成指定Entity的查询
+   * @param entity entity class
+   * @param tableAlias 表的别名
+   * @return
+   */
   default <E> SelectSqlBuilder newSelect(Class<E> entity, String tableAlias) {
-    return StringUtils.isEmpty(tableAlias) ? new SelectSqlBuilder(getDialect(), this.tableName(entity))
-        : new SelectSqlBuilder(getDialect(), this.tableName(entity), tableAlias);
+    return StringUtils.isEmpty(tableAlias) ? new SelectSqlBuilder(dialect(), this.tableName(entity))
+        : new SelectSqlBuilder(dialect(), this.tableName(entity), tableAlias);
   }
 
+  /**
+   * Query list
+   * @param sql
+   * @return
+   */
   default List<T> queryList(SelectSqlBuilder sql) {
-    return queryList(sql, getEntityClass());
+    return queryList(sql, entityClass());
+  }
+
+  /**
+   * Query list
+   * @param <P>
+   * @param sql
+   * @param clazz 结果类
+   * @return
+   */
+  default <P> List<P> queryList(SelectSqlBuilder sql, Class<P> clazz) {
+    return queryList(sql.getSql(), clazz, sql.getParams());
   }
 
   /**
@@ -59,7 +99,7 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    * @param sql Native sql 语句
    * @param clazz 要映射的类
    * @param params 查询参数
-   * @return
+   * @return 如果结果为空，则返回 emptyList
    */
   <P> List<P> queryList(@Nonnull String sql, @Nonnull Class<P> clazz, @Nullable Object... params);
 
@@ -77,19 +117,13 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
     }
   }
 
-  default <P> P getOne(String sql, Class<P> clazz, Object... params) {
-    List<P> rs = queryList(sql, clazz, params);
-    if (CollectionUtils.isNotEmpty(rs)) {
-      return rs.get(0);
-    } else {
-      return null;
-    }
-  }
-
-  default <P> List<P> queryList(SelectSqlBuilder sql, Class<P> clazz) {
-    return queryList(sql.getSql(), clazz, sql.getParams());
-  }
-
+  /**
+   * 获取一个元素
+   * @param <P>
+   * @param sql sql语句
+   * @param clazz 结果类
+   * @return null如果查不到
+   */
   default <P> P getOne(SelectSqlBuilder sql, Class<P> clazz) {
     List<P> rs = queryList(sql, clazz);
     if (CollectionUtils.isNotEmpty(rs)) {
@@ -99,20 +133,62 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
     }
   }
 
+  /**
+   * 获取一个元素
+   * @param <P>
+   * @param sql native sql语句
+   * @param clazz 结果类
+   * @param params 查询参数
+   * @return null如果查不到
+   */
+  default <P> P getOne(String sql, Class<P> clazz, Object... params) {
+    List<P> rs = queryList(sql, clazz, params);
+    if (CollectionUtils.isNotEmpty(rs)) {
+      return rs.get(0);
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * 返回计数
+   * @param sql 查询语句
+   * @return
+   */
   default long count(SelectSqlBuilder sql) {
     Long l = getOne(sql, Long.class);
     return l == null ? 0L : l.longValue();
   }
 
+  /**
+   * 返回计数
+   * @param sql native sql语句
+   * @param params 查询参数
+   * @return
+   */
   default long count(String sql, Object... params) {
     Long l = getOne(sql, Long.class, params);
     return l == null ? 0L : l.longValue();
   }
 
+  /**
+   * 分页查询
+   * @param sql sql查询
+   * @param pageable 分页信息
+   * @return
+   */
   default Page<T> queryPage(SelectSqlBuilder sql, Pageable pageable) {
-    return queryPage(sql, pageable, getEntityClass());
+    return queryPage(sql, pageable, entityClass());
   }
 
+  /**
+   * 分页查询
+   * @param <P>
+   * @param sql sql查询
+   * @param pageable 分页信息
+   * @param clazz 结果类
+   * @return
+   */
   default <P> Page<P> queryPage(SelectSqlBuilder sql, Pageable pageable, Class<P> clazz) {
 
     Sort sort = pageable.getSort();
@@ -127,10 +203,26 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
     }
   }
 
+  /**
+   * 分页查询
+   * @param sql sql查询
+   * @param countSql 总记录数sql查询
+   * @param pageable 分页信息
+   * @return
+   */
   default Page<T> queryPage(SelectSqlBuilder sql, SelectSqlBuilder countSql, Pageable pageable) {
-    return queryPage(sql, countSql, pageable, getEntityClass());
+    return queryPage(sql, countSql, pageable, entityClass());
   }
 
+  /**
+   * 分页查询
+   * @param <P>
+   * @param sqlsql查询
+   * @param countSql 总记录数sql查询
+   * @param pageable 分页信息
+   * @param clazz 结果类
+   * @return
+   */
   default <P> Page<P> queryPage(SelectSqlBuilder sql, SelectSqlBuilder countSql, Pageable pageable, Class<P> clazz) {
 
     Sort sort = pageable.getSort();
@@ -145,5 +237,11 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
     }
   }
 
+  /**
+   * 保存并返回对象
+   * @param sql native sql
+   * @param params sql参数
+   * @return
+   */
   K save(@Nonnull String sql, @Nullable Object... params);
 }

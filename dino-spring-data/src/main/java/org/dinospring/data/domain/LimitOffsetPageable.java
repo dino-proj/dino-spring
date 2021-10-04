@@ -1,11 +1,11 @@
 // Copyright 2021 dinospring.cn
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,17 +16,20 @@ package org.dinospring.data.domain;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-public class LimitOffsetPageable implements Pageable, Serializable {
-  private static final long serialVersionUID = -25822477129613575L;
+import lombok.Data;
 
-  private int limit;
-  private long offset;
+/**
+ *
+ * @author tuuboo
+ */
+@Data
+public class LimitOffsetPageable implements Pageable, Serializable {
+
+  private final int limit;
+  private final long offset;
   private final Sort sort;
 
   /**
@@ -113,31 +116,6 @@ public class LimitOffsetPageable implements Pageable, Serializable {
   @Override
   public boolean hasPrevious() {
     return offset > limit;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (!(o instanceof LimitOffsetPageable)) {
-      return false;
-    }
-
-    LimitOffsetPageable that = (LimitOffsetPageable) o;
-
-    return new EqualsBuilder().append(limit, that.limit).append(offset, that.offset).append(sort, that.sort).isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37).append(limit).append(offset).append(sort).toHashCode();
-  }
-
-  @Override
-  public String toString() {
-    return new ToStringBuilder(this).append("limit", limit).append("offset", offset).append("sort", sort).toString();
   }
 
   @Override

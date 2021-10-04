@@ -1,11 +1,11 @@
 // Copyright 2021 dinospring.cn
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,11 +37,16 @@ import org.springframework.core.type.classreading.MetadataReaderFactory;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ *
+ * @author tuuboo
+ */
+
 @Slf4j
 public class AnnotionedJsonTypeIdResolver extends TypeIdResolverBase {
   private final Map<String, Class<?>> idToType = new HashMap<>();
   private final Map<Class<?>, String> typeToId = new HashMap<>();
-  private static final Map<Class<?>, String> annos = new HashMap<>();
+  private static final Map<Class<?>, String> ANNOS_CACHE = new HashMap<>(32);
 
   public static <T extends Annotation> void addAnnotion(Class<T> annoClass, Function<T, String> idExtractor,
       @Nonnull String packageToScan) throws IOException {
@@ -76,7 +81,7 @@ public class AnnotionedJsonTypeIdResolver extends TypeIdResolverBase {
         var anno = AnnotationUtils.findAnnotation(clazz, annoClass);
         //判断是否有指定注解
         if (anno != null) {
-          annos.put(clazz, idExtractor.apply(anno));
+          ANNOS_CACHE.put(clazz, idExtractor.apply(anno));
         }
       } catch (ClassNotFoundException | NoClassDefFoundError | ExceptionInInitializerError e) {
         log.error("class:{} not found", classname);
@@ -86,7 +91,7 @@ public class AnnotionedJsonTypeIdResolver extends TypeIdResolverBase {
 
   @Override
   public void init(JavaType bt) {
-    annos.entrySet().forEach(e -> {
+    ANNOS_CACHE.entrySet().forEach(e -> {
       if (bt.isTypeOrSuperTypeOf(e.getKey())) {
         typeToId.put(e.getKey(), e.getValue());
         if (idToType.containsKey(e.getValue())) {

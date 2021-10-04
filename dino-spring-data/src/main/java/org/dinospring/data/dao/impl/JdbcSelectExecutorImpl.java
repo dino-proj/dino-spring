@@ -1,11 +1,11 @@
 // Copyright 2021 dinospring.cn
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,6 +25,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 
 import com.botbrain.dino.sql.dialect.Dialect;
@@ -36,6 +37,7 @@ import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.response.Status;
 import org.dinospring.commons.utils.Assert;
 import org.dinospring.data.dao.JdbcSelectExecutor;
+import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.JpaMetamodelEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
@@ -47,6 +49,11 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.util.ClassUtils;
 
 import lombok.extern.slf4j.Slf4j;
+
+/**
+ *
+ * @author tuuboo
+ */
 
 @Slf4j
 public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> implements JdbcSelectExecutor<T, K> {
@@ -66,38 +73,37 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
     super(entityInformation, entityManager);
     this.entityInformation = entityInformation;
     this.entityManager = entityManager;
-    init();
   }
 
   public JdbcSelectExecutorImpl(Class<T> domainClass, EntityManager entityManager) {
     super(domainClass, entityManager);
     this.entityInformation = getEntityInformation(domainClass, entityManager);
     this.entityManager = entityManager;
-    init();
   }
 
+  @PostConstruct
   private void init() {
     this.jdbcTemplate = ContextHelper.findBean(JdbcTemplate.class);
     this.objectMapper = ContextHelper.findBean(ObjectMapper.class);
     this.dialect = ContextHelper.findBean(Dialect.class);
 
-    ENTITY_INFO_CACHE.put(getDomainClass(), EntityInfo.of(dialect, getEntityClass()));
+    ENTITY_INFO_CACHE.put(getDomainClass(), EntityInfo.of(dialect, entityClass()));
   }
 
   @Override
-  public EntityManager getEntityManager() {
+  public EntityManager entityManager() {
     return this.entityManager;
   }
 
   @Override
-  public Class<T> getEntityClass() {
+  public Class<T> entityClass() {
     return getDomainClass();
   }
 
   @Override
   @SuppressWarnings("unchecked")
   @Nullable
-  public Class<K> getKeyClass() {
+  public Class<K> keyClass() {
     var tp = this.getDomainClass().getGenericSuperclass();
     if (tp instanceof ParameterizedType) {
       var paramType = (ParameterizedType) tp;
@@ -107,7 +113,7 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
   }
 
   @Override
-  public Dialect getDialect() {
+  public Dialect dialect() {
     return dialect;
   }
 
@@ -131,7 +137,8 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
     if (ClassUtils.isPrimitiveOrWrapper(clazz)) {
       return jdbcTemplate.queryForList(sql, clazz, params);
     } else {
-      return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(clazz), params);
+      return jdbcTemplate.query(sql,
+          BeanPropertyRowMapper.newInstance(clazz, DefaultConversionService.getSharedInstance()), params);
     }
   }
 
@@ -161,7 +168,7 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
       return null;
     }
     var v = map.get(idAttr.getName()).toString();
-    var k = this.getKeyClass();
+    var k = this.keyClass();
     log.info("entity key:{} of value {}", k, v);
 
     if (v == null || k == null) {

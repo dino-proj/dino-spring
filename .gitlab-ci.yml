@@ -2,6 +2,7 @@ image: 10.10.23.161:5000/botbrain/maven:latest
 
 stages:
   - deploy
+  - verify
 
 variables:
   MVN_OPT: --settings /usr/share/maven/ref/settings.xml
@@ -47,3 +48,24 @@ deploy:
     - cd dino-spring-core
     - echo "=============== 开始部署 dino-spring-core  ==============="
     - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+
+sonarqube-check:
+  image: maven:3.6.3-jdk-11
+  stage: verify
+  variables:
+    SONAR_USER_HOME: '${CI_PROJECT_DIR}/.sonar' # Defines the location of the analysis task cache
+    GIT_DEPTH: '0' # Tells git to fetch all the branches of the project, required by the analysis task
+  cache:
+    key: '${CI_JOB_NAME}'
+    paths:
+      - .sonar/cache
+  tags:
+    - maven
+  script:
+    - cd dino-spring-commons
+    - echo "=============== 开始检查 dino-spring-commons  ==============="
+    - mvn verify sonar:sonar
+    - cd ..
+  allow_failure: true
+  only:
+    - master # or the name of your main branch

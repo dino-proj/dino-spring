@@ -50,7 +50,7 @@ deploy:
     - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
 
 sonarqube-check:
-  image: maven:3.6.3-jdk-11
+  #image: maven:3.6.3-jdk-11
   stage: verify
   variables:
     SONAR_USER_HOME: '${CI_PROJECT_DIR}/.sonar' # Defines the location of the analysis task cache

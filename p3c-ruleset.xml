@@ -9,6 +9,7 @@
     <!-- 配置忽略检查的规则 -->
     <!-- https://github.com/alibaba/p3c/tree/master/p3c-pmd/src/main/resources/rulesets/java -->
     <!-- <exclude name="CallSuperLast" /> -->
+    <exclude name="AvoidCommentBehindStatementRule" />
   </rule>
   <rule ref="rulesets/java/ali-concurrent.xml"></rule>
   <rule ref="rulesets/java/ali-constant.xml">
@@ -18,6 +19,8 @@
   <rule ref="rulesets/java/ali-flowcontrol.xml"></rule>
   <rule ref="rulesets/java/ali-naming.xml">
     <exclude name="AbstractClassShouldStartWithAbstractNamingRule" />
+    <exclude name="LowerCamelCaseVariableNamingRule" />
+    <exclude name="ServiceOrDaoClassShouldEndWithImplRule" />
   </rule>
   <rule ref="rulesets/java/ali-oop.xml"></rule>
   <rule ref="rulesets/java/ali-orm.xml"></rule>

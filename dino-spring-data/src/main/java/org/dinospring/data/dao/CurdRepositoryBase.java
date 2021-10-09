@@ -29,7 +29,7 @@ import org.springframework.data.repository.NoRepositoryBean;
  */
 
 @NoRepositoryBean
-public interface CurdRepositoryBase2<T, K> extends JpaRepository<T, K>, JdbcSelectExecutor<T, K> {
+public interface CurdRepositoryBase<T, K> extends JpaRepository<T, K>, JdbcSelectExecutor<T, K> {
   /**
    * 对查询结果进行处理，自动注入TenantId
    * @param entity

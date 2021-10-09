@@ -1,11 +1,11 @@
 // Copyright 2021 dinospring.cn
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,8 +16,14 @@ package org.dinospring.core.entity;
 
 import java.util.Arrays;
 
+/**
+ *
+ * @author tuuboo
+ */
+
 public interface Code {
   enum STATUS {
+    //正常
     OK(0, "ok"), DELETED(1, "deleted"),
     //审核相关
     CHECKING(10, "checking"), ACCEPTED(0, "accepted"), DENNIED(12, "dennied"),
@@ -68,8 +74,16 @@ public interface Code {
     }
   }
 
+  /**
+   * 审核
+   */
   enum CHECK {
-    ING(0, "checking"), ACCEPT(1, "accept"), DENNIED(2, "dennied");
+    //审核中
+    ING(0, "checking"),
+    //审核通过
+    ACCEPT(1, "accept"),
+    //审核未通过
+    DENNIED(2, "dennied");
 
     int id;
     String name;

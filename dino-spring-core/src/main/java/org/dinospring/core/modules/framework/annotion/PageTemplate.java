@@ -1,11 +1,11 @@
 // Copyright 2021 dinospring.cn
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,22 +22,55 @@ import java.lang.annotation.Target;
 
 import org.dinospring.core.modules.framework.PageType;
 
+/**
+ *
+ * @author tuuboo
+ */
+
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface PageTemplate {
 
+  /**
+   * 页面模板名字
+   * @return
+   */
   String name();
 
+  /**
+   * 模板标题
+   * @return
+   */
   String title();
 
+  /**
+   * 页面类型
+   * @return
+   */
   PageType type();
 
+  /**
+   * 页面Icon图标地址
+   * @return
+   */
   String icon() default "";
 
+  /**
+   * app中页面路径
+   * @return
+   */
   String appPath() default "";
 
+  /**
+   * pc中页面路径，不填写，则同 {@link #appPath()}
+   * @return
+   */
   String pcPath() default "";
 
+  /**
+   * 对页面模板的描述
+   * @return
+   */
   String description() default "";
 }

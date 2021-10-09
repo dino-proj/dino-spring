@@ -1,11 +1,11 @@
 // Copyright 2021 dinospring.cn
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -48,7 +48,9 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 用于记录日志的Aspect,
- * 请使用 {@link com.botbrain.spring.core.entity.AuditLogEntity} 注解
+ * 请使用 {@link AuditLogEntity} 注解
+ *
+ * @author tuuboo
  */
 @Aspect
 @Component
@@ -147,7 +149,7 @@ public class AuditLogAspect {
         .setRequestIp(IPUtils.getIpAddr(request));
 
     // 请求参数
-    Map<String, String> params = new HashMap<>();
+    Map<String, String> params = new HashMap<>(16);
     request.getParameterMap().entrySet().stream()
         .forEach(kv -> params.put(kv.getKey(), StringUtils.join(kv.getValue(), ',')));
     String paramsJson = JSON.toJSONString(params);
@@ -158,7 +160,7 @@ public class AuditLogAspect {
     var currentUser = dinoAppContext.currentUser();
     if (currentUser != null) {
       auditLog.setUserType(currentUser.getUserType().toString()).setUserId(String.valueOf(currentUser.getId()))
-          .setUserRealname(currentUser.getDisplayName()).setTenantId(currentUser.getTenantId());
+          .setUserDisplayname(currentUser.getDisplayName()).setTenantId(currentUser.getTenantId());
     }
 
     // 补充注解信息
@@ -174,7 +176,7 @@ public class AuditLogAspect {
         log.warn("@auditLog(operation='{}') 注解未识别到class泛型参数，请指定 businessObj", auditLogAnno.op());
       }
     }
-    auditLog.setBusinessObj(businessObj).setOperation(auditLogAnno.op());
+    auditLog.setBusiness(businessObj).setOperation(auditLogAnno.op());
 
     return auditLog;
   }

@@ -1,11 +1,11 @@
 // Copyright 2021 dinospring.cn
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,8 +15,8 @@
 package org.dinospring.core.sys.login;
 
 import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
 import java.util.Map;
+import java.util.Optional;
 
 import com.botbrain.dino.utils.ValidateUtil;
 
@@ -26,31 +26,51 @@ import org.dinospring.commons.response.Status;
 import org.dinospring.commons.sys.Tenant;
 import org.dinospring.commons.sys.User;
 import org.dinospring.commons.utils.Assert;
+import org.dinospring.commons.utils.TypeUtils;
 import org.dinospring.core.entity.Code;
 import org.dinospring.core.modules.message.sms.SmsService;
-import org.dinospring.core.sys.org.UserEntityBase;
 import org.dinospring.core.sys.token.TokenPrincaple;
 import org.dinospring.core.sys.token.TokenService;
+import org.dinospring.core.sys.user.UserEntityBase;
 import org.dinospring.core.sys.user.UserService;
-import org.springframework.data.util.CastUtils;
+
+/**
+ *
+ * @author tuuboo
+ */
 
 public abstract interface LoginServiceBase<U extends UserEntityBase<K>, V extends User<K>, K extends Serializable> {
 
+  /**
+   * UserService
+   * @return
+   */
   UserService<V, K> userService();
 
+  /**
+   * TokenService
+   * @return
+   */
   TokenService tokenService();
 
+  /**
+   * SmsService
+   * @return
+   */
   SmsService smsService();
 
+  /**
+   * User class
+   * @return
+   */
   default Class<V> userClass() {
-    var tp = this.getClass().getGenericSuperclass();
-    if (tp instanceof ParameterizedType) {
-      var paramType = (ParameterizedType) tp;
-      return CastUtils.cast(paramType.getActualTypeArguments()[1]);
-    }
-    return null;
+    return TypeUtils.getGenericParamClass(this, LoginServiceBase.class, 1);
   }
 
+  /**
+   * 生成LoginAuth对象
+   * @return
+   */
   default LoginAuth<V, K> newLoginAuth() {
     return new LoginAuth<>();
   }
@@ -112,6 +132,12 @@ public abstract interface LoginServiceBase<U extends UserEntityBase<K>, V extend
     return StringUtils.equals(retriveSmsCaptcha(mobile), captcha);
   }
 
+  /**
+   * 验证用户密码
+   * @param user
+   * @param password
+   * @return
+   */
   default boolean verifyUserPassword(U user, String password) {
     var signToken = tokenService().siginParams(user.getSecretKey(),
         Map.of("username", user.getLoginName(), "password", password));
@@ -119,6 +145,11 @@ public abstract interface LoginServiceBase<U extends UserEntityBase<K>, V extend
     return user.getPasswordHash().equalsIgnoreCase(signToken);
   }
 
+  /**
+   * 发送手机短信验证码
+   * @param mobile
+   * @return
+   */
   default boolean sendSmsCaptcha(String mobile) {
     var captcha = new RandomStringGenerator.Builder().withinRange('0', '9').build().generate(4);
     if (smsService().sendSmsCaptcha(mobile, captcha, null)) {
@@ -128,7 +159,34 @@ public abstract interface LoginServiceBase<U extends UserEntityBase<K>, V extend
     return false;
   }
 
+  /**
+   * 根据用户名查找用户
+   * @param tenantId
+   * @param username
+   * @return
+   */
+  Optional<U> findUserByLoginName(String tenantId, String username);
+
+  /**
+   * 根据手机号码查询用户
+   *
+   * @param tenantId
+   * @param mobile
+   * @return
+   */
+  Optional<U> findUserByMobile(String tenantId, String mobile);
+
+  /**
+   * 存储验证码
+   * @param mobile
+   * @param captcha
+   */
   void saveSmsCaptcha(String mobile, String captcha);
 
+  /**
+   * 获取验证码
+   * @param mobile
+   * @return
+   */
   String retriveSmsCaptcha(String mobile);
 }

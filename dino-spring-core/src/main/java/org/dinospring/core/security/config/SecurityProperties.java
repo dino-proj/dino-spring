@@ -1,39 +1,42 @@
 // Copyright 2021 dinospring.cn
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.core.annotion;
+package org.dinospring.core.security.config;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.List;
 
-@Target({ ElementType.TYPE })
-@Retention(RetentionPolicy.RUNTIME)
-@Inherited
-@Documented
-public @interface TenantTable {
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import lombok.Data;
+
+/**
+ *
+ * @author tuuboo
+ */
+
+@Data
+@ConfigurationProperties(prefix = SecurityProperties.PREFIX)
+public class SecurityProperties {
+  public final static String PREFIX = "dinospring.security";
+
   /**
-   * 表名和租户ID之间的分隔符，默认"_"
+   * 是否启用安全机制
    */
-  String sep() default "_";
+  private boolean enabled = true;
 
-  TenantLevel level() default TenantLevel.TABLE;
-
-  enum TenantLevel {
-    TABLE, SCHEMA, ROW
-  }
+  /**
+   * 白名单，不需要检查权限的URL列表
+   */
+  private List<String> whiteList;
 }

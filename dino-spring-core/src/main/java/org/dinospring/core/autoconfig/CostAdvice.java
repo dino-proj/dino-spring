@@ -1,11 +1,11 @@
 // Copyright 2021 dinospring.cn
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,6 +23,11 @@ import org.dinospring.commons.response.Response;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
+
+/**
+ *
+ * @author tuuboo
+ */
 
 @Slf4j
 @Component
@@ -42,7 +47,9 @@ public class CostAdvice {
   public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
     long start = System.currentTimeMillis();
     try {
-      log.info("around:{}", joinPoint.toLongString());
+      if (log.isDebugEnabled()) {
+        log.debug("around:{}", joinPoint.toLongString());
+      }
       Object result = joinPoint.proceed();
       if (result == null || !Response.class.isAssignableFrom(result.getClass())) {
         return result;
@@ -50,7 +57,9 @@ public class CostAdvice {
       Response<?> resp = (Response<?>) result;
       long end = System.currentTimeMillis();
       long cost = end - start;
-      log.info("around {} Use time: {}ms!", joinPoint, cost);
+      if (log.isDebugEnabled()) {
+        log.debug("around {} Use time: {}ms!", joinPoint, cost);
+      }
       if (0 != resp.getCode()) {
         log.error("around {} error.msg :{}", joinPoint, resp.getMsg());
       }

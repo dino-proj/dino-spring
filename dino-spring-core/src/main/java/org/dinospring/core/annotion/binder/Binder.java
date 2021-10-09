@@ -1,11 +1,11 @@
 // Copyright 2021 dinospring.cn
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,6 +24,11 @@ import com.botbrain.dino.utils.NamingUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.dinospring.core.service.Service;
+
+/**
+ *
+ * @author tuuboo
+ */
 
 public class Binder<E, V, K extends Serializable> {
   /**
@@ -58,7 +63,7 @@ public class Binder<E, V, K extends Serializable> {
   }
 
   /**
-   * 
+   *
    * join连接条件，指定当前VO的取值方法和关联entity的取值方法
    * @param entityField Entity的Field名字
    * @param voField vo的Field名字

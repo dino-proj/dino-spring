@@ -1,11 +1,11 @@
 // Copyright 2021 dinospring.cn
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,12 +32,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.sys.Tenant;
 import org.dinospring.commons.sys.User;
 import org.dinospring.core.service.impl.ServiceBase;
-import org.dinospring.core.sys.login.LoginModuleProperties;
-import org.dinospring.data.dao.CURDRepositoryBase;
+import org.dinospring.core.sys.login.config.LoginModuleProperties;
+import org.dinospring.data.dao.CurdRepositoryBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
+
+/**
+ *
+ * @author tuuboo
+ */
 
 @Slf4j
 @Component
@@ -53,7 +58,7 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
   private TokenRepository tokenRepository;
 
   @Override
-  public CURDRepositoryBase<TokenEntity, String> repository() {
+  public CurdRepositoryBase<TokenEntity, String> repository() {
     return tokenRepository;
   }
 
@@ -86,12 +91,20 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
     return t;
   }
 
-  // 清除 token refresh token
+  /**
+   * 清除 token refresh token
+   * @param princ
+   */
   public void clearLoginToken(TokenPrincaple princ) {
     this.removeById(generateTokenId(princ));
   }
 
-  //校验
+  /**
+   * 校验登录Token
+   * @param princ
+   * @param token
+   * @return
+   */
   public boolean checkLoginToken(TokenPrincaple princ, String token) {
     var tokenEntity = tokenRepository.findById(generateTokenId(princ));
     //不存在
@@ -106,7 +119,13 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
     return t.getToken().equalsIgnoreCase(token);
   }
 
-  //刷新
+  /**
+   * 刷新Token
+   * @param princ
+   * @param secretKey
+   * @param refreshToken
+   * @return
+   */
   public Optional<Token> refreshLoginToken(TokenPrincaple princ, String secretKey, String refreshToken) {
     var tokenEntity = tokenRepository.findById(generateTokenId(princ));
     //不存在
@@ -152,13 +171,26 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
 
   }
 
-  // 生成refresh token
+  /**
+   * 生成refresh token
+   * @param princ
+   * @param secretKey
+   * @param authAt
+   * @return
+   */
   private String generateRefreshToken(TokenPrincaple princ, String secretKey, long authAt) {
     return calculateToken(princ, StringUtils.reverse(secretKey), authAt,
         loginModuleProperties.getToken().getRefreshTokenExpiresIn().toMillis());
   }
 
-  //加密
+  /**
+   * 计算Token信息
+   * @param princ
+   * @param secretKey
+   * @param authAt
+   * @param siginTtlMs
+   * @return
+   */
   private String calculateToken(TokenPrincaple princ, String secretKey, long authAt, long siginTtlMs) {
     var params = List.of("tenant=" + princ.getTenantId(), "utype=" + princ.getUserType(), "plt=" + princ.getPlt(),
         "expiresIn=" + siginTtlMs, "authAt=" + authAt);

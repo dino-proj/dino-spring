@@ -1,11 +1,11 @@
 // Copyright 2021 dinospring.cn
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,29 +16,29 @@ package org.dinospring.core.modules.framework.components;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
+import org.dinospring.core.modules.framework.Component;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-@Data
-@JsonTypeName(BBAlert.T_NAME)
-public class BBAlert implements Component, Action {
-  public static final String T_NAME = "alert";
+/**
+ *
+ * @author tuuboo
+ */
 
-  @Schema(description = "提示窗标题")
+@Data
+@JsonTypeName(CompImage.T_NAME)
+public class CompImage implements Component {
+  public static final String T_NAME = "image";
+
+  @Schema(description = "图片URL地址")
+  private String imageUrl;
+
+  @Schema(description = "图片标题")
   private String title;
 
-  @Schema(description = "提示窗类型")
-  private AlertType type;
-
-  @Schema(description = "提示内容")
-  private String msg;
-
-  @Schema(description = "按钮文字")
-  private String buttonLabel;
-
-  public enum AlertType {
-    WARN, ERROR, INFO;
-  }
+  @Schema(description = "图片链接")
+  private CompLink link;
 
   @Schema(title = "@t", description = "组件名字:" + T_NAME)
   @Override

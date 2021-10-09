@@ -1,11 +1,11 @@
 // Copyright 2021 dinospring.cn
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,14 +19,20 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import org.dinospring.commons.ValueLabel;
+import org.dinospring.core.modules.framework.Component;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+/**
+ *
+ * @author tuuboo
+ */
+
 @Data
-@JsonTypeName(BBLink.T_NAME)
-public class BBLink implements Component, Action {
+@JsonTypeName(CompLink.T_NAME)
+public class CompLink implements Component, Action {
   public static final String T_NAME = "link";
 
   @Schema(description = "链接的类型", required = true)
@@ -43,7 +49,12 @@ public class BBLink implements Component, Action {
 
   @RequiredArgsConstructor
   enum LinkType implements ValueLabel<String> {
-    H5("H5地址"), PAGE("内部页面"), CONTENT("查看内容");
+    //H5地址
+    H5("H5地址"),
+    //内部页面
+    PAGE("内部页面"),
+    //内容
+    CONTENT("查看内容");
 
     private final String label;
 

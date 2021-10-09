@@ -1,11 +1,11 @@
 // Copyright 2021 dinospring.cn
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,6 +29,11 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+
+/**
+ *
+ * @author tuuboo
+ */
 
 @Configuration
 public class ShiroConfig {
@@ -66,8 +71,8 @@ public class ShiroConfig {
   public ShiroFilterFactoryBean shiroFilterFactoryBean(DefaultWebSecurityManager securityManager) {
     var factoryBean = new ShiroFilterFactoryBean();
 
-    // 添加自己的过滤器并且取名为jwt
-    Map<String, Filter> filterMap = new HashMap<>();
+    // 添加自己的过滤器
+    Map<String, Filter> filterMap = new HashMap<>(4);
     filterMap.put("authToken", shiroAuthFilter());
     factoryBean.setFilters(filterMap);
 
@@ -77,7 +82,7 @@ public class ShiroConfig {
      * 自定义url规则
      * http://shiro.apache.org/web.html#urls-
      */
-    Map<String, String> filterRuleMap = new HashMap<>();
+    Map<String, String> filterRuleMap = new HashMap<>(4);
     // 所有请求通过我们自己的authToken Filter
     filterRuleMap.put("/**", "anon");
 

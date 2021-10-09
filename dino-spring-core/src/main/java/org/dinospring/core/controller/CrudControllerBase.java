@@ -22,14 +22,16 @@ import javax.annotation.Nonnull;
 
 import org.dinospring.commons.request.PageReq;
 import org.dinospring.commons.request.PostBody;
+import org.dinospring.commons.request.SortReq;
 import org.dinospring.commons.response.PageResponse;
 import org.dinospring.commons.response.Response;
 import org.dinospring.commons.response.Status;
 import org.dinospring.commons.utils.Assert;
 import org.dinospring.commons.utils.TypeUtils;
 import org.dinospring.core.annotion.param.ParamPageable;
+import org.dinospring.core.annotion.param.ParamSort;
 import org.dinospring.core.annotion.param.ParamTenant;
-import org.dinospring.core.service.SearchQuery;
+import org.dinospring.core.service.CustomQuery;
 import org.dinospring.core.service.Service;
 import org.dinospring.core.vo.VoBase;
 import org.dinospring.data.domain.EntityBase;
@@ -50,7 +52,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
  * @author tuuboo
  */
 
-public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBase<K>, VO extends VoBase<K>, SRC extends SearchQuery, REQ, K extends Serializable> {
+public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBase<K>, VO extends VoBase<K>, SRC extends CustomQuery, REQ, K extends Serializable> {
 
   /**
    * Service 服务实例
@@ -111,17 +113,22 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
    * 查询列表
    * @param tenantId 租户ID
    * @param pageReq 分页请求
+   * @param sortReq 排序
    * @param req 查询条件
    * @return
    */
   @Operation(summary = "列表")
   @ParamTenant
   @ParamPageable
+  @ParamSort
   @PostMapping("list")
-  default PageResponse<VO> list(@PathVariable("tenant_id") String tenantId, PageReq pageReq,
+  default PageResponse<VO> list(@PathVariable("tenant_id") String tenantId, PageReq pageReq, SortReq sortReq,
       @RequestBody PostBody<SRC> req) {
 
-    var pageData = service().listPage(pageReq.pageable());
+    var pageable = pageReq.pageable(sortReq);
+
+    var query = req.getBody();
+    var pageData = query == null ? service().listPage(pageable) : service().listPage(query, pageable);
 
     return PageResponse.success(pageData, t -> processVo(service().projection(voClass(), t)));
   }

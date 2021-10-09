@@ -23,11 +23,8 @@ import org.dinospring.core.service.impl.ServiceBase;
 import org.dinospring.core.sys.dictionary.DictionaryEntity.DictItem;
 import org.dinospring.data.dao.CurdRepositoryBase;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  *

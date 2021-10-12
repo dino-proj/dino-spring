@@ -17,7 +17,9 @@ package org.dinospring.core.modules.oss.config;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
@@ -25,6 +27,8 @@ import lombok.Data;
  */
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class TencentCosProperties {
   /**
    * SECRETID和SECRETKEY请登录访问管理控制台进行查看和管理

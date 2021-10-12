@@ -39,8 +39,14 @@ import lombok.Data;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "dinospring.module.msg")
+@ConfigurationProperties(prefix = MsgModuleProperties.PREFIX)
 public class MsgModuleProperties {
+  public static final String PREFIX = "dinospring.module.msg";
+
+  /**
+   * 短信配置
+   */
+  private SmsProperties sms;
 
   @Data
   public static class SmsProperties {

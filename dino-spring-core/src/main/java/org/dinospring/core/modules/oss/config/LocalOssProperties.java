@@ -16,7 +16,9 @@ package org.dinospring.core.modules.oss.config;
 
 import javax.annotation.Nonnull;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
@@ -24,6 +26,8 @@ import lombok.Data;
  */
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class LocalOssProperties {
 
   /**

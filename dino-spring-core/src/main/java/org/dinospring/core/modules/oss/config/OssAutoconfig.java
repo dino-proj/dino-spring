@@ -16,12 +16,14 @@ package org.dinospring.core.modules.oss.config;
 
 import java.io.IOException;
 
+import com.qcloud.cos.COSClient;
+
 import org.dinospring.core.modules.oss.impl.LocalOssService;
 import org.dinospring.core.modules.oss.impl.MinioOssService;
 import org.dinospring.core.modules.oss.impl.TencentOssService;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -33,27 +35,26 @@ import io.minio.MinioClient;
  */
 
 @Configuration
-@AutoConfigureAfter(OssModuleProperties.class)
+@EnableConfigurationProperties(OssModuleProperties.class)
 public class OssAutoconfig {
 
   @Bean
   @ConditionalOnClass(MinioClient.class)
-  @ConditionalOnProperty(prefix = OssModuleProperties.PREFIX, name = "minio")
-  public MinioOssService minioOssService(OssModuleProperties fsProps) {
-    return new MinioOssService(fsProps.getMinio());
+  public MinioOssService minioOssService(OssModuleProperties ossProps) {
+    return new MinioOssService(ossProps.getMinio());
   }
 
   @Bean
   @ConditionalOnProperty(prefix = OssModuleProperties.PREFIX, name = "local")
-  public LocalOssService localOssService(OssModuleProperties fsProps) throws IOException {
-    return new LocalOssService(fsProps.getLocal());
+  public LocalOssService localOssService(OssModuleProperties ossProps) throws IOException {
+    return new LocalOssService(ossProps.getLocal());
   }
 
   @Bean
-  @ConditionalOnClass(MinioClient.class)
+  @ConditionalOnClass(COSClient.class)
   @ConditionalOnProperty(prefix = OssModuleProperties.PREFIX, name = "tencent-cos")
-  public TencentOssService tencentOssService(OssModuleProperties fsProps) throws IOException {
-    return new TencentOssService(fsProps.getTencentCos());
+  public TencentOssService tencentOssService(OssModuleProperties ossProps) {
+    return new TencentOssService(ossProps.getTencentCos());
   }
 
 }

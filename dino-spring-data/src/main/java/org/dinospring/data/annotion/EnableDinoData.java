@@ -23,8 +23,6 @@ import java.lang.annotation.Target;
 
 import org.dinospring.data.autoconfig.CustomJpaRepositoryFactoryBean;
 import org.dinospring.data.dao.impl.JdbcSelectExecutorImpl;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
@@ -38,8 +36,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Documented
 @Inherited
 @EnableJpaRepositories(basePackages = "org.dinospring", repositoryFactoryBeanClass = CustomJpaRepositoryFactoryBean.class, repositoryBaseClass = JdbcSelectExecutorImpl.class)
-@EntityScan("org.dinospring")
-@ComponentScan("org.dinospring")
 public @interface EnableDinoData {
   /**
    * Base packages to scan for annotated components. please include "org.dinospring"

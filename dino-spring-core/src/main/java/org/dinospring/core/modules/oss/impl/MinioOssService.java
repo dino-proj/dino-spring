@@ -32,7 +32,6 @@ import org.dinospring.core.modules.oss.BucketMeta;
 import org.dinospring.core.modules.oss.ObjectMeta;
 import org.dinospring.core.modules.oss.OssService;
 import org.dinospring.core.modules.oss.config.MinioProperties;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import io.minio.BucketExistsArgs;
 import io.minio.CopyObjectArgs;
@@ -61,7 +60,6 @@ import io.minio.messages.Item;
 
 public class MinioOssService implements OssService {
 
-  @Autowired
   private MinioClient minioClient;
 
   public MinioOssService(@Nonnull MinioProperties properties) {

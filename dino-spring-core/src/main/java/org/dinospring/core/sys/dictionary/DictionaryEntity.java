@@ -70,7 +70,7 @@ public class DictionaryEntity extends TenantableEntityBase<Long> {
   @Data
   @EqualsAndHashCode(callSuper = true)
   @Entity(name = "DictItem")
-  @Table(name = "sys_dictionary_item", indexes = @Index(name = "idx_sys_dictionary__tenant_key_itemvalue", columnList = "tenant_id,key,itemValue"))
+  @Table(name = "sys_dictionary_item", indexes = @Index(name = "idx_sys_dictionary__tenant_key_itemkey", columnList = "tenant_id,key,item_key"))
   public static class DictItem extends TenantableEntityBase<Long> implements Orderable {
 
     @Schema(description = "字典键值")

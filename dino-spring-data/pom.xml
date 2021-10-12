@@ -20,7 +20,7 @@
     <dependency>
       <groupId>org.dinospring</groupId>
       <artifactId>dino-spring-commons</artifactId>
-      <version>${project.version}</version>
+      <version>${dino-spring.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>

@@ -47,7 +47,7 @@
       <dependency>
         <groupId>org.dino</groupId>
         <artifactId>dino-dependencies-root</artifactId>
-        <version>${project.version}</version>
+        <version>${dino-spring.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -183,7 +183,7 @@
     <dependency>
       <groupId>org.dino</groupId>
       <artifactId>dino-utils</artifactId>
-      <version>${project.version}</version>
+      <version>${dino-spring.version}</version>
     </dependency>
 
     <!-- spring doc openAPI-->
@@ -357,6 +357,15 @@
     <plugins>
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>validate</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

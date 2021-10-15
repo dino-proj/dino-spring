@@ -24,6 +24,7 @@ import org.dinospring.data.domain.TenantableEntityBase;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.FieldNameConstants;
 
 /**
  * 页面布局
@@ -32,6 +33,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
+@FieldNameConstants
 public class LayoutEntity<T extends Serializable> extends TenantableEntityBase<Long> {
   @Schema(description = "布局标题")
   private String title;

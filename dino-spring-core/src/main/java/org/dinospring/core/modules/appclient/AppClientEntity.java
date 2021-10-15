@@ -23,6 +23,7 @@ import org.dinospring.data.domain.EntityBase;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.FieldNameConstants;
 
 /**
  *
@@ -31,6 +32,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
+@FieldNameConstants
 @Entity
 @Table(name = "sys_app_client")
 public class AppClientEntity extends EntityBase<String> {

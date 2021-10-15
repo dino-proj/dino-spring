@@ -23,6 +23,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -34,6 +35,7 @@ import lombok.experimental.SuperBuilder;
 @MappedSuperclass
 @SuperBuilder
 @NoArgsConstructor
+@FieldNameConstants
 public abstract class TenantableEntityBase<K extends Serializable> extends EntityBase<K> {
   /**
    * 代表系统的tenant ID；

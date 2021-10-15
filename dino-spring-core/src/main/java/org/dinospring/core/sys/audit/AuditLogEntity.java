@@ -25,6 +25,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import lombok.experimental.FieldNameConstants;
 
 /**
  * 操作日志
@@ -34,6 +35,7 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
+@FieldNameConstants
 @Entity
 @Table(name = "sys_auditlog")
 public class AuditLogEntity extends TenantableEntityBase<Long> {

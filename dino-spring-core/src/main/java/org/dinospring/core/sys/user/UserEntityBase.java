@@ -30,6 +30,7 @@ import org.dinospring.data.domain.TenantableEntityBase;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.FieldNameConstants;
 
 /**
  *
@@ -40,6 +41,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
 @MappedSuperclass
+@FieldNameConstants
 public abstract class UserEntityBase<K extends Serializable> extends TenantableEntityBase<K> {
 
   @Schema(description = "用户设备ID")

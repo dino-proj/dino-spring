@@ -22,6 +22,7 @@ import org.dinospring.data.domain.TenantableEntityBase;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.FieldNameConstants;
 
 /**
  *
@@ -30,6 +31,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
+@FieldNameConstants
 @MappedSuperclass
 public abstract class AbstractOrg extends TenantableEntityBase<Long> {
 

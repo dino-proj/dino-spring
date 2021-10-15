@@ -23,6 +23,7 @@ import org.dinospring.data.domain.TenantableEntityBase;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.FieldNameConstants;
 
 /**
  * Token 信息
@@ -33,6 +34,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
+@FieldNameConstants
 @Table(name = "sys_token")
 public class TokenEntity extends TenantableEntityBase<String> {
 

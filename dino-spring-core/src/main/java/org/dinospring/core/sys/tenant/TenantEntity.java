@@ -23,6 +23,7 @@ import org.dinospring.data.domain.EntityBase;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.FieldNameConstants;
 
 /**
  *
@@ -32,6 +33,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
+@FieldNameConstants
 @Table(name = "sys_tenant")
 public class TenantEntity extends EntityBase<String> {
 

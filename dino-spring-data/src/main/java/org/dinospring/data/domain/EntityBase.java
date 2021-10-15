@@ -32,6 +32,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -43,6 +44,7 @@ import lombok.experimental.SuperBuilder;
 @MappedSuperclass
 @SuperBuilder
 @NoArgsConstructor
+@FieldNameConstants
 public abstract class EntityBase<K extends Serializable> implements Serializable {
 
   /**

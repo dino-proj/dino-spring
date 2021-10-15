@@ -52,7 +52,6 @@ import org.springframework.jdbc.core.ConnectionCallback;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.util.Assert;
 
-import lombok.var;
 import lombok.extern.slf4j.Slf4j;
 
 /**

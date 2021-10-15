@@ -31,7 +31,6 @@ import javax.annotation.Nonnull;
 
 import com.botbrain.dino.utils.BatchUtils;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.NotImplementedException;
@@ -40,6 +39,7 @@ import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.core.service.Service;
 import org.dinospring.data.domain.EntityBase;
 import org.dinospring.data.domain.TenantableEntityBase;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,7 +67,7 @@ public abstract class ServiceBase<T, K extends Serializable> implements Service<
     } else {
       try {
         R inst = cls.getDeclaredConstructor().newInstance();
-        PropertyUtils.copyProperties(inst, obj);
+        BeanUtils.copyProperties(obj, inst);
         return inst;
       } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
           | NoSuchMethodException | SecurityException e) {

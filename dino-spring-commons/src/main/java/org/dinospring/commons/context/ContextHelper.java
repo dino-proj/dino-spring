@@ -67,8 +67,25 @@ public class ContextHelper {
     return context.currentUser();
   }
 
-  public static <T> T findBean(Class<T> cls) {
-    return applicationContext.getBean(cls);
+  /**
+   * 查找Bean
+   * @param <T>
+   * @param requiredType Bean的类型
+   * @return 找不到返回{@code null}
+   */
+  public static <T> T findBean(Class<T> requiredType) {
+    return applicationContext.getBean(requiredType);
+  }
+
+  /**
+   * 查找Bean
+   * @param <T>
+   * @param name Bean的名字
+   * @param requiredType Bean的类型
+   * @return 找不到返回{@code null}
+   */
+  public static <T> T findBean(String name, Class<T> requiredType) {
+    return applicationContext.getBean(name, requiredType);
   }
 
 }

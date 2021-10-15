@@ -25,7 +25,6 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 
 import com.botbrain.dino.sql.dialect.Dialect;
@@ -37,7 +36,7 @@ import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.response.Status;
 import org.dinospring.commons.utils.Assert;
 import org.dinospring.data.dao.JdbcSelectExecutor;
-import org.springframework.core.convert.support.DefaultConversionService;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.JpaMetamodelEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
@@ -63,31 +62,33 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
   private final JpaEntityInformation<T, K> entityInformation;
   private final EntityManager entityManager;
 
+  @Nonnull
   private JdbcTemplate jdbcTemplate;
 
+  @Nonnull
   private Dialect dialect;
 
+  @Nonnull
   private ObjectMapper objectMapper;
+
+  @Nonnull
+  private ConversionService conversionService;
 
   public JdbcSelectExecutorImpl(JpaEntityInformation<T, K> entityInformation, EntityManager entityManager) {
     super(entityInformation, entityManager);
     this.entityInformation = entityInformation;
     this.entityManager = entityManager;
-  }
 
-  public JdbcSelectExecutorImpl(Class<T> domainClass, EntityManager entityManager) {
-    super(domainClass, entityManager);
-    this.entityInformation = getEntityInformation(domainClass, entityManager);
-    this.entityManager = entityManager;
-  }
-
-  @PostConstruct
-  private void init() {
     this.jdbcTemplate = ContextHelper.findBean(JdbcTemplate.class);
     this.objectMapper = ContextHelper.findBean(ObjectMapper.class);
     this.dialect = ContextHelper.findBean(Dialect.class);
+    this.conversionService = ContextHelper.findBean("dataConversionService", ConversionService.class);
 
     ENTITY_INFO_CACHE.put(getDomainClass(), EntityInfo.of(dialect, entityClass()));
+  }
+
+  public JdbcSelectExecutorImpl(Class<T> domainClass, EntityManager entityManager) {
+    this(getEntityInformation(domainClass, entityManager), entityManager);
   }
 
   @Override
@@ -137,8 +138,7 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
     if (ClassUtils.isPrimitiveOrWrapper(clazz)) {
       return jdbcTemplate.queryForList(sql, clazz, params);
     } else {
-      return jdbcTemplate.query(sql,
-          BeanPropertyRowMapper.newInstance(clazz, DefaultConversionService.getSharedInstance()), params);
+      return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(clazz, conversionService), params);
     }
   }
 
@@ -185,7 +185,7 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
     return null;
   }
 
-  private JpaEntityInformation<T, K> getEntityInformation(Class<T> domainClass, EntityManager em) {
+  private static <T, K> JpaEntityInformation<T, K> getEntityInformation(Class<T> domainClass, EntityManager em) {
     return new JpaMetamodelEntityInformation<>(domainClass, em.getMetamodel());
   }
 

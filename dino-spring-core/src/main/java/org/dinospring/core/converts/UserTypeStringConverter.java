@@ -14,20 +14,26 @@
 
 package org.dinospring.core.converts;
 
+import java.util.Set;
+
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 import org.dinospring.commons.sys.UserType;
 import org.dinospring.core.sys.user.UserServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.core.convert.converter.GenericConverter;
+import org.springframework.data.util.CastUtils;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author tuuboo
  */
-
+@Component
 @Converter(autoApply = true)
-public class UserTypeStringConverter implements AttributeConverter<UserType, String> {
+public class UserTypeStringConverter implements AttributeConverter<UserType, String>, GenericConverter {
   @Autowired
   private UserServiceProvider userServiceProvider;
 
@@ -39,6 +45,24 @@ public class UserTypeStringConverter implements AttributeConverter<UserType, Str
   @Override
   public UserType convertToEntityAttribute(String dbData) {
     return userServiceProvider.resolveUserType(dbData);
+  }
+
+  @Override
+  public Set<ConvertiblePair> getConvertibleTypes() {
+    return Set.of(new ConvertiblePair(String.class, UserType.class), //
+        new ConvertiblePair(UserType.class, String.class));
+  }
+
+  @Override
+  public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
+    if (source == null) {
+      return null;
+    }
+    if (source instanceof String) {
+      return convertToEntityAttribute(CastUtils.cast(source));
+    } else {
+      return convertToDatabaseColumn(CastUtils.cast(source));
+    }
   }
 
 }

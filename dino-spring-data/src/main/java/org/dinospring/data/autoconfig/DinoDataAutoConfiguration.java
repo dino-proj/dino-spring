@@ -17,6 +17,8 @@ package org.dinospring.data.autoconfig;
 import java.sql.DatabaseMetaData;
 import java.util.Locale;
 
+import javax.annotation.PostConstruct;
+
 import com.botbrain.dino.sql.dialect.Dialect;
 import com.botbrain.dino.sql.dialect.MysqlDialect;
 import com.botbrain.dino.sql.dialect.PostgreSQLDialect;
@@ -28,18 +30,29 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.dinospring.commons.autoconfig.DinoCommonsAutoConfiguration;
+import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.data.converts.JacksonCustomerModule;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.convert.ApplicationConversionService;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.annotation.Order;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.converter.GenericConverter;
+import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.jdbc.core.ConnectionCallback;
 import org.springframework.jdbc.core.JdbcOperations;
+import org.springframework.util.Assert;
 
+import lombok.var;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -49,11 +62,19 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
-@Order(1)
+@ImportAutoConfiguration(DinoCommonsAutoConfiguration.class)
+@AutoConfigureAfter(DinoCommonsAutoConfiguration.class)
 public class DinoDataAutoConfiguration {
 
+  @Autowired
+  private ContextHelper contextHelper;
+
+  @PostConstruct
+  public void check() {
+    Assert.notNull(contextHelper, "contextHelper should init before DinoDataAutoConfiguration");
+  }
+
   @Bean
-  @Primary
   @ConditionalOnMissingBean
   public Dialect dialect(JdbcOperations jdbcOperations) {
 
@@ -76,7 +97,7 @@ public class DinoDataAutoConfiguration {
 
   @Bean({ "jacksonObjectMapper", "objectMapper" })
   @Primary
-  @ConditionalOnMissingBean(ObjectMapper.class)
+  @ConditionalOnMissingBean
   public ObjectMapper objectMapper() {
     log.info("--->>>> new jacksonObjectMapper");
     ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
@@ -91,7 +112,7 @@ public class DinoDataAutoConfiguration {
   }
 
   @Bean
-  @ConditionalOnMissingBean(Gson.class)
+  @ConditionalOnMissingBean
   public Gson gson() {
     return new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
   }
@@ -102,4 +123,17 @@ public class DinoDataAutoConfiguration {
     return new SpelAwareProxyProjectionFactory();
   }
 
+  @Bean("dataConversionService")
+  public ConversionService dataConversionService(ApplicationContext applicationContext) {
+    log.info("--->>>> new dataConversionService");
+    var dataConversionService = new DefaultConversionService();
+    ApplicationConversionService.addApplicationConverters(dataConversionService);
+
+    var genericConverters = applicationContext.getBeansOfType(GenericConverter.class);
+    for (var kv : genericConverters.entrySet()) {
+      log.info("register GenericConverter[{} @{}] to dataConversionService", kv.getKey(), kv.getValue());
+      dataConversionService.addConverter(kv.getValue());
+    }
+    return dataConversionService;
+  }
 }

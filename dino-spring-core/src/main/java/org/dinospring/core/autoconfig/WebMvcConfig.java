@@ -48,9 +48,9 @@ import lombok.extern.slf4j.Slf4j;
  * @author tuuboo
  */
 
+@Slf4j
 @Configuration
 @EnableWebMvc
-@Slf4j
 public class WebMvcConfig implements WebMvcConfigurer {
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
@@ -64,7 +64,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     log.info("add knife4j support");
     //for knife4j
-    registry.addResourceHandler("doc.html").addResourceLocations("classpath:/META-INF/resources/");
+    registry.addResourceHandler("api-doc.html").addResourceLocations("classpath:/META-INF/resources/doc.html");
     registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
   }
 

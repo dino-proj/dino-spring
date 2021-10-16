@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.request.PageReq;
 import org.dinospring.commons.request.PostBody;
 import org.dinospring.commons.request.SortReq;
@@ -58,12 +59,16 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
    * Service 服务实例
    * @return
    */
-  S service();
+  @Nonnull
+  default S service() {
+    return ContextHelper.findBean(TypeUtils.getGenericParamClass(this, CrudControllerBase.class, 0));
+  }
 
   /**
    * Vo类的Class
    * @return
    */
+  @Nonnull
   default Class<VO> voClass() {
     return TypeUtils.getGenericParamClass(this, CrudControllerBase.class, 2);
   }
@@ -72,6 +77,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
    * Entity类的Class
    * @return
    */
+  @Nonnull
   default Class<E> entityClass() {
     return TypeUtils.getGenericParamClass(this, CrudControllerBase.class, 1);
   }
@@ -90,7 +96,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
    * @param voList
    * @return
    */
-  default List<VO> processVo(@Nonnull Collection<VO> voList) {
+  default List<VO> processVoList(@Nonnull Collection<VO> voList) {
     voList.forEach(CrudControllerBase.this::processVo);
     if (List.class.isAssignableFrom(voList.getClass())) {
       return CastUtils.cast(voList);
@@ -130,7 +136,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
     var query = req.getBody();
     var pageData = query == null ? service().listPage(pageable) : service().listPage(query, pageable);
 
-    return PageResponse.success(pageData, t -> processVo(service().projection(voClass(), t)));
+    return PageResponse.success(pageData, t -> processVoList(service().projection(voClass(), t)));
   }
 
   /**

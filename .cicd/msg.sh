@@ -15,6 +15,8 @@
 
 WEBHOOK_URL="https://open.feishu.cn/open-apis/bot/v2/hook/8b94c66d-23ce-44bf-af64-db63264969ee"
 
+ls /bin/sh -al
+
 stdin_read() {
   while read line
   do

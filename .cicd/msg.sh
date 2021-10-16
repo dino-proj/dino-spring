@@ -15,14 +15,14 @@
 
 WEBHOOK_URL="https://open.feishu.cn/open-apis/bot/v2/hook/8b94c66d-23ce-44bf-af64-db63264969ee"
 
-function stdin_read {
+stdin_read() {
   while read line
   do
     echo "$line"
   done < "${1:-/dev/stdin}"
 }
 
-function json {
+json() {
   JSON_RAW=$1
   JSON_RAW=${JSON_RAW//\\/\\\\} # \
   JSON_RAW=${JSON_RAW//\//\\\/} # /

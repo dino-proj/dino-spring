@@ -26,7 +26,7 @@ stdin_read() {
 
 json() {
   JSON_RAW=$1
-  echo json $JSON_RAW
+
   JSON_RAW=${JSON_RAW//\\/\\\\} # \
   JSON_RAW=${JSON_RAW//\//\\\/} # /
   JSON_RAW=${JSON_RAW//\'/\\\'} # ' (not strictly needed ?)

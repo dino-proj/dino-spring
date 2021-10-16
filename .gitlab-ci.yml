@@ -49,7 +49,7 @@ deploy:
     - echo "=============== 开始部署 dino-spring-core  ==============="
     - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
     - cd ..
-    - echo "${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME} TAG=\"${CI_COMMIT_TAG}\" 发布成功.\\n\\n${CI_COMMIT_DESCRIPTION}\\n${CI_COMMIT_MESSAGE}" | bash ./.cicd/msg.sh
+    - echo "${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME} TAG=\"${CI_COMMIT_TAG}\" 发布成功.\n\n${CI_COMMIT_DESCRIPTION}\n${CI_COMMIT_MESSAGE}" | bash ./.cicd/msg.sh
 
 sonarqube-check:
   #image: maven:3.6.3-jdk-11
@@ -69,7 +69,7 @@ sonarqube-check:
     - echo "=============== 开始检查 dino-spring-commons  ==============="
     - mvn verify
     - cd ..
-    - echo "${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME} $CI_COMMIT_AUTHOR 推送代码到:${CI_COMMIT_REF_NAME} \\n\\n${CI_COMMIT_DESCRIPTION}\\n${CI_COMMIT_MESSAGE}" | bash ./.cicd/msg.sh
+    - echo "${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME} $CI_COMMIT_AUTHOR 推送代码到:${CI_COMMIT_REF_NAME} \n\n${CI_COMMIT_DESCRIPTION}\n${CI_COMMIT_MESSAGE}" | bash ./.cicd/msg.sh
   allow_failure: true
   only:
     - master # or the name of your main branch

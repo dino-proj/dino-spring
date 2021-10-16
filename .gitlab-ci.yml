@@ -48,6 +48,8 @@ deploy:
     - cd dino-spring-core
     - echo "=============== 开始部署 dino-spring-core  ==============="
     - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+    - cd ..
+    - echo "DinoSpring TAG=\"CI_COMMIT_TAG\" 发布成功.\n\n$CI_COMMIT_DESCRIPTION\n$CI_COMMIT_MESSAGE" | sh ./cicd/msg.sh
 
 sonarqube-check:
   #image: maven:3.6.3-jdk-11

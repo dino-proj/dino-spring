@@ -4,12 +4,12 @@
   <parent>
     <groupId>org.dinospring</groupId>
     <artifactId>dino-spring-boot-starter</artifactId>
-    <version>1.1.1.RELEASE</version>
+    <version>1.2.0.RELEASE</version>
     <relativePath />
   </parent>
   <groupId>org.dinospring</groupId>
   <artifactId>dino-spring-core</artifactId>
-  <version>1.1.1.RELEASE</version>
+  <version>1.2.0.RELEASE</version>
   <name>dino-spring-core</name>
 
   <properties>

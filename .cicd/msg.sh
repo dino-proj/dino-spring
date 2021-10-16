@@ -24,6 +24,7 @@ stdin_read() {
 
 json() {
   JSON_RAW=$1
+  echo json $JSON_RAW
   JSON_RAW=${JSON_RAW//\\/\\\\} # \
   JSON_RAW=${JSON_RAW//\//\\\/} # /
   JSON_RAW=${JSON_RAW//\'/\\\'} # ' (not strictly needed ?)
@@ -42,6 +43,7 @@ MSG=`stdin_read`
 echo $MSG
 
 MSG=`json "$MSG"`
+echo $MSG
 
 curl -X POST \
   -H "Content-Type: application/json" \

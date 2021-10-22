@@ -38,6 +38,9 @@ public interface Status {
     ERROR(1, "操作失败"),
 
     //登录失败
+    FAIL_EXISTS(10, "已存在"),
+
+    //登录失败
     FAIL_LOGIN(600, "登录失败"),
 
     //账号不允许登录
@@ -134,7 +137,7 @@ public interface Status {
     }
 
     @Override
-    public Status withMsg(String msg, Object[] args) {
+    public Status withMsg(String msg, Object... args) {
       return Status.fail(this.iCode, msg, args);
     }
   }
@@ -164,7 +167,7 @@ public interface Status {
    * @param args 消息模板的参数
    * @return
    */
-  Status withMsg(String msg, Object[] args);
+  Status withMsg(String msg, Object... args);
 
   /**
    * 生成成功Status
@@ -269,7 +272,7 @@ class DefaultStatus implements Status {
   }
 
   @Override
-  public Status withMsg(String msg, Object[] args) {
+  public Status withMsg(String msg, Object... args) {
     return Status.fail(this.code, msg, args);
   }
 

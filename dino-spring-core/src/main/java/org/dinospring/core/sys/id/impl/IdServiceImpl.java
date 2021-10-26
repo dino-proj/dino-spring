@@ -32,7 +32,7 @@ public class IdServiceImpl implements IdService {
 
   @Override
   public Long genId() {
-    return jdbcTemplate.queryForObject("sys_seq_id", Long.class);
+    return jdbcTemplate.queryForObject(dialect.getSequenceNextValSql("sys_seq_id"), Long.class);
   }
 
   @Override

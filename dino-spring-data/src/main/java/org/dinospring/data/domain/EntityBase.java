@@ -19,7 +19,6 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
@@ -51,38 +50,39 @@ public abstract class EntityBase<K extends Serializable> implements Serializable
    * 默认主键字段id，类型为Long型自增，转json时转换为String
    */
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "myIdGenerator")
+  @GeneratedValue(generator = "myIdGenerator")
   @GenericGenerator(name = "myIdGenerator", strategy = "org.dinospring.data.domain.IdGenerator")
   @Schema(description = "ID")
+  @Column(name = "id", unique = true)
   private K id;
 
   /**
    * 默认逻辑删除标记，is_deleted=0有效
    */
-  @Column(name = "status", nullable = false)
   @Schema(description = "0-正常， 1-删除")
+  @Column(name = "status", nullable = false)
   private Integer status = 0;
 
   /**
    * 默认记录创建时间字段，新建时由数据库赋值
    */
+  @Schema(description = "创建时间")
   @CreatedDate
   @Column(name = "create_at", updatable = false, nullable = false)
-  @Schema(description = "创建时间")
   private Date createAt;
 
   @CreatedBy
-  @Column(name = "create_by", updatable = false, length = 32, nullable = true)
   @Schema(description = "创建者用户ID")
+  @Column(name = "create_by", updatable = false, length = 32, nullable = true)
   private String createBy;
 
   @LastModifiedDate
-  @Column(name = "update_at", updatable = true, nullable = false)
   @Schema(description = "最后更新时间")
+  @Column(name = "update_at", updatable = true, nullable = false)
   private Date updateAt;
 
   @LastModifiedBy
+  @Schema(description = "最后更新的用户ID")
   @Column(name = "update_by", updatable = true, length = 32, nullable = true)
-  @Schema(description = "最后更新更新的用户ID")
   private String updateBy;
 }

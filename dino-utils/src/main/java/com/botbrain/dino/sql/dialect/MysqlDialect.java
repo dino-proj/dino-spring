@@ -17,6 +17,16 @@ package com.botbrain.dino.sql.dialect;
 import org.apache.commons.lang3.StringUtils;
 
 public class MysqlDialect implements Dialect {
+  private NamingConversition namingConversition;
+
+  public MysqlDialect(NamingConversition namingConversition) {
+    this.namingConversition = namingConversition;
+  }
+
+  @Override
+  public NamingConversition namingConversition() {
+    return namingConversition;
+  }
 
   @Override
   public String limitOffset(int limit, long offset) {

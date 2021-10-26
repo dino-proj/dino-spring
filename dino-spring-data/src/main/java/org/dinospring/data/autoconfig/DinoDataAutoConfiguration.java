@@ -22,6 +22,7 @@ import javax.annotation.PostConstruct;
 import com.botbrain.dino.sql.dialect.Dialect;
 import com.botbrain.dino.sql.dialect.MysqlDialect;
 import com.botbrain.dino.sql.dialect.PostgreSQLDialect;
+import com.botbrain.dino.sql.dialect.SnakeNamingConversition;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -83,10 +84,10 @@ public class DinoDataAutoConfiguration {
       String name = metaData.getDatabaseProductName().toLowerCase(Locale.ENGLISH);
 
       if (name.contains("mysql") || name.contains("mariadb")) {
-        return new MysqlDialect();
+        return new MysqlDialect(new SnakeNamingConversition());
       }
       if (name.contains("postgresql")) {
-        return new PostgreSQLDialect();
+        return new PostgreSQLDialect(new SnakeNamingConversition());
       }
 
       log.warn("Couldn't determine DB Dialect for {}", name);

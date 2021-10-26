@@ -17,6 +17,12 @@ package com.botbrain.dino.sql.dialect;
 import org.apache.commons.lang3.StringUtils;
 
 public interface Dialect {
+
+  /**
+   * 获取名字转换器
+   */
+  NamingConversition namingConversition();
+
   /**
    * 生成limit offset语句
    */
@@ -70,6 +76,11 @@ public interface Dialect {
     @Override
     public String quoteTableName(String name) {
       return StringUtils.wrapIfMissing(name, '\"');
+    }
+
+    @Override
+    public NamingConversition namingConversition() {
+      return NamingConversition.Default.INST;
     }
   }
 }

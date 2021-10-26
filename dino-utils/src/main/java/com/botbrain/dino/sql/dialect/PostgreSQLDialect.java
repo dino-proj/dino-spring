@@ -17,6 +17,17 @@ package com.botbrain.dino.sql.dialect;
 import org.apache.commons.lang3.StringUtils;
 
 public class PostgreSQLDialect implements Dialect {
+  private NamingConversition namingConversition;
+
+  public PostgreSQLDialect(NamingConversition namingConversition) {
+    this.namingConversition = namingConversition;
+
+  }
+
+  @Override
+  public NamingConversition namingConversition() {
+    return namingConversition;
+  }
 
   @Override
   public String limitOffset(int limit, long offset) {
@@ -45,4 +56,5 @@ public class PostgreSQLDialect implements Dialect {
   public boolean supportSequence() {
     return true;
   }
+
 }

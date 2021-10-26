@@ -15,6 +15,7 @@
 package org.dinospring.data.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -170,6 +171,49 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
     Long l = getOne(sql, Long.class, params);
     return l == null ? 0L : l.longValue();
   }
+
+  /**
+   * 将查询结果放到Map中
+   * @param <MK> key的类型
+   * @param <MV> value的类型
+   * @param sql
+   * @param keyColumn 作key的列名
+   * @param keyClass key的Class
+   * @param valueClass value的Class
+   * @return
+   */
+  default <MK, MV> Map<MK, MV> queryForMap(SelectSqlBuilder sql, String keyColumn, Class<MK> keyClass,
+      Class<MV> valueClass) {
+    return queryForMap(sql.getSql(), keyColumn, keyClass, valueClass, sql.getParams());
+  }
+
+  /**
+   * 将查询结果放到Map中
+   * @param <MK> key的类型
+   * @param <MV> value的类型
+   * @param sql
+   * @param keyColumn 作key的列名
+   * @param keyClass key的Class
+   * @param valueColumn 作value的列名
+   * @param valueClass value的Class
+   * @return
+   */
+  <MK, MV> Map<MK, MV> queryForMap(SelectSqlBuilder sql, String keyColumn, Class<MK> keyClass, String valueColumn,
+      Class<MV> valueClass);
+
+  /**
+   * 将查询结果放到Map中
+   * @param <MK> key的类型
+   * @param <MV> value的类型
+   * @param sql
+   * @param keyColumn 作key的列名
+   * @param keyClass key的Class
+   * @param valueClass value的Class
+   * @param params 查询参数
+   * @return
+   */
+  <MK, MV> Map<MK, MV> queryForMap(String sql, String keyColumn, Class<MK> keyClass, Class<MV> valueClass,
+      Object... params);
 
   /**
    * 分页查询

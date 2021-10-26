@@ -14,9 +14,12 @@
 
 package org.dinospring.data.dao.impl;
 
+import static org.springframework.data.util.CastUtils.cast;
+
 import java.lang.reflect.ParameterizedType;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -27,6 +30,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
 
+import com.botbrain.dino.sql.builder.SelectSqlBuilder;
 import com.botbrain.dino.sql.dialect.Dialect;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,6 +41,7 @@ import org.dinospring.commons.response.Status;
 import org.dinospring.commons.utils.Assert;
 import org.dinospring.data.dao.JdbcSelectExecutor;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.JpaMetamodelEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
@@ -44,7 +49,10 @@ import org.springframework.jdbc.core.ArgumentPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.util.ClassUtils;
 
 import lombok.extern.slf4j.Slf4j;
@@ -140,6 +148,69 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
     } else {
       return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(clazz, conversionService), params);
     }
+  }
+
+  @Override
+  public <MK, MV> Map<MK, MV> queryForMap(SelectSqlBuilder sql, String keyColumn, Class<MK> keyClass,
+      String valueColumn, Class<MV> valueClass) {
+    if (log.isDebugEnabled()) {
+      log.debug("query for map: {}:{}, {}:{},\nSQL:{},\nPARAMs:", keyColumn, keyClass, valueColumn, valueClass,
+          sql.getSql(), sql.getParams());
+    }
+    org.springframework.util.Assert.isTrue(keyClass.isPrimitive(), "key must be primitive class");
+    org.springframework.util.Assert.isTrue(valueClass.isPrimitive(), "value must be primitive class");
+
+    Map<MK, MV> result = new HashMap<>();
+    jdbcTemplate.query(sql.getSql(), new RowCallbackHandler() {
+
+      @Override
+      public void processRow(ResultSet rs) throws SQLException {
+
+        MK key = cast(JdbcUtils.getResultSetValue(rs, rs.findColumn(keyColumn), keyClass));
+        MV value = cast(JdbcUtils.getResultSetValue(rs, rs.findColumn(valueColumn), valueClass));
+        result.put(key, value);
+      }
+
+    }, sql.getParams());
+    return result;
+  }
+
+  @Override
+  public <MK, MV> Map<MK, MV> queryForMap(String sql, String keyColumn, Class<MK> keyClass, Class<MV> valueClass,
+      Object... params) {
+    if (log.isDebugEnabled()) {
+      log.debug("query for map: {}:{}, valueClass:{},\nSQL:{},\nPARAMs:", keyColumn, keyClass, valueClass, sql, params);
+    }
+    org.springframework.util.Assert.isTrue(keyClass.isPrimitive(), "key must be primitive class");
+
+    boolean isPrimitiveValue = valueClass.isPrimitive();
+    BeanPropertyRowMapper<MV> mapper = isPrimitiveValue ? null
+        : BeanPropertyRowMapper.newInstance(valueClass, conversionService);
+
+    return jdbcTemplate.query(sql, new ResultSetExtractor<Map<MK, MV>>() {
+
+      @Override
+      public Map<MK, MV> extractData(ResultSet rs) throws SQLException, DataAccessException {
+        Map<MK, MV> result = new HashMap<>();
+        org.springframework.util.Assert.isTrue(rs.getMetaData().getColumnCount() == 2,
+            "resulset column count must be 2,as valueClass is primitive class");
+        var keyIndex = rs.findColumn(keyColumn);
+        int rowNum = 0;
+        while (rs.next()) {
+          MK key = cast(JdbcUtils.getResultSetValue(rs, keyIndex, keyClass));
+          if (isPrimitiveValue) {
+            MV value = cast(JdbcUtils.getResultSetValue(rs, 3 - keyIndex, valueClass));
+            result.put(key, value);
+          } else {
+            MV value = mapper.mapRow(rs, rowNum++);
+            result.put(key, value);
+          }
+        }
+        return result;
+      }
+
+    }, params);
+
   }
 
   @Override

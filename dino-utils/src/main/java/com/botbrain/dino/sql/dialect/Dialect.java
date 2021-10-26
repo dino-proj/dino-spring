@@ -1,11 +1,11 @@
 // Copyright 2021 dinospring.cn
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,7 +14,6 @@
 
 package com.botbrain.dino.sql.dialect;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 
 public interface Dialect {
@@ -27,6 +26,13 @@ public interface Dialect {
    * 生成 查询UUID的语句
    */
   String getSelectUUIDSql();
+
+  /**
+   * 生成查询sequence的语句
+   * @param sequenceName
+   * @return
+   */
+  public String getSequenceNextValSql(String sequenceName);
 
   String quoteTableName(String name);
 
@@ -42,7 +48,11 @@ public interface Dialect {
 
     @Override
     public String getSelectUUIDSql() {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
+    }
+
+    public String getSequenceNextValSql(String sequenceName) {
+      throw new UnsupportedOperationException();
     }
 
     @Override

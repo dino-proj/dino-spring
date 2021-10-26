@@ -23,6 +23,11 @@ import org.dinospring.data.domain.EntityBase;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+/**
+ *
+ * @author tuuboo
+ */
+
 @Data
 public class StatusQuery implements CustomQuery {
   @Schema(description = "状态，默认查询全部")

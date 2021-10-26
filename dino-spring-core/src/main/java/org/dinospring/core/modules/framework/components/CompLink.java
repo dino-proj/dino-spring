@@ -18,7 +18,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-import org.dinospring.commons.ValueLabel;
+import org.dinospring.commons.data.ValueLabel;
 import org.dinospring.core.modules.framework.Component;
 
 import io.swagger.v3.oas.annotations.media.Schema;

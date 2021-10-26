@@ -34,6 +34,12 @@ public interface Dialect {
    */
   public String getSequenceNextValSql(String sequenceName);
 
+  /**
+   * 是否支持sequence
+   * @return
+   */
+  public boolean supportSequence();
+
   String quoteTableName(String name);
 
   public class DEFAULT implements Dialect {
@@ -51,8 +57,14 @@ public interface Dialect {
       throw new UnsupportedOperationException();
     }
 
+    @Override
     public String getSequenceNextValSql(String sequenceName) {
       throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean supportSequence() {
+      return false;
     }
 
     @Override

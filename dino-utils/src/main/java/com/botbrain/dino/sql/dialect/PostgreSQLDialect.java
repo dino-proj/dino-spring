@@ -40,4 +40,9 @@ public class PostgreSQLDialect implements Dialect {
   public String getSequenceNextValSql(String sequenceName) {
     return "SELECT nextval('" + sequenceName + "')";
   }
+
+  @Override
+  public boolean supportSequence() {
+    return true;
+  }
 }

@@ -16,6 +16,7 @@ package org.dinospring.core.sys.tenant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.dinospring.data.domain.EntityBase;
@@ -35,6 +36,7 @@ import lombok.experimental.FieldNameConstants;
 @Entity
 @FieldNameConstants
 @Table(name = "sys_tenant")
+@SequenceGenerator(name = "IdGen", sequenceName = "sys_seq_id", initialValue = 1000)
 public class TenantEntity extends EntityBase<String> {
 
   @Schema(description = "租户名称")

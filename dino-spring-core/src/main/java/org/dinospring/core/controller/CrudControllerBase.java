@@ -20,7 +20,6 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.request.PageReq;
 import org.dinospring.commons.request.PostBody;
 import org.dinospring.commons.request.SortReq;
@@ -28,7 +27,6 @@ import org.dinospring.commons.response.PageResponse;
 import org.dinospring.commons.response.Response;
 import org.dinospring.commons.response.Status;
 import org.dinospring.commons.utils.Assert;
-import org.dinospring.commons.utils.TypeUtils;
 import org.dinospring.core.annotion.param.ParamPageable;
 import org.dinospring.core.annotion.param.ParamSort;
 import org.dinospring.core.annotion.param.ParamTenant;
@@ -53,34 +51,8 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
  * @author tuuboo
  */
 
-public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBase<K>, VO extends VoBase<K>, SRC extends CustomQuery, REQ, K extends Serializable> {
-
-  /**
-   * Service 服务实例
-   * @return
-   */
-  @Nonnull
-  default S service() {
-    return ContextHelper.findBean(TypeUtils.getGenericParamClass(this, CrudControllerBase.class, 0));
-  }
-
-  /**
-   * Vo类的Class
-   * @return
-   */
-  @Nonnull
-  default Class<VO> voClass() {
-    return TypeUtils.getGenericParamClass(this, CrudControllerBase.class, 2);
-  }
-
-  /**
-   * Entity类的Class
-   * @return
-   */
-  @Nonnull
-  default Class<E> entityClass() {
-    return TypeUtils.getGenericParamClass(this, CrudControllerBase.class, 1);
-  }
+public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBase<K>, VO extends VoBase<K>, SRC extends CustomQuery, REQ, K extends Serializable>
+    extends ControllerBase<S, E, VO, K> {
 
   /**
    * 对VO对象进行返回前的处理

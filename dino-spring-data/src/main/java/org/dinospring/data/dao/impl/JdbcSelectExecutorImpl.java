@@ -192,8 +192,11 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
       @Override
       public Map<MK, MV> extractData(ResultSet rs) throws SQLException, DataAccessException {
         Map<MK, MV> result = new HashMap<>();
-        org.springframework.util.Assert.isTrue(rs.getMetaData().getColumnCount() == 2,
-            "resulset column count must be 2,as valueClass is primitive class");
+        if (isPrimitiveValue) {
+          org.springframework.util.Assert.isTrue(rs.getMetaData().getColumnCount() == 2,
+              "resulset column count must be 2,as valueClass is primitive class");
+        }
+
         var keyIndex = rs.findColumn(keyColumn);
         int rowNum = 0;
         while (rs.next()) {

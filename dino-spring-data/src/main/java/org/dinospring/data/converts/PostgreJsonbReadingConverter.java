@@ -20,13 +20,13 @@ import java.util.Map;
 import java.util.Set;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.lang3.StringUtils;
 import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.data.util.CastUtils;
@@ -80,12 +80,11 @@ public class PostgreJsonbReadingConverter implements GenericConverter {
       }
     } catch (JsonProcessingException e) {
       log.error("convert error from:{} to:{} value:{}", sourceType, targetType, source, e);
-      throw new IllegalArgumentException(e);
+      throw new ConversionFailedException(sourceType, targetType, source, e);
     }
   }
 
-  private Object convertCollection(PGobject source, TypeDescriptor targetType)
-      throws JsonMappingException, JsonProcessingException {
+  private Object convertCollection(PGobject source, TypeDescriptor targetType) throws JsonProcessingException {
     if (source == null || source.isNull() || StringUtils.isBlank(source.getValue())) {
       return Collections.emptyList();
     }
@@ -93,8 +92,7 @@ public class PostgreJsonbReadingConverter implements GenericConverter {
         .readValue(source.getValue());
   }
 
-  private Object convertArray(PGobject source, TypeDescriptor targetType)
-      throws JsonMappingException, JsonProcessingException {
+  private Object convertArray(PGobject source, TypeDescriptor targetType) throws JsonProcessingException {
     if (source == null || source.isNull() || StringUtils.isBlank(source.getValue())) {
       return null;
     }
@@ -103,8 +101,7 @@ public class PostgreJsonbReadingConverter implements GenericConverter {
         .readValue(source.getValue());
   }
 
-  private Object convertMap(PGobject source, TypeDescriptor targetType)
-      throws JsonMappingException, JsonProcessingException {
+  private Object convertMap(PGobject source, TypeDescriptor targetType) throws JsonProcessingException {
 
     if (source == null || source.isNull() || StringUtils.isBlank(source.getValue())) {
       return Collections.emptyMap();
@@ -114,8 +111,7 @@ public class PostgreJsonbReadingConverter implements GenericConverter {
         .readValue(source.getValue());
   }
 
-  private Object convertObject(PGobject source, TypeDescriptor targetType)
-      throws JsonMappingException, JsonProcessingException {
+  private Object convertObject(PGobject source, TypeDescriptor targetType) throws JsonProcessingException {
 
     if (source == null || source.isNull() || StringUtils.isBlank(source.getValue())) {
       return null;

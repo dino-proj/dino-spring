@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.stereotype.Component;
@@ -69,7 +70,7 @@ public class PostgreJsonbWritingConverter implements GenericConverter {
       return pg;
     } catch (SQLException | JsonProcessingException e) {
       log.error("convert error from:{} to:{} value:{}", sourceType, targetType, source, e);
-      throw new IllegalArgumentException(e);
+      throw new ConversionFailedException(sourceType, targetType, source, e);
     }
   }
 

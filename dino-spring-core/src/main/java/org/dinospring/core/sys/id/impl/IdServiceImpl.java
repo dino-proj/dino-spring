@@ -16,7 +16,7 @@ package org.dinospring.core.sys.id.impl;
 
 import com.botbrain.dino.sql.dialect.Dialect;
 
-import org.dinospring.core.sys.id.IdService;
+import org.dinospring.data.domain.IdService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;

@@ -37,8 +37,8 @@
     <jedis.version>3.6.3</jedis.version>
     <redisson.version>3.16.0</redisson.version>
     <lettuce.version>6.1.4.RELEASE</lettuce.version>
-    <postgresql.version>42.2.23</postgresql.version>
-    <mysql.version>8.0.22</mysql.version>
+    <postgresql.version>42.3.0</postgresql.version>
+    <mysql.version>8.0.27</mysql.version>
     <mongo.version>3.12.9</mongo.version>
     <mariadb.version>2.7.1</mariadb.version>
 

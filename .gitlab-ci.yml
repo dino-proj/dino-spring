@@ -68,7 +68,16 @@ sonarqube-check:
   script:
     - cd dino-spring-commons
     - echo "=============== 开始检查 dino-spring-commons  ==============="
-    - mvn clean verify
+    - mvn clean verify $MVN_OPT
+    - cd ..
+    - cd dino-spring-data
+    - echo "=============== 开始检查 dino-spring-data  ==============="
+    - mvn clean verify $MVN_OPT
+    - cd ..
+    - cd dino-spring-core
+    - echo "=============== 开始检查 dino-spring-core  ==============="
+    - mvn clean verify $MVN_OPT
+    - cd ..
   after_script:
     - echo "${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME} $CI_COMMIT_AUTHOR 推送代码到:${CI_COMMIT_REF_NAME} --> ${CI_COMMIT_MESSAGE} <--> 执行结果：${CI_JOB_STATUS} ${CI_JOB_URL}" | bash ./.cicd/msg.sh
   allow_failure: true

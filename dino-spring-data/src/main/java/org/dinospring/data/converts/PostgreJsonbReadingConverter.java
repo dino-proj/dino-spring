@@ -84,7 +84,7 @@ public class PostgreJsonbReadingConverter implements GenericConverter {
   }
 
   private Object convertCollection(PGobject source, TypeDescriptor targetType) throws JsonProcessingException {
-    if (source == null || source.isNull() || StringUtils.isBlank(source.getValue())) {
+    if (source == null || source.getValue() == null || StringUtils.isBlank(source.getValue())) {
       return Collections.emptyList();
     }
     return objectMapper.readerForListOf(targetType.getResolvableType().getGeneric(0).getRawClass())
@@ -92,7 +92,7 @@ public class PostgreJsonbReadingConverter implements GenericConverter {
   }
 
   private Object convertArray(PGobject source, TypeDescriptor targetType) throws JsonProcessingException {
-    if (source == null || source.isNull() || StringUtils.isBlank(source.getValue())) {
+    if (source == null || source.getValue() == null || StringUtils.isBlank(source.getValue())) {
       return null;
     }
 
@@ -102,7 +102,7 @@ public class PostgreJsonbReadingConverter implements GenericConverter {
 
   private Object convertMap(PGobject source, TypeDescriptor targetType) throws JsonProcessingException {
 
-    if (source == null || source.isNull() || StringUtils.isBlank(source.getValue())) {
+    if (source == null || source.getValue() == null || StringUtils.isBlank(source.getValue())) {
       return Collections.emptyMap();
     }
 
@@ -112,7 +112,7 @@ public class PostgreJsonbReadingConverter implements GenericConverter {
 
   private Object convertObject(PGobject source, TypeDescriptor targetType) throws JsonProcessingException {
 
-    if (source == null || source.isNull() || StringUtils.isBlank(source.getValue())) {
+    if (source == null || source.getValue() == null) {
       return null;
     }
 

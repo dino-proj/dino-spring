@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.core.sys.id;
+package org.dinospring.data.domain;
 
 import java.util.Base64;
 

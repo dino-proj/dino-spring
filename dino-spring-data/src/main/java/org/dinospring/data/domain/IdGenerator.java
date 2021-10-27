@@ -17,6 +17,7 @@ package org.dinospring.data.domain;
 import java.io.Serializable;
 import java.util.Properties;
 
+import org.dinospring.commons.context.ContextHelper;
 import org.hibernate.HibernateException;
 import org.hibernate.MappingException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
@@ -35,14 +36,15 @@ import org.hibernate.type.Type;
 public class IdGenerator extends IdentityGenerator implements Configurable {
   private String entityName;
 
+  private IdService idService;
+
   @Override
   public Serializable generate(SharedSessionContractImplementor session, Object object) throws HibernateException {
     var ep = session.getEntityPersister(entityName, object);
     var id = ep.getIdentifier(object, session);
     if ("string".equals(ep.getIdentifierType().getName())) {
       if (id == null) {
-        throw new IdentifierGenerationException(
-            "ids for String must be manually assigned before calling save(): " + entityName);
+          id = idService.genIdStr();
       }
       return id;
     }
@@ -55,6 +57,7 @@ public class IdGenerator extends IdentityGenerator implements Configurable {
     if (entityName == null) {
       throw new MappingException("no entity name");
     }
+    idService = ContextHelper.findBean(IdService.class);
   }
 
 }

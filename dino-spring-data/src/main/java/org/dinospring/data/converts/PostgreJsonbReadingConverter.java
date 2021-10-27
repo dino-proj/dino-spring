@@ -52,7 +52,6 @@ public class PostgreJsonbReadingConverter implements GenericConverter {
     return Set.of(new ConvertiblePair(PGobject.class, Collection.class), //
         new ConvertiblePair(PGobject.class, Object[].class), //
         new ConvertiblePair(PGobject.class, Map.class), //
-        new ConvertiblePair(PGobject.class, Map.class), //
         new ConvertiblePair(PGobject.class, Object.class), //
         new ConvertiblePair(PGobject.class, String.class), //
         new ConvertiblePair(PGobject.class, Boolean.class), //

@@ -160,7 +160,7 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
     org.springframework.util.Assert.isTrue(keyClass.isPrimitive(), "key must be primitive class");
     org.springframework.util.Assert.isTrue(valueClass.isPrimitive(), "value must be primitive class");
 
-    Map<MK, MV> result = new HashMap<>();
+    Map<MK, MV> result = new HashMap<>(20);
     jdbcTemplate.query(sql.getSql(), new RowCallbackHandler() {
 
       @Override
@@ -191,7 +191,7 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
 
       @Override
       public Map<MK, MV> extractData(ResultSet rs) throws SQLException, DataAccessException {
-        Map<MK, MV> result = new HashMap<>();
+        Map<MK, MV> result = new HashMap<>(20);
         if (isPrimitiveValue) {
           org.springframework.util.Assert.isTrue(rs.getMetaData().getColumnCount() == 2,
               "resulset column count must be 2,as valueClass is primitive class");

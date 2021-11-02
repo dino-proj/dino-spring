@@ -25,7 +25,7 @@ import com.botbrain.dino.sql.builder.SelectSqlBuilder;
 import org.dinospring.commons.response.Response;
 import org.dinospring.core.annotion.param.ParamTenant;
 import org.dinospring.core.controller.CrudControllerBase;
-import org.dinospring.core.controller.StatusQuery;
+import org.dinospring.core.controller.support.StatusQuery;
 import org.dinospring.core.modules.category.CategoryController.CategroyReq;
 import org.dinospring.core.modules.category.CategoryController.CategroySearch;
 import org.springframework.web.bind.annotation.GetMapping;

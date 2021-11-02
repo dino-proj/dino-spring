@@ -14,35 +14,28 @@
 
 package org.dinospring.commons.data;
 
-import com.botbrain.dino.sql.Range;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import java.util.Date;
+import java.util.List;
 
 /**
- *
- * @author tuuboo
+ * @author JL
+ * @Date: 2021/10/29
  */
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Embeddable
-public class TimePeriod implements Range<Date> {
+public class SearchFiledMeta {
 
-  @Schema(description = "开始时间, Unix时间戳，到毫秒")
-  @Parameter(name = "begin", description = "开始时间, Unix时间戳，到毫秒")
-  @Column(name = "begin_time")
-  private Date begin;
+  @Schema(description = "数据库字段名称")
+  @Parameter(name = "field", description = "数据库字段名称")
+  private List<String> field;
 
-  @Schema(description = "结束时间, Unix时间戳，到毫秒")
-  @Parameter(name = "end", description = "束时间, Unix时间戳，到毫秒")
-  @Column(name = "end_time")
-  private Date end;
+  @Schema(description = "关键字")
+  @Parameter(name = "keyword", description = "关键字")
+  private String keyword;
 }

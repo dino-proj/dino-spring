@@ -17,24 +17,28 @@ package org.dinospring.core.controller.support;
 import com.botbrain.dino.sql.builder.SelectSqlBuilder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import org.dinospring.commons.data.FieldEnum;
 import org.dinospring.commons.data.SearchFiledMeta;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author JL
  * @Date: 2021/11/1
  */
 @Data
-public class SearchFiledStatusQuery extends StatusQuery {
+public class SearchFiledStatusQuery<M extends FieldEnum> extends StatusQuery {
 
   @Schema(name = "search", description = "数据库字段搜索")
-  private SearchFiledMeta search;
+  private SearchFiledMeta<M> search;
 
   @Override
   public SelectSqlBuilder buildSql(SelectSqlBuilder sql) {
-    super.buildSql(sql);
-    if (search == null) {
-      return sql;
+    if (search != null) {
+      List<String> fields = search.getField().stream().map(file -> file.getField()).collect(Collectors.toList());
+      sql.someLike(fields.toArray(new String[fields.size()]), search.getKeyword());
     }
-    return sql.someLike(search.getField().toArray(new String[search.getField().size()]), search.getKeyword());
+    return super.buildSql(sql);
   }
 }

@@ -17,24 +17,28 @@ package org.dinospring.core.controller.support;
 import com.botbrain.dino.sql.builder.SelectSqlBuilder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import org.dinospring.commons.data.TimePeriod;
-import org.dinospring.core.service.CustomQuery;
+import org.dinospring.commons.data.FieldEnum;
+import org.dinospring.commons.data.SearchFiledMeta;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author JL
  * @Date: 2021/11/1
  */
 @Data
-public class PublishTimePeriodQuery implements CustomQuery {
+public class SearchFiledStatusCreateTimePeriodQuery<M extends FieldEnum> extends CreateTimePeriodStatusQuery {
 
-  @Schema(name = "publish_period", description = "发布时间范围查询")
-  private TimePeriod publishPeriod;
+  @Schema(name = "search", description = "数据库字段搜索")
+  private SearchFiledMeta<M> search;
 
   @Override
   public SelectSqlBuilder buildSql(SelectSqlBuilder sql) {
-    if (publishPeriod == null) {
-      return sql;
+    if (search != null) {
+      List<String> fields = search.getField().stream().map(file -> file.getField()).collect(Collectors.toList());
+      sql.someLike(fields.toArray(new String[fields.size()]), search.getKeyword());
     }
-    return sql.between("publish_at", publishPeriod);
+    return super.buildSql(sql);
   }
 }

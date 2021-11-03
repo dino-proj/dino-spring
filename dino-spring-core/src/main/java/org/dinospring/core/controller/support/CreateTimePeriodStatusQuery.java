@@ -31,10 +31,9 @@ public class CreateTimePeriodStatusQuery extends StatusQuery {
 
   @Override
   public SelectSqlBuilder buildSql(SelectSqlBuilder sql) {
-    super.buildSql(sql);
-    if (createPeriod == null) {
-      return sql;
+    if (createPeriod != null) {
+      sql.between("create_at", createPeriod);
     }
-    return sql.between("create_at", createPeriod);
+    return super.buildSql(sql);
   }
 }

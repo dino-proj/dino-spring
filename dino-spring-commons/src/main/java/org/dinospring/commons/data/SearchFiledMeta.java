@@ -27,15 +27,16 @@ import java.util.List;
  * @Date: 2021/10/29
  */
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class SearchFiledMeta {
+@NoArgsConstructor
+public class SearchFiledMeta<M extends FieldEnum> {
 
   @Schema(description = "数据库字段名称")
   @Parameter(name = "field", description = "数据库字段名称")
-  private List<String> field;
+  private List<M> field;
 
   @Schema(description = "关键字")
   @Parameter(name = "keyword", description = "关键字")
   private String keyword;
+
 }

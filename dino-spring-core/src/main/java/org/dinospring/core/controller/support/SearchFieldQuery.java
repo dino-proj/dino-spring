@@ -17,8 +17,6 @@ package org.dinospring.core.controller.support;
 import com.botbrain.dino.sql.builder.SelectSqlBuilder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import org.dinospring.commons.data.FieldEnum;
-import org.dinospring.commons.data.SearchFiledMeta;
 import org.dinospring.core.service.CustomQuery;
 
 import java.util.List;
@@ -32,7 +30,7 @@ import java.util.stream.Collectors;
 public class SearchFieldQuery<M extends FieldEnum> implements CustomQuery {
 
   @Schema(name = "search", description = "数据库字段搜索")
-  private SearchFiledMeta<M> search;
+  private SearchFieldMeta<M> search;
 
   @Override
   public SelectSqlBuilder buildSql(SelectSqlBuilder sql) {

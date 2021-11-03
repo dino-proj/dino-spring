@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.dinospring.commons.data;
+package org.dinospring.core.controller.support;
 
 /**
  * @author JL

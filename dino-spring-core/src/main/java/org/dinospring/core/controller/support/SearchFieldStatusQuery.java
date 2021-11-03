@@ -17,8 +17,6 @@ package org.dinospring.core.controller.support;
 import com.botbrain.dino.sql.builder.SelectSqlBuilder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import org.dinospring.commons.data.FieldEnum;
-import org.dinospring.commons.data.SearchFiledMeta;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +29,7 @@ import java.util.stream.Collectors;
 public class SearchFieldStatusQuery<M extends FieldEnum> extends StatusQuery {
 
   @Schema(name = "search", description = "数据库字段搜索")
-  private SearchFiledMeta<M> search;
+  private SearchFieldMeta<M> search;
 
   @Override
   public SelectSqlBuilder buildSql(SelectSqlBuilder sql) {

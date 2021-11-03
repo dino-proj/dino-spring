@@ -74,6 +74,10 @@ public abstract interface LoginServiceBase<U extends UserEntityBase<K>, V extend
     return TypeUtils.getGenericParamClass(this, LoginServiceBase.class, 1);
   }
 
+  /**
+   * 获取登录配置
+   * @return
+   */
   default LoginModuleProperties loginModuleProperties() {
     return ContextHelper.findBean(LoginModuleProperties.class);
   }

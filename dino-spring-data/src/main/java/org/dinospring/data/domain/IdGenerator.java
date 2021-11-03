@@ -22,7 +22,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.MappingException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.Configurable;
-import org.hibernate.id.IdentifierGenerationException;
 import org.hibernate.id.IdentifierGeneratorHelper;
 import org.hibernate.id.IdentityGenerator;
 import org.hibernate.service.ServiceRegistry;
@@ -44,7 +43,7 @@ public class IdGenerator extends IdentityGenerator implements Configurable {
     var id = ep.getIdentifier(object, session);
     if ("string".equals(ep.getIdentifierType().getName())) {
       if (id == null) {
-          id = idService.genIdStr();
+        id = idService.genIdStr();
       }
       return id;
     }

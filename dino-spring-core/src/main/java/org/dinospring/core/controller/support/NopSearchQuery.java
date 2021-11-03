@@ -1,4 +1,4 @@
-package org.dinospring.core.controller;
+package org.dinospring.core.controller.support;
 
 import com.botbrain.dino.sql.builder.SelectSqlBuilder;
 

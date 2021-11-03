@@ -12,30 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.core.controller;
+package org.dinospring.core.controller.support;
 
 import com.botbrain.dino.sql.builder.SelectSqlBuilder;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.dinospring.core.service.CustomQuery;
-import org.dinospring.data.domain.EntityBase;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import org.dinospring.commons.data.TimePeriod;
+import org.dinospring.core.service.CustomQuery;
 
 /**
- *
- * @author tuuboo
+ * @author JL
+ * @Date: 2021/11/1
  */
-
 @Data
-public class StatusQuery implements CustomQuery {
-  @Schema(description = "状态，默认查询全部")
-  private Integer[] status;
+public class CreateTimePeriodQuery implements CustomQuery {
+
+  @Schema(name = "create_period", description = "创建时间范围查询")
+  private TimePeriod createPeriod;
 
   @Override
   public SelectSqlBuilder buildSql(SelectSqlBuilder sql) {
-    return sql.inIf(ArrayUtils.isNotEmpty(status), EntityBase.Fields.status, status);
+    if (createPeriod == null) {
+      return sql;
+    }
+    return sql.between("create_at", createPeriod);
   }
-
 }

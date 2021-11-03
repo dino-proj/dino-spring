@@ -15,6 +15,8 @@
 package org.dinospring.core.sys.login;
 
 import java.io.Serializable;
+
+import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.sys.User;
 import org.dinospring.core.sys.tenant.TenantService;
 import org.dinospring.core.sys.user.UserEntityBase;
@@ -37,7 +39,9 @@ public interface LoginControllerBase<U extends UserEntityBase<K>, V extends User
    * 租户Service
    * @return
    */
-  TenantService tenantService();
+  default TenantService tenantService() {
+    return ContextHelper.findBean(TenantService.class);
+  }
 
   /**
    * 登录Service

@@ -20,8 +20,10 @@ import java.util.Optional;
 
 import com.botbrain.dino.utils.ValidateUtil;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.RandomStringGenerator;
+import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.response.Status;
 import org.dinospring.commons.sys.Tenant;
 import org.dinospring.commons.sys.User;
@@ -29,6 +31,7 @@ import org.dinospring.commons.utils.Assert;
 import org.dinospring.commons.utils.TypeUtils;
 import org.dinospring.core.entity.Code;
 import org.dinospring.core.modules.message.sms.SmsService;
+import org.dinospring.core.sys.login.config.LoginModuleProperties;
 import org.dinospring.core.sys.token.TokenPrincaple;
 import org.dinospring.core.sys.token.TokenService;
 import org.dinospring.core.sys.user.UserEntityBase;
@@ -51,13 +54,17 @@ public abstract interface LoginServiceBase<U extends UserEntityBase<K>, V extend
    * TokenService
    * @return
    */
-  TokenService tokenService();
+  default TokenService tokenService() {
+    return ContextHelper.findBean(TokenService.class);
+  }
 
   /**
    * SmsService
    * @return
    */
-  SmsService smsService();
+  default SmsService smsService() {
+    return ContextHelper.findBean(SmsService.class);
+  }
 
   /**
    * User class
@@ -65,6 +72,10 @@ public abstract interface LoginServiceBase<U extends UserEntityBase<K>, V extend
    */
   default Class<V> userClass() {
     return TypeUtils.getGenericParamClass(this, LoginServiceBase.class, 1);
+  }
+
+  default LoginModuleProperties loginModuleProperties() {
+    return ContextHelper.findBean(LoginModuleProperties.class);
   }
 
   /**
@@ -76,13 +87,14 @@ public abstract interface LoginServiceBase<U extends UserEntityBase<K>, V extend
   }
 
   /**
-   * 是否是模拟登录
+   * 是否是模拟登录,默认根据配置信息
    * @param mobile 手机号
    * @param captcha 短信验证码
    * @return
    */
   default boolean isMockLogin(String mobile, String captcha) {
-    return false;
+    return CollectionUtils.containsAny(loginModuleProperties().getMock().getMobiles(), mobile)
+        && captcha.equals(loginModuleProperties().getMock().getCaptcha());
   }
 
   /**

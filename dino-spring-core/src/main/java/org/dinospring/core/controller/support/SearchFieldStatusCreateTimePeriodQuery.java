@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  * @Date: 2021/11/1
  */
 @Data
-public class SearchFiledStatusQuery<M extends FieldEnum> extends StatusQuery {
+public class SearchFieldStatusCreateTimePeriodQuery<M extends FieldEnum> extends CreateTimePeriodStatusQuery {
 
   @Schema(name = "search", description = "数据库字段搜索")
   private SearchFiledMeta<M> search;

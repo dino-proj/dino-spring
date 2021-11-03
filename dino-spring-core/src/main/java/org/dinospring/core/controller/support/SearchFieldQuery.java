@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  * @Date: 2021/10/29
  */
 @Data
-public class SearchFiledQuery<M extends FieldEnum> implements CustomQuery {
+public class SearchFieldQuery<M extends FieldEnum> implements CustomQuery {
 
   @Schema(name = "search", description = "数据库字段搜索")
   private SearchFiledMeta<M> search;

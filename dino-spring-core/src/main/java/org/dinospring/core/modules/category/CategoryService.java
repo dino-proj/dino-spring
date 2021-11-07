@@ -14,18 +14,16 @@
 
 package org.dinospring.core.modules.category;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import org.dinospring.core.entity.Code;
 import org.dinospring.core.service.impl.ServiceBase;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  *
  * @author tuuboo
  */
-
 public abstract class CategoryService<E extends CategoryEntityBase> extends ServiceBase<E, Long> {
 
   public List<TreeNode> findCategory(@Nullable Long parentId, @Nullable String keyword) {
@@ -33,14 +31,12 @@ public abstract class CategoryService<E extends CategoryEntityBase> extends Serv
       parentId = 0L;
     }
     var sql = repository().newSelect("t1");
-    sql.leftJoin(repository().tableName(), "t2", "t1.id = t2.parent_id");
-    sql.columns("t1.id as value, t1.name as label, t1.icon, count(1)-1 as child_count");
+    sql.leftJoin(repository().tableName(), "t2", "t1.id = t2.parent_id and t2.status=0");
+    sql.columns("t1.id as value, t1.name as label, t1.icon, count(t2.id) as child_count");
     sql.eqIfNotNull("t1.parent_id", parentId);
     sql.like("t1.name", keyword);
-    sql.eq("t1.status", Code.STATUS.OK);
-    sql.eq("t2.status", Code.STATUS.OK);
+    sql.eq("t1.status", Code.STATUS.OK.getId());
     sql.groupBy("t1.id");
-
     return repository().queryList(sql, TreeNode.class);
   }
 }

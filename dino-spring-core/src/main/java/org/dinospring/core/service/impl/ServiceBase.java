@@ -14,6 +14,23 @@
 
 package org.dinospring.core.service.impl;
 
+import com.botbrain.dino.utils.BatchUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.lang3.StringUtils;
+import org.dinospring.commons.context.ContextHelper;
+import org.dinospring.commons.sys.User;
+import org.dinospring.core.service.Service;
+import org.dinospring.data.domain.EntityBase;
+import org.dinospring.data.domain.TenantableEntityBase;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.projection.ProjectionFactory;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
@@ -26,25 +43,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-
-import javax.annotation.Nonnull;
-
-import com.botbrain.dino.utils.BatchUtils;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
-import org.apache.commons.lang3.NotImplementedException;
-import org.apache.commons.lang3.StringUtils;
-import org.dinospring.commons.context.ContextHelper;
-import org.dinospring.core.service.Service;
-import org.dinospring.data.domain.EntityBase;
-import org.dinospring.data.domain.TenantableEntityBase;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.projection.ProjectionFactory;
-import org.springframework.transaction.annotation.Transactional;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  *
@@ -70,7 +68,7 @@ public abstract class ServiceBase<T, K extends Serializable> implements Service<
         BeanUtils.copyProperties(obj, inst);
         return inst;
       } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-          | NoSuchMethodException | SecurityException e) {
+        | NoSuchMethodException | SecurityException e) {
         log.error("create instance of {} error", cls.getName(), e);
         throw new IllegalArgumentException("instance of class:" + cls.getName() + " connot be created");
       }
@@ -124,6 +122,11 @@ public abstract class ServiceBase<T, K extends Serializable> implements Service<
         base.setCreateAt(now);
       }
       base.setUpdateAt(now);
+
+      User<Serializable> user = ContextHelper.currentUser();
+      if (user != null) {
+        ((EntityBase<?>) entity).setCreateBy(String.format("%s:%s", user.getId(), user.getUserType().getType()));
+      }
     }
 
     if (entity instanceof TenantableEntityBase && StringUtils.isNotEmpty(ContextHelper.currentTenantId())) {
@@ -157,12 +160,12 @@ public abstract class ServiceBase<T, K extends Serializable> implements Service<
   }
 
   /**
-  * 批量插入
-  *
-  * @param entityList ignore
-  * @param batchSize  ignore
-  * @return ignore
-  */
+   * 批量插入
+   *
+   * @param entityList ignore
+   * @param batchSize  ignore
+   * @return ignore
+   */
   @Transactional(rollbackFor = Exception.class)
   @Override
   public boolean saveBatch(@Nonnull Collection<T> entityList, int batchSize) {

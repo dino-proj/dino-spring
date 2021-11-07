@@ -19,6 +19,7 @@ import java.util.Set;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
+import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.sys.UserType;
 import org.dinospring.core.sys.user.UserServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,6 @@ import org.springframework.stereotype.Component;
 @Component
 @Converter(autoApply = true)
 public class UserTypeStringConverter implements AttributeConverter<UserType, String>, GenericConverter {
-  @Autowired
-  private UserServiceProvider userServiceProvider;
 
   @Override
   public String convertToDatabaseColumn(UserType attribute) {
@@ -44,7 +43,7 @@ public class UserTypeStringConverter implements AttributeConverter<UserType, Str
 
   @Override
   public UserType convertToEntityAttribute(String dbData) {
-    return userServiceProvider.resolveUserType(dbData);
+    return ContextHelper.findBean(UserServiceProvider.class).resolveUserType(dbData);
   }
 
   @Override

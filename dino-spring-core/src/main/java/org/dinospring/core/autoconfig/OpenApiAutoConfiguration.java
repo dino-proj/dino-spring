@@ -14,21 +14,25 @@
 
 package org.dinospring.core.autoconfig;
 
-import java.util.Iterator;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
 import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.core.converter.ModelConverter;
 import io.swagger.v3.core.converter.ModelConverterContext;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.media.StringSchema;
+import io.swagger.v3.oas.models.parameters.HeaderParameter;
+import io.swagger.v3.oas.models.parameters.Parameter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springdoc.core.customizers.OpenApiCustomiser;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.Iterator;
 
 /**
  *
@@ -51,12 +55,22 @@ public class OpenApiAutoConfiguration {
   @Bean
   public OpenAPI customOpenAPI() {
     log.info("start custom open api info");
-    return new OpenAPI()//
-        .info(new Info()//
-            .title(StringUtils.capitalize(apiName) + " Open API")//
-            .description(StringUtils.defaultString(apiDescription, "布本智能，开放API"))//
-            .version(apiVersion)
-            .contact(new Contact().name("botbrain").email("luxueyu@botbrain.ai").url("https://botbrain.ai")));
+    return new OpenAPI()
+      .components(new Components()
+        .addParameters("header", new Parameter().in("header").description("token").schema(new StringSchema()).name("D-auth-token")))
+      .info(new Info()
+        .title(StringUtils.capitalize(apiName) + " Open API")
+        .description(StringUtils.defaultString(apiDescription, "布本智能，开放API"))
+        .version(apiVersion)
+        .contact(new Contact().name("botbrain").email("luxueyu@botbrain.ai").url("https://botbrain.ai")));
+  }
+
+  @Bean
+  public OpenApiCustomiser customerGlobalHeaderOpenApiCustomiser() {
+    return openApi -> openApi.getPaths().values().stream().flatMap(pathItem -> pathItem.readOperations().stream())
+      .forEach(operation -> {
+        operation.addParametersItem(new HeaderParameter().$ref("#/components/parameters/header"));
+      });
   }
 
   public static class JsonModelConverter implements ModelConverter {

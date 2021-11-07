@@ -14,36 +14,61 @@
 
 package org.dinospring.core.modules.category;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-
-import com.botbrain.dino.sql.builder.SelectSqlBuilder;
-
-import org.dinospring.commons.response.Response;
-import org.dinospring.core.annotion.param.ParamTenant;
-import org.dinospring.core.controller.CrudControllerBase;
-import org.dinospring.core.controller.support.StatusQuery;
-import org.dinospring.core.modules.category.CategoryController.CategroyReq;
-import org.dinospring.core.modules.category.CategoryController.CategroySearch;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import org.dinospring.commons.context.ContextHelper;
+import org.dinospring.commons.response.Response;
+import org.dinospring.commons.utils.TypeUtils;
+import org.dinospring.core.annotion.param.ParamTenant;
+import org.dinospring.core.controller.CrudControllerBase;
+import org.dinospring.core.service.CustomQuery;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.util.List;
 
 /**
  *
  * @author tuuboo
  */
 
-public interface CategoryController<S extends CategoryService<E>, E extends CategoryEntityBase, VO extends CategoryVo>
-    extends CrudControllerBase<S, E, VO, CategroySearch, CategroyReq, Long> {
+public interface CategoryController<S extends CategoryService<E>, E extends CategoryEntityBase, VO extends CategoryVo, SRC extends CustomQuery>
+  extends CrudControllerBase<S, E, VO, SRC, CategoryController.CategoryReq, Long> {
+
+  /**
+   * 服务实例
+   * @return
+   */
+  @Override
+  default S service() {
+    return ContextHelper.findBean(TypeUtils.getGenericParamClass(this, CategoryController.class, 0));
+  }
+
+  /**
+   * Entity类的Class
+   * @return
+   */
+  @Override
+  @Nonnull
+  default Class<E> entityClass() {
+    return TypeUtils.getGenericParamClass(this, CategoryController.class, 1);
+  }
+
+  /**
+   * Vo类的Class
+   * @return
+   */
+  @Override
+  @Nonnull
+  default Class<VO> voClass() {
+    return TypeUtils.getGenericParamClass(this, CategoryController.class, 2);
+  }
 
   /**
    * 为VO添加parentCategory信息
@@ -59,26 +84,7 @@ public interface CategoryController<S extends CategoryService<E>, E extends Cate
   }
 
   @Data
-  @EqualsAndHashCode(callSuper = true)
-  public static class CategroySearch extends StatusQuery {
-
-    @Schema(description = "根据名字模糊查询")
-    private String name;
-
-    @Schema(description = "根据父分类ID筛选")
-    private Long parentId;
-
-    @Override
-    public SelectSqlBuilder buildSql(SelectSqlBuilder sql) {
-      sql.eqIfNotNull("parent_id", parentId);
-      sql.like(CategoryEntityBase.Fields.name, this.name);
-      return super.buildSql(sql);
-    }
-
-  }
-
-  @Data
-  public static class CategroyReq {
+  public static class CategoryReq {
     @Schema(description = "分类名字")
     @Size(max = 100)
     @NotBlank
@@ -106,7 +112,7 @@ public interface CategoryController<S extends CategoryService<E>, E extends Cate
   @Parameter(name = "keyword")
   @GetMapping("/tree")
   default Response<List<TreeNode>> getCategoryTree(@PathVariable("tenant_id") String tenantId, @Nullable Long parent,
-      @Nullable String keyword) {
+                                                   @Nullable String keyword) {
     return Response.success(service().findCategory(parent, keyword));
   }
 }

@@ -17,6 +17,7 @@ package org.dinospring.core.security.config;
 import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
 import lombok.Data;
 
@@ -26,9 +27,10 @@ import lombok.Data;
  */
 
 @Data
+@Configuration
 @ConfigurationProperties(prefix = SecurityProperties.PREFIX)
 public class SecurityProperties {
-  public final static String PREFIX = "dinospring.security";
+  public static final String PREFIX = "dinospring.security";
 
   /**
    * 是否启用安全机制

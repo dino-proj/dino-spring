@@ -22,6 +22,7 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.dinospring.commons.context.DinoContext;
 import org.dinospring.commons.utils.Assert;
 import org.dinospring.core.security.DinoPrincipal;
 import org.dinospring.core.sys.tenant.TenantService;
@@ -41,6 +42,9 @@ public class ShiroRealm extends AuthorizingRealm {
 
   @Autowired
   private UserServiceProvider userServiceProvider;
+
+  @Autowired
+  private DinoContext context;
 
   public ShiroRealm() {
     this.setAuthenticationTokenClass(ShiroAuthToken.class);
@@ -63,6 +67,7 @@ public class ShiroRealm extends AuthorizingRealm {
         princ.getUserId());
     Assert.state(user.isPresent(), "user[id={}, type={}] not found", princ.getUserId(), princ.getUserType());
 
+    context.currentUser(user.orElse(null));
     var tenant = tenantService.findTenantById(princ.getTenantId());
     Assert.state(tenant != null, "tenant[id={}] not found", princ.getTenantId());
 

@@ -56,19 +56,13 @@ public interface Status {
     FAIL_INVALID_CAPTCHA(612, "验证码不正确"),
 
     //登录token已过期
-    FAIL_TOKEN_EXPIRED(630, "token已过期"),
-
-    //登录token不匹配
-    FAIL_TOKEN_NOT_MATCH(631, "token不匹配"),
-
-    //refresh token已经过期
-    FAIL_REFRESH_TOKEN_EXPIRED(632, "refresh token已经过期"),
-
-    //refresh token不匹配
-    FAIL_REFRESH_TOKEN_NOT_MATCH(633, "refresh token不匹配"),
+    FAIL_INVALID_AUTH_TOKEN(630, "token不正确"),
 
     //已经在另一台设备上登录了
-    FAIL_TOKEN_LOGIN_ANOTHER_DEVICE(634, "已经在另一台设备上登录了"),
+    FAIL_TOKEN_LOGIN_ANOTHER_DEVICE(631, "已经在另一台设备上登录了"),
+
+    //refresh token已经过期
+    FAIL_NVALID_REFRESH_TOKEN(640, "refresh token已经过期"),
 
     //部分成功
     WARN_PARTIAL_SUCCESS(1001, "部分成功"),

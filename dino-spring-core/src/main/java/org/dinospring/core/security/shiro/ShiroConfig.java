@@ -14,6 +14,7 @@
 
 package org.dinospring.core.security.shiro;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +26,8 @@ import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.dinospring.core.security.config.SecurityProperties;
+import org.dinospring.core.sys.login.config.LoginModuleProperties;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -63,17 +66,20 @@ public class ShiroConfig {
   }
 
   @Bean
-  public ShiroAuthFilter shiroAuthFilter() {
-    return new ShiroAuthFilter();
+  public ShiroAuthFilter shiroAuthFilter(LoginModuleProperties loginModuleProperties) {
+    return new ShiroAuthFilter(loginModuleProperties.getToken().getHttpHeaderName());
+
   }
 
   @Bean
-  public ShiroFilterFactoryBean shiroFilterFactoryBean(DefaultWebSecurityManager securityManager) {
+  @DependsOn("shiroAuthFilter")
+  public ShiroFilterFactoryBean shiroFilterFactoryBean(DefaultWebSecurityManager securityManager,
+      ShiroAuthFilter shiroAuthFilter, SecurityProperties securityProperties) {
     var factoryBean = new ShiroFilterFactoryBean();
 
     // 添加自己的过滤器
     Map<String, Filter> filterMap = new HashMap<>(4);
-    filterMap.put("authToken", shiroAuthFilter());
+    filterMap.put("authToken", shiroAuthFilter);
     factoryBean.setFilters(filterMap);
 
     factoryBean.setSecurityManager(securityManager);
@@ -84,9 +90,14 @@ public class ShiroConfig {
      */
     Map<String, String> filterRuleMap = new HashMap<>(4);
     // 所有请求通过我们自己的authToken Filter
-    filterRuleMap.put("/**", "anon");
+    if (securityProperties.isEnabled()) {
+      filterRuleMap.put("/**", "authToken[GET,POST,PUT,DELETE]");
 
-    filterRuleMap.put("/actuator", "anon");
+      var whiltes = new ArrayList<String>(securityProperties.getWhiteList());
+      whiltes.add("/actuator/**");
+
+      shiroAuthFilter.setWhiteList(whiltes);
+    }
     factoryBean.setFilterChainDefinitionMap(filterRuleMap);
     return factoryBean;
   }

@@ -14,24 +14,29 @@
 
 package org.dinospring.core.security.shiro;
 
+import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
+import org.apache.shiro.web.filter.authc.BearerHttpAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.dinospring.commons.response.Response;
 import org.dinospring.commons.response.Status;
-import org.dinospring.core.sys.login.config.LoginModuleProperties;
 import org.dinospring.core.sys.token.Token;
 import org.dinospring.core.sys.token.TokenPrincaple;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -40,53 +45,89 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
-public class ShiroAuthFilter extends AuthenticatingFilter {
+public class ShiroAuthFilter extends BearerHttpAuthenticationFilter {
 
   @Autowired
   private ObjectMapper objectMapper;
 
-  @Autowired
-  private LoginModuleProperties loginModuleProperties;
+  private static final String DINO_AUTH = "DinoAuth";
 
-  /**
-   * 判断用户是否想要登入。
-   * 检测header里面是否包含Authorization字段即可
-   */
-  @Override
-  protected boolean isLoginRequest(ServletRequest request, ServletResponse response) {
-    if (super.isLoginRequest(request, response)) {
-      return false;
-    }
-    var req = WebUtils.toHttp(request);
-    String authorization = req.getHeader("Authorization");
-    return authorization != null;
+  @Getter
+  private final String authHeader;
+
+  @Getter
+  @Setter
+  private List<String> whiteList;
+
+  public ShiroAuthFilter(String authHeader) {
+    super();
+    this.authHeader = authHeader;
+    setAuthcScheme(DINO_AUTH);
+    setAuthzScheme(DINO_AUTH);
   }
 
   @Override
-  protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
+  protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+    var path = WebUtils.toHttp(request).getServletPath();
+
+    if (CollectionUtils.isNotEmpty(whiteList)) {
+      for (var uri : whiteList) {
+        if (pathMatcher.matches(uri, path)) {
+          return true;
+        }
+      }
+    }
+
+    return super.isAccessAllowed(request, response, mappedValue);
+  }
+
+  @Override
+  protected boolean isLoginAttempt(String authzHeader) {
+    return StringUtils.isNotBlank(authzHeader);
+  }
+
+  @Override
+  protected String getAuthzHeader(ServletRequest request) {
+    HttpServletRequest httpRequest = WebUtils.toHttp(request);
+    return httpRequest.getHeader(authHeader);
+  }
+
+  @Override
+  protected boolean sendChallenge(ServletRequest request, ServletResponse response) {
     var req = WebUtils.toHttp(request);
     if (log.isDebugEnabled()) {
       log.debug("Access denied uri={}", req.getRequestURI());
     }
+
     var resp = WebUtils.toHttp(response);
     resp.setContentType("application/json;charset=UTF-8");
-    objectMapper.writeValue(resp.getWriter(), Response.fail(Status.CODE.FAIL_NO_PERMISSION));
+    try {
+      objectMapper.writeValue(resp.getWriter(), Response.fail(Status.CODE.FAIL_INVALID_AUTH_TOKEN));
+    } catch (IOException e) {
+      log.error("error occured while sendChallenge", e);
+    }
 
     return false;
   }
 
   @Override
-  protected AuthenticationToken createToken(ServletRequest request, ServletResponse response) throws Exception {
-    var req = WebUtils.toHttp(request);
-    String authorization = req.getHeader(loginModuleProperties.getToken().getHttpHeaderName());
-    var prinStr = Token.extractPrinc(authorization);
-    var tokenStr = Token.extractToken(authorization);
+  protected AuthenticationToken createToken(ServletRequest request, ServletResponse response) {
+    String authzHeader = getAuthzHeader(request);
 
-    if (StringUtils.isBlank(authorization)) {
+    if (StringUtils.isBlank(authzHeader)) {
       return null;
     }
-    var princ = objectMapper.readValue(Base64.getUrlDecoder().decode(prinStr), TokenPrincaple.class);
-    return ShiroAuthToken.of(princ, tokenStr);
+
+    var prinStr = Token.extractPrinc(authzHeader);
+    var tokenStr = Token.extractToken(authzHeader);
+
+    try {
+      var princ = objectMapper.readValue(Base64.getUrlDecoder().decode(prinStr), TokenPrincaple.class);
+      return ShiroAuthToken.of(princ, tokenStr);
+    } catch (IOException e) {
+      log.error("error occured while createToken from[{}]", prinStr, e);
+      return null;
+    }
   }
 
 }

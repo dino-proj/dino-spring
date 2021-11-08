@@ -34,6 +34,7 @@ import org.dinospring.commons.response.Status;
 import org.dinospring.core.sys.token.Token;
 import org.dinospring.core.sys.token.TokenPrincaple;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -100,9 +101,12 @@ public class ShiroAuthFilter extends BearerHttpAuthenticationFilter {
     }
 
     var resp = WebUtils.toHttp(response);
+    resp.setStatus(HttpStatus.OK.value());
     resp.setContentType("application/json;charset=UTF-8");
-    try {
-      objectMapper.writeValue(resp.getWriter(), Response.fail(Status.CODE.FAIL_INVALID_AUTH_TOKEN));
+    resp.setHeader("Access-Control-Allow-Origin", "*");
+    try (var out = resp.getOutputStream()) {
+      var errors = objectMapper.writeValueAsBytes(Response.fail(Status.CODE.FAIL_INVALID_AUTH_TOKEN));
+      out.write(errors);
     } catch (IOException e) {
       log.error("error occured while sendChallenge", e);
     }

@@ -20,6 +20,7 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAccount;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.authz.permission.AllPermission;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.dinospring.commons.context.DinoContext;
@@ -55,16 +56,25 @@ public class ShiroRealm extends AuthorizingRealm {
   @Override
   protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 
-    return new SimpleAuthorizationInfo();
+    var authInfo = new SimpleAuthorizationInfo();
+    var user = ((DinoPrincipal) principals.getPrimaryPrincipal()).getUser();
+    var userService = userServiceProvider.resolveUserService(user.getUserType());
+
+    if (userService.isSuperAdmin(user.getUserType(), user.getId().toString())) {
+      authInfo.addObjectPermission(new AllPermission());
+    }
+    authInfo.setRoles(userService.getRoles(user.getUserType(), user.getId().toString()));
+    authInfo.setStringPermissions(userService.getPermissions(user.getUserType(), user.getId().toString()));
+    return authInfo;
   }
 
   @Override
   protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
     ShiroAuthToken authToken = CastUtils.cast(token);
     var princ = authToken.getPrinc();
+    var userType = userServiceProvider.resolveUserType(princ.getUserType());
 
-    var user = userServiceProvider.resolveUserService(princ.getUserType()).getUserById(princ.getUserType(),
-        princ.getUserId());
+    var user = userServiceProvider.resolveUserService(userType).getUserById(userType, princ.getUserId());
     Assert.state(user.isPresent(), "user[id={}, type={}] not found", princ.getUserId(), princ.getUserType());
 
     context.currentUser(user.orElse(null));

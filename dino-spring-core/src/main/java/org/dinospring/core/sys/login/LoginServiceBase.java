@@ -124,7 +124,7 @@ public abstract interface LoginServiceBase<U extends UserEntityBase<K>, V extend
         .guid(guid).plt(plt).build();
 
     auth.setAuthToken(tokenService().genLoginToken(princ, user.getSecretKey()));
-    userService().onLogin(user.getUserType().getType(), String.valueOf(user.getId()));
+    userService().onLogin(user.getUserType(), String.valueOf(user.getId()));
     return auth;
   }
 

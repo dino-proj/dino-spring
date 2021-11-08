@@ -16,8 +16,10 @@ package org.dinospring.core.sys.user;
 
 import java.io.Serializable;
 import java.util.Optional;
+import java.util.Set;
 
 import org.dinospring.commons.sys.User;
+import org.dinospring.commons.sys.UserType;
 
 /**
  *
@@ -32,13 +34,37 @@ public interface UserService<T extends User<K>, K extends Serializable> {
    * @param userId 用户ID
    * @return
    */
-  Optional<T> getUserById(String userType, String userId);
+  Optional<T> getUserById(UserType userType, String userId);
+
+  /**
+   * 获取用户所有角色
+   * @param userType 用户类型
+   * @param userId 用户ID
+   * @return
+   */
+  Set<String> getRoles(UserType userType, String userId);
+
+  /**
+   * 获取用户所有权限
+   * @param userType 用户类型
+   * @param userId 用户ID
+   * @return
+   */
+  Set<String> getPermissions(UserType userType, String userId);
+
+  /**
+   * 用户是否是超级用户
+   * @param userType 用户类型
+   * @param userId 用户ID
+   * @return
+   */
+  boolean isSuperAdmin(UserType userType, String userId);
 
   /**
    * 用户登录后的回调
    * @param userType 用户类型
    * @param userId 用户ID
    */
-  void onLogin(String userType, String userId);
+  void onLogin(UserType userType, String userId);
 
 }

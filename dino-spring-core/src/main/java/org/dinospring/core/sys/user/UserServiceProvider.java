@@ -33,7 +33,7 @@ public interface UserServiceProvider {
    * @param userType 用户类型
    * @return
    */
-  <T extends User<K>, K extends Serializable> UserService<T, K> resolveUserService(String userType);
+  <T extends User<K>, K extends Serializable> UserService<T, K> resolveUserService(UserType userType);
 
   /**
    * 获取用户类型

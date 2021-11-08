@@ -43,4 +43,9 @@ public class OssModuleProperties {
    */
   private TencentCosProperties tencentCos;
 
+  /**
+   * oss服务的URLBase
+   */
+  private String ossUrlBase;
+
 }

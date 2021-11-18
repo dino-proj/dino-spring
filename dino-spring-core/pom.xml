@@ -86,6 +86,17 @@
       <artifactId>cos_api</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>com.drewnoakes</groupId>
+      <artifactId>metadata-extractor</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>net.coobird</groupId>
+      <artifactId>thumbnailator</artifactId>
+      <scope>provided</scope>
+    </dependency>
 
 
   </dependencies>

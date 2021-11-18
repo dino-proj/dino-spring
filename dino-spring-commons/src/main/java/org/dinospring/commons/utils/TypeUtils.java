@@ -22,6 +22,7 @@ import lombok.experimental.UtilityClass;
 /**
  *
  * @author tuuboo
+ * @author JL
  */
 
 @UtilityClass
@@ -47,6 +48,22 @@ public class TypeUtils {
           } else {
             return (Class<T>) t;
           }
+        }
+      }
+    }
+    return null;
+  }
+
+  public static <T> Class<T> getGenericSuperclassParamClass(Object inst, Class<?> interfaceClass, int paramIndex) {
+    Type type = inst.getClass().getGenericSuperclass();
+    if (type instanceof ParameterizedType) {
+      var tp = (ParameterizedType) type;
+      if (tp.getRawType().equals(interfaceClass)) {
+        var t = tp.getActualTypeArguments()[paramIndex];
+        if (t instanceof ParameterizedType) {
+          return (Class<T>) ((ParameterizedType) t).getRawType();
+        } else {
+          return (Class<T>) t;
         }
       }
     }

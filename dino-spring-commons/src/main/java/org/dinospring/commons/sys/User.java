@@ -23,6 +23,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 /**
  *
  * @author tuuboo
+ * @author JL
  */
 public interface User<K extends Serializable> extends Serializable {
 
@@ -88,5 +89,5 @@ public interface User<K extends Serializable> extends Serializable {
    * @return
    */
   @Schema(description = "用户的状态")
-  Integer getStatus();
+  String getStatus();
 }

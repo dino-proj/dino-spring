@@ -14,16 +14,16 @@
 
 package org.dinospring.core.modules.oss;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 /**
  *
  * @author tuuboo
+ * @author JL
  */
 
 public interface OssService {
@@ -93,6 +93,16 @@ public interface OssService {
   void putObject(InputStream stream, String bucket, String objectName) throws IOException;
 
   /**
+   * 上传对象
+   * @param stream
+   * @param bucket
+   * @param objectName
+   * @param contentType
+   * @throws IOException
+   */
+  void putObject(InputStream stream, String bucket, String objectName, String contentType) throws IOException;
+
+  /**
    * 获取对象
    * @param bucket
    * @param objectName
@@ -128,16 +138,24 @@ public interface OssService {
    * @throws IOException
    */
   void moveObject(@Nonnull String srcBucket, @Nonnull String srcObjectName, @Nonnull String destBucket,
-      @Nonnull String destObjectName) throws IOException;
+                  @Nonnull String destObjectName) throws IOException;
 
   /**
-  * 将对象Copy到指定位置，并保留原对象
-  * @param srcBucket
-  * @param srcObjectName
-  * @param destBucket
-  * @param destObjectName
-  * @throws IOException
-  */
+   * 将对象Copy到指定位置，并保留原对象
+   * @param srcBucket
+   * @param srcObjectName
+   * @param destBucket
+   * @param destObjectName
+   * @throws IOException
+   */
   void copyObject(@Nonnull String srcBucket, @Nonnull String srcObjectName, @Nonnull String destBucket,
-      @Nonnull String destObjectName) throws IOException;
+                  @Nonnull String destObjectName) throws IOException;
+
+  /**
+   * 获取链接
+   * @param bucket
+   * @param objectName
+   * @return
+   */
+  String getPresignedObjectUrl(String bucket, String objectName);
 }

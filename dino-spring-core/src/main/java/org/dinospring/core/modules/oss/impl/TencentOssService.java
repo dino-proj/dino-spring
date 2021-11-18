@@ -14,31 +14,23 @@
 
 package org.dinospring.core.modules.oss.impl;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
-
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.auth.BasicCOSCredentials;
 import com.qcloud.cos.auth.COSCredentials;
 import com.qcloud.cos.exception.CosClientException;
 import com.qcloud.cos.exception.CosServiceException;
+import com.qcloud.cos.http.HttpMethodName;
 import com.qcloud.cos.model.Bucket;
 import com.qcloud.cos.model.COSObject;
 import com.qcloud.cos.model.CannedAccessControlList;
 import com.qcloud.cos.model.CreateBucketRequest;
+import com.qcloud.cos.model.GeneratePresignedUrlRequest;
 import com.qcloud.cos.model.GetObjectRequest;
 import com.qcloud.cos.model.ListObjectsRequest;
 import com.qcloud.cos.model.ObjectMetadata;
 import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.region.Region;
-
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.iterators.LazyIteratorChain;
 import org.apache.commons.io.IOUtils;
@@ -48,9 +40,19 @@ import org.dinospring.core.modules.oss.ObjectMeta;
 import org.dinospring.core.modules.oss.OssService;
 import org.dinospring.core.modules.oss.config.TencentCosProperties;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
+
 /**
  *
  * @author tuuboo
+ * @author JL
  */
 
 public class TencentOssService implements OssService {
@@ -113,7 +115,7 @@ public class TencentOssService implements OssService {
       return buckets.stream().map(b -> BucketMeta.of(b.getName(), b.getCreationDate())).collect(Collectors.toList());
     } catch (
 
-    CosClientException clientException) {
+      CosClientException clientException) {
       throw new IOException("Error occured while list buckets", clientException);
     }
   }
@@ -149,9 +151,9 @@ public class TencentOssService implements OssService {
         try {
           var objectListing = cosClient.listObjects(listObjectsRequest);
           var dirs = objectListing.getCommonPrefixes().stream().map(p -> ObjectMeta.ofDir(p, null))
-              .collect(Collectors.toList());
+            .collect(Collectors.toList());
           var files = objectListing.getObjectSummaries().stream()
-              .map(p -> ObjectMeta.ofFile(p.getKey(), p.getSize(), p.getLastModified())).collect(Collectors.toList());
+            .map(p -> ObjectMeta.ofFile(p.getKey(), p.getSize(), p.getLastModified())).collect(Collectors.toList());
 
           // for next
           listObjectsRequest.setMarker(objectListing.getNextMarker());
@@ -183,6 +185,18 @@ public class TencentOssService implements OssService {
   public void putObject(InputStream stream, String bucket, String objectName) throws IOException {
     try {
       var meta = new ObjectMetadata();
+      var putObjectRequest = new PutObjectRequest(bucket, objectName, stream, meta);
+      cosClient.putObject(putObjectRequest);
+    } catch (CosServiceException cse) {
+      throw new IOException("Error occured while put file:" + objectName, cse);
+    }
+  }
+
+  @Override
+  public void putObject(InputStream stream, String bucket, String objectName, String contentType) throws IOException {
+    try {
+      var meta = new ObjectMetadata();
+      meta.setHeader("Content-Type", contentType);
       var putObjectRequest = new PutObjectRequest(bucket, objectName, stream, meta);
       cosClient.putObject(putObjectRequest);
     } catch (CosServiceException cse) {
@@ -232,14 +246,14 @@ public class TencentOssService implements OssService {
 
   @Override
   public void moveObject(String srcBucket, String srcObjectName, String destBucket, String destObjectName)
-      throws IOException {
+    throws IOException {
     copyObject(srcBucket, srcObjectName, destBucket, destObjectName);
     deleteObject(srcBucket, srcObjectName);
   }
 
   @Override
   public void copyObject(String srcBucket, String srcObjectName, String destBucket, String destObjectName)
-      throws IOException {
+    throws IOException {
     try {
       cosClient.copyObject(srcBucket, srcObjectName, destBucket, destObjectName);
     } catch (CosServiceException cse) {
@@ -249,5 +263,10 @@ public class TencentOssService implements OssService {
       throw new IOException("Error occured while copy file:" + srcObjectName, cse);
     }
 
+  }
+
+  @Override
+  public String getPresignedObjectUrl(String bucket, String objectName) {
+    return cosClient.generatePresignedUrl(new GeneratePresignedUrlRequest(bucket, objectName, HttpMethodName.GET)).getPath();
   }
 }

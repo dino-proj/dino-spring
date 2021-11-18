@@ -15,7 +15,6 @@
 package org.dinospring.core.modules.framework;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.response.Status;
 import org.dinospring.commons.utils.Assert;
@@ -29,6 +28,7 @@ import org.springframework.stereotype.Service;
 /**
  *
  * @author tuuboo
+ * @author JL
  */
 
 @Service
@@ -61,7 +61,7 @@ public class PageService extends ServiceBase<PageEntity, Long> {
     Page<T> page;
     if (entity.isPresent()) {
       page = projection(Page.class, entity);
-
+      page.setId(entity.get().getId());
       page.setProperties(cls.cast(entity.get().getConfig()));
     } else {
       page = new Page<>();
@@ -84,7 +84,7 @@ public class PageService extends ServiceBase<PageEntity, Long> {
     Page<T> page;
     page = projection(Page.class, entity);
     page.setProperties(cls.cast(entity.get().getConfig()));
-
+    page.setId(entity.get().getId());
     page.setTemplate(template);
     return page;
   }

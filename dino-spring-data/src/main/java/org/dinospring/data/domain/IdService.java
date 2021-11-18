@@ -19,6 +19,7 @@ import java.util.Base64;
 /**
  *
  * @author tuuboo
+ * @author JL
  */
 
 public interface IdService {
@@ -36,7 +37,7 @@ public interface IdService {
   default String genIdStr() {
     long id = genId();
     id <<= 3;
-    return Base64.getUrlEncoder().encodeToString(String.valueOf(id).getBytes());
+    return Base64.getUrlEncoder().withoutPadding().encodeToString(String.valueOf(id).getBytes());
   }
 
   /**

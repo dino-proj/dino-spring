@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 /**
  *
  * @author tuuboo
+ * @author JL
  */
 public interface VoBase<K extends Serializable> extends Serializable {
 
@@ -51,7 +52,7 @@ public interface VoBase<K extends Serializable> extends Serializable {
    * @return
    */
   @Schema(description = "状态码")
-  Integer getStatus();
+  String getStatus();
 
   /**
    * 创建用户

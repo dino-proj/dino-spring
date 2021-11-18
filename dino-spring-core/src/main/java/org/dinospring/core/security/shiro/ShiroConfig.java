@@ -95,6 +95,14 @@ public class ShiroConfig {
 
       var whiltes = new ArrayList<String>(securityProperties.getWhiteList());
       whiltes.add("/actuator/**");
+      whiltes.add("/swagger-ui/**");
+      whiltes.add("/swagger-ui.html");
+      whiltes.add("/v3/api-doc/**");
+      whiltes.add("/v3/api-docs/**");
+      whiltes.add("*.html");
+      whiltes.add("*.htm");
+      whiltes.add("*.css");
+      whiltes.add("*.js");
 
       shiroAuthFilter.setWhiteList(whiltes);
     }

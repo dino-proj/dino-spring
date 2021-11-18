@@ -32,7 +32,7 @@ import lombok.EqualsAndHashCode;
 public class ImageFileMeta extends FileMeta {
 
   public ImageFileMeta() {
-    this.setType("image/*");
+    this.setType(FileTypes.IMAGE);
   }
 
   @Schema(description = "图片编码格式")

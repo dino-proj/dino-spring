@@ -14,29 +14,18 @@
 
 package org.dinospring.commons.data;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-
 /**
  *
  * @author tuuboo
  */
-@Data
-@JsonInclude(Include.NON_NULL)
-public class FileMeta {
 
-  @Schema(description = "文件类型")
-  private FileTypes type;
-
-  @Schema(description = "文件存放桶")
-  private String bucket;
-
-  @Schema(description = "文件存放路径")
-  private String path;
-
-  @Schema(description = "文件大小")
-  private Long size;
+public enum FileTypes {
+  //文件
+  FILE,
+  //图片
+  IMAGE,
+  //视频
+  VIDEO,
+  //音频
+  AUDIO;
 }

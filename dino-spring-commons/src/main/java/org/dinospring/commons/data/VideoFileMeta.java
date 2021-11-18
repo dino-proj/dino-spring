@@ -32,7 +32,7 @@ import lombok.EqualsAndHashCode;
 public class VideoFileMeta extends FileMeta {
 
   public VideoFileMeta() {
-    this.setType("video");
+    this.setType(FileTypes.VIDEO);
   }
 
   @Schema(description = "视频编码格式")

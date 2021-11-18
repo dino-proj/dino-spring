@@ -19,24 +19,22 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  *
  * @author tuuboo
  */
+
 @Data
+@EqualsAndHashCode(callSuper = true)
 @JsonInclude(Include.NON_NULL)
-public class FileMeta {
+public class AudioFileMeta extends FileMeta {
 
-  @Schema(description = "文件类型")
-  private FileTypes type;
+  public AudioFileMeta() {
+    super.setType(FileTypes.AUDIO);
+  }
 
-  @Schema(description = "文件存放桶")
-  private String bucket;
-
-  @Schema(description = "文件存放路径")
-  private String path;
-
-  @Schema(description = "文件大小")
-  private Long size;
+  @Schema(description = "音频时长，单位(秒)")
+  private Integer duration;
 }

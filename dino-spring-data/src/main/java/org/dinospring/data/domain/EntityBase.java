@@ -37,6 +37,7 @@ import lombok.experimental.SuperBuilder;
 /**
  * Entity基础父类
  * @author tuuboo
+ * @author JL
  */
 
 @Data

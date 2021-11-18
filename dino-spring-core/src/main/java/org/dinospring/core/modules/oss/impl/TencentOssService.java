@@ -52,6 +52,7 @@ import java.util.stream.Collectors;
 /**
  *
  * @author tuuboo
+ * @author JL
  */
 
 public class TencentOssService implements OssService {
@@ -192,10 +193,10 @@ public class TencentOssService implements OssService {
   }
 
   @Override
-  public void putObject(InputStream stream, String bucket, String objectName, String contextType) throws IOException {
+  public void putObject(InputStream stream, String bucket, String objectName, String contentType) throws IOException {
     try {
       var meta = new ObjectMetadata();
-      meta.setHeader("Content-Type", contextType);
+      meta.setHeader("Content-Type", contentType);
       var putObjectRequest = new PutObjectRequest(bucket, objectName, stream, meta);
       cosClient.putObject(putObjectRequest);
     } catch (CosServiceException cse) {

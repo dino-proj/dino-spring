@@ -34,6 +34,7 @@ import org.hibernate.annotations.TypeDef;
 /**
  *
  * @author tuuboo
+ * @author JL
  */
 
 @Data

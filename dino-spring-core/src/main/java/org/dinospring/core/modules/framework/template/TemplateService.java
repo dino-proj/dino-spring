@@ -79,7 +79,4 @@ public class TemplateService {
     return templatesMap.get(templateName);
   }
 
-  public Map<String, Template> getTemplatesMap(){
-    return this.templatesMap;
-  }
 }

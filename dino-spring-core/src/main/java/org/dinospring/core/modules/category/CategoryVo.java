@@ -14,12 +14,11 @@
 
 package org.dinospring.core.modules.category;
 
-import org.dinospring.core.vo.VoImplBase;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldNameConstants;
+import org.dinospring.core.vo.VoImplBase;
 
 /**
  *

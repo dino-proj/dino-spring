@@ -23,6 +23,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 /**
  *
  * @author tuuboo
+ * @author JL
  */
 
 public interface Tenant extends Serializable {

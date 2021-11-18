@@ -56,6 +56,7 @@ import java.util.stream.Collectors;
 /**
  *
  * @author tuuboo
+ * @author JL
  */
 
 public class MinioOssService implements OssService {
@@ -175,10 +176,10 @@ public class MinioOssService implements OssService {
   }
 
   @Override
-  public void putObject(InputStream stream, String bucket, String objectName, String contextType) throws IOException {
+  public void putObject(InputStream stream, String bucket, String objectName, String contentType) throws IOException {
     try {
       minioClient
-        .putObject(PutObjectArgs.builder().bucket(bucket).contentType(contextType).object(objectName).stream(stream, -1, 10485760).build());
+        .putObject(PutObjectArgs.builder().bucket(bucket).contentType(contentType).object(objectName).stream(stream, -1, 10485760).build());
     } catch (InvalidKeyException | ErrorResponseException | InsufficientDataException | InternalException
       | InvalidResponseException | NoSuchAlgorithmException | ServerException | XmlParserException
       | IllegalArgumentException e) {
@@ -253,27 +254,12 @@ public class MinioOssService implements OssService {
 
 
   @Override
-  public String getPresignedObjectUrl(String bucket, String objectName){
+  public String getPresignedObjectUrl(String bucket, String objectName) {
     String url = null;
     try {
       url = minioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().bucket(bucket).object(objectName).method(Method.GET).build());
-    } catch (ErrorResponseException e) {
-      e.printStackTrace();
-    } catch (InsufficientDataException e) {
-      e.printStackTrace();
-    } catch (InternalException e) {
-      e.printStackTrace();
-    } catch (InvalidKeyException e) {
-      e.printStackTrace();
-    } catch (InvalidResponseException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
-    } catch (XmlParserException e) {
-      e.printStackTrace();
-    } catch (ServerException e) {
+    } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
+      InvalidResponseException | IOException | NoSuchAlgorithmException | XmlParserException | ServerException e) {
       e.printStackTrace();
     }
     return url;

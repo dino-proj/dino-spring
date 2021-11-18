@@ -16,6 +16,7 @@ package org.dinospring.core.modules.category;
 
 import org.dinospring.commons.utils.TypeUtils;
 import org.dinospring.core.entity.Code;
+import org.dinospring.core.service.CategoryServiceBase;
 import org.dinospring.core.service.impl.ServiceBase;
 
 import javax.annotation.Nullable;
@@ -24,10 +25,13 @@ import java.util.List;
 /**
  *
  * @author tuuboo
+ * @author JL
  */
-public abstract class CategoryService<E extends CategoryEntityBase, N extends TreeNode> extends ServiceBase<E, Long> {
+public abstract class CategoryService<E extends CategoryEntityBase> extends ServiceBase<E, Long> implements CategoryServiceBase<TreeNode> {
 
-  public List<N> findCategory(@Nullable Long parentId, @Nullable String keyword) {
+
+  @Override
+  public List<TreeNode> findCategory(@Nullable Long parentId, @Nullable String keyword) {
     if (parentId == null) {
       parentId = 0L;
     }
@@ -40,4 +44,5 @@ public abstract class CategoryService<E extends CategoryEntityBase, N extends Tr
     sql.groupBy("t1.id");
     return repository().queryList(sql, TypeUtils.getGenericSuperclassParamClass(this, CategoryService.class, 1));
   }
+
 }

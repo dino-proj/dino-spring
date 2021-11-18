@@ -36,10 +36,4 @@ public class FileMeta {
 
   @Schema(description = "文件大小")
   private Long size;
-
-  @Schema(description = "文件名称")
-  private String name;
-
-  @Schema(description = "文件扩展字段")
-  private String ext;
 }

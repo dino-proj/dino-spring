@@ -34,7 +34,7 @@ public interface PageRepository extends CurdRepositoryBase<PageEntity, Long> {
    * @return
    */
   @Query("FROM PageEntity p WHERE p.tenantId = :tenantId AND p.templateName = :templateName")
-  List<PageEntity> getByTemplateName(String tenantId, String templateName);
+  Optional<PageEntity> getOneByTemplateName(String tenantId, String templateName);
 
   /**
    * 根据id查询页面

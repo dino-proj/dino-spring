@@ -14,12 +14,11 @@
 
 package org.dinospring.core.modules.oss;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
-
-import javax.annotation.Nonnull;
 
 /**
  *
@@ -97,10 +96,10 @@ public interface OssService {
    * @param stream
    * @param bucket
    * @param objectName
-   * @param contextType
+   * @param contentType
    * @throws IOException
    */
-  void putObject(InputStream stream, String bucket, String objectName, String contextType) throws IOException;
+  void putObject(InputStream stream, String bucket, String objectName, String contentType) throws IOException;
 
   /**
    * 获取对象
@@ -138,18 +137,18 @@ public interface OssService {
    * @throws IOException
    */
   void moveObject(@Nonnull String srcBucket, @Nonnull String srcObjectName, @Nonnull String destBucket,
-      @Nonnull String destObjectName) throws IOException;
+                  @Nonnull String destObjectName) throws IOException;
 
   /**
-  * 将对象Copy到指定位置，并保留原对象
-  * @param srcBucket
-  * @param srcObjectName
-  * @param destBucket
-  * @param destObjectName
-  * @throws IOException
-  */
+   * 将对象Copy到指定位置，并保留原对象
+   * @param srcBucket
+   * @param srcObjectName
+   * @param destBucket
+   * @param destObjectName
+   * @throws IOException
+   */
   void copyObject(@Nonnull String srcBucket, @Nonnull String srcObjectName, @Nonnull String destBucket,
-      @Nonnull String destObjectName) throws IOException;
+                  @Nonnull String destObjectName) throws IOException;
 
   /**
    * 获取链接

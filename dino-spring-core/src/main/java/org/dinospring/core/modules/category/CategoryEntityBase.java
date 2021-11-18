@@ -14,16 +14,15 @@
 
 package org.dinospring.core.modules.category;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-
-import org.dinospring.data.domain.TenantableEntityBase;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
+import org.dinospring.data.domain.TenantableEntityBase;
+
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 
 /**
  *

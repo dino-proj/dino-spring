@@ -29,7 +29,7 @@ import javax.validation.constraints.Size;
  * @author JL
  */
 
-public interface CategoryController<S extends CategoryService<E>, E extends CategoryEntityBase, VO extends CategoryVo> extends CrudControllerBase<S, E, VO, CategorySearch, CategoryController.CategoryReq, Long>, CategoryControllerBase<S, TreeNode> {
+public interface CategoryController<S extends CategoryService<E>, E extends CategoryEntityBase, VO extends CategoryVo, SRC extends CategorySearch, REQ extends CategoryController.CategoryReq> extends CrudControllerBase<S, E, VO, SRC, REQ, Long>, CategoryControllerBase<S, TreeNode> {
 
 
   @Data

@@ -12,37 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.core.modules.category;
+package org.dinospring.commons.data;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.experimental.FieldNameConstants;
-import org.dinospring.core.vo.VoImplBase;
 
 /**
  *
- * @author tuuboo
+ * @author JL
  */
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@FieldNameConstants
-public class CategoryVo extends VoImplBase<Long> {
-  @Schema(description = "分类名称", maxLength = 100)
-  private String name;
+@JsonInclude(Include.NON_NULL)
+public class DocumentFileMeta extends FileMeta {
 
-  @Schema(description = "分类图标", maxLength = 100)
-  private String icon;
-
-  @Schema(description = "父分类ID")
-  private Long parentId;
-
-  @Schema(description = "父分类")
-  private CategoryVo parentCategory;
-
-  @Schema(description = "是否是根节点")
-  public boolean isRoot() {
-    return parentId == null || parentId == 0L;
-  }
+  @Schema(description = "文件名称")
+  private String title;
 }

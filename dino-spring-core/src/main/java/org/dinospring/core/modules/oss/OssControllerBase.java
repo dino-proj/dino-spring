@@ -102,6 +102,7 @@ public interface OssControllerBase {
   @PostMapping(value = "/upload/{file_type}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   default Response<FileMeta> uploadFile(@PathVariable("tenant_id") String tenantId,
       @PathVariable("file_type") FileTypes fileType, String service, MultipartFile file) throws IOException {
+
     var fileMeta = new FileMeta();
     fileMeta.setSize(file.getSize());
     var contentType = FileTypeMap.getDefaultFileTypeMap().getContentType(file.getOriginalFilename());
@@ -120,7 +121,7 @@ public interface OssControllerBase {
 
     fileMeta.setPath(fileName);
     try {
-      ossService().putObject(file.getInputStream(), "tmp", objectName);
+      ossService().putObject(file.getInputStream(), "tmp", objectName, fileType.contextType);
 
       return Response.success(fileMeta);
     } catch (IOException e) {
@@ -166,6 +167,7 @@ public interface OssControllerBase {
   @GetMapping("/upload_meta")
   default Response<UploadMeta> requestUpload(@PathVariable("tenant_id") String tenantId,
       @RequestParam("file_type") FileTypes fileType, @RequestParam String service, HttpServletRequest request) {
+
     var tenant = ContextHelper.currentTenant();
     var meta = new UploadMeta();
     meta.setOssType(OssType.LOCAL);
@@ -184,6 +186,7 @@ public interface OssControllerBase {
 
   default String toPath(FileMeta meta, String tenantId) {
     return "";
+
   }
 
 }

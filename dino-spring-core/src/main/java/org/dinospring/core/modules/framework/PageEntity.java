@@ -19,6 +19,7 @@ import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import org.dinospring.core.converts.PageConfigJsonbConverter;
 import org.dinospring.data.domain.TenantableEntityBase;
 
@@ -27,10 +28,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldNameConstants;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 /**
  *
  * @author tuuboo
+ * @author JL
  */
 
 @Data
@@ -39,6 +43,7 @@ import lombok.experimental.FieldNameConstants;
 @FieldNameConstants
 @Entity
 @Table(name = "sys_frame_page")
+@TypeDef(name = "json", typeClass = JsonBinaryType.class)
 public class PageEntity extends TenantableEntityBase<Long> {
 
   @Schema(title = "页面标题")
@@ -51,7 +56,8 @@ public class PageEntity extends TenantableEntityBase<Long> {
 
   @Schema(title = "页面的配置属性", type = "json")
   @Column(name = "config", columnDefinition = "jsonb")
-  @Convert(converter = PageConfigJsonbConverter.class)
+  @Type(type = "json")
+  @Convert(disableConversion = true)
   private PageConfig config;
 
 }

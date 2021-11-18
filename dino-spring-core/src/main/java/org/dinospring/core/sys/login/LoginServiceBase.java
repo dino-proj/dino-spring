@@ -112,7 +112,7 @@ public abstract interface LoginServiceBase<U extends UserEntityBase<K>, V extend
   default LoginAuth<V, K> loginAuth(Tenant tenant, V user, String plt, String guid) {
     Assert.notNull(user, Status.CODE.FAIL_USER_NOT_EXIST);
 
-    Assert.isTrue(user.getStatus() == Code.STATUS.OK.getId(), Status.CODE.FAIL_LOGIN_DENNY);
+    Assert.isTrue(user.getStatus().equals(Code.STATUS.OK.name().toLowerCase()) , Status.CODE.FAIL_LOGIN_DENNY);
 
     var auth = newLoginAuth();
     auth.setUser(user);

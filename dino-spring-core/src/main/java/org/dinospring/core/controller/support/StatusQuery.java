@@ -26,12 +26,13 @@ import lombok.Data;
 /**
  *
  * @author tuuboo
+ * @author JL
  */
 
 @Data
 public class StatusQuery implements CustomQuery {
   @Schema(description = "状态，默认查询全部")
-  private Integer[] status;
+  private String[] status;
 
   @Override
   public SelectSqlBuilder buildSql(SelectSqlBuilder sql) {

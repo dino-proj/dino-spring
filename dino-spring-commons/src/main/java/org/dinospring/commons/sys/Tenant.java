@@ -23,6 +23,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 /**
  *
  * @author tuuboo
+ * @author JL
  */
 
 public interface Tenant extends Serializable {
@@ -81,7 +82,7 @@ public interface Tenant extends Serializable {
    * @return
    */
   @Schema(description = "租户状态")
-  Integer getStatus();
+  String getStatus();
 
   /**
    * 是否系统租户

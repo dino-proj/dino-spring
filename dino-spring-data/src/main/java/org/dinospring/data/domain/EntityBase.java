@@ -37,6 +37,7 @@ import lombok.experimental.SuperBuilder;
 /**
  * Entity基础父类
  * @author tuuboo
+ * @author JL
  */
 
 @Data
@@ -59,9 +60,9 @@ public abstract class EntityBase<K extends Serializable> implements Serializable
   /**
    * 默认逻辑删除标记，is_deleted=0有效
    */
-  @Schema(description = "0-正常， 1-删除")
+  @Schema(description = "ok-正常， deleted-删除")
   @Column(name = "status", nullable = false)
-  private Integer status = 0;
+  private String status = "ok";
 
   /**
    * 默认记录创建时间字段，新建时由数据库赋值

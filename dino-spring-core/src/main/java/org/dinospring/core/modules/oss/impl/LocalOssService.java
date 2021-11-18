@@ -113,6 +113,13 @@ public class LocalOssService implements OssService {
   }
 
   @Override
+  public void putObject(InputStream stream, String bucket, String objectName, String contextType) throws IOException {
+    var file = FileUtils.getFile(basePath.toFile(), bucket, objectName);
+    file.createNewFile();
+    IOUtils.copy(stream, new FileOutputStream(file, false));
+  }
+
+  @Override
   public InputStream getObject(String bucket, String objectName) throws IOException {
     var file = FileUtils.getFile(basePath.toFile(), bucket, objectName);
     if (!file.exists()) {
@@ -167,6 +174,11 @@ public class LocalOssService implements OssService {
     }
     FileUtils.copyFile(srcFile, destFile);
 
+  }
+
+  @Override
+  public String getPresignedObjectUrl(String bucket, String objectName) {
+    return null;
   }
 
 }

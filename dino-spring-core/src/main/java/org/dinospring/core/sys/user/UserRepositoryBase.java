@@ -17,6 +17,7 @@ package org.dinospring.core.sys.user;
 import java.io.Serializable;
 import java.util.Optional;
 
+import org.dinospring.commons.sys.UserType;
 import org.dinospring.data.dao.CurdRepositoryBase;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -31,6 +32,17 @@ import org.springframework.transaction.annotation.Transactional;
 @NoRepositoryBean
 public interface UserRepositoryBase<T extends UserEntityBase<K>, K extends Serializable>
     extends CurdRepositoryBase<T, K> {
+
+  /**
+   * 根据手机号查询用户
+   * @param tenantId
+   * @param mobile
+   * @param userType
+   * @return
+   */
+  @Query("FROM #{#entityName} e WHERE e.mobile=:mobile and e.tenantId=:tenantId and e.userType=:userType")
+  Optional<T> findUserByMobile(String tenantId, String mobile, UserType userType);
+
 
   /**
    * 根据手机号查询用户

@@ -44,7 +44,7 @@ public class VoImplBase<K extends Serializable> implements VoBase<K> {
   private Date updateAt;
 
   @Schema(description = "状态")
-  private Integer status;
+  private String status;
 
   @Schema(description = "创建用户")
   private String createBy;

@@ -93,6 +93,16 @@ public interface OssService {
   void putObject(InputStream stream, String bucket, String objectName) throws IOException;
 
   /**
+   * 上传对象
+   * @param stream
+   * @param bucket
+   * @param objectName
+   * @param contextType
+   * @throws IOException
+   */
+  void putObject(InputStream stream, String bucket, String objectName, String contextType) throws IOException;
+
+  /**
    * 获取对象
    * @param bucket
    * @param objectName
@@ -140,4 +150,12 @@ public interface OssService {
   */
   void copyObject(@Nonnull String srcBucket, @Nonnull String srcObjectName, @Nonnull String destBucket,
       @Nonnull String destObjectName) throws IOException;
+
+  /**
+   * 获取链接
+   * @param bucket
+   * @param objectName
+   * @return
+   */
+  String getPresignedObjectUrl(String bucket, String objectName);
 }

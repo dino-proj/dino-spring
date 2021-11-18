@@ -78,4 +78,8 @@ public class TemplateService {
   public Template getByName(String templateName) {
     return templatesMap.get(templateName);
   }
+
+  public Map<String, Template> getTemplatesMap(){
+    return this.templatesMap;
+  }
 }

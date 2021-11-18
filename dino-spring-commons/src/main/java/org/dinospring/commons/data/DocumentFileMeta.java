@@ -12,16 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.core.controller.support;
+package org.dinospring.commons.data;
 
-import com.botbrain.dino.sql.builder.SelectSqlBuilder;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.dinospring.core.service.CustomQuery;
-import org.dinospring.data.domain.EntityBase;
-
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  *
@@ -29,13 +25,7 @@ import lombok.Data;
  */
 
 @Data
-public class StatusQuery implements CustomQuery {
-  @Schema(description = "状态，默认查询全部")
-  private String[] status;
-
-  @Override
-  public SelectSqlBuilder buildSql(SelectSqlBuilder sql) {
-    return sql.inIf(ArrayUtils.isNotEmpty(status), EntityBase.Fields.status, status);
-  }
-
+@EqualsAndHashCode(callSuper = true)
+@JsonInclude(Include.NON_NULL)
+public class DocumentFileMeta extends FileMeta {
 }

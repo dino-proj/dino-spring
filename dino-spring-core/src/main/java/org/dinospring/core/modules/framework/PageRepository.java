@@ -14,6 +14,7 @@
 
 package org.dinospring.core.modules.framework;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.dinospring.data.dao.CurdRepositoryBase;
@@ -32,8 +33,8 @@ public interface PageRepository extends CurdRepositoryBase<PageEntity, Long> {
    * @param templateName
    * @return
    */
-  @Query("FROM PageEntity p WHERE p.tenantId = :tenantId AND templateName = :templateName")
-  Optional<PageEntity> getOneByTemplateName(String tenantId, String templateName);
+  @Query("FROM PageEntity p WHERE p.tenantId = :tenantId AND p.templateName = :templateName")
+  List<PageEntity> getByTemplateName(String tenantId, String templateName);
 
   /**
    * 根据id查询页面
@@ -41,6 +42,6 @@ public interface PageRepository extends CurdRepositoryBase<PageEntity, Long> {
    * @param id
    * @return
    */
-  @Query("FROM PageEntity p WHERE p.tenantId = :tenantId AND id = :id")
+  @Query("FROM PageEntity p WHERE p.tenantId = :tenantId AND p.id = :id")
   Optional<PageEntity> getOneById(String tenantId, Long id);
 }

@@ -16,6 +16,7 @@ package org.dinospring.core.modules.framework;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.response.Status;
 import org.dinospring.commons.utils.Assert;
@@ -25,6 +26,9 @@ import org.dinospring.core.service.impl.ServiceBase;
 import org.dinospring.data.dao.CurdRepositoryBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -48,27 +52,28 @@ public class PageService extends ServiceBase<PageEntity, Long> {
     return pageRepository;
   }
 
-  public Page<PageConfig> getPageByTemplateName(String templateName) {
+  public List<Page<PageConfig>> getPageByTemplateName(String templateName) {
     return getPageByTemplateName(templateName, PageConfig.class);
   }
 
   @SuppressWarnings("unchecked")
-  public <T extends PageConfig> Page<T> getPageByTemplateName(String templateName, Class<T> cls) {
+  public <T extends PageConfig> List<Page<T>> getPageByTemplateName(String templateName, Class<T> cls) {
     Template template = templateService.getByName(templateName);
     Assert.notNull(template, "模板不存在");
 
-    var entity = pageRepository.getOneByTemplateName(ContextHelper.currentTenantId(), templateName);
-    Page<T> page;
-    if (entity.isPresent()) {
-      page = projection(Page.class, entity);
-
-      page.setProperties(cls.cast(entity.get().getConfig()));
-    } else {
-      page = new Page<>();
-      page.setTitle(template.getTitle());
+    List<Page<T>> pageList = new ArrayList<>();
+    var entityList = pageRepository.getByTemplateName(ContextHelper.currentTenantId(), templateName);
+    if (CollectionUtils.isNotEmpty(entityList)){
+      entityList.stream().forEach(entity -> {
+        Page<T> page;
+        page = projection(Page.class, entity);
+        page.setId(entity.getId());
+        page.setProperties(cls.cast(entity.getConfig()));
+        page.setTemplate(template);
+        pageList.add(page);
+      });
     }
-    page.setTemplate(template);
-    return page;
+    return pageList;
   }
 
   @SuppressWarnings("unchecked")
@@ -84,7 +89,7 @@ public class PageService extends ServiceBase<PageEntity, Long> {
     Page<T> page;
     page = projection(Page.class, entity);
     page.setProperties(cls.cast(entity.get().getConfig()));
-
+    page.setId(entity.get().getId());
     page.setTemplate(template);
     return page;
   }
@@ -104,7 +109,7 @@ public class PageService extends ServiceBase<PageEntity, Long> {
     return this.getPageById(id);
   }
 
-  @SuppressWarnings("unchecked")
+  /*@SuppressWarnings("unchecked")
   public Page<PageConfig> updatePageConfigByTemplate(Template template, String title, PageConfig config) {
     PageEntity pageEntity;
     if (template.getType() == PageType.CUSTOM) {
@@ -120,7 +125,8 @@ public class PageService extends ServiceBase<PageEntity, Long> {
     Page<PageConfig> page = projection(Page.class, pageEntity);
     page.setTemplate(template);
     page.setProperties(pageEntity.getConfig());
+    page.setId(pageEntity.getId());
     return page;
-  }
+  }*/
 
 }

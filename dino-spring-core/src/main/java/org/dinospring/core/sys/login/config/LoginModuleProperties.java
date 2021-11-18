@@ -74,7 +74,7 @@ public class LoginModuleProperties {
      * 登录token的有效时长，默认2小时
      */
     @DurationUnit(ChronoUnit.SECONDS)
-    private Duration loginTokenExpiresIn = Duration.ofHours(2L);
+    private Duration loginTokenExpiresIn = Duration.ofHours(24L*10);
 
     /**
      * refresh token的有效时长，默认365天

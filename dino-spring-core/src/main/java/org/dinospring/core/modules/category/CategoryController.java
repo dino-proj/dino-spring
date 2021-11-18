@@ -38,8 +38,8 @@ import java.util.List;
  * @author tuuboo
  */
 
-public interface CategoryController<S extends CategoryService<E>, E extends CategoryEntityBase, VO extends CategoryVo, SRC extends CustomQuery>
-  extends CrudControllerBase<S, E, VO, SRC, CategoryController.CategoryReq, Long> {
+public interface CategoryController<S extends CategoryService<E, N>, E extends CategoryEntityBase, VO extends CategoryVo, SRC extends CustomQuery, REQ extends CategoryController.CategoryReq, N extends TreeNode>
+  extends CrudControllerBase<S, E, VO, SRC, REQ, Long> {
 
   /**
    * 服务实例
@@ -94,7 +94,7 @@ public interface CategoryController<S extends CategoryService<E>, E extends Cate
     @Nullable
     private String icon;
 
-    @Schema(description = "父分类ID，不传则表示一级分类")
+    @Schema(name = "parent_id", description = "父分类ID，不传则表示一级分类")
     @Nullable
     private Long parentId;
   }
@@ -111,8 +111,9 @@ public interface CategoryController<S extends CategoryService<E>, E extends Cate
   @Parameter(name = "parent")
   @Parameter(name = "keyword")
   @GetMapping("/tree")
-  default Response<List<TreeNode>> getCategoryTree(@PathVariable("tenant_id") String tenantId, @Nullable Long parent,
-                                                   @Nullable String keyword) {
+  default Response<List<N>> getCategoryTree(@PathVariable("tenant_id") String tenantId, @Nullable Long parent,
+                                            @Nullable String keyword) {
     return Response.success(service().findCategory(parent, keyword));
   }
+
 }

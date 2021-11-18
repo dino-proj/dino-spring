@@ -88,5 +88,5 @@ public interface User<K extends Serializable> extends Serializable {
    * @return
    */
   @Schema(description = "用户的状态")
-  Integer getStatus();
+  String getStatus();
 }

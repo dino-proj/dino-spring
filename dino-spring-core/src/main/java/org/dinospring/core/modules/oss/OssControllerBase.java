@@ -14,13 +14,9 @@
 
 package org.dinospring.core.modules.oss;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import org.apache.commons.io.FilenameUtils;
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.data.FileMeta;
@@ -38,9 +34,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  *
@@ -92,7 +90,7 @@ public interface OssControllerBase {
   @Parameter(in = ParameterIn.PATH, name = "file_type", description = "文件类型", required = true)
   @PostMapping(value = "/upload/{file_type}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   default Response<FileMeta> uploadFile(@PathVariable("tenant_id") String tenantId,
-      @PathVariable("file_type") FileType fileType, String service, MultipartFile file) {
+                                        @PathVariable("file_type") FileType fileType, String service, MultipartFile file) {
     var fileMeta = new FileMeta();
     fileMeta.setSize(file.getSize());
 
@@ -101,7 +99,7 @@ public interface OssControllerBase {
 
     fileMeta.setPath(fileName);
     try {
-      ossService().putObject(file.getInputStream(), "tmp", objectName);
+      ossService().putObject(file.getInputStream(), "tmp", objectName, fileType.contextType);
 
       return Response.success(fileMeta);
     } catch (IOException e) {
@@ -122,7 +120,7 @@ public interface OssControllerBase {
   @ParamTenant
   @GetMapping("/tmp/{file_path}")
   default void get(@PathVariable("tenant_id") String tenantId, @PathVariable("file_path") String fileName,
-      HttpServletResponse resp) throws IOException {
+                   HttpServletResponse resp) throws IOException {
 
     resp.setContentType("application/x-download");
 
@@ -145,7 +143,7 @@ public interface OssControllerBase {
   @Parameter(name = "file_type", required = true, description = "文件类型")
   @GetMapping("/upload_meta")
   default Response<UploadMeta> requestUpload(@PathVariable("tenant_id") String tenantId,
-      @RequestParam("file_type") FileType fileType, @RequestParam String service, HttpServletRequest request) {
+                                             @RequestParam("file_type") FileType fileType, @RequestParam String service, HttpServletRequest request) {
     var tenant = ContextHelper.currentTenant();
     var meta = new UploadMeta();
     meta.setOssType(OssType.LOCAL);
@@ -158,16 +156,22 @@ public interface OssControllerBase {
     var token = tokenService().siginParams(tenant.getSecretKey(), params);
 
     meta.setUploadUrl(ossModuleProperties().getOssUrlBase() + "/v1/" + tenantId + "/oss/upload/" + fileType.toString()
-        + "?_nonce=" + nonce + "&token=" + token);
+      + "?_nonce=" + nonce + "&token=" + token);
     return Response.success(meta);
   }
 
   public enum FileType {
     //文件
-    FILE,
+    FILE("application/octet-stream"),
     //图片
-    IMAGE,
+    IMAGE("image/jpeg"),
     //视频
-    VIDEO;
+    VIDEO("video/mp4");
+
+    private String contextType;
+
+    FileType(String contextType) {
+      this.contextType = contextType;
+    }
   }
 }

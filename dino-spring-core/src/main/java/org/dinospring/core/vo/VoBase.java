@@ -51,7 +51,7 @@ public interface VoBase<K extends Serializable> extends Serializable {
    * @return
    */
   @Schema(description = "状态码")
-  Integer getStatus();
+  String getStatus();
 
   /**
    * 创建用户

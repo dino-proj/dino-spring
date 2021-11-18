@@ -81,7 +81,7 @@ public interface Tenant extends Serializable {
    * @return
    */
   @Schema(description = "租户状态")
-  Integer getStatus();
+  String getStatus();
 
   /**
    * 是否系统租户

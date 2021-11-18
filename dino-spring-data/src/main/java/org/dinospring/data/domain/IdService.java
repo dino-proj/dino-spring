@@ -19,6 +19,7 @@ import java.util.Base64;
 /**
  *
  * @author tuuboo
+ * @author JL
  */
 
 public interface IdService {

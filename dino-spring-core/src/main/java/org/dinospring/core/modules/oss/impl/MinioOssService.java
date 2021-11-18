@@ -56,6 +56,7 @@ import java.util.stream.Collectors;
 /**
  *
  * @author tuuboo
+ * @author JL
  */
 
 public class MinioOssService implements OssService {

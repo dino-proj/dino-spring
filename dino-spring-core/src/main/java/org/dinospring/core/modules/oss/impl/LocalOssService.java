@@ -41,6 +41,7 @@ import org.dinospring.core.modules.oss.config.LocalOssProperties;
 /**
  *
  * @author tuuboo
+ * @author JL
  */
 
 public class LocalOssService implements OssService {

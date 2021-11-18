@@ -23,6 +23,7 @@ import java.util.List;
 /**
  *
  * @author tuuboo
+ * @author JL
  */
 
 public interface OssService {

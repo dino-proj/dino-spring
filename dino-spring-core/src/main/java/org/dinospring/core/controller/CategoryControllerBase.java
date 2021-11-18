@@ -30,11 +30,15 @@ import java.util.List;
 
 /**
  *
- * @author tuuboo
+ * @author JL
  */
 
 public interface CategoryControllerBase<S extends CategoryServiceBase<N>, N extends TreeNode> {
 
+  /**
+   * Service 服务实例
+   * @return
+   */
   default S categoryService() {
     return ContextHelper.findBean(TypeUtils.getGenericParamClass(this, CategoryControllerBase.class, 0));
   }

@@ -25,6 +25,7 @@ import java.util.List;
 /**
  *
  * @author tuuboo
+ * @author JL
  */
 public abstract class CategoryService<E extends CategoryEntityBase> extends ServiceBase<E, Long> implements CategoryServiceBase<TreeNode> {
 

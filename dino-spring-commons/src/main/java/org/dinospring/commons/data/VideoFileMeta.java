@@ -35,7 +35,7 @@ public class VideoFileMeta extends FileMeta {
     this.setType(FileTypes.VIDEO);
   }
 
-  @Schema(description = "视频编码格式")
+  @Schema(description = "视频文件格式")
   private String format;
 
   @Schema(description = "视频宽度")
@@ -45,7 +45,7 @@ public class VideoFileMeta extends FileMeta {
   private Integer height;
 
   @Schema(description = "视频时长，单位(秒)")
-  private Integer duration;
+  private Long duration;
 
   @Schema(description = "视频画质", allowableValues = { "240", "360", "480", "720", "1080", "2k", "4k", "8k" })
   private String resolution;

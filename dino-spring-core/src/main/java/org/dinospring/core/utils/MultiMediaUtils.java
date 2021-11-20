@@ -196,7 +196,7 @@ public class MultiMediaUtils {
    * @param mime
    * @return
    */
-  public boolean isMultiMediaMime(String mime) {
+  public static boolean isMultiMediaMime(String mime) {
     return StringUtils.startsWithAny(mime, "audio/", "video/", "image/");
   }
 
@@ -213,5 +213,20 @@ public class MultiMediaUtils {
     //清晰度["240", "360", "480", "720", "1080", "2k", "4k", "8k"]
     private String resolution;
 
+    public boolean isImage() {
+      return isImageMime(mime);
+    }
+
+    public boolean isAudio() {
+      return isAudioMime(mime);
+    }
+
+    public boolean isVideo() {
+      return isVideoMime(mime);
+    }
+
+    public boolean isMultiMedia() {
+      return isMultiMediaMime(mime);
+    }
   }
 }

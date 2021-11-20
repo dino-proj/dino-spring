@@ -46,4 +46,7 @@ public class VideoFileMeta extends FileMeta {
 
   @Schema(description = "视频时长，单位(秒)")
   private Integer duration;
+
+  @Schema(description = "视频画质", allowableValues = { "240", "360", "480", "720", "1080", "2k", "4k", "8k" })
+  private String resolution;
 }

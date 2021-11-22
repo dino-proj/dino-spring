@@ -35,6 +35,9 @@ public class AudioFileMeta extends FileMeta {
     super.setType(FileTypes.AUDIO);
   }
 
+  @Schema(description = "音频文件格式")
+  private String format;
+
   @Schema(description = "音频时长，单位(秒)")
-  private Integer duration;
+  private Long duration;
 }

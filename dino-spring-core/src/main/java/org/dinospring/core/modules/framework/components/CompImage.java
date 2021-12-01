@@ -16,6 +16,7 @@ package org.dinospring.core.modules.framework.components;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
+import org.dinospring.commons.data.FileMeta;
 import org.dinospring.core.modules.framework.Component;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,7 +33,7 @@ public class CompImage implements Component {
   public static final String T_NAME = "image";
 
   @Schema(description = "图片URL地址")
-  private String imageUrl;
+  private FileMeta imageUrl;
 
   @Schema(description = "图片标题")
   private String title;

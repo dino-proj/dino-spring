@@ -33,7 +33,7 @@
             <fileMode>0755</fileMode>
             <useStrictFiltering>true</useStrictFiltering>
             <includes>
-                <include>com.botbrain.dino:assembly-bin</include>
+                <include>org.dinospring:dino-spring-assembly</include>
             </includes>
             <unpack>true</unpack>
             <unpackOptions>

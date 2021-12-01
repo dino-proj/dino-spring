@@ -21,7 +21,7 @@ import javax.annotation.PostConstruct;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import org.dinospring.core.modules.framework.annotion.PageTemplate;
-import org.dinospring.data.annotion.AnnotionedJsonTypeIdResolver;
+import org.dinospring.commons.annotion.AnnotionedJsonTypeIdResolver;
 import org.dinospring.data.autoconfig.DinoDataAutoConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;

@@ -14,9 +14,7 @@
 
 package org.dinospring.core.utils;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-
+import com.drew.imaging.FileType;
 import com.drew.imaging.FileTypeDetector;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
@@ -26,19 +24,22 @@ import com.drew.metadata.avi.AviDirectory;
 import com.drew.metadata.bmp.BmpHeaderDirectory;
 import com.drew.metadata.gif.GifHeaderDirectory;
 import com.drew.metadata.jpeg.JpegDirectory;
+import com.drew.metadata.mov.QuickTimeDirectory;
 import com.drew.metadata.mov.media.QuickTimeVideoDirectory;
 import com.drew.metadata.mp3.Mp3Directory;
+import com.drew.metadata.mp4.Mp4Directory;
 import com.drew.metadata.mp4.media.Mp4VideoDirectory;
 import com.drew.metadata.png.PngDirectory;
 import com.drew.metadata.wav.WavDirectory;
 import com.drew.metadata.webp.WebpDirectory;
-
-import org.apache.commons.lang3.StringUtils;
-
 import kotlin.NotImplementedError;
 import lombok.Data;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
 
 /**
  *
@@ -58,7 +59,7 @@ public class MultiMediaUtils {
 
     try {
       var fileType = FileTypeDetector.detectFileType(input);
-      if (fileType.getMimeType() == null) {
+      if (fileType.getMimeType() == null || fileType == FileType.Zip) {
         return null;
       }
       var media = new MediaInfo(fileType.getName(), fileType.getMimeType());
@@ -100,20 +101,22 @@ public class MultiMediaUtils {
           media.setDuration(dir.getLong(AviDirectory.TAG_DURATION));
           media.setResolution(calResolution(media.getWidth(), media.getHeight()));
           return media;
-        } else if (dir instanceof QuickTimeVideoDirectory) {
-          media.setWidth(dir.getInt(QuickTimeVideoDirectory.TAG_WIDTH));
-          media.setHeight(dir.getInt(QuickTimeVideoDirectory.TAG_HEIGHT));
-          media.setDuration(dir.getLong(QuickTimeVideoDirectory.TAG_DURATION_SECONDS));
-          media.setResolution(calResolution(dir.getInt(QuickTimeVideoDirectory.TAG_VERTICAL_RESOLUTION),
-              dir.getInt(QuickTimeVideoDirectory.TAG_HORIZONTAL_RESOLUTION)));
-          return media;
-        } else if (dir instanceof Mp4VideoDirectory) {
-          media.setWidth(dir.getInt(Mp4VideoDirectory.TAG_WIDTH));
-          media.setHeight(dir.getInt(Mp4VideoDirectory.TAG_HEIGHT));
-          media.setDuration(dir.getLong(Mp4VideoDirectory.TAG_DURATION_SECONDS));
-          media.setResolution(calResolution(dir.getInt(Mp4VideoDirectory.TAG_VERTICAL_RESOLUTION),
-              dir.getInt(Mp4VideoDirectory.TAG_HORIZONTAL_RESOLUTION)));
-          return media;
+        } else if (dir instanceof QuickTimeDirectory) {
+          if (dir instanceof QuickTimeVideoDirectory) {
+            media.setWidth(dir.getInt(QuickTimeVideoDirectory.TAG_WIDTH));
+            media.setHeight(dir.getInt(QuickTimeVideoDirectory.TAG_HEIGHT));
+            media.setResolution(calResolution(media.getWidth(), media.getHeight()));
+          } else if (dir.hasTagName(QuickTimeDirectory.TAG_DURATION)) {
+            media.setDuration(dir.getLong(QuickTimeDirectory.TAG_DURATION) / 1000L);
+          }
+        } else if (dir instanceof Mp4Directory) {
+          if (dir instanceof Mp4VideoDirectory) {
+            media.setWidth(dir.getInt(Mp4VideoDirectory.TAG_WIDTH));
+            media.setHeight(dir.getInt(Mp4VideoDirectory.TAG_HEIGHT));
+            media.setResolution(calResolution(media.getWidth(), media.getHeight()));
+          } else if (dir.hasTagName(Mp4Directory.TAG_DURATION)) {
+            media.setDuration(dir.getLong(Mp4Directory.TAG_DURATION) / 1000L);
+          }
         } else if (dir instanceof Mp3Directory) {
           //TODO cal duration
           throw new NotImplementedError();

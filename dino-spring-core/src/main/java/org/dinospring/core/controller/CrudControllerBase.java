@@ -14,12 +14,9 @@
 
 package org.dinospring.core.controller;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import org.dinospring.commons.request.PageReq;
 import org.dinospring.commons.request.PostBody;
 import org.dinospring.commons.request.SortReq;
@@ -36,23 +33,26 @@ import org.dinospring.core.vo.VoBase;
 import org.dinospring.data.domain.EntityBase;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.util.CastUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import javax.annotation.Nonnull;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 
 /**
  *
  * @author tuuboo
+ * @author JL
  */
 
 public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBase<K>, VO extends VoBase<K>, SRC extends CustomQuery, REQ, K extends Serializable>
-    extends ControllerBase<S, E, VO, K> {
+  extends ControllerBase<S, E, VO, K> {
 
   /**
    * 对VO对象进行返回前的处理
@@ -101,7 +101,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @ParamSort
   @PostMapping("list")
   default PageResponse<VO> list(@PathVariable("tenant_id") String tenantId, PageReq pageReq, SortReq sortReq,
-      @RequestBody PostBody<SRC> req) {
+                                @RequestBody PostBody<SRC> req) {
 
     var pageable = pageReq.pageable(sortReq);
 
@@ -135,17 +135,28 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @Operation(summary = "添加")
   @ParamTenant
   @PostMapping("add")
+  @Transactional(rollbackFor = Exception.class)
   default Response<VO> add(@PathVariable("tenant_id") String tenantId, @RequestBody PostBody<REQ> req) {
 
     var body = processReq(tenantId, req, null);
 
     Assert.notNull(body, Status.CODE.FAIL_INVALID_PARAM);
 
-    E item = service().projection(entityClass(), body);
+    VO vo = add(body);
+
+    return Response.success(processVo(vo));
+  }
+
+  /**
+   * 添加
+   * @param req
+   * @return
+   */
+  default VO add(REQ req) {
+    E item = service().projection(entityClass(), req);
 
     item = service().save(item);
-
-    return Response.success(processVo(service().projection(voClass(), item)));
+    return service().projection(voClass(), item);
   }
 
   /**
@@ -158,20 +169,32 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @Operation(summary = "更新")
   @ParamTenant
   @PostMapping("update")
+  @Transactional(rollbackFor = Exception.class)
   default Response<VO> update(@PathVariable("tenant_id") String tenantId, @RequestParam K id,
-      @RequestBody PostBody<REQ> req) {
+                              @RequestBody PostBody<REQ> req) {
 
     var body = processReq(tenantId, req, id);
 
     Assert.notNull(body, Status.CODE.FAIL_INVALID_PARAM);
 
+    VO vo = update(body, id);
+    return Response.success(processVo(vo));
+  }
+
+  /**
+   * 修改
+   * @param req
+   * @param id
+   * @return
+   */
+  default VO update(REQ req, K id) {
     E item = service().getById(id);
     Assert.notNull(item, Status.CODE.FAIL_NOT_FOUND);
 
-    BeanUtils.copyProperties(body, item);
+    BeanUtils.copyProperties(req, item);
 
     item = service().updateById(item);
-    return Response.success(processVo(service().projection(voClass(), item)));
+    return service().projection(voClass(), item);
   }
 
   /**
@@ -185,6 +208,22 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @GetMapping("delete")
   default Response<Boolean> dels(@PathVariable("tenant_id") String tenantId, @RequestParam List<K> ids) {
     service().removeByIds(ids);
+    return Response.success(true);
+  }
+
+
+  /**
+   * 状态设置
+   * @param tenantId
+   * @param ids
+   * @param status
+   * @return
+   */
+  @Operation(summary = "状态设置")
+  @ParamTenant
+  @GetMapping("status")
+  default Response<Boolean> status(@PathVariable("tenant_id") String tenantId, @RequestParam List<K> ids, @RequestParam String status) {
+    service().repository().updateStatusByIds(ids, status);
     return Response.success(true);
   }
 

@@ -116,7 +116,11 @@ public class PostgreJsonbReadingConverter implements GenericConverter {
       return null;
     }
 
-    return objectMapper.readerFor(targetType.getResolvableType().getRawClass()).readValue(source.getValue());
+    var cls = targetType.getResolvableType().getRawClass();
+    if(cls == null){
+      cls = targetType.getType();
+    }
+    return objectMapper.readerFor(cls).readValue(source.getValue());
   }
 
 }

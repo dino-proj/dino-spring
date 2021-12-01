@@ -44,25 +44,25 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(NullPointerException.class)
-  public Response<String> nullPointerExceptionHandler(HttpServletResponse response, NullPointerException ex) {
+  public Response<Void> nullPointerExceptionHandler(HttpServletResponse response, NullPointerException ex) {
     log.error("NPE exception occured", ex);
-    return Response.fail(Status.CODE.FAIL_EXCEPTION);
+    return Response.fail(Status.CODE.FAIL_EXCEPTION.withMsg("NPE"));
   }
 
   @ExceptionHandler(DataAccessException.class)
-  public Response<String> dataAccessExceptionHandler(HttpServletResponse response, DataAccessException ex) {
+  public Response<Void> dataAccessExceptionHandler(HttpServletResponse response, DataAccessException ex) {
     log.error("data access exception occured", ex);
     return Response.fail(Status.CODE.FAIL_QUERY_EXCEPTION);
   }
 
   @ExceptionHandler(IllegalArgumentException.class)
-  public Response<String> illegalArgumentExceptionHandler(HttpServletResponse response, IllegalArgumentException ex) {
+  public Response<Void> illegalArgumentExceptionHandler(HttpServletResponse response, IllegalArgumentException ex) {
     log.error("illegal argument exception occured", ex);
     return Response.fail(Status.CODE.FAIL_INVALID_PARAM);
   }
 
   @ExceptionHandler(ConstraintViolationException.class)
-  public Response<String> validateExceptionHandler(HttpServletResponse response, ConstraintViolationException ex) {
+  public Response<Void> validateExceptionHandler(HttpServletResponse response, ConstraintViolationException ex) {
     log.error("validate exception occured", ex);
     return Response.fail(Status.CODE.FAIL_VALIDATION.withMsg(ex.toString()));
   }

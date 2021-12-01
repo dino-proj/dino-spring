@@ -17,6 +17,7 @@ package org.dinospring.commons.data;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,6 +30,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @JsonInclude(Include.NON_NULL)
+@JsonTypeName("IMAGE")
 public class ImageFileMeta extends FileMeta {
 
   public ImageFileMeta() {

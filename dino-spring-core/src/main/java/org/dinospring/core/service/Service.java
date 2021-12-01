@@ -14,19 +14,20 @@
 
 package org.dinospring.core.service;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.dinospring.data.dao.CurdRepositoryBase;
+import org.dinospring.data.domain.LimitOffsetPageable;
+import org.dinospring.data.domain.LogicalDelete;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.dinospring.data.dao.CurdRepositoryBase;
-import org.dinospring.data.domain.LimitOffsetPageable;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 基础服务Service
@@ -172,7 +173,23 @@ public interface Service<T, K extends Serializable> {
     if (CollectionUtils.isEmpty(idList)) {
       return;
     }
-    repository().deleteAllById(idList);
+
+    boolean isDelete = false;
+    Class<T> entityClass = getEntityClass();
+    Class<?>[] interfaces = entityClass.getInterfaces();
+    for (Class<?> anInterface : interfaces) {
+      if (anInterface == LogicalDelete.class) {
+        isDelete = true;
+        break;
+      }
+    }
+
+    if (!isDelete) {
+      repository().deleteAllById(idList);
+    } else {
+      repository().updateStatusByIds(idList, "deleted");
+    }
+
   }
 
   /**

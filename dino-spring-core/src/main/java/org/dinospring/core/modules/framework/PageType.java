@@ -24,7 +24,10 @@ public enum PageType {
   //列表类页面
   LIST(2, "LIST"),
   //自定义页面
-  CUSTOM(3, "CUSTOM");
+  CUSTOM(3, "CUSTOM"),
+  //详情页面
+  DETAIL(4, "DETAIL"),
+  ;
 
   private int id;
   private String type;

@@ -16,19 +16,21 @@
 
 package org.dinospring.core.modules.framework;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.FieldNameConstants;
+
 import org.dinospring.commons.VisualScope;
 import org.dinospring.data.domain.TenantableEntityBase;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.FieldNameConstants;
 
 /**
  * 页面布局
@@ -40,18 +42,18 @@ import javax.persistence.Table;
 @FieldNameConstants
 @Entity
 @Table(name = "sys_frame_layout")
-@TypeDef(name = "json", typeClass = JsonBinaryType.class)
-public class LayoutEntity<T extends LayoutConfig> extends TenantableEntityBase<Long> {
+@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
+public class LayoutEntity extends TenantableEntityBase<Long> {
   @Schema(description = "布局标题")
   private String title;
 
   @Schema(description = "布局的可见范围")
   @Column(name = "access_scope", columnDefinition = "jsonb")
-  @Type(type = "json")
+  @Type(type = "jsonb")
   private VisualScope accessScope;
 
   @Schema(description = "布局配置")
   @Column(name = "config", columnDefinition = "jsonb")
-  @Type(type = "json")
-  private T config;
+  @Type(type = "jsonb")
+  private LayoutConfig config;
 }

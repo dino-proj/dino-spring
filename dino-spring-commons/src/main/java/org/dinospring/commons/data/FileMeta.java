@@ -16,13 +16,13 @@ package org.dinospring.commons.data;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
+
+import org.dinospring.commons.annotion.AnnotionedJsonTypeIdResolver;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import org.dinospring.commons.annotion.AnnotionedJsonTypeIdResolver;
 
 /**
  *
@@ -30,12 +30,7 @@ import org.dinospring.commons.annotion.AnnotionedJsonTypeIdResolver;
  */
 @Data
 @JsonInclude(Include.NON_NULL)
-@JsonTypeInfo(
-  use = JsonTypeInfo.Id.CUSTOM,
-  include = JsonTypeInfo.As.PROPERTY,
-  visible = true,
-  property = "type"
-)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, include = JsonTypeInfo.As.PROPERTY, visible = true, property = "type")
 @JsonTypeIdResolver(AnnotionedJsonTypeIdResolver.class)
 public class FileMeta {
 

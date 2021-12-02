@@ -22,7 +22,6 @@ import javax.persistence.Converter;
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.sys.UserType;
 import org.dinospring.core.sys.user.UserServiceProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.data.util.CastUtils;

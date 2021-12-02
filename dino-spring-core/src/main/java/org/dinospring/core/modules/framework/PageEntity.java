@@ -20,16 +20,16 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import org.dinospring.core.converts.PageConfigJsonbConverter;
+
 import org.dinospring.data.domain.TenantableEntityBase;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldNameConstants;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 
 /**
  *

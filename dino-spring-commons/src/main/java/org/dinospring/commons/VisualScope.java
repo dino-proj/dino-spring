@@ -16,11 +16,13 @@
 
 package org.dinospring.commons;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
+import java.io.Serializable;
+import java.util.List;
+
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 
 /**
  * @author JL
@@ -28,7 +30,7 @@ import java.util.List;
  */
 @Schema(description = "可见范围")
 @Data
-public class VisualScope {
+public class VisualScope implements Serializable {
 
   @Schema(description = "人员")
   private List<String> user;
@@ -42,6 +44,7 @@ public class VisualScope {
   private List<Long> company;
 
   public boolean beEmpty() {
-    return CollectionUtils.isEmpty(user) && CollectionUtils.isEmpty(dept) && CollectionUtils.isEmpty(post) && CollectionUtils.isEmpty(group) && CollectionUtils.isEmpty(company);
+    return CollectionUtils.isEmpty(user) && CollectionUtils.isEmpty(dept) && CollectionUtils.isEmpty(post)
+        && CollectionUtils.isEmpty(group) && CollectionUtils.isEmpty(company);
   }
 }

@@ -26,14 +26,13 @@ import org.springframework.stereotype.Service;
  * @Date: 2021/11/24 10:13
  */
 @Service
-public class LayoutService<T extends LayoutConfig> extends ServiceBase<LayoutEntity<T>, Long> {
+public class LayoutService extends ServiceBase<LayoutEntity, Long> {
 
   @Autowired
   private LayoutRepository layoutRepository;
 
-
   @Override
-  public CurdRepositoryBase<LayoutEntity<T>, Long> repository() {
+  public CurdRepositoryBase<LayoutEntity, Long> repository() {
     return layoutRepository;
   }
 }

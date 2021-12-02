@@ -17,10 +17,13 @@
 package org.dinospring.core.modules.framework;
 
 import org.dinospring.data.dao.CurdRepositoryBase;
+import org.springframework.stereotype.Repository;
 
 /**
  * @Author: Jack
  * @Date: 2021/11/24 10:14
  */
-public interface LayoutRepository<T extends LayoutConfig> extends CurdRepositoryBase<LayoutEntity<T>, Long> {
+
+@Repository
+public interface LayoutRepository extends CurdRepositoryBase<LayoutEntity, Long> {
 }

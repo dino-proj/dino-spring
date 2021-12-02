@@ -18,17 +18,16 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+import javax.transaction.Transactional;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.data.domain.TenantableEntityBase;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.query.Param;
-
-import javax.transaction.Transactional;
 
 /**
  *
@@ -70,5 +69,5 @@ public interface CurdRepositoryBase<T, K> extends JpaRepository<T, K>, JdbcSelec
   @Modifying
   @Transactional(rollbackOn = Exception.class)
   @Query("UPDATE #{#entityName} e SET e.status=:status WHERE e.id in :ids")
-  void updateStatusByIds(@Param("ids") Collection<K> ids,@Param("status") String status);
+  void updateStatusByIds(@Param("ids") Collection<K> ids, @Param("status") String status);
 }

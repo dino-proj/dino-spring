@@ -14,7 +14,6 @@
 
 package org.dinospring.core.modules.framework;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.dinospring.data.dao.CurdRepositoryBase;

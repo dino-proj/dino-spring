@@ -30,6 +30,7 @@ public class TypeUtils {
 
   /**
    * 获取某个泛型接口的实际参数
+   * @param <T>
    * @param inst 对象实例
    * @param interfaceClass 需要查询的接口类
    * @param paramIndex 类型参数的索引，从0开始
@@ -54,6 +55,15 @@ public class TypeUtils {
     return null;
   }
 
+  /**
+   * 获取某个父类泛型接口的实际参数
+   * @param <T>
+   * @param inst 对象实例
+   * @param interfaceClass 需要查询的接口类
+   * @param paramIndex 类型参数的索引，从0开始
+   * @return
+   */
+  @SuppressWarnings("unchecked")
   public static <T> Class<T> getGenericSuperclassParamClass(Object inst, Class<?> interfaceClass, int paramIndex) {
     Type type = inst.getClass().getGenericSuperclass();
     if (type instanceof ParameterizedType) {

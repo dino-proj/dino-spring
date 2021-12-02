@@ -14,23 +14,28 @@
 
 package org.dinospring.commons.utils;
 
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
+import lombok.experimental.UtilityClass;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.core.ResolvableType;
+import org.springframework.data.util.CastUtils;
 import org.springframework.util.ClassUtils;
 
-import lombok.experimental.UtilityClass;
+import javax.annotation.Nullable;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -107,7 +112,7 @@ public class ProjectionUtils {
    * @see BeanWrapper
    */
   private static void projectProperties(Object source, Object target, @Nullable Class<?> editable,
-      @Nullable String... ignoreProperties) throws BeansException {
+                                        @Nullable String... ignoreProperties) throws BeansException {
 
     Assert.notNull(source, "Source must not be null");
     Assert.notNull(target, "Target must not be null");
@@ -116,7 +121,7 @@ public class ProjectionUtils {
     if (editable != null) {
       if (!editable.isInstance(target)) {
         throw new IllegalArgumentException("Target class [" + target.getClass().getName()
-            + "] not assignable to Editable class [" + editable.getName() + "]");
+          + "] not assignable to Editable class [" + editable.getName() + "]");
       }
       actualEditable = editable;
     }
@@ -138,35 +143,78 @@ public class ProjectionUtils {
 
       // Ignore generic types in assignable check if either ResolvableType has unresolvable generics.
       boolean isAssignable = (sourceResolvableType.hasUnresolvableGenerics()
-          || targetResolvableType.hasUnresolvableGenerics()
-              ? ClassUtils.isAssignable(writeMethod.getParameterTypes()[0], readMethod.getReturnType())
-              : targetResolvableType.isAssignableFrom(sourceResolvableType));
+        || targetResolvableType.hasUnresolvableGenerics()
+        ? ClassUtils.isAssignable(writeMethod.getParameterTypes()[0], readMethod.getReturnType())
+        : targetResolvableType.isAssignableFrom(sourceResolvableType));
 
       try {
+        if (!Modifier.isPublic(readMethod.getDeclaringClass().getModifiers())) {
+          readMethod.setAccessible(true);
+        }
+        if (!Modifier.isPublic(writeMethod.getDeclaringClass().getModifiers())) {
+          writeMethod.setAccessible(true);
+        }
         if (isAssignable) {
-          if (!Modifier.isPublic(readMethod.getDeclaringClass().getModifiers())) {
-            readMethod.setAccessible(true);
-          }
+
           Object value = readMethod.invoke(source);
-          if (!Modifier.isPublic(writeMethod.getDeclaringClass().getModifiers())) {
-            writeMethod.setAccessible(true);
-          }
           writeMethod.invoke(target, value);
 
         } else if (!BeanUtils.isSimpleValueType(targetResolvableType.getRawClass())) {
-          if (!Modifier.isPublic(readMethod.getDeclaringClass().getModifiers())) {
-            readMethod.setAccessible(true);
-          }
-          Object targetValue = BeanUtils.instantiateClass(targetResolvableType.resolve());
-          projectProperties(readMethod.invoke(source), targetValue);
-          if (!Modifier.isPublic(writeMethod.getDeclaringClass().getModifiers())) {
-            writeMethod.setAccessible(true);
-          }
+
+          Object targetValue = newInstance(targetResolvableType, readMethod.invoke(source));
           writeMethod.invoke(target, targetValue);
         }
       } catch (Throwable ex) {
         throw new FatalBeanException("Could not copy property '" + targetPd.getName() + "' from source to target", ex);
       }
+    }
+  }
+
+  private static Object newInstance(ResolvableType type, Object value) {
+    if (value == null) {
+      return null;
+    }
+    var cls = type.resolve();
+    if (cls.isAssignableFrom(List.class)) {
+      Collection<?> valueList = CastUtils.cast(value);
+      var list = new ArrayList(valueList.size());
+      var genericCls = type.getGeneric(0);
+      for (var v : valueList) {
+        if (genericCls.isAssignableFrom(ResolvableType.forInstance(v))) {
+          list.add(v);
+        } else {
+          list.add(newInstance(genericCls, v));
+        }
+      }
+      return list;
+    } else if (cls.isAssignableFrom(Map.class)) {
+      Map<?, ?> valueMap = CastUtils.cast(value);
+      var map = new HashMap(valueMap.size());
+      var genericCls = type.getGeneric(1);
+      for (var v : valueMap.entrySet()) {
+        if (genericCls.isAssignableFrom(ResolvableType.forInstance(v.getValue()))) {
+          map.put(v.getKey(), v.getValue());
+        } else {
+          map.put(v.getKey(), newInstance(genericCls, v.getValue()));
+        }
+      }
+      return map;
+    } else if (cls.isAssignableFrom(Set.class)) {
+      Set<?> valueSet = CastUtils.cast(value);
+      var set = new HashSet(valueSet.size());
+      var genericCls = type.getGeneric(0);
+      for (var v : valueSet) {
+        if (genericCls.isAssignableFrom(ResolvableType.forInstance(v))) {
+          set.add(v);
+        } else {
+          set.add(newInstance(genericCls, v));
+        }
+      }
+      return set;
+    } else {
+      var target = BeanUtils.instantiateClass(cls);
+      projectProperties(value, target);
+      return target;
     }
   }
 

@@ -15,6 +15,7 @@
 package org.dinospring.data.dao;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -31,11 +32,21 @@ import org.springframework.data.repository.query.Param;
 public interface LogicalDeleteExecutor<K extends Serializable> {
 
   /**
-   * 逻辑删除，将status字段设置为'1'（0-正常， 1-删除）
+   * 逻辑删除，将status字段设置为'deleted'（-正常， 1-删除）
    * @param id entity id
    */
   @Modifying
-  @Query("UPDATE #{#entityName} SET status=1 WHERE id=:id")
+  @Query("UPDATE #{#entityName} e SET e.status='deleted' WHERE e.id=:id")
   @CacheEvict(cacheNames = "repo", key = "#{#entityName}'.id:'+#key")
   void logicalDeleteById(@Param("id") K id);
+
+  /**
+   * 逻辑删除，将status字段设置为'deleted'（-正常， 1-删除）
+   * @param id entity id
+   */
+  @Modifying
+  @Query("UPDATE #{#entityName} e SET  e.status='deleted' WHERE e.id in :ids")
+  @CacheEvict(cacheNames = "repo", key = "#{#entityName}'.id:'+#key")
+  void logicalDeleteByIds(@Param("ids") Collection<K> id);
+
 }

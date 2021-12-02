@@ -22,7 +22,18 @@ import java.util.Arrays;
  */
 
 public interface Code {
-  enum STATUS {
+  /**
+   * 状态值
+   * @return
+   */
+  int getId();
+
+  /**
+   * 状态名
+   * @return
+   */
+  String getName();
+  enum STATUS implements Code {
     //正常
     OK(0, "ok"), DELETED(1, "deleted"),
     //审核相关
@@ -38,10 +49,12 @@ public interface Code {
       this.name = name;
     }
 
+    @Override
     public int getId() {
       return id;
     }
 
+    @Override
     public String getName() {
       return this.name;
     }

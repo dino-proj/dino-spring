@@ -62,7 +62,7 @@ public interface Status {
     FAIL_TOKEN_LOGIN_ANOTHER_DEVICE(631, "已经在另一台设备上登录了"),
 
     //refresh token已经过期
-    FAIL_NVALID_REFRESH_TOKEN(640, "refresh token已经过期"),
+    FAIL_INVALID_REFRESH_TOKEN(640, "refresh token已经过期"),
 
     //部分成功
     WARN_PARTIAL_SUCCESS(1001, "部分成功"),

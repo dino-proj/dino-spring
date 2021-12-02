@@ -20,6 +20,7 @@ import com.botbrain.dino.sql.dialect.Dialect;
 import com.botbrain.dino.utils.NamingUtils;
 
 import org.dinospring.data.annotion.TenantTable;
+import org.dinospring.data.domain.LogicalDelete;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import lombok.Data;
@@ -35,8 +36,11 @@ public class EntityInfo {
   private final TenantTable.TenantLevel tenantLevel;
 
   private final String tableName;
+  
+  private final boolean logicalDelete;
 
   private String quotedTableName;
+
 
   public boolean isTenantTable() {
     return tenantLevel == TenantTable.TenantLevel.TABLE;
@@ -58,7 +62,9 @@ public class EntityInfo {
       tableName = NamingUtils.toSnake(cls.getSimpleName());
     }
 
-    var ei = new EntityInfo(tenantLevel, tableName);
+    var logicalDelete = LogicalDelete.class.isAssignableFrom(cls);
+
+    var ei = new EntityInfo(tenantLevel, tableName,logicalDelete);
     ei.quotedTableName = dialect.quoteTableName(tableName);
     return ei;
   }

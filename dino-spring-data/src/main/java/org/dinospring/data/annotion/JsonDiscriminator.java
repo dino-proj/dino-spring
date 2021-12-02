@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
 
+import org.dinospring.commons.annotion.AnnotionedJsonTypeIdResolver;
 import org.springframework.core.annotation.AliasFor;
 
 /**

@@ -14,6 +14,7 @@
 
 package org.dinospring.core.autoconfig;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,6 +35,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -52,6 +56,32 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @EnableWebMvc
 public class WebMvcConfig implements WebMvcConfigurer {
+
+  private CorsConfiguration buildConfig() {
+    CorsConfiguration corsConfiguration = new CorsConfiguration();
+    //sessionid 多次访问一致
+    corsConfiguration.setAllowCredentials(true);
+
+    // 允许访问的客户端域名
+    List<String> allowedOriginPatterns = new ArrayList<>();
+    allowedOriginPatterns.add("*");
+    // 允许任何域名使用
+    corsConfiguration.setAllowedOriginPatterns(allowedOriginPatterns);
+    // 允许任何头
+    corsConfiguration.addAllowedHeader("*");
+    // 允许任何方法（post、get等）
+    corsConfiguration.addAllowedMethod("*");
+    return corsConfiguration;
+  }
+
+  @Bean
+  public CorsFilter corsFilter() {
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    // 对接口配置跨域设置
+    source.registerCorsConfiguration("/**", buildConfig());
+    return new CorsFilter(source);
+  }
+
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
     WebMvcConfigurer.super.addInterceptors(registry);

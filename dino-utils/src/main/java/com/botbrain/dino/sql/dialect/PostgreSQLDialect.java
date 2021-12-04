@@ -57,4 +57,9 @@ public class PostgreSQLDialect implements Dialect {
     return true;
   }
 
+  @Override
+  public boolean supportUUID() {
+    return true;
+  }
+
 }

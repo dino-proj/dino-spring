@@ -55,4 +55,9 @@ public class MysqlDialect implements Dialect {
   public boolean supportSequence() {
     return false;
   }
+
+  @Override
+  public boolean supportUUID() {
+    return true;
+  }
 }

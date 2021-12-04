@@ -70,4 +70,14 @@ public interface CurdRepositoryBase<T, K> extends JpaRepository<T, K>, JdbcSelec
   @Transactional(rollbackOn = Exception.class)
   @Query("UPDATE #{#entityName} e SET e.status=:status WHERE e.id in :ids")
   void updateStatusByIds(@Param("ids") Collection<K> ids, @Param("status") String status);
+
+  /**
+   * 状态设置
+   * @param id
+   * @param status
+   */
+  @Modifying
+  @Transactional(rollbackOn = Exception.class)
+  @Query("UPDATE #{#entityName} e SET e.status=:status WHERE e.id = :ids")
+  void updateStatusById(@Param("id") K id, @Param("status") String status);
 }

@@ -14,6 +14,8 @@
 
 package org.dinospring.core.sys.id.impl;
 
+import java.util.UUID;
+
 import com.botbrain.dino.sql.dialect.Dialect;
 
 import org.dinospring.data.domain.IdService;
@@ -42,7 +44,11 @@ public class IdServiceImpl implements IdService {
 
   @Override
   public String genUUID() {
-    return jdbcTemplate.queryForObject(dialect.getSelectUUIDSql(), String.class);
+    if (dialect.supportUUID()) {
+      return jdbcTemplate.queryForObject(dialect.getSelectUUIDSql(), String.class);
+    } else {
+      return UUID.randomUUID().toString();
+    }
   }
 
 }

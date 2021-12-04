@@ -33,11 +33,10 @@ public interface Code {
    * @return
    */
   String getName();
+
   enum STATUS implements Code {
     //正常
     OK(0, "ok"), DELETED(1, "deleted"),
-    //审核相关
-    CHECKING(10, "checking"), ACCEPTED(0, "accepted"), DENNIED(12, "dennied"),
     //锁住或者过期
     LOCKED(99, "locked"), EXPERIED(100, "experied");
 
@@ -90,11 +89,11 @@ public interface Code {
   /**
    * 审核
    */
-  enum CHECK {
+  enum CHECK implements Code {
     //审核中
-    ING(0, "checking"),
+    CHECKING(0, "checking"),
     //审核通过
-    ACCEPT(1, "accept"),
+    ACCEPTED(1, "accepted"),
     //审核未通过
     DENNIED(2, "dennied");
 
@@ -120,6 +119,58 @@ public interface Code {
 
     public static CHECK of(String name) {
       return Arrays.stream(CHECK.values()).filter(v -> v.eq(name)).findFirst().orElse(null);
+    }
+
+    public boolean eq(Integer id) {
+      if (id == null) {
+        return false;
+      }
+      return id.equals(this.id);
+    }
+
+    public boolean eq(String name) {
+      if (name == null) {
+        return false;
+      }
+      return this.name.equalsIgnoreCase(name);
+    }
+
+    @Override
+    public String toString() {
+      return this.name().toLowerCase();
+    }
+  }
+
+  /**
+   * 任务状态
+   */
+  enum TASK implements Code {
+
+    //任务进度
+    INIT(1, "init"), RUNNING(2, "running"), SUCCEED(0, "succeed"), FAILD(3, "faild"), TIMEOUT(4, "timeout");
+
+    int id;
+    String name;
+
+    private TASK(int id, String name) {
+      this.id = id;
+      this.name = name;
+    }
+
+    public int getId() {
+      return id;
+    }
+
+    public String getName() {
+      return this.name;
+    }
+
+    public static TASK of(int id) {
+      return Arrays.stream(TASK.values()).filter(v -> v.id == id).findFirst().orElse(null);
+    }
+
+    public static TASK of(String name) {
+      return Arrays.stream(TASK.values()).filter(v -> v.eq(name)).findFirst().orElse(null);
     }
 
     public boolean eq(Integer id) {

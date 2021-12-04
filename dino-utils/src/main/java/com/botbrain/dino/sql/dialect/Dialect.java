@@ -29,6 +29,12 @@ public interface Dialect {
   String limitOffset(int limit, long offset);
 
   /**
+   * 是否支持UUID语句
+   * @return
+   */
+  boolean supportUUID();
+
+  /**
    * 生成 查询UUID的语句
    */
   String getSelectUUIDSql();
@@ -81,6 +87,11 @@ public interface Dialect {
     @Override
     public NamingConversition namingConversition() {
       return NamingConversition.Default.INST;
+    }
+
+    @Override
+    public boolean supportUUID() {
+      return false;
     }
   }
 }

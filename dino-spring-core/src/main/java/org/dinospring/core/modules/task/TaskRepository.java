@@ -13,21 +13,34 @@
 // limitations under the License.
 package org.dinospring.core.modules.task;
 
-import javax.transaction.Transactional;
-
 import org.dinospring.data.dao.CurdRepositoryBase;
-import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
+
+/**
+ * @author tuuboo
+ */
 @Repository
 public interface TaskRepository extends CurdRepositoryBase<TaskEntity, String> {
 
+  /**
+   * 通过id修改任务的输出消息
+   * @param id
+   * @param msg
+   */
   @Modifying
   @Transactional(rollbackOn = Exception.class)
   @Query("UPDATE TaskEntity e SET e.taskMsg=:msg WHERE e.id=:id")
   void updateTaskMsg(String id, String msg);
 
+  /**
+   * 通过id修改任务的进度
+   * @param id
+   * @param progress
+   */
   @Modifying
   @Transactional(rollbackOn = Exception.class)
   @Query("UPDATE TaskEntity e SET e.taskProgress=:progress WHERE e.id=:id")

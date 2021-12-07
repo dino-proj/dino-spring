@@ -120,6 +120,7 @@ public class PageService extends ServiceBase<PageEntity, Long> {
     Page<PageConfig> page = projection(Page.class, pageEntity);
     page.setTemplate(template);
     page.setProperties(pageEntity.getConfig());
+    page.setId(pageEntity.getId());
     return page;
   }
 

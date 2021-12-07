@@ -84,10 +84,10 @@ public class DinoDataAutoConfiguration {
       String name = metaData.getDatabaseProductName().toLowerCase(Locale.ENGLISH);
 
       if (name.contains("mysql") || name.contains("mariadb")) {
-        return new MysqlDialect(new SnakeNamingConversition());
+        return new MysqlDialect(metaData, new SnakeNamingConversition());
       }
       if (name.contains("postgresql")) {
-        return new PostgreSQLDialect(new SnakeNamingConversition());
+        return new PostgreSQLDialect(metaData, new SnakeNamingConversition());
       }
 
       log.warn("Couldn't determine DB Dialect for {}", name);

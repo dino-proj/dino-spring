@@ -43,8 +43,9 @@ public interface TaskControllerBase {
   }
 
   /**
-   *
+   * 查询任务信息，包括状态，进度，错误信息等
    * @param tenantId
+   * @param id
    * @return
    */
   @Operation(summary = "查询任务信息，包括状态，进度，错误信息等")

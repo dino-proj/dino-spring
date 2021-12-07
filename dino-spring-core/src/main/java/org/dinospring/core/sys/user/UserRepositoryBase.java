@@ -57,6 +57,16 @@ public interface UserRepositoryBase<T extends UserEntityBase<K>, K extends Seria
    * 根据登录用户名查询用户
    * @param tenantId
    * @param username
+   * @param userType
+   * @return
+   */
+  @Query("FROM #{#entityName} e WHERE e.loginName=:username and e.tenantId=:tenantId and e.userType=:userType")
+  Optional<T> findUserByLoginName(String tenantId, String username, UserType userType);
+
+  /**
+   * 根据登录用户名查询用户
+   * @param tenantId
+   * @param username
    * @return
    */
   @Query("FROM #{#entityName} e WHERE e.loginName=:username and e.tenantId=:tenantId")

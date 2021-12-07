@@ -16,11 +16,21 @@ package com.botbrain.dino.sql.dialect;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class PostgreSQLDialect implements Dialect {
-  private NamingConversition namingConversition;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 
-  public PostgreSQLDialect(NamingConversition namingConversition) {
+public class PostgreSQLDialect implements Dialect {
+  private final NamingConversition namingConversition;
+  private final String uuidSql;
+
+  public PostgreSQLDialect(DatabaseMetaData metaData, NamingConversition namingConversition) throws SQLException {
     this.namingConversition = namingConversition;
+    var majorVer = metaData.getDatabaseMajorVersion();
+    if(majorVer >= 13){
+      uuidSql = "SELECT gen_random_uuid()";
+    }else {
+      uuidSql = "SELECT uuid_generate_v4()";
+    }
 
   }
 
@@ -39,7 +49,7 @@ public class PostgreSQLDialect implements Dialect {
 
   @Override
   public String getSelectUUIDSql() {
-    return "SELECT gen_random_uuid()";
+    return uuidSql;
   }
 
   @Override

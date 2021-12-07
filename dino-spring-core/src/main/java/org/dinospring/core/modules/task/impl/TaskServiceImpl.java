@@ -14,13 +14,7 @@
 
 package org.dinospring.core.modules.task.impl;
 
-import java.time.Duration;
-import java.util.function.Function;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.transaction.Transactional;
-
+import lombok.RequiredArgsConstructor;
 import org.dinospring.commons.utils.AsyncWorker;
 import org.dinospring.commons.utils.TaskObserver;
 import org.dinospring.core.entity.Code;
@@ -34,7 +28,11 @@ import org.dinospring.data.domain.IdService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import lombok.RequiredArgsConstructor;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.transaction.Transactional;
+import java.time.Duration;
+import java.util.function.Function;
 
 /**
  *
@@ -65,15 +63,15 @@ public class TaskServiceImpl extends ServiceBase<TaskEntity, String> implements 
 
   @Override
   public TaskVo runTask(@Nonnull String name, @Nullable Duration timeout,
-      @Nonnull Function<TaskObserver, Boolean> task) {
-    var taskEntity = TaskEntity.builder()//
-        .id(idService.genUUID())//
-        .taskName(name)//
-        .taskProgress(0)//
-        .taskTimeout(timeout == null ? -1L : timeout.toMillis())//
-        .status(Code.TASK.INIT.getName())//
-        .build();
-    taskEntity = taskRepository.save(taskEntity);
+                        @Nonnull Function<TaskObserver, Boolean> task) {
+    var taskEntity = TaskEntity.builder()
+      .id(idService.genUUID())
+      .taskName(name)
+      .taskProgress(0)
+      .taskTimeout(timeout == null ? -1L : timeout.toMillis())
+      .status(Code.TASK.INIT.getName())
+      .build();
+    taskEntity=this.save(taskEntity);
 
     var taskObserver = new TaskObserverImpl(taskEntity.getId(), timeout);
 
@@ -127,26 +125,29 @@ public class TaskServiceImpl extends ServiceBase<TaskEntity, String> implements 
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     public void updateStatus(TaskStatus status) {
       switch (status) {
-      case INIT:
-        taskRepository.updateStatusById(taskId, Code.TASK.INIT.getName());
-        break;
+        case INIT:
+          taskRepository.updateStatusById(taskId, Code.TASK.INIT.getName());
+          break;
 
-      case RUNNING:
-        taskRepository.updateStatusById(taskId, Code.TASK.RUNNING.getName());
-        break;
+        case RUNNING:
+          taskRepository.updateStatusById(taskId, Code.TASK.RUNNING.getName());
+          break;
 
-      case SUCCEED:
-        taskRepository.updateStatusById(taskId, Code.TASK.SUCCEED.getName());
-        taskRepository.updateTaskProgress(taskId, 100);
-        break;
+        case SUCCEED:
+          taskRepository.updateStatusById(taskId, Code.TASK.SUCCEED.getName());
+          taskRepository.updateTaskProgress(taskId, 100);
+          break;
 
-      case FAILD:
-        taskRepository.updateStatusById(taskId, Code.TASK.FAILD.getName());
-        taskRepository.updateTaskProgress(taskId, 100);
-        break;
+        case FAILD:
+          taskRepository.updateStatusById(taskId, Code.TASK.FAILD.getName());
+          taskRepository.updateTaskProgress(taskId, 100);
+          break;
+
+        default:
+          break;
 
       }
 

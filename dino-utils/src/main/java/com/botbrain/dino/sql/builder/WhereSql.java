@@ -1176,6 +1176,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
       final Logic innerLogic) {
     var joiner = Collectors.joining(StringUtils.wrap(innerLogic.getLogic(), ' '));
     var expr = Arrays.stream(columns).map(op::makeExpr).collect(joiner);
+    expr = String.format("(%s)", expr);
     appendWhere(logicOp, expr);
     if (op.hasValue()) {
       for (int i = 0; i < columns.length; i++) {

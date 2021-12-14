@@ -409,8 +409,7 @@
           <resource>
             <directory>src/main/resources</directory>
             <excludes>
-              <exclude>application.yml</exclude>
-              <exclude>bootstrap.yml</exclude>
+              <exclude>application-dev.yml</exclude>
               <exclude>bootstrap-dev.yml</exclude>
             </excludes>
             <filtering>true</filtering>
@@ -422,6 +421,13 @@
           </plugin>
         </plugins>
       </build>
+
+      <dependencies>
+        <dependency>
+          <groupId>org.dinospring</groupId>
+          <artifactId>dino-spring-assembly</artifactId>
+        </dependency>
+      </dependencies>
     </profile>
 
     <!-- FOR product-->
@@ -435,8 +441,7 @@
           <resource>
             <directory>src/main/resources</directory>
             <excludes>
-              <exclude>application.yml</exclude>
-              <exclude>bootstrap.yml</exclude>
+              <exclude>application-dev.yml</exclude>
               <exclude>bootstrap-dev.yml</exclude>
             </excludes>
             <filtering>true</filtering>
@@ -448,6 +453,13 @@
           </plugin>
         </plugins>
       </build>
+
+      <dependencies>
+        <dependency>
+          <groupId>org.dinospring</groupId>
+          <artifactId>dino-spring-assembly</artifactId>
+        </dependency>
+      </dependencies>
     </profile>
   </profiles>
 </project>

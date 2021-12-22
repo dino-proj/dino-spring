@@ -15,12 +15,10 @@ package org.dinospring.core.modules.task;
 
 import javax.transaction.Transactional;
 
-import org.dinospring.data.dao.CurdRepositoryBase;
+import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import javax.transaction.Transactional;
 
 /**
  * @author tuuboo

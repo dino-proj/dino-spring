@@ -14,18 +14,17 @@
 
 package com.botbrain.dino.sql.builder;
 
+import com.botbrain.dino.sql.Logic;
+import com.botbrain.dino.sql.Oper;
+import com.botbrain.dino.sql.Range;
+import com.botbrain.dino.sql.SqlBuilder;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import com.botbrain.dino.sql.Logic;
-import com.botbrain.dino.sql.Oper;
-import com.botbrain.dino.sql.Range;
-import com.botbrain.dino.sql.SqlBuilder;
-
-import org.apache.commons.lang3.StringUtils;
 
 public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
   protected static final Object[] EMPTY_PARAMS = new Object[0];
@@ -1174,7 +1173,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
 
   private void appendNColumnExpr(final Logic logicOp, final String[] columns, final Oper op, final Object value,
       final Logic innerLogic) {
-    var joiner = Collectors.joining(StringUtils.wrap(innerLogic.getLogic(), ' '));
+    var joiner = Collectors.joining(StringUtils.wrap(innerLogic.getLogic(), ' '), "(", ")");
     var expr = Arrays.stream(columns).map(op::makeExpr).collect(joiner);
     appendWhere(logicOp, expr);
     if (op.hasValue()) {

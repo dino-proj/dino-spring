@@ -17,7 +17,7 @@
 package org.dinospring.core.modules.framework;
 
 import org.dinospring.core.service.impl.ServiceBase;
-import org.dinospring.data.dao.CurdRepositoryBase;
+import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +32,7 @@ public class LayoutService extends ServiceBase<LayoutEntity, Long> {
   private LayoutRepository layoutRepository;
 
   @Override
-  public CurdRepositoryBase<LayoutEntity, Long> repository() {
+  public CrudRepositoryBase<LayoutEntity, Long> repository() {
     return layoutRepository;
   }
 }

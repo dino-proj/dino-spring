@@ -18,7 +18,7 @@ import org.dinospring.core.service.impl.ServiceBase;
 import org.dinospring.core.sys.tenant.TenantEntity;
 import org.dinospring.core.sys.tenant.TenantRepository;
 import org.dinospring.core.sys.tenant.TenantService;
-import org.dinospring.data.dao.CurdRepositoryBase;
+import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +33,7 @@ public class TenantServiceImpl extends ServiceBase<TenantEntity, String> impleme
   private TenantRepository tenantRepository;
 
   @Override
-  public CurdRepositoryBase<TenantEntity, String> repository() {
+  public CrudRepositoryBase<TenantEntity, String> repository() {
     return tenantRepository;
   }
 

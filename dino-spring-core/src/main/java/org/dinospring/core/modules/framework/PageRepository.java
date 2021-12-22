@@ -16,7 +16,7 @@ package org.dinospring.core.modules.framework;
 
 import java.util.Optional;
 
-import org.dinospring.data.dao.CurdRepositoryBase;
+import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.data.jpa.repository.Query;
 
 /**
@@ -24,7 +24,7 @@ import org.springframework.data.jpa.repository.Query;
  * @author tuuboo
  */
 
-public interface PageRepository extends CurdRepositoryBase<PageEntity, Long> {
+public interface PageRepository extends CrudRepositoryBase<PageEntity, Long> {
 
   /**
    * 根据模板查询页面

@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.response.Status;
 import org.dinospring.commons.utils.Assert;
+import org.dinospring.commons.utils.TypeUtils;
 import org.dinospring.data.dao.JdbcSelectExecutor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.dao.DataAccessException;
@@ -143,7 +144,7 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
     if (log.isDebugEnabled()) {
       log.debug("query for: {},\nSQL:{},\nPARAMs:", clazz, sql, params);
     }
-    if (ClassUtils.isPrimitiveOrWrapper(clazz)) {
+    if (TypeUtils.isPrimitiveOrString(clazz)) {
       return jdbcTemplate.queryForList(sql, clazz, params);
     } else {
       return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(clazz, conversionService), params);
@@ -157,8 +158,8 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
       log.debug("query for map: {}:{}, {}:{},\nSQL:{},\nPARAMs:", keyColumn, keyClass, valueColumn, valueClass,
         sql.getSql(), sql.getParams());
     }
-    org.springframework.util.Assert.isTrue(keyClass.isPrimitive(), "key must be primitive class");
-    org.springframework.util.Assert.isTrue(valueClass.isPrimitive(), "value must be primitive class");
+    org.springframework.util.Assert.isTrue(TypeUtils.isPrimitiveOrString(keyClass), "key must be primitive class");
+    org.springframework.util.Assert.isTrue(TypeUtils.isPrimitiveOrString(valueClass), "value must be primitive class");
 
     Map<MK, MV> result = new HashMap<>(20);
     jdbcTemplate.query(sql.getSql(), new RowCallbackHandler() {
@@ -181,9 +182,9 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
     if (log.isDebugEnabled()) {
       log.debug("query for map: {}:{}, valueClass:{},\nSQL:{},\nPARAMs:", keyColumn, keyClass, valueClass, sql, params);
     }
-    org.springframework.util.Assert.isTrue(keyClass.isPrimitive(), "key must be primitive class");
+    org.springframework.util.Assert.isTrue(TypeUtils.isPrimitiveOrString(keyClass), "key must be primitive class");
 
-    boolean isPrimitiveValue = valueClass.isPrimitive();
+    boolean isPrimitiveValue = TypeUtils.isPrimitiveOrString(valueClass);
     BeanPropertyRowMapper<MV> mapper = isPrimitiveValue ? null
       : BeanPropertyRowMapper.newInstance(valueClass, conversionService);
 

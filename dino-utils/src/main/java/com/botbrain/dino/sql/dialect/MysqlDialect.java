@@ -16,10 +16,12 @@ package com.botbrain.dino.sql.dialect;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class MysqlDialect implements Dialect {
-  private NamingConversition namingConversition;
+import java.sql.DatabaseMetaData;
 
-  public MysqlDialect(NamingConversition namingConversition) {
+public class MysqlDialect implements Dialect {
+  private final NamingConversition namingConversition;
+
+  public MysqlDialect(DatabaseMetaData metaData, NamingConversition namingConversition) {
     this.namingConversition = namingConversition;
   }
 

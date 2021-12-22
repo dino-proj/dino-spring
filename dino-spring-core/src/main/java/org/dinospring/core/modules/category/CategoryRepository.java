@@ -13,7 +13,7 @@
 // limitations under the License.
 package org.dinospring.core.modules.category;
 
-import org.dinospring.data.dao.CurdRepositoryBase;
+import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.data.repository.NoRepositoryBean;
 
 /**
@@ -22,6 +22,6 @@ import org.springframework.data.repository.NoRepositoryBean;
  */
 
 @NoRepositoryBean
-public interface CategoryRepository<E extends CategoryEntityBase> extends CurdRepositoryBase<E, Long> {
+public interface CategoryRepository<E extends CategoryEntityBase> extends CrudRepositoryBase<E, Long> {
 
 }

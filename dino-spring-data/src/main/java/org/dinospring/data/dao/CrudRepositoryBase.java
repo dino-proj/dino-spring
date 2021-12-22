@@ -35,7 +35,7 @@ import org.springframework.data.repository.query.Param;
  */
 
 @NoRepositoryBean
-public interface CurdRepositoryBase<T, K> extends JpaRepository<T, K>, JdbcSelectExecutor<T, K> {
+public interface CrudRepositoryBase<T, K> extends JpaRepository<T, K>, JdbcSelectExecutor<T, K> {
   /**
    * 对查询结果进行处理，自动注入TenantId
    * @param entity
@@ -56,7 +56,7 @@ public interface CurdRepositoryBase<T, K> extends JpaRepository<T, K>, JdbcSelec
    */
   default List<T> postQuery(List<T> entities) {
     if (CollectionUtils.isNotEmpty(entities)) {
-      entities.forEach(CurdRepositoryBase.this::postQuery);
+      entities.forEach(CrudRepositoryBase.this::postQuery);
     }
     return entities;
   }
@@ -78,6 +78,6 @@ public interface CurdRepositoryBase<T, K> extends JpaRepository<T, K>, JdbcSelec
    */
   @Modifying
   @Transactional(rollbackOn = Exception.class)
-  @Query("UPDATE #{#entityName} e SET e.status=:status WHERE e.id = :ids")
+  @Query("UPDATE #{#entityName} e SET e.status=:status WHERE e.id = :id")
   void updateStatusById(@Param("id") K id, @Param("status") String status);
 }

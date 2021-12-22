@@ -61,11 +61,6 @@ public class LoginModuleProperties {
   public static class TokenProperties {
 
     /**
-     * 传递签名的HTTP头名字， 默认为"D-auth-token"
-     */
-    private String httpHeaderName = "D-auth-token";
-
-    /**
      * 是否允许多人登录
      */
     private boolean allowMutiDeviceLogin = true;

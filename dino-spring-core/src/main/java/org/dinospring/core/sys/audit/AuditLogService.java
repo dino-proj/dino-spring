@@ -15,7 +15,7 @@
 package org.dinospring.core.sys.audit;
 
 import org.dinospring.core.service.impl.ServiceBase;
-import org.dinospring.data.dao.CurdRepositoryBase;
+import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +31,7 @@ public class AuditLogService extends ServiceBase<AuditLogEntity, Long> {
   private AuditLogRepository auditLogRepository;
 
   @Override
-  public CurdRepositoryBase<AuditLogEntity, Long> repository() {
+  public CrudRepositoryBase<AuditLogEntity, Long> repository() {
     return auditLogRepository;
   }
 

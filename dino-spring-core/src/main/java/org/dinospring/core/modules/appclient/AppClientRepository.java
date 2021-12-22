@@ -17,13 +17,13 @@ package org.dinospring.core.modules.appclient;
 import java.util.List;
 
 import org.dinospring.core.sys.tenant.TenantEntity;
-import org.dinospring.data.dao.CurdRepositoryBase;
+import org.dinospring.data.dao.CrudRepositoryBase;
 
 /**
  * @author tuuboo
  */
 
-public interface AppClientRepository extends CurdRepositoryBase<AppClientEntity, String> {
+public interface AppClientRepository extends CrudRepositoryBase<AppClientEntity, String> {
 
   /**
    * 查询客户端绑定的租户信息

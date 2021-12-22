@@ -14,13 +14,13 @@
 
 package org.dinospring.core.sys.tenant;
 
-import org.dinospring.data.dao.CurdRepositoryBase;
+import org.dinospring.data.dao.CrudRepositoryBase;
 
 /**
  *
  * @author tuuboo
  */
 
-public interface TenantRepository extends CurdRepositoryBase<TenantEntity, String> {
+public interface TenantRepository extends CrudRepositoryBase<TenantEntity, String> {
 
 }

@@ -31,9 +31,10 @@ import org.apache.commons.codec.digest.HmacUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.sys.Tenant;
 import org.dinospring.commons.sys.User;
+import org.dinospring.core.security.config.SecurityProperties;
 import org.dinospring.core.service.impl.ServiceBase;
 import org.dinospring.core.sys.login.config.LoginModuleProperties;
-import org.dinospring.data.dao.CurdRepositoryBase;
+import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,10 +56,13 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
   private LoginModuleProperties loginModuleProperties;
 
   @Autowired
+  private SecurityProperties securityProperties;
+
+  @Autowired
   private TokenRepository tokenRepository;
 
   @Override
-  public CurdRepositoryBase<TokenEntity, String> repository() {
+  public CrudRepositoryBase<TokenEntity, String> repository() {
     return tokenRepository;
   }
 
@@ -84,7 +88,7 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
     var t = this.projection(Token.class, token);
     try {
       t.setPrinc(Base64.getUrlEncoder().encodeToString(objectMapper.writeValueAsBytes(princ)));
-      t.setAuthHeaderName(loginModuleProperties.getToken().getHttpHeaderName());
+      t.setAuthHeaderName(securityProperties.getHttpHeaderName());
     } catch (JsonProcessingException e) {
       log.error("Impossible!", e);
     }

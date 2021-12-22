@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 import org.dinospring.commons.Scope;
-import org.dinospring.data.dao.CurdRepositoryBase;
+import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
 
@@ -32,7 +32,7 @@ import org.springframework.data.repository.NoRepositoryBean;
  */
 
 @NoRepositoryBean
-public interface ConfigurationRepository<T extends Configuration> extends CurdRepositoryBase<T, Long> {
+public interface ConfigurationRepository<T extends Configuration> extends CrudRepositoryBase<T, Long> {
 
   /**
    * 根据Key查询一组属性

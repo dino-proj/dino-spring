@@ -17,6 +17,14 @@
 
   </properties>
 
+  <repositories>
+    <repository>
+      <id>EBIPublic</id>
+      <name>EBIPublic</name>
+      <url>https://www.ebi.ac.uk/intact/maven/nexus/content/repositories/public/</url>
+    </repository>
+  </repositories>
+
   <dependencies>
     <dependency>
       <groupId>org.dinospring</groupId>
@@ -96,6 +104,33 @@
       <groupId>net.coobird</groupId>
       <artifactId>thumbnailator</artifactId>
       <scope>provided</scope>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/ws.schild/jave-core -->
+    <dependency>
+      <groupId>ws.schild</groupId>
+      <artifactId>jave-core</artifactId>
+      <version>3.2.0</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/ws.schild/jave-nativebin-win64 -->
+    <dependency>
+      <groupId>ws.schild</groupId>
+      <artifactId>jave-nativebin-win64</artifactId>
+      <version>3.2.0</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/ws.schild/jave-nativebin-linux64 -->
+    <dependency>
+      <groupId>ws.schild</groupId>
+      <artifactId>jave-nativebin-linux64</artifactId>
+      <version>3.2.0</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/ws.schild/jave-nativebin-osx64 -->
+    <dependency>
+      <groupId>ws.schild</groupId>
+      <artifactId>jave-nativebin-osx64</artifactId>
+      <version>3.2.0</version>
     </dependency>
 
 

@@ -18,7 +18,7 @@ import java.util.List;
 
 import org.dinospring.commons.sys.Tenant;
 import org.dinospring.core.service.impl.ServiceBase;
-import org.dinospring.data.dao.CurdRepositoryBase;
+import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +38,7 @@ public class AppClientService extends ServiceBase<AppClientEntity, String> {
   }
 
   @Override
-  public CurdRepositoryBase<AppClientEntity, String> repository() {
+  public CrudRepositoryBase<AppClientEntity, String> repository() {
     return appClientRepository;
   }
 

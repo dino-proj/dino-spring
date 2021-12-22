@@ -19,6 +19,7 @@ import com.drew.imaging.FileTypeDetector;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.imaging.png.PngChunkType;
+import com.drew.metadata.Metadata;
 import com.drew.metadata.MetadataException;
 import com.drew.metadata.avi.AviDirectory;
 import com.drew.metadata.bmp.BmpHeaderDirectory;
@@ -36,10 +37,15 @@ import kotlin.NotImplementedError;
 import lombok.Data;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import ws.schild.jave.EncoderException;
+import ws.schild.jave.MultimediaObject;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.UUID;
 
 /**
  *
@@ -68,8 +74,24 @@ public class MultiMediaUtils {
         return media;
       }
 
+      if (media.isAudio()) {
+        media.setDuration(getAudioDuration(input) / 1000L);
+        return media;
+      }
+
       var meta = ImageMetadataReader.readMetadata(input);
 
+
+      return mediaInfo(meta, media);
+
+    } catch (IOException | ImageProcessingException | EncoderException e) {
+      log.error("error occurred", e);
+      return null;
+    }
+  }
+
+  public static MediaInfo mediaInfo(Metadata meta, MediaInfo media) {
+    try {
       for (var dir : meta.getDirectories()) {
         if (dir instanceof JpegDirectory) {
           var jpegDir = (JpegDirectory) dir;
@@ -125,12 +147,17 @@ public class MultiMediaUtils {
           return media;
         }
       }
-      return media;
-
-    } catch (IOException | MetadataException | ImageProcessingException e) {
-      log.error("error occurred", e);
-      return null;
+    } catch (MetadataException e) {
+      e.printStackTrace();
     }
+    return media;
+  }
+
+  public static long getAudioDuration(InputStream input) throws IOException, EncoderException {
+    var tempFile = FileUtils.getFile(FileUtils.getTempDirectory(), UUID.randomUUID().toString());
+    FileUtils.copyToFile(input, tempFile);
+    var mediaInfo = new MultimediaObject(tempFile).getInfo();
+    return mediaInfo.getDuration();
   }
 
   /**
@@ -191,7 +218,7 @@ public class MultiMediaUtils {
    * @return
    */
   public static boolean isAudioMime(String mime) {
-    return StringUtils.startsWith(mime, "image/");
+    return StringUtils.startsWith(mime, "audio/");
   }
 
   /**

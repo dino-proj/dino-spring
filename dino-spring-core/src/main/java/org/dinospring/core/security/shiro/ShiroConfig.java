@@ -66,8 +66,8 @@ public class ShiroConfig {
   }
 
   @Bean
-  public ShiroAuthFilter shiroAuthFilter(LoginModuleProperties loginModuleProperties) {
-    return new ShiroAuthFilter(loginModuleProperties.getToken().getHttpHeaderName());
+  public ShiroAuthFilter shiroAuthFilter(SecurityProperties securityProperties) {
+    return new ShiroAuthFilter(securityProperties.getHttpHeaderName());
 
   }
 

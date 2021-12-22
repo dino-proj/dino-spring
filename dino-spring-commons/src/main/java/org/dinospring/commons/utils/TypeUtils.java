@@ -15,9 +15,9 @@
 package org.dinospring.commons.utils;
 
 import lombok.experimental.UtilityClass;
-import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
@@ -87,8 +87,7 @@ public class TypeUtils {
    * @param clazz
    * @return
    */
-  public static boolean isPrimitiveOrString(Class<?> clazz) {
-    Assert.notNull(clazz, "Class must not be null");
+  public static boolean isPrimitiveOrString(@Nonnull Class<?> clazz) {
     return ClassUtils.isPrimitiveOrWrapper(clazz) || clazz == String.class;
   }
 }

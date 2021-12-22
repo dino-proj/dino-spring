@@ -17,7 +17,7 @@ package org.dinospring.core.sys.dictionary;
 import java.util.List;
 
 import org.dinospring.core.sys.dictionary.DictionaryEntity.DictItem;
-import org.dinospring.data.dao.CurdRepositoryBase;
+import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.data.jpa.repository.Query;
 
 /**
@@ -25,7 +25,7 @@ import org.springframework.data.jpa.repository.Query;
  * @author tuuboo
  */
 
-public interface DictionaryRepository extends CurdRepositoryBase<DictionaryEntity, Long> {
+public interface DictionaryRepository extends CrudRepositoryBase<DictionaryEntity, Long> {
 
   /**
    * 查询字典项

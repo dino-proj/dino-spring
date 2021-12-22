@@ -52,6 +52,11 @@ public class LayoutEntity extends TenantableEntityBase<Long> {
   @Type(type = "jsonb")
   private VisualScope accessScope;
 
+  @Schema(name = "exclude_scope", description = "布局的排除可见范围")
+  @Column(name = "exclude_scope", columnDefinition = "jsonb")
+  @Type(type = "jsonb")
+  private VisualScope excludeScope;
+
   @Schema(description = "布局配置")
   @Column(name = "config", columnDefinition = "jsonb")
   @Type(type = "jsonb")

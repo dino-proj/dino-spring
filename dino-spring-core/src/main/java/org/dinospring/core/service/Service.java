@@ -15,7 +15,7 @@
 package org.dinospring.core.service;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.dinospring.data.dao.CurdRepositoryBase;
+import org.dinospring.data.dao.CrudRepositoryBase;
 import org.dinospring.data.domain.LimitOffsetPageable;
 import org.dinospring.data.domain.LogicalDelete;
 import org.springframework.data.domain.Example;
@@ -46,7 +46,7 @@ public interface Service<T, K extends Serializable> {
    *
    * @return BaseMapper
    */
-  CurdRepositoryBase<T, K> repository();
+  CrudRepositoryBase<T, K> repository();
 
   /**
    * 获取 entity 的 class

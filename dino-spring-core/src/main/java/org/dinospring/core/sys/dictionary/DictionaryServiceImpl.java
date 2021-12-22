@@ -21,7 +21,7 @@ import java.util.function.Function;
 import org.dinospring.core.annotion.BindDict.DictFilds;
 import org.dinospring.core.service.impl.ServiceBase;
 import org.dinospring.core.sys.dictionary.DictionaryEntity.DictItem;
-import org.dinospring.data.dao.CurdRepositoryBase;
+import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +38,7 @@ public class DictionaryServiceImpl extends ServiceBase<DictionaryEntity, Long> i
   private DictionaryRepository dictionaryRepository;
 
   @Override
-  public CurdRepositoryBase<DictionaryEntity, Long> repository() {
+  public CrudRepositoryBase<DictionaryEntity, Long> repository() {
     return dictionaryRepository;
   }
 

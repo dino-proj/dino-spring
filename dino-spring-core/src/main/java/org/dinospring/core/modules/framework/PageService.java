@@ -21,7 +21,7 @@ import org.dinospring.commons.utils.Assert;
 import org.dinospring.core.modules.framework.template.Template;
 import org.dinospring.core.modules.framework.template.TemplateService;
 import org.dinospring.core.service.impl.ServiceBase;
-import org.dinospring.data.dao.CurdRepositoryBase;
+import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +44,7 @@ public class PageService extends ServiceBase<PageEntity, Long> {
   ObjectMapper objectMapper;
 
   @Override
-  public CurdRepositoryBase<PageEntity, Long> repository() {
+  public CrudRepositoryBase<PageEntity, Long> repository() {
     return pageRepository;
   }
 

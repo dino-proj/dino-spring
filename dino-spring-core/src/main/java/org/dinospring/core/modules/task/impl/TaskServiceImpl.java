@@ -23,7 +23,7 @@ import org.dinospring.core.modules.task.TaskRepository;
 import org.dinospring.core.modules.task.TaskService;
 import org.dinospring.core.modules.task.TaskVo;
 import org.dinospring.core.service.impl.ServiceBase;
-import org.dinospring.data.dao.CurdRepositoryBase;
+import org.dinospring.data.dao.CrudRepositoryBase;
 import org.dinospring.data.domain.IdService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,7 +52,7 @@ public class TaskServiceImpl extends ServiceBase<TaskEntity, String> implements 
   private AsyncWorker asyncWorker;
 
   @Override
-  public CurdRepositoryBase<TaskEntity, String> repository() {
+  public CrudRepositoryBase<TaskEntity, String> repository() {
     return taskRepository;
   }
 

@@ -14,10 +14,12 @@
 
 package org.dinospring.commons.utils;
 
+import lombok.experimental.UtilityClass;
+import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-
-import lombok.experimental.UtilityClass;
 
 /**
  *
@@ -78,5 +80,15 @@ public class TypeUtils {
       }
     }
     return null;
+  }
+
+  /**
+   * 判断class是否为基本类型或者基本类型的包装类型
+   * @param clazz
+   * @return
+   */
+  public static boolean isPrimitiveOrString(Class<?> clazz) {
+    Assert.notNull(clazz, "Class must not be null");
+    return ClassUtils.isPrimitiveOrWrapper(clazz) || clazz == String.class;
   }
 }

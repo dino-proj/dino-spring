@@ -18,7 +18,7 @@ import java.io.Serializable;
 import java.util.Optional;
 
 import org.dinospring.commons.sys.UserType;
-import org.dinospring.data.dao.CurdRepositoryBase;
+import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @NoRepositoryBean
 public interface UserRepositoryBase<T extends UserEntityBase<K>, K extends Serializable>
-    extends CurdRepositoryBase<T, K> {
+    extends CrudRepositoryBase<T, K> {
 
   /**
    * 根据手机号查询用户

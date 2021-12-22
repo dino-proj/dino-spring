@@ -14,7 +14,7 @@
 
 package org.dinospring.core.sys.token;
 
-import org.dinospring.data.dao.CurdRepositoryBase;
+import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -23,6 +23,6 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface TokenRepository extends CurdRepositoryBase<TokenEntity, String> {
+public interface TokenRepository extends CrudRepositoryBase<TokenEntity, String> {
 
 }

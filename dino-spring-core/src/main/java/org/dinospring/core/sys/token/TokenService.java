@@ -33,7 +33,7 @@ import org.dinospring.commons.sys.Tenant;
 import org.dinospring.commons.sys.User;
 import org.dinospring.core.service.impl.ServiceBase;
 import org.dinospring.core.sys.login.config.LoginModuleProperties;
-import org.dinospring.data.dao.CurdRepositoryBase;
+import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,7 +58,7 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
   private TokenRepository tokenRepository;
 
   @Override
-  public CurdRepositoryBase<TokenEntity, String> repository() {
+  public CrudRepositoryBase<TokenEntity, String> repository() {
     return tokenRepository;
   }
 

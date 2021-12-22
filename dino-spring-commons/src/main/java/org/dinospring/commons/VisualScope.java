@@ -34,6 +34,8 @@ public class VisualScope implements Serializable {
 
   @Schema(description = "人员")
   private List<String> user;
+  @Schema(name = "user_type",description = "id:user_type")
+  private List<String> userType;
   @Schema(description = "部门")
   private List<Long> dept;
   @Schema(description = "职位")

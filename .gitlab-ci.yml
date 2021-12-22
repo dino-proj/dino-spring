@@ -1,4 +1,4 @@
-image: http://10.10.23.161:5000/botbrain/maven:latest
+image: dinospring/maven:latest
 
 stages:
   - deploy

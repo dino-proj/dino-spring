@@ -1,4 +1,4 @@
-image: dinospring/maven:latest
+image: dinospring/maven:3.8.1-jdk-11
 
 stages:
   - deploy

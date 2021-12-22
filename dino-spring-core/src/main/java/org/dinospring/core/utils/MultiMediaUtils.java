@@ -14,6 +14,11 @@
 
 package org.dinospring.core.utils;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.UUID;
+
 import com.drew.imaging.FileType;
 import com.drew.imaging.FileTypeDetector;
 import com.drew.imaging.ImageMetadataReader;
@@ -27,25 +32,20 @@ import com.drew.metadata.gif.GifHeaderDirectory;
 import com.drew.metadata.jpeg.JpegDirectory;
 import com.drew.metadata.mov.QuickTimeDirectory;
 import com.drew.metadata.mov.media.QuickTimeVideoDirectory;
-import com.drew.metadata.mp3.Mp3Directory;
 import com.drew.metadata.mp4.Mp4Directory;
 import com.drew.metadata.mp4.media.Mp4VideoDirectory;
 import com.drew.metadata.png.PngDirectory;
 import com.drew.metadata.wav.WavDirectory;
 import com.drew.metadata.webp.WebpDirectory;
-import kotlin.NotImplementedError;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import lombok.Data;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import ws.schild.jave.EncoderException;
 import ws.schild.jave.MultimediaObject;
-
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.UUID;
 
 /**
  *
@@ -81,78 +81,77 @@ public class MultiMediaUtils {
 
       var meta = ImageMetadataReader.readMetadata(input);
 
+      fillMediaInfo(meta, media);
+      return media;
 
-      return mediaInfo(meta, media);
-
-    } catch (IOException | ImageProcessingException | EncoderException e) {
+    } catch (IOException | ImageProcessingException | EncoderException | MetadataException e) {
       log.error("error occurred", e);
       return null;
     }
   }
 
-  public static MediaInfo mediaInfo(Metadata meta, MediaInfo media) {
-    try {
-      for (var dir : meta.getDirectories()) {
-        if (dir instanceof JpegDirectory) {
-          var jpegDir = (JpegDirectory) dir;
-          media.setWidth(jpegDir.getImageWidth());
-          media.setHeight(jpegDir.getImageHeight());
-          return media;
-        } else if (dir instanceof PngDirectory) {
-          var pngDir = (PngDirectory) dir;
-          if (pngDir.getPngChunkType().equals(PngChunkType.IHDR)) {
-            media.setWidth(dir.getInt(PngDirectory.TAG_IMAGE_WIDTH));
-            media.setHeight(dir.getInt(PngDirectory.TAG_IMAGE_HEIGHT));
-          }
-          return media;
-        } else if (dir instanceof GifHeaderDirectory) {
-          media.setWidth(dir.getInt(GifHeaderDirectory.TAG_IMAGE_WIDTH));
-          media.setHeight(dir.getInt(GifHeaderDirectory.TAG_IMAGE_HEIGHT));
-          return media;
-        } else if (dir instanceof BmpHeaderDirectory) {
-          media.setWidth(dir.getInt(BmpHeaderDirectory.TAG_IMAGE_WIDTH));
-          media.setHeight(dir.getInt(BmpHeaderDirectory.TAG_IMAGE_HEIGHT));
-          return media;
-        } else if (dir instanceof WebpDirectory) {
-          media.setWidth(dir.getInt(WebpDirectory.TAG_IMAGE_WIDTH));
-          media.setHeight(dir.getInt(WebpDirectory.TAG_IMAGE_HEIGHT));
-          return media;
-        } else if (dir instanceof AviDirectory) {
-          media.setWidth(dir.getInt(AviDirectory.TAG_WIDTH));
-          media.setHeight(dir.getInt(AviDirectory.TAG_HEIGHT));
-          media.setDuration(dir.getLong(AviDirectory.TAG_DURATION));
-          media.setResolution(calResolution(media.getWidth(), media.getHeight()));
-          return media;
-        } else if (dir instanceof QuickTimeDirectory) {
-          if (dir instanceof QuickTimeVideoDirectory) {
-            media.setWidth(dir.getInt(QuickTimeVideoDirectory.TAG_WIDTH));
-            media.setHeight(dir.getInt(QuickTimeVideoDirectory.TAG_HEIGHT));
-            media.setResolution(calResolution(media.getWidth(), media.getHeight()));
-          } else if (dir.hasTagName(QuickTimeDirectory.TAG_DURATION)) {
-            media.setDuration(dir.getLong(QuickTimeDirectory.TAG_DURATION) / 1000L);
-          }
-        } else if (dir instanceof Mp4Directory) {
-          if (dir instanceof Mp4VideoDirectory) {
-            media.setWidth(dir.getInt(Mp4VideoDirectory.TAG_WIDTH));
-            media.setHeight(dir.getInt(Mp4VideoDirectory.TAG_HEIGHT));
-            media.setResolution(calResolution(media.getWidth(), media.getHeight()));
-          } else if (dir.hasTagName(Mp4Directory.TAG_DURATION)) {
-            media.setDuration(dir.getLong(Mp4Directory.TAG_DURATION) / 1000L);
-          }
-        } else if (dir instanceof Mp3Directory) {
-          //TODO cal duration
-          throw new NotImplementedError();
-        } else if (dir instanceof WavDirectory) {
-          media.setDuration(dir.getLong(WavDirectory.TAG_DURATION) / 1000L);
-          return media;
+  private static void fillMediaInfo(Metadata meta, MediaInfo media) throws MetadataException {
+    for (var dir : meta.getDirectories()) {
+      if (dir instanceof JpegDirectory) {
+        var jpegDir = (JpegDirectory) dir;
+        media.setWidth(jpegDir.getImageWidth());
+        media.setHeight(jpegDir.getImageHeight());
+        return;
+      } else if (dir instanceof PngDirectory) {
+        var pngDir = (PngDirectory) dir;
+        if (pngDir.getPngChunkType().equals(PngChunkType.IHDR)) {
+          media.setWidth(dir.getInt(PngDirectory.TAG_IMAGE_WIDTH));
+          media.setHeight(dir.getInt(PngDirectory.TAG_IMAGE_HEIGHT));
         }
+        return;
+      } else if (dir instanceof GifHeaderDirectory) {
+        media.setWidth(dir.getInt(GifHeaderDirectory.TAG_IMAGE_WIDTH));
+        media.setHeight(dir.getInt(GifHeaderDirectory.TAG_IMAGE_HEIGHT));
+        return;
+      } else if (dir instanceof BmpHeaderDirectory) {
+        media.setWidth(dir.getInt(BmpHeaderDirectory.TAG_IMAGE_WIDTH));
+        media.setHeight(dir.getInt(BmpHeaderDirectory.TAG_IMAGE_HEIGHT));
+        return;
+      } else if (dir instanceof WebpDirectory) {
+        media.setWidth(dir.getInt(WebpDirectory.TAG_IMAGE_WIDTH));
+        media.setHeight(dir.getInt(WebpDirectory.TAG_IMAGE_HEIGHT));
+        return;
+      } else if (dir instanceof AviDirectory) {
+        media.setWidth(dir.getInt(AviDirectory.TAG_WIDTH));
+        media.setHeight(dir.getInt(AviDirectory.TAG_HEIGHT));
+        media.setDuration(dir.getLong(AviDirectory.TAG_DURATION));
+        media.setResolution(calResolution(media.getWidth(), media.getHeight()));
+        return;
+      } else if (dir instanceof QuickTimeDirectory) {
+        if (dir instanceof QuickTimeVideoDirectory) {
+          media.setWidth(dir.getInt(QuickTimeVideoDirectory.TAG_WIDTH));
+          media.setHeight(dir.getInt(QuickTimeVideoDirectory.TAG_HEIGHT));
+          media.setResolution(calResolution(media.getWidth(), media.getHeight()));
+        } else if (dir.hasTagName(QuickTimeDirectory.TAG_DURATION)) {
+          media.setDuration(dir.getLong(QuickTimeDirectory.TAG_DURATION) / 1000L);
+        }
+      } else if (dir instanceof Mp4Directory) {
+        if (dir instanceof Mp4VideoDirectory) {
+          media.setWidth(dir.getInt(Mp4VideoDirectory.TAG_WIDTH));
+          media.setHeight(dir.getInt(Mp4VideoDirectory.TAG_HEIGHT));
+          media.setResolution(calResolution(media.getWidth(), media.getHeight()));
+        } else if (dir.hasTagName(Mp4Directory.TAG_DURATION)) {
+          media.setDuration(dir.getLong(Mp4Directory.TAG_DURATION) / 1000L);
+        }
+      } else if (dir instanceof WavDirectory) {
+        media.setDuration(dir.getLong(WavDirectory.TAG_DURATION) / 1000L);
+        return;
       }
-    } catch (MetadataException e) {
-      e.printStackTrace();
     }
-    return media;
   }
 
+  /**
+   * 计算视频文件的长度
+   * @param input
+   * @return
+   * @throws IOException
+   * @throws EncoderException
+   */
   public static long getAudioDuration(InputStream input) throws IOException, EncoderException {
     var tempFile = FileUtils.getFile(FileUtils.getTempDirectory(), UUID.randomUUID().toString());
     FileUtils.copyToFile(input, tempFile);

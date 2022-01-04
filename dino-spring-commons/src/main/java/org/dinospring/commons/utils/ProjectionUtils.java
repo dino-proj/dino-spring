@@ -15,6 +15,7 @@
 package org.dinospring.commons.utils;
 
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -178,7 +179,7 @@ public class ProjectionUtils {
       return null;
     }
     var cls = type.resolve();
-    if (cls == null) {
+    if (cls == null || TypeUtils.isPrimitiveOrString(cls)) {
       return value;
     }
 
@@ -190,6 +191,9 @@ public class ProjectionUtils {
 
     } else if (cls.isAssignableFrom(Set.class)) {
       return newSet(type, value);
+
+    } else if (cls.isArray()) {
+      return newArray(cls.getComponentType(), value);
 
     } else {
       var target = BeanUtils.instantiateClass(cls);
@@ -203,7 +207,7 @@ public class ProjectionUtils {
     var list = new ArrayList<>(valueList.size());
     var genericCls = type.getGeneric(0);
     for (var v : valueList) {
-      if (genericCls.isAssignableFrom(ResolvableType.forInstance(v))) {
+      if (v == null || genericCls.isAssignableFrom(ResolvableType.forInstance(v))) {
         list.add(v);
       } else {
         list.add(newInstance(genericCls, v));
@@ -238,6 +242,30 @@ public class ProjectionUtils {
       }
     }
     return set;
+  }
+
+  private static Object newArray(Class<?> componentClass, Object value) {
+    Object[] srcArr;
+    var type = ResolvableType.forClass(componentClass);
+    if (ClassUtils.isAssignableValue(Collection.class, value)) {
+      Collection<?> col = CastUtils.cast(value);
+      srcArr = col.toArray();
+
+    } else {
+      srcArr = CastUtils.cast(value);
+    }
+    Object[] destArr = CastUtils.cast(Array.newInstance(componentClass, srcArr.length));
+
+    for (int i = 0; i < destArr.length; i++) {
+      var v = srcArr[i];
+      if (v == null || type.isAssignableFrom(ResolvableType.forInstance(v))) {
+        destArr[i] = v;
+      } else {
+        destArr[i] = newInstance(type, v);
+      }
+    }
+
+    return destArr;
   }
 
 }

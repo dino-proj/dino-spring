@@ -17,6 +17,7 @@ package org.dinospring.data.dao;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -80,4 +81,11 @@ public interface CrudRepositoryBase<T, K> extends JpaRepository<T, K>, JdbcSelec
   @Transactional(rollbackOn = Exception.class)
   @Query("UPDATE #{#entityName} e SET e.status=:status WHERE e.id = :id")
   void updateStatusById(@Param("id") K id, @Param("status") String status);
+
+  /**
+   * 查询状态为‘ok’的记录数量
+   * @return
+   */
+  @Query("SELECT count(1) AS cnt FROM #{#entityName} e WHERE e.status='ok'")
+  Optional<Long> countOk();
 }

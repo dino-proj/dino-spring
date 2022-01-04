@@ -14,6 +14,12 @@
 
 package org.dinospring.core.service;
 
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.dinospring.data.dao.CrudRepositoryBase;
 import org.dinospring.data.domain.LimitOffsetPageable;
@@ -22,12 +28,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * 基础服务Service
@@ -325,6 +325,15 @@ public interface Service<T, K extends Serializable> {
    */
   default long count() {
     return repository().count();
+  }
+
+  /**
+  * 查询状态为有效的记录数
+  *
+  * @return
+  */
+  default long countOk() {
+    return repository().countOk().orElse(0L);
   }
 
   /**

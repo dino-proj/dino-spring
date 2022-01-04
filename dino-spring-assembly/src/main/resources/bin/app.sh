@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Copyright 2021 dinospring.cn
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -114,7 +114,7 @@ RUN_JAVA ()
   CLASSPATH=${CLASSPATH}:$APP_DIR'/conf/*'
   CLASSPATH=${CLASSPATH}:$APP_DIR'/conf/'
   CLASSPATH=${CLASSPATH}:$APP_DIR
-  CLASS=${MAIN_CLASS:-"com.botbrain.dinospring.core.ApplicationMain"}
+  CLASS=${MAIN_CLASS:-"org.dinospring.core.ApplicationMain"}
 
   export CLASSPATH=$CLASSPATH
 
@@ -124,7 +124,7 @@ RUN_JAVA ()
   echo "excute ->CLASS:"${CLASS}
   echo "excute ->CLASSPATH:"${CLASSPATH}
   nohup "$JAVA" -Dproc_$APP_NAME $APP_JAVA_OPTS $CLASS  > "$OUT_FILE" "$@" 2>&1 < /dev/null &
-    
+
 }
 
 PID_FILE=$PID_DIR/$IDENT_STRING-$APP_NAME.pid
@@ -156,7 +156,7 @@ case $START_STOP in
       exit 1
     fi
     ;;
-          
+
   (stop)
 
     if [ -f $PID_FILE ]; then

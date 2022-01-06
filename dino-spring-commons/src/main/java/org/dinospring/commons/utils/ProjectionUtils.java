@@ -14,6 +14,16 @@
 
 package org.dinospring.commons.utils;
 
+import lombok.experimental.UtilityClass;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.FatalBeanException;
+import org.springframework.core.ResolvableType;
+import org.springframework.data.util.CastUtils;
+import org.springframework.util.ClassUtils;
+
+import javax.annotation.Nullable;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -27,18 +37,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.annotation.Nullable;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.FatalBeanException;
-import org.springframework.core.ResolvableType;
-import org.springframework.data.util.CastUtils;
-import org.springframework.util.ClassUtils;
-
-import lombok.experimental.UtilityClass;
 
 /**
  *
@@ -115,7 +113,7 @@ public class ProjectionUtils {
    * @see BeanWrapper
    */
   private static void projectProperties(Object source, Object target, @Nullable Class<?> editable,
-      @Nullable String... ignoreProperties) throws BeansException {
+                                        @Nullable String... ignoreProperties) throws BeansException {
 
     Assert.notNull(source, "Source must not be null");
     Assert.notNull(target, "Target must not be null");
@@ -124,7 +122,7 @@ public class ProjectionUtils {
     if (editable != null) {
       if (!editable.isInstance(target)) {
         throw new IllegalArgumentException("Target class [" + target.getClass().getName()
-            + "] not assignable to Editable class [" + editable.getName() + "]");
+          + "] not assignable to Editable class [" + editable.getName() + "]");
       }
       actualEditable = editable;
     }
@@ -146,10 +144,9 @@ public class ProjectionUtils {
 
       // Ignore generic types in assignable check if either ResolvableType has unresolvable generics.
       boolean isAssignable = (sourceResolvableType.hasUnresolvableGenerics()
-          || targetResolvableType.hasUnresolvableGenerics()
-              ? ClassUtils.isAssignable(writeMethod.getParameterTypes()[0], readMethod.getReturnType())
-              : targetResolvableType.isAssignableFrom(sourceResolvableType));
-
+        || targetResolvableType.hasUnresolvableGenerics()
+        ? ClassUtils.isAssignable(writeMethod.getParameterTypes()[0], readMethod.getReturnType())
+        : targetResolvableType.isAssignableFrom(sourceResolvableType) ? true : BeanUtils.isSimpleValueType(targetResolvableType.getRawClass()));
       try {
         if (!Modifier.isPublic(readMethod.getDeclaringClass().getModifiers())) {
           readMethod.setAccessible(true);
@@ -162,7 +159,7 @@ public class ProjectionUtils {
           Object value = readMethod.invoke(source);
           writeMethod.invoke(target, value);
 
-        } else if (!BeanUtils.isSimpleValueType(targetResolvableType.getRawClass())) {
+        } else {
 
           Object targetValue = newInstance(targetResolvableType, readMethod.invoke(source));
           writeMethod.invoke(target, targetValue);

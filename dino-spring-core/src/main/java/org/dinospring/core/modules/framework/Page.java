@@ -19,6 +19,8 @@ import org.dinospring.core.modules.framework.template.Template;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  *
  * @author tuuboo
@@ -37,4 +39,7 @@ public class Page<T extends PageConfig> {
 
   @Schema(description = "页面的配置属性", type = "json")
   private T properties;
+
+  @Schema(description = "被哪些布局引用")
+  private List<Layout> layouts;
 }

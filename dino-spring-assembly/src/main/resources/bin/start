@@ -22,7 +22,7 @@ bin=`cd "$bin" > /dev/null; pwd`
 echo $bin
 APP_DIR=$(cd -P -- $bin/.. && pwd -P)
 
-export APP_LOG_DIR=./logs
+export APP_LOG_DIR=$APP_DIR/logs
 
 export MEMORY_SIZE="1G"
 

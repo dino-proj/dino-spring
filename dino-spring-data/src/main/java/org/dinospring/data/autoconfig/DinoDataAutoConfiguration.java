@@ -100,7 +100,7 @@ public class DinoDataAutoConfiguration {
   @ConditionalOnMissingBean
   public ObjectMapper objectMapper() {
     log.info("--->>>> new jacksonObjectMapper");
-    ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
+    ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().defaultViewInclusion(true).build();
     objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     objectMapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
     objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);

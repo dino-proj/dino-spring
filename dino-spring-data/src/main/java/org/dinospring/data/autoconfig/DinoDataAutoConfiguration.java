@@ -24,6 +24,7 @@ import com.botbrain.dino.sql.dialect.MysqlDialect;
 import com.botbrain.dino.sql.dialect.PostgreSQLDialect;
 import com.botbrain.dino.sql.dialect.SnakeNamingConversition;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -106,6 +107,7 @@ public class DinoDataAutoConfiguration {
     objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
     objectMapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
     objectMapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
+    objectMapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
 
     objectMapper.registerModule(new JacksonCustomerModule());
     return objectMapper;

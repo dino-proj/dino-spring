@@ -14,6 +14,7 @@
 
 package org.dinospring.core.security.config;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -40,7 +41,7 @@ public class SecurityProperties {
   /**
    * 白名单，不需要检查权限的URL列表
    */
-  private List<String> whiteList;
+  private List<String> whiteList = new ArrayList<>();
 
   /**
    * 传递签名的HTTP头名字， 默认为"D-auth-token"

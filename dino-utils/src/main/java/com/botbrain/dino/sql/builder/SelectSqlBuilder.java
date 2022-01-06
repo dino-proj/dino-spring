@@ -338,13 +338,35 @@ public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
   }
 
   /**
-   * CROSS JOIN 交叉连接
+   * CROSS JOIN 交叉连接,cross join不可以加on
+   * <p>- <code>crossJoin("table2")</code>
+   * <p>生成的sql为：<code>CROSS JOIN table2</code>
+   * OR
+   * <p>- <code>crossJoin("jsonb_array_elements(knowledge)")</code>
+   * <p>生成的sql为：<code>CROSS JOIN jsonb_array_elements(knowledge)</code>
+   *
    * @param joinExpr
    * @return
    */
   public SelectSqlBuilder crossJoin(final String joinExpr) {
     joins.add(new JoinEntity<>("CROSS JOIN", joinExpr));
     return this;
+  }
+
+  /**
+   * CROSS JOIN 交叉连接,cross join不可以加on
+   * <p>- <code>crossJoin("table2", "t2")</code>
+   * <p>生成的sql为：<code>CROSS JOIN table2 AS t2</code>
+   * OR
+   * <p>- <code>crossJoin("jsonb_array_elements(knowledge)", "value")</code>
+   * <p>生成的sql为：<code>CROSS JOIN jsonb_array_elements(knowledge) AS value</code>
+   *
+   * @param joinExpr
+   * @param alias
+   * @return
+   */
+  public SelectSqlBuilder crossJoin(final String joinExpr, final String alias) {
+    return crossJoin(String.format("%s AS %s", joinExpr, alias));
   }
 
   /**

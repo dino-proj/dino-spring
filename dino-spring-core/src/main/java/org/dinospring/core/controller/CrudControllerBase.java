@@ -228,8 +228,8 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @Operation(summary = "状态设置")
   @ParamTenant
   @GetMapping("status")
-  default Response<Boolean> status(@PathVariable("tenant_id") String tenantId, @RequestParam List<K> ids,
-      @RequestParam String status) {
+  @Transactional(rollbackFor = Exception.class)
+  default Response<Boolean> status(@PathVariable("tenant_id") String tenantId, @RequestParam List<K> ids, @RequestParam String status) {
     service().repository().updateStatusByIds(ids, status);
     return Response.success(true);
   }

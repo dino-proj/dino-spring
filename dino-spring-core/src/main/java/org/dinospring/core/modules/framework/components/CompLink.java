@@ -38,7 +38,7 @@ public class CompLink implements Component, Action {
   @Schema(description = "链接的类型", required = true)
   private LinkType linkType;
 
-  @Schema(description = "链接的路径", required = true)
+  @Schema(description = "链接的路径")
   private String path;
 
   @Schema(description = "链接标题", required = false)

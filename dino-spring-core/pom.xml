@@ -110,49 +110,31 @@
   <profiles>
     <profile>
       <id>os-win</id>
-      <activation>
-        <os>
-          <family>windows</family>
-        </os>
-      </activation>
       <dependencies>
         <!-- https://mvnrepository.com/artifact/ws.schild/jave-nativebin-win64 -->
         <dependency>
           <groupId>ws.schild</groupId>
           <artifactId>jave-nativebin-win64</artifactId>
-          <scope>provided</scope>
         </dependency>
       </dependencies>
     </profile>
     <profile>
       <id>os-linux</id>
-      <activation>
-        <os>
-          <name>linux</name>
-        </os>
-      </activation>
       <dependencies>
         <!-- https://mvnrepository.com/artifact/ws.schild/jave-nativebin-linux64 -->
         <dependency>
           <groupId>ws.schild</groupId>
           <artifactId>jave-nativebin-linux64</artifactId>
-          <scope>provided</scope>
         </dependency>
       </dependencies>
     </profile>
     <profile>
       <id>os-osx</id>
-      <activation>
-        <os>
-          <name>Mac OS X</name>
-        </os>
-      </activation>
       <dependencies>
         <!-- https://mvnrepository.com/artifact/ws.schild/jave-nativebin-osx64 -->
         <dependency>
           <groupId>ws.schild</groupId>
           <artifactId>jave-nativebin-osx64</artifactId>
-          <scope>provided</scope>
         </dependency>
       </dependencies>
     </profile>

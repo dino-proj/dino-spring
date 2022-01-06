@@ -6,26 +6,26 @@
   </formats>
   <includeBaseDirectory>true</includeBaseDirectory>
 
+  <fileSets>
+    <fileSet>
+      <directory>src/main/resources/</directory>
+      <outputDirectory>conf/</outputDirectory>
+      <excludes>
+        <exclude>application*.yml</exclude>
+      </excludes>
+      <lineEnding>unix</lineEnding>
+      <fileMode>0755</fileMode>
+      <filtered>true</filtered>
+    </fileSet>
+  </fileSets>
+
   <files>
-    <file>
-      <source>src/main/resources/bootstrap.yml</source>
-      <outputDirectory>conf/</outputDirectory>
-      <destName>bootstrap.yml</destName>
-      <lineEnding>unix</lineEnding>
-      <filtered>true</filtered>
-    </file>
-    <file>
-      <source>src/main/resources/application.yml</source>
-      <outputDirectory>conf/</outputDirectory>
-      <destName>application.yml</destName>
-      <lineEnding>unix</lineEnding>
-      <filtered>true</filtered>
-    </file>
     <file>
       <source>src/main/resources/application-${spring.profiles.active}.yml</source>
       <outputDirectory>conf/</outputDirectory>
-      <destName>application-${spring.profiles.active}.yml</destName>
+      <destName>application.yml</destName>
       <lineEnding>unix</lineEnding>
+      <fileMode>0755</fileMode>
       <filtered>true</filtered>
     </file>
   </files>
@@ -33,6 +33,9 @@
   <dependencySets>
     <dependencySet>
       <outputDirectory>lib</outputDirectory>
+      <excludes>
+        <exclude>org.dinospring:dino-spring-assembly</exclude>
+      </excludes>
     </dependencySet>
 
     <dependencySet>

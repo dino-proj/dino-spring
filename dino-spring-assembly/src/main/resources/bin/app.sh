@@ -114,7 +114,7 @@ RUN_JAVA ()
   CLASSPATH=${CLASSPATH}:$APP_DIR'/conf/*'
   CLASSPATH=${CLASSPATH}:$APP_DIR'/conf/'
   CLASSPATH=${CLASSPATH}:$APP_DIR
-  CLASS=${MAIN_CLASS:-"com.botbrain.dinospring.core.ApplicationMain"}
+  CLASS=${MAIN_CLASS:-"org.dinospring.core.ApplicationMain"}
 
   export CLASSPATH=$CLASSPATH
 

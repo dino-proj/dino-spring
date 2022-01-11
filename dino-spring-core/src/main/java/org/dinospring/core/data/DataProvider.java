@@ -32,4 +32,17 @@ import org.dinospring.commons.annotion.AnnotionedJsonTypeIdResolver;
 @JsonTypeIdResolver(AnnotionedJsonTypeIdResolver.class)
 public interface DataProvider extends Serializable {
 
+  /**
+   * 入参处理
+   */
+  default void processReq() {
+
+  }
+
+  /**
+   * 出参处理
+   */
+  default void processVo() {
+
+  }
 }

@@ -13,7 +13,7 @@ variables:
 deploy:
   stage: deploy
   only:
-    - tags
+    - dev-liujie-deploy
   tags:
     - maven
   script:

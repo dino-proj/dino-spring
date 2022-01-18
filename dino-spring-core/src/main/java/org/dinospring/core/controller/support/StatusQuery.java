@@ -36,7 +36,7 @@ public class StatusQuery implements CustomQuery {
 
   @Override
   public SelectSqlBuilder buildSql(SelectSqlBuilder sql) {
-    return sql.inIf(ArrayUtils.isNotEmpty(status), EntityBase.Fields.status, status);
+    return sql.inIf(ArrayUtils.isNotEmpty(status), "t.status", status);
   }
 
 }

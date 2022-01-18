@@ -237,7 +237,14 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
 
     Sort sort = pageable.getSort();
     if (sort.isSorted()) {
-      sort.forEach(o -> sql.orderBy(o.getProperty(), o.isAscending()));
+      sort.forEach(o -> {
+        String s = sql.getSql();
+        if (s.indexOf("join")!=-1 || s.indexOf("JOIN")!=-1){
+          sql.orderBy(String.format("t.%s", o.getProperty()), o.isAscending());
+        }else {
+          sql.orderBy(o.getProperty(), o.isAscending());
+        }
+      });
     }
     if (pageable.isUnpaged()) {
       return new PageImpl<>(queryList(sql, clazz));

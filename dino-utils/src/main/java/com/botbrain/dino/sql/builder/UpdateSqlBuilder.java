@@ -1,11 +1,11 @@
 // Copyright 2021 dinospring.cn
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,7 +32,7 @@ public class UpdateSqlBuilder extends WhereSql<UpdateSqlBuilder> {
      * 根据表名构造, 如下写法都是合法的：
      * <p>- <code>"table1"</code>
      * <p>- <code>"table1 as t1"</code>
-     * 
+     *
      * @param table
      */
   public UpdateSqlBuilder(final String table) {
@@ -43,7 +43,7 @@ public class UpdateSqlBuilder extends WhereSql<UpdateSqlBuilder> {
   /**
      * 设置表名，更设置表的别名
      * <p>- <code>生成的sql片段为：table AS alias</code>
-     * 
+     *
      * @param table
      * @param alias
      */

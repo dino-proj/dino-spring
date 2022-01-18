@@ -312,7 +312,7 @@ public interface Service<T, K extends Serializable> {
    * @return
    */
   default Page<T> listPage(CustomQuery search, Pageable page) {
-    var sql = repository().newSelect("t");
+    var sql = repository().newSelect("t").column("t.*");
     search.buildSql(sql);
 
     return repository().queryPage(sql, page);

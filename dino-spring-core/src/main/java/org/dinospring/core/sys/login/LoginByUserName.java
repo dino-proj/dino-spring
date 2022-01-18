@@ -14,13 +14,10 @@
 
 package org.dinospring.core.sys.login;
 
-import java.io.Serializable;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-
 import com.botbrain.dino.utils.ValidateUtil;
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 import org.dinospring.commons.request.PostBody;
 import org.dinospring.commons.response.Response;
 import org.dinospring.commons.response.Status;
@@ -33,9 +30,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 /**
  *
@@ -43,7 +40,7 @@ import lombok.Data;
  */
 
 public interface LoginByUserName<U extends UserEntityBase<K>, V extends User<K>, K extends Serializable>
-    extends LoginControllerBase<U, V, K> {
+  extends LoginControllerBase<U, V, K> {
 
   /**
    * 用户名密码登录
@@ -55,7 +52,7 @@ public interface LoginByUserName<U extends UserEntityBase<K>, V extends User<K>,
   @ParamTenant
   @PostMapping("/username")
   default Response<LoginAuth<V, K>> byUserName(@PathVariable("tenant_id") String tenantId,
-      @RequestBody PostBody<UserNameLoginBody> req) {
+                                               @RequestBody PostBody<UserNameLoginBody> req) {
     if (Tenant.isSys(tenantId)) {
       return Response.fail(Status.CODE.FAIL_TENANT_NOT_EXIST);
     }
@@ -64,20 +61,20 @@ public interface LoginByUserName<U extends UserEntityBase<K>, V extends User<K>,
     //查询用户
     var username = req.getBody().getUsername();
 
-    U user;
-    if (ValidateUtil.isMobile(username)) {
-      user = loginService().findUserByMobile(tenant.getId(), username).orElse(null);
-    } else {
-      user = loginService().findUserByLoginName(tenant.getId(), username).orElse(null);
+    U user = loginService().findUserByLoginName(tenant.getId(), username).orElse(null);
+    if (user == null) {
+      if (ValidateUtil.isMobile(username)) {
+        user = loginService().findUserByMobile(tenant.getId(), username).orElse(null);
+      }
     }
     Assert.notNull(user, Status.CODE.FAIL_USER_NOT_EXIST);
 
     //验证用户密码
     Assert.isTrue(loginService().verifyUserPassword(user, req.getBody().getPassword()),
-        Status.CODE.FAIL_INVALID_PASSWORD);
+      Status.CODE.FAIL_INVALID_PASSWORD);
     //返回授权签名
     return Response.success(loginService().loginAuth(tenant,
-        tenantService().projection(loginService().userClass(), user), req.getPlt(), req.getUid()));
+      tenantService().projection(loginService().userClass(), user), req.getPlt(), req.getUid()));
   }
 
   @Data

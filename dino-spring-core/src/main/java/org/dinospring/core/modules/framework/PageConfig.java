@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
 import org.dinospring.commons.annotion.AnnotionedJsonTypeIdResolver;
 
-import java.io.Serializable;
-
 /**
  *
  * @author tuuboo
@@ -15,20 +13,6 @@ import java.io.Serializable;
 
 @JsonTypeInfo(use = Id.CUSTOM, include = As.PROPERTY, visible = true, property = "@t")
 @JsonTypeIdResolver(AnnotionedJsonTypeIdResolver.class)
-public interface PageConfig extends Serializable {
+public interface PageConfig extends Component {
 
-
-  /**
-   * 入参处理
-   */
-  default void processReq() {
-
-  }
-
-  /**
-   * 出参处理
-   */
-  default void processVo() {
-
-  }
 }

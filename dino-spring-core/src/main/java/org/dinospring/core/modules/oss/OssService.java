@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -158,4 +159,15 @@ public interface OssService {
    * @return
    */
   String getPresignedObjectUrl(String bucket, String objectName);
+
+
+  /**
+   * 获取链接
+   * @param bucket
+   * @param objectName
+   * @param timeout
+   * @param unit
+   * @return
+   */
+  String getPresignedObjectUrl(String bucket, String objectName, Integer timeout, TimeUnit unit);
 }

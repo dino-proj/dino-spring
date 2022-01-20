@@ -51,6 +51,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -255,9 +256,18 @@ public class MinioOssService implements OssService {
 
   @Override
   public String getPresignedObjectUrl(String bucket, String objectName) {
+    return getPresignedObjectUrl(bucket, objectName, null, null);
+  }
+
+  @Override
+  public String getPresignedObjectUrl(String bucket, String objectName, Integer timeout, TimeUnit unit) {
     String url = null;
     try {
-      url = minioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().bucket(bucket).object(objectName).method(Method.GET).build());
+      GetPresignedObjectUrlArgs.Builder builder = GetPresignedObjectUrlArgs.builder().bucket(bucket).object(objectName).method(Method.GET);
+      if (timeout != null && unit != null) {
+        builder.expiry(timeout, unit);
+      }
+      url = minioClient.getPresignedObjectUrl(builder.build());
     } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
       InvalidResponseException | IOException | NoSuchAlgorithmException | XmlParserException | ServerException e) {
       e.printStackTrace();

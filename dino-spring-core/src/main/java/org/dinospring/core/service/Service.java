@@ -315,7 +315,7 @@ public interface Service<T, K extends Serializable> {
     var sql = repository().newSelect("t").column("t.*");
     search.buildSql(sql);
 
-    return repository().queryPage(sql, page);
+    return repository().queryPage(sql,page);
   }
 
   /**

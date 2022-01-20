@@ -62,11 +62,6 @@ public interface LoginByUserName<U extends UserEntityBase<K>, V extends User<K>,
     var username = req.getBody().getUsername();
 
     U user = loginService().findUserByLoginName(tenant.getId(), username).orElse(null);
-    if (user == null) {
-      if (ValidateUtil.isMobile(username)) {
-        user = loginService().findUserByMobile(tenant.getId(), username).orElse(null);
-      }
-    }
     Assert.notNull(user, Status.CODE.FAIL_USER_NOT_EXIST);
 
     //验证用户密码

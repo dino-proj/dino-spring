@@ -17,7 +17,7 @@ package org.dinospring.core.entity;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
-import org.dinospring.data.domain.TenantableEntityBase;
+import org.dinospring.data.domain.EntityBase;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -33,7 +33,7 @@ import lombok.experimental.FieldNameConstants;
 @EqualsAndHashCode(callSuper = true)
 @FieldNameConstants
 @MappedSuperclass
-public abstract class AbstractOrg extends TenantableEntityBase<Long> {
+public abstract class AbstractOrg extends EntityBase<Long> {
 
   /**
    * 组织树根节点ID

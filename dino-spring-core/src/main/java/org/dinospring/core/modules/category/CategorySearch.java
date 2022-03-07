@@ -16,10 +16,11 @@
 
 package org.dinospring.core.modules.category;
 
-import com.botbrain.dino.sql.builder.SelectSqlBuilder;
+import org.dinospring.core.controller.support.StatusQuery;
+import org.dinospring.data.sql.builder.SelectSqlBuilder;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import org.dinospring.core.controller.support.StatusQuery;
 
 /**
  * @author JL

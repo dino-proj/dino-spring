@@ -28,6 +28,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public interface Tenant extends Serializable {
   /**
+   * 代表系统的tenant ID；
+   */
+  public static final String TENANT_SYS = "_SYS_";
+
+  /**
    * 租户ID
    * @return
    */
@@ -90,6 +95,6 @@ public interface Tenant extends Serializable {
    * @return
    */
   static boolean isSys(String tenantId) {
-    return "SYS".equals(tenantId);
+    return TENANT_SYS.equals(tenantId);
   }
 }

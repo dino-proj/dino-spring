@@ -14,12 +14,13 @@
 
 package org.dinospring.core.controller.support;
 
-import com.botbrain.dino.sql.builder.SelectSqlBuilder;
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.dinospring.data.sql.builder.SelectSqlBuilder;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 
 /**
  * @author JL

@@ -180,12 +180,6 @@
       <scope>provided</scope>
     </dependency>
 
-    <dependency>
-      <groupId>org.dino</groupId>
-      <artifactId>dino-utils</artifactId>
-      <version>${dino-spring.version}</version>
-    </dependency>
-
     <!-- spring doc openAPI-->
     <dependency>
       <groupId>org.springdoc</groupId>

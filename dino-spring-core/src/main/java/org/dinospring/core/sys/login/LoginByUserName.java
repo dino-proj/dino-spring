@@ -19,14 +19,13 @@ import java.io.Serializable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import com.botbrain.dino.utils.ValidateUtil;
-
 import org.dinospring.commons.request.PostBody;
 import org.dinospring.commons.response.Response;
 import org.dinospring.commons.response.Status;
 import org.dinospring.commons.sys.Tenant;
 import org.dinospring.commons.sys.User;
 import org.dinospring.commons.utils.Assert;
+import org.dinospring.commons.utils.ValidateUtil;
 import org.dinospring.core.annotion.param.ParamTenant;
 import org.dinospring.core.sys.user.UserEntityBase;
 import org.springframework.web.bind.annotation.PathVariable;

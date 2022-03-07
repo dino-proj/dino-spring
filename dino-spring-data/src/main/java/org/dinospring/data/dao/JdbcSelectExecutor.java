@@ -20,16 +20,17 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.botbrain.dino.sql.builder.SelectSqlBuilder;
-import com.botbrain.dino.sql.dialect.Dialect;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.dinospring.data.sql.builder.DeleteSqlBuilder;
+import org.dinospring.data.sql.builder.SelectSqlBuilder;
+import org.dinospring.data.sql.dialect.Dialect;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.NoRepositoryBean;
+import org.springframework.util.Assert;
 
 /**
  *
@@ -59,8 +60,8 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    * @return
    */
   default SelectSqlBuilder newSelect(String tableAlias) {
-    return StringUtils.isEmpty(tableAlias) ? new SelectSqlBuilder(dialect(), this.tableName())
-        : new SelectSqlBuilder(dialect(), this.tableName(), tableAlias);
+    Assert.hasText(tableAlias, "tableAlias is empty");
+    return new SelectSqlBuilder(dialect(), this.tableName(), tableAlias);
   }
 
   /**
@@ -72,6 +73,15 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
   default <E> SelectSqlBuilder newSelect(Class<E> entity, String tableAlias) {
     return StringUtils.isEmpty(tableAlias) ? new SelectSqlBuilder(dialect(), this.tableName(entity))
         : new SelectSqlBuilder(dialect(), this.tableName(entity), tableAlias);
+  }
+
+  default DeleteSqlBuilder newDelete() {
+    return new DeleteSqlBuilder(this.tableName());
+  }
+
+  default DeleteSqlBuilder newDelete(String tableAlias) {
+    Assert.hasText(tableAlias, "tableAlias is empty");
+    return new DeleteSqlBuilder(this.tableName(), tableAlias);
   }
 
   /**

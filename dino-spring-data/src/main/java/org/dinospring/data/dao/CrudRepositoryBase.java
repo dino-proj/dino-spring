@@ -16,14 +16,11 @@ package org.dinospring.data.dao;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.dinospring.commons.context.ContextHelper;
-import org.dinospring.data.domain.TenantableEntityBase;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -43,10 +40,6 @@ public interface CrudRepositoryBase<T, K> extends JpaRepository<T, K>, JdbcSelec
    * @return
    */
   default T postQuery(T entity) {
-    if (!Objects.isNull(entity) && entity instanceof TenantableEntityBase) {
-      TenantableEntityBase<?> tenantEntity = (TenantableEntityBase<?>) entity;
-      tenantEntity.setTenantId(ContextHelper.currentTenantId());
-    }
     return entity;
   }
 

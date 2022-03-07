@@ -37,4 +37,9 @@ public class TenantServiceImpl extends ServiceBase<TenantEntity, String> impleme
     return tenantRepository;
   }
 
+  @Override
+  public TenantRepository tenantRepository() {
+    return tenantRepository;
+  }
+
 }

@@ -16,6 +16,7 @@ package org.dinospring.data.sql.builder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -689,7 +690,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * @param values
    * @return
    */
-  public T in(final String column, final List<?> values) {
+  public T in(final String column, final Collection<?> values) {
     return in(column, values, Logic.AND);
   }
 
@@ -706,7 +707,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * @param values
    * @return
    */
-  public T inIf(final boolean cnd, final String column, final List<?> values) {
+  public T inIf(final boolean cnd, final String column, final Collection<?> values) {
     return cnd ? in(column, values, Logic.AND) : that;
   }
 
@@ -722,7 +723,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * @param logic
    * @return
    */
-  public T in(final String column, final List<?> values, final Logic logic) {
+  public T in(final String column, final Collection<?> values, final Logic logic) {
     if (values == null || values.isEmpty()) {
       return that;
     }

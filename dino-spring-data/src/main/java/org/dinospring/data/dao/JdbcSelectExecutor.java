@@ -16,6 +16,7 @@ package org.dinospring.data.dao;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -94,6 +95,16 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
   }
 
   /**
+  * Query list
+  * @param sql
+  * @param sort 排序
+  * @return
+  */
+  default List<T> queryList(SelectSqlBuilder sql, Sort sort) {
+    return queryList(sql, entityClass(), sort);
+  }
+
+  /**
    * Query list
    * @param <P>
    * @param sql
@@ -101,6 +112,21 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    * @return
    */
   default <P> List<P> queryList(SelectSqlBuilder sql, Class<P> clazz) {
+    return queryList(sql.getSql(), clazz, sql.getParams());
+  }
+
+  /**
+  * Query list
+  * @param <P>
+  * @param sql
+  * @param clazz 结果类
+  * @param sort 排序
+  * @return
+  */
+  default <P> List<P> queryList(SelectSqlBuilder sql, Class<P> clazz, Sort sort) {
+    if (!Objects.isNull(sort) && sort.isSorted()) {
+      sort.forEach(o -> sql.orderBy(o.getProperty(), o.isAscending()));
+    }
     return queryList(sql.getSql(), clazz, sql.getParams());
   }
 

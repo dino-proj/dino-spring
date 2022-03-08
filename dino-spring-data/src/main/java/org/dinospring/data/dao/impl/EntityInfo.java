@@ -25,6 +25,7 @@ import org.dinospring.data.domain.TenantRowEntity;
 import org.dinospring.data.domain.TenantTableEntity;
 import org.dinospring.data.sql.dialect.Dialect;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.data.util.Lazy;
 import org.springframework.util.Assert;
 
 import lombok.Data;
@@ -48,7 +49,7 @@ public class EntityInfo {
 
   private final boolean logicalDelete;
 
-  private final String quotedTableName;
+  private final Lazy<String> quotedTableName;
 
   private EntityInfo(Dialect dialect, Class<?> domainClass, TenantLevel tenantLevel, String tableName,
       boolean logicalDelete) {
@@ -58,11 +59,7 @@ public class EntityInfo {
     this.tableName = tableName;
     this.logicalDelete = logicalDelete;
 
-    if (!isTenantTable()) {
-      this.quotedTableName = dialect.quoteTableName(tableName);
-    } else {
-      this.quotedTableName = null;
-    }
+    this.quotedTableName = Lazy.of(() -> dialect.quoteTableName(tableName));
   }
 
   /**
@@ -81,7 +78,7 @@ public class EntityInfo {
     if (isTenantTable()) {
       return dialect.quoteTableName(tableName + '_' + ContextHelper.currentTenantId());
     } else {
-      return quotedTableName;
+      return quotedTableName.get();
     }
   }
 

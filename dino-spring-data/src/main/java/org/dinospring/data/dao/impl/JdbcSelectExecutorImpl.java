@@ -220,16 +220,6 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
   }
 
   @Override
-  public boolean updateColumnById(@Nonnull K id, @Nonnull Map<String, Object> columnValue) {
-    var sql = new UpdateSqlBuilder(tableName());
-    sql.eq("id", id);
-    for (var kv : columnValue.entrySet()) {
-      sql.set(kv.getKey(), kv.getValue());
-    }
-    return jdbcTemplate.update(sql.getSql(), sql.getParams()) == 1;
-  }
-
-  @Override
   public K save(String sql, Object... params) {
     GeneratedKeyHolder keys = new GeneratedKeyHolder();
     var argSetter = new ArgumentPreparedStatementSetter(params);
@@ -279,6 +269,29 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
   @Override
   public <C> C fromJson(String json, Class<C> cls) throws JsonProcessingException {
     return objectMapper.readValue(json, cls);
+  }
+
+  @Override
+  public boolean updateById(K id, Map<String, Object> columnValue) {
+
+    var sql = new UpdateSqlBuilder(tableName());
+    sql.eq("id", id);
+    for (var kv : columnValue.entrySet()) {
+      sql.set(kv.getKey(), kv.getValue());
+    }
+    return jdbcTemplate.update(sql.getSql(), sql.getParams()) == 1;
+  }
+
+  @Override
+  public boolean updateByIdWithVersion(K id, Map<String, Object> columnValue, Number version) {
+    var sql = new UpdateSqlBuilder(tableName());
+    sql.eq("id", id);
+    sql.eq("version", version);
+    for (var kv : columnValue.entrySet()) {
+      sql.set(kv.getKey(), kv.getValue());
+    }
+    sql.set("version = version+1");
+    return jdbcTemplate.update(sql.getSql(), sql.getParams()) == 1;
   }
 
 }

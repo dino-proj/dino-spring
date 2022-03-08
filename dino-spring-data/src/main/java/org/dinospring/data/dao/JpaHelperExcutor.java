@@ -89,8 +89,21 @@ public interface JpaHelperExcutor<T, K> {
    * @return
    */
   @Modifying
-  default boolean updateColumnById(K id, String column, Object value) {
-    return updateColumnById(id, Map.of(column, value));
+  default boolean updateById(K id, String column, Object value) {
+    return updateById(id, Map.of(column, value));
+  }
+
+  /**
+   * 更新指定列，并判断版本，如果版本不对，则不更新，如果版本正确，则版本自动+1
+   * @param id
+   * @param column
+   * @param value
+   * @param version
+   * @return
+   */
+  @Modifying
+  default boolean updateByIdWithVersion(K id, String column, Object value, Number version) {
+    return updateByIdWithVersion(id, Map.of(column, value), version);
   }
 
   /**
@@ -103,8 +116,23 @@ public interface JpaHelperExcutor<T, K> {
    * @return
    */
   @Modifying
-  default boolean updateColumnById(K id, String column1, Object value1, String column2, Object value2) {
-    return updateColumnById(id, Map.of(column1, value1, column2, value2));
+  default boolean updateById(K id, String column1, Object value1, String column2, Object value2) {
+    return updateById(id, Map.of(column1, value1, column2, value2));
+  }
+
+  /**
+   * 更新指定列，并判断版本，如果版本不对，则不更新，如果版本正确，则版本自动+1
+   * @param id
+   * @param column1
+   * @param value1
+   * @param column2
+   * @param value2
+   * @param version
+   * @return
+   */
+  default boolean updateByIdWithVersion(K id, String column1, Object value1, String column2, Object value2,
+      Number version) {
+    return updateByIdWithVersion(id, Map.of(column1, value1, column2, value2), version);
   }
 
   /**
@@ -114,5 +142,15 @@ public interface JpaHelperExcutor<T, K> {
    * @return
    */
   @Modifying
-  boolean updateColumnById(K id, Map<String, Object> columnValue);
+  boolean updateById(K id, Map<String, Object> columnValue);
+
+  /**
+   * 更新指定列，并判断版本，如果版本不对，则不更新，如果版本正确，则版本自动+1
+   * @param id
+   * @param columnValue
+   * @param version
+   * @return
+   */
+  @Modifying
+  boolean updateByIdWithVersion(K id, Map<String, Object> columnValue, Number version);
 }

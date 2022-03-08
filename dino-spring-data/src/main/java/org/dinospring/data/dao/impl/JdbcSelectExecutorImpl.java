@@ -37,6 +37,7 @@ import org.dinospring.commons.response.Status;
 import org.dinospring.commons.utils.Assert;
 import org.dinospring.commons.utils.TypeUtils;
 import org.dinospring.data.dao.JdbcSelectExecutor;
+import org.dinospring.data.domain.Versioned;
 import org.dinospring.data.sql.builder.SelectSqlBuilder;
 import org.dinospring.data.sql.builder.UpdateSqlBuilder;
 import org.dinospring.data.sql.dialect.Dialect;
@@ -284,6 +285,8 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
 
   @Override
   public boolean updateByIdWithVersion(K id, Map<String, Object> columnValue, Number version) {
+    org.springframework.util.Assert.isTrue(entityInfo.isVersioned(),
+        entityInfo.getDomainClass() + " must implements " + Versioned.class);
     var sql = new UpdateSqlBuilder(tableName());
     sql.eq("id", id);
     sql.eq("version", version);

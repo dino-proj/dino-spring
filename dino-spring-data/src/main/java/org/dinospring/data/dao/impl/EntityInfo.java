@@ -23,6 +23,7 @@ import org.dinospring.data.domain.LogicalDelete;
 import org.dinospring.data.domain.TenantLevel;
 import org.dinospring.data.domain.TenantRowEntity;
 import org.dinospring.data.domain.TenantTableEntity;
+import org.dinospring.data.domain.Versioned;
 import org.dinospring.data.sql.dialect.Dialect;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.util.Lazy;
@@ -49,15 +50,18 @@ public class EntityInfo {
 
   private final boolean logicalDelete;
 
+  private final boolean versioned;
+
   private final Lazy<String> quotedTableName;
 
   private EntityInfo(Dialect dialect, Class<?> domainClass, TenantLevel tenantLevel, String tableName,
-      boolean logicalDelete) {
+      boolean logicalDelete, boolean versioned) {
     this.dialect = dialect;
     this.domainClass = domainClass;
     this.tenantLevel = tenantLevel;
     this.tableName = tableName;
     this.logicalDelete = logicalDelete;
+    this.versioned = versioned;
 
     this.quotedTableName = Lazy.of(() -> dialect.quoteTableName(tableName));
   }
@@ -105,6 +109,8 @@ public class EntityInfo {
       Assert.isAssignable(EntityBase.class, cls, "");
     }
 
-    return new EntityInfo(dialect, cls, tenantLevel, tableName, logicalDelete);
+    var versioned = Versioned.class.isAssignableFrom(cls);
+
+    return new EntityInfo(dialect, cls, tenantLevel, tableName, logicalDelete, versioned);
   }
 }

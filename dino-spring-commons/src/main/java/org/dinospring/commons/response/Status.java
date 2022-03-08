@@ -85,6 +85,9 @@ public interface Status {
     //操作执行失败
     FAIL_OPERATION(4006, "操作执行失败"),
 
+    //资源不存在
+    FAIL_INVALID_STAUS(4010, "资源状态不正确"),
+
     //请求连接超时
     FAIL_REQUEST_TIMEOUT(4008, "请求连接超时"),
 

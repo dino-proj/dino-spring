@@ -31,12 +31,12 @@ import javax.annotation.Nonnull;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.sys.User;
 import org.dinospring.commons.utils.BatchUtils;
 import org.dinospring.commons.utils.ProjectionUtils;
+import org.dinospring.commons.utils.TypeUtils;
 import org.dinospring.core.service.Service;
 import org.dinospring.data.domain.EntityBase;
 import org.dinospring.data.domain.TenantRowEntity;
@@ -109,7 +109,7 @@ public abstract class ServiceBase<T, K extends Serializable> implements Service<
    * 创建一个新的Entity
    */
   protected T newEntity() {
-    throw new NotImplementedException();
+    return TypeUtils.newInstance(getEntityClass());
   }
 
   /**

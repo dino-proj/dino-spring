@@ -14,6 +14,7 @@
 
 package org.dinospring.commons.utils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
@@ -91,6 +92,20 @@ public class TypeUtils {
    */
   public static boolean isPrimitiveOrString(@Nonnull Class<?> clazz) {
     return ClassUtils.isPrimitiveOrWrapper(clazz) || clazz == String.class;
+  }
+
+  /**
+   * 用默认构造函数构建创建新实例
+   * @param cls
+   * @return
+   */
+  public static <T> T newInstance(Class<T> cls) {
+    try {
+      return cls.getDeclaredConstructor().newInstance();
+    } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+        | NoSuchMethodException | SecurityException e) {
+      throw new UnsupportedOperationException(e);
+    }
   }
 
   /**

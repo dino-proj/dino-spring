@@ -14,15 +14,19 @@
 
 package org.dinospring.commons.utils;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
+
+import lombok.AllArgsConstructor;
 
 /**
  * 异步执行的任务
@@ -30,14 +34,27 @@ import org.springframework.stereotype.Component;
  */
 @Async
 @Component
+@AllArgsConstructor
 public class AsyncWorker {
+
+  private final ThreadPoolExecutor executor;
 
   /**
    * 无参数，无返回的异步调用
    * @param task 异步任务
    */
-  public void exec(AsyncTask task) {
-    task.exec();
+  public void exec(Runnable task) {
+    executor.execute(task);
+  }
+
+  /**
+   * 无参数，无返回的异步调用
+   * @param task 异步任务
+   */
+  public <R> Future<R> exec(Callable<R> task) {
+    var futureTask = new FutureTask<>(task);
+    executor.execute(futureTask);
+    return futureTask;
   }
 
   /**
@@ -47,7 +64,7 @@ public class AsyncWorker {
    * @param param 传给异步任务的参数
    */
   public <T> void exec(Consumer<T> task, final T param) {
-    task.accept(param);
+    executor.execute(() -> task.accept(param));
   }
 
   /**
@@ -59,7 +76,9 @@ public class AsyncWorker {
    * @return
    */
   public <T, R> Future<R> exec(Function<T, R> task, final T param) {
-    return new AsyncResult<>(task.apply(param));
+    var futureTask = new FutureTask<>(() -> task.apply(param));
+    executor.execute(futureTask);
+    return futureTask;
   }
 
   /**
@@ -71,7 +90,7 @@ public class AsyncWorker {
    * @param paramSecond 第二个参数
    */
   public <T, U> void exec(BiConsumer<T, U> task, final T paramFirst, final U paramSecond) {
-    task.accept(paramFirst, paramSecond);
+    executor.execute(() -> task.accept(paramFirst, paramSecond));
   }
 
   /**
@@ -85,7 +104,9 @@ public class AsyncWorker {
    * @return
    */
   public <T, U, R> Future<R> exec(BiFunction<T, U, R> task, final T paramFirst, final U paramSecond) {
-    return new AsyncResult<>(task.apply(paramFirst, paramSecond));
+    var futureTask = new FutureTask<>(() -> task.apply(paramFirst, paramSecond));
+    executor.execute(futureTask);
+    return futureTask;
   }
 
 }

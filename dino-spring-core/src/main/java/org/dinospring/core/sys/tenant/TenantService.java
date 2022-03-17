@@ -36,6 +36,17 @@ public interface TenantService extends Service<TenantEntity, String> {
   }
 
   /**
+   * 获取租户信息
+   * @param <T>
+   * @param tenantId
+   * @param cls
+   * @return
+   */
+  default <T> T findTenantById(String tenantId, Class<T> cls) {
+    return projection(cls, getById(tenantId));
+  }
+
+  /**
    * 根据域名查询Domain
    * @param <T>
    * @param domain

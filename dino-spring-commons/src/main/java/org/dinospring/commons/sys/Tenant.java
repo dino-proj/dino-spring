@@ -61,13 +61,6 @@ public interface Tenant extends Serializable {
   String getIconUrl();
 
   /**
-   * 租户子域名, 用于PC和H5端
-   * @return
-   */
-  @Schema(description = "租户子域名, 用于PC和H5端")
-  String getSubDomain();
-
-  /**
    * 租户自定义域名,如果用户配置了域名，则用其自己的域名
    * @return
    */

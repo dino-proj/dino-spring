@@ -24,4 +24,18 @@ public interface TenantControllerBase extends ControllerBase<TenantService, Tena
     Assert.hasText(domain, Status.CODE.FAIL_INVALID_PARAM.withMsg("domain 不能为空"));
     return Response.success(service().findTenantByDomain(domain, TenantVo.class));
   }
+
+  /**
+   * 根据域名查询Tenant
+   * @param domain 域名
+   * @return
+   */
+  @Operation(summary = "根据域名查询Tenant")
+  @Parameter(name = "id", description = "Tenant Id")
+  @GetMapping("/byid")
+  default Response<TenantVo> getById(String id) {
+
+    Assert.hasText(id, Status.CODE.FAIL_INVALID_PARAM.withMsg("id 不能为空"));
+    return Response.success(service().findTenantById(id, TenantVo.class));
+  }
 }

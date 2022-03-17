@@ -6,6 +6,7 @@ import org.dinospring.core.vo.VoImplBase;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  *
@@ -14,6 +15,7 @@ import lombok.Data;
  */
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class TenantVo extends VoImplBase<String> implements Tenant {
 
   @Schema(description = "租户名称")
@@ -24,9 +26,6 @@ public class TenantVo extends VoImplBase<String> implements Tenant {
 
   @Schema(description = "租户LOGO")
   String iconUrl;
-
-  @Schema(description = "租户子域名，用于PC和H5端")
-  String subDomain;
 
   @Schema(description = "租户自定义域名，如果用户配置了域名，则用其自己的域名")
   String customDomain;

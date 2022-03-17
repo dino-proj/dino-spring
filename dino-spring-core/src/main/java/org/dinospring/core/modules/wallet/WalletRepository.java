@@ -1,6 +1,5 @@
-package org.dinospring.core.modules.account;
+package org.dinospring.core.modules.wallet;
 
-import java.io.Serializable;
 import java.util.Optional;
 
 import org.dinospring.data.dao.CrudRepositoryBase;
@@ -15,13 +14,13 @@ import org.springframework.data.repository.NoRepositoryBean;
  */
 
 @NoRepositoryBean
-public interface AccountRepositoryBase<E extends AccountEntityBase<K>, K extends Serializable>
-    extends CrudRepositoryBase<E, Long> {
+public interface WalletRepository
+    extends CrudRepositoryBase<WalletEntity, Long> {
 
   @Modifying
   @Query("UPDATE #{#entityName} e SET e.balance = :balance, e.ver = :newVersion WHERE e.id = :accountId AND e.ver = :oldVersion")
   Optional<Long> updateBalance(Long accountId, Long balance, Long oldVersion, Long newVersion);
 
-  @Query("FROM #{#entityName} e WHERE e.ownerId = :ownerId")
-  Optional<E> findByOwnerId(K ownerId);
+  @Query("FROM #{#entityName} e WHERE e.ownerId = :ownerId AND e.type = :walletType")
+  Optional<WalletEntity> findByOwnerId(String ownerId, String walletType);
 }

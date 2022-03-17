@@ -1,11 +1,12 @@
-package org.dinospring.core.modules.account;
-
-import java.io.Serializable;
+package org.dinospring.core.modules.wallet;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Index;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Table;
 
-import org.dinospring.data.domain.EntityBase;
+import org.dinospring.data.domain.TenantRowEntityBase;
 import org.dinospring.data.domain.Versioned;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,13 +26,20 @@ import lombok.experimental.FieldNameConstants;
 @MappedSuperclass
 @NoArgsConstructor
 @FieldNameConstants
-public abstract class AccountEntityBase<K extends Serializable> extends EntityBase<Long> implements Versioned {
+@Entity
+@Table(name = "sys_wallet", indexes = {
+    @Index(name = "uniq_ownerId_type", columnList = "owner_id,type", unique = true) })
+public class WalletEntity extends TenantRowEntityBase<Long> implements Versioned {
 
-  @Schema(description = "账户Owner Id")
+  @Schema(description = "钱包Owner Id")
   @Column(name = "owner_id", nullable = false)
-  private K ownerId;
+  private String ownerId;
 
-  @Schema(description = "账户余额", defaultValue = "0")
+  @Schema(description = "钱包类型")
+  @Column(name = "type", nullable = false)
+  private String type;
+
+  @Schema(description = "钱包余额", defaultValue = "0")
   @Column(name = "balance", nullable = false)
   private Long balance = 0L;
 

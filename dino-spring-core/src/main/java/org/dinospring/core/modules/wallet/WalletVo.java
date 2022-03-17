@@ -1,4 +1,4 @@
-package org.dinospring.core.modules.account;
+package org.dinospring.core.modules.wallet;
 
 import org.dinospring.core.vo.VoImplBase;
 
@@ -18,9 +18,17 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountVoBase extends VoImplBase<Long> {
+public class WalletVo extends VoImplBase<Long> {
+
+  @Schema(description = "账户Owner Id")
+  private String ownerId;
+
+  @Schema(description = "钱包类型")
+  private String type;
 
   @Schema(description = "余额")
   private Long balance;
 
+  @Schema(description = "锁定金额", defaultValue = "0")
+  private Long lockBalance = 0L;
 }

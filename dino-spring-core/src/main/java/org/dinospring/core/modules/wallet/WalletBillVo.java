@@ -1,4 +1,4 @@
-package org.dinospring.core.modules.account;
+package org.dinospring.core.modules.wallet;
 
 import java.io.Serializable;
 
@@ -20,13 +20,16 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountBillVo extends VoImplBase<Long> {
+public class WalletBillVo extends VoImplBase<Long> {
 
   @Schema(description = "账户ID")
   private Long accountId;
 
   @Schema(description = "变动数量，正数表示增加，负数表示减少")
   private Long amount;
+
+  @Schema(description = "是否为冻结")
+  private Boolean isLock;
 
   @Schema(description = "变动后的余额")
   private Long balance;

@@ -14,9 +14,6 @@
 
 package org.dinospring.data.domain;
 
-import java.io.Serializable;
-import java.util.Properties;
-
 import org.dinospring.commons.context.ContextHelper;
 import org.hibernate.HibernateException;
 import org.hibernate.MappingException;
@@ -26,6 +23,9 @@ import org.hibernate.id.IdentifierGeneratorHelper;
 import org.hibernate.id.IdentityGenerator;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.type.Type;
+
+import java.io.Serializable;
+import java.util.Properties;
 
 /**
  * 根据ID类型生成ID
@@ -41,11 +41,12 @@ public class IdGenerator extends IdentityGenerator implements Configurable {
   public Serializable generate(SharedSessionContractImplementor session, Object object) throws HibernateException {
     var ep = session.getEntityPersister(entityName, object);
     var id = ep.getIdentifier(object, session);
-    if ("string".equals(ep.getIdentifierType().getName())) {
-      if (id == null) {
-        id = idService.genIdStr();
-      }
+    // 自定义
+    if (null != id) {
       return id;
+    }
+    if ("string".equals(ep.getIdentifierType().getName())) {
+      return idService.genIdStr();
     }
     return IdentifierGeneratorHelper.POST_INSERT_INDICATOR;
   }

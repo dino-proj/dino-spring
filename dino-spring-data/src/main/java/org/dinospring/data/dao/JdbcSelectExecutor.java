@@ -14,15 +14,10 @@
 
 package org.dinospring.data.dao;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.botbrain.dino.sql.builder.InsertSqlBuilder;
 import com.botbrain.dino.sql.builder.SelectSqlBuilder;
+import com.botbrain.dino.sql.builder.UpdateSqlBuilder;
 import com.botbrain.dino.sql.dialect.Dialect;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -30,6 +25,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.NoRepositoryBean;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -60,7 +60,7 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    */
   default SelectSqlBuilder newSelect(String tableAlias) {
     return StringUtils.isEmpty(tableAlias) ? new SelectSqlBuilder(dialect(), this.tableName())
-        : new SelectSqlBuilder(dialect(), this.tableName(), tableAlias);
+      : new SelectSqlBuilder(dialect(), this.tableName(), tableAlias);
   }
 
   /**
@@ -71,7 +71,33 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    */
   default <E> SelectSqlBuilder newSelect(Class<E> entity, String tableAlias) {
     return StringUtils.isEmpty(tableAlias) ? new SelectSqlBuilder(dialect(), this.tableName(entity))
-        : new SelectSqlBuilder(dialect(), this.tableName(entity), tableAlias);
+      : new SelectSqlBuilder(dialect(), this.tableName(entity), tableAlias);
+  }
+
+  /**
+   * 针对此Entity的新的修改
+   * @return
+   */
+  default UpdateSqlBuilder newUpdate() {
+    return new UpdateSqlBuilder(this.tableName());
+  }
+
+  /**
+   * 针对此Entity的新的修改
+   * @param alias
+   * @return
+   */
+  default UpdateSqlBuilder newUpdate(String alias) {
+    return new UpdateSqlBuilder(this.tableName(), alias);
+  }
+
+
+  /**
+   * 针对此Entity的新的新增
+   * @return
+   */
+  default InsertSqlBuilder newInsert() {
+    return new InsertSqlBuilder(this.tableName());
   }
 
   /**
@@ -183,7 +209,7 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    * @return
    */
   default <MK, MV> Map<MK, MV> queryForMap(SelectSqlBuilder sql, String keyColumn, Class<MK> keyClass,
-      Class<MV> valueClass) {
+                                           Class<MV> valueClass) {
     return queryForMap(sql.getSql(), keyColumn, keyClass, valueClass, sql.getParams());
   }
 
@@ -199,7 +225,7 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    * @return
    */
   <MK, MV> Map<MK, MV> queryForMap(SelectSqlBuilder sql, String keyColumn, Class<MK> keyClass, String valueColumn,
-      Class<MV> valueClass);
+                                   Class<MV> valueClass);
 
   /**
    * 将查询结果放到Map中
@@ -213,7 +239,7 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    * @return
    */
   <MK, MV> Map<MK, MV> queryForMap(String sql, String keyColumn, Class<MK> keyClass, Class<MV> valueClass,
-      Object... params);
+                                   Object... params);
 
   /**
    * 分页查询
@@ -237,14 +263,7 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
 
     Sort sort = pageable.getSort();
     if (sort.isSorted()) {
-      sort.forEach(o -> {
-        String s = sql.getSql();
-        if (s.indexOf("join")!=-1 || s.indexOf("JOIN")!=-1){
-          sql.orderBy(String.format("t.%s", o.getProperty()), o.isAscending());
-        }else {
-          sql.orderBy(o.getProperty(), o.isAscending());
-        }
-      });
+      sort.forEach(o -> sql.orderBy(o.getProperty(), o.isAscending()));
     }
     if (pageable.isUnpaged()) {
       return new PageImpl<>(queryList(sql, clazz));

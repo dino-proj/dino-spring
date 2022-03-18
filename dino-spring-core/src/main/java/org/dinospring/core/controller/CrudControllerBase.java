@@ -14,14 +14,12 @@
 
 package org.dinospring.core.controller;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
+import com.botbrain.dino.sql.builder.SelectSqlBuilder;
 import com.fasterxml.jackson.annotation.JsonView;
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import org.apache.commons.collections4.CollectionUtils;
 import org.dinospring.commons.request.PageReq;
 import org.dinospring.commons.request.PostBody;
 import org.dinospring.commons.request.SortReq;
@@ -46,9 +44,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import javax.annotation.Nonnull;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -57,7 +57,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
  */
 
 public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBase<K>, VO extends VoBase<K>, SRC extends CustomQuery, REQ, K extends Serializable>
-    extends ControllerBase<S, E, VO, K> {
+  extends ControllerBase<S, E, VO, K> {
 
   /**
    * 对VO对象进行返回前的处理
@@ -107,14 +107,19 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @PostMapping("list")
   @JsonView(PropertyView.OnSummary.class)
   default PageResponse<VO> list(@PathVariable("tenant_id") String tenantId, PageReq pageReq, SortReq sortReq,
-      @RequestBody PostBody<SRC> req) {
+                                @RequestBody PostBody<SRC> req) {
 
+    List<String> sort = sortReq.getSort();
+    if (CollectionUtils.isNotEmpty(sort)) {
+      sort = sort.stream().map(s -> "t." + s).collect(Collectors.toList());
+      sortReq.setSort(sort);
+    }
     var pageable = pageReq.pageable(sortReq);
 
     var query = req.getBody();
-    var pageData = query == null ? service().listPage(pageable) : service().listPage(query, pageable);
+    var pageData = query == null ? service().listPage(pageable, voClass()) : service().listPage(query, pageable,voClass());
 
-    return PageResponse.success(pageData, t -> processVoList(service().projection(voClass(), t)));
+    return PageResponse.success(pageData, this::processVoList);
   }
 
   /**
@@ -130,7 +135,9 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @JsonView(PropertyView.OnDetail.class)
   default Response<VO> getByid(@PathVariable("tenant_id") String tenantId, @RequestParam K id) {
 
-    return Response.success(processVo(service().getById(id, voClass())));
+    SelectSqlBuilder selectSqlBuilder = service().repository().newSelect().eq("id", id);
+
+    return Response.success(processVo(service().repository().getOne(selectSqlBuilder, voClass())));
   }
 
   /**
@@ -151,7 +158,9 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
 
     VO vo = add(body);
 
-    return Response.success(processVo(vo));
+    SelectSqlBuilder selectSqlBuilder = service().repository().newSelect().eq("id", vo.getId());
+
+    return Response.success(processVo(service().repository().getOne(selectSqlBuilder, voClass())));
   }
 
   /**
@@ -178,14 +187,14 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @PostMapping("update")
   @Transactional(rollbackFor = Exception.class)
   default Response<VO> update(@PathVariable("tenant_id") String tenantId, @RequestParam K id,
-      @RequestBody PostBody<REQ> req) {
+                              @RequestBody PostBody<REQ> req) {
 
     var body = processReq(tenantId, req, id);
 
     Assert.notNull(body, Status.CODE.FAIL_INVALID_PARAM);
 
     VO vo = update(body, id);
-    return Response.success(processVo(vo));
+    return Response.success(processVo(service().getById(id, voClass())));
   }
 
   /**

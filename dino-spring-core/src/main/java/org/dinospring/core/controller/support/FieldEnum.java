@@ -16,11 +16,13 @@
 
 package org.dinospring.core.controller.support;
 
+import java.io.Serializable;
+
 /**
  * @author JL
  * @Date: 2021/11/2
  */
-public interface FieldEnum {
+public interface FieldEnum extends Serializable {
 
   /**
    * 数据库字段名

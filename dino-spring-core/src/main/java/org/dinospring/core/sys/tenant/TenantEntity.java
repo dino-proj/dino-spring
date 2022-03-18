@@ -51,12 +51,8 @@ public class TenantEntity extends EntityBase<String> {
   @Column(name = "icon_url", length = 2048)
   String iconUrl;
 
-  @Schema(description = "租户子域名，用于PC和H5端")
-  @Column(name = "sub_domain", length = 16)
-  String subDomain;
-
   @Schema(description = "租户自定义域名，如果用户配置了域名，则用其自己的域名")
-  @Column(name = "custom_domain", length = 128)
+  @Column(name = "custom_domain", length = 128, nullable = true, unique = true)
   String customDomain;
 
   @Schema(description = "租户秘钥，请不要随便显示")

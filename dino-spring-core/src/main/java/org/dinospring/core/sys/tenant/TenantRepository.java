@@ -14,7 +14,12 @@
 
 package org.dinospring.core.sys.tenant;
 
+import java.util.Optional;
+
+import javax.annotation.Nonnull;
+
 import org.dinospring.data.dao.CrudRepositoryBase;
+import org.springframework.data.jpa.repository.Query;
 
 /**
  *
@@ -23,4 +28,6 @@ import org.dinospring.data.dao.CrudRepositoryBase;
 
 public interface TenantRepository extends CrudRepositoryBase<TenantEntity, String> {
 
+  @Query("SELECT * FROM #{#entityName} e WHERE e.customDomain = :domain")
+  Optional<TenantEntity> getByDomain(@Nonnull String domain);
 }

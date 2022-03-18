@@ -14,12 +14,15 @@
 
 package org.dinospring.commons.utils;
 
-import lombok.experimental.UtilityClass;
-import org.springframework.util.ClassUtils;
-
-import javax.annotation.Nonnull;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+
+import javax.annotation.Nonnull;
+
+import org.springframework.util.ClassUtils;
+
+import lombok.experimental.UtilityClass;
 
 /**
  *
@@ -89,5 +92,34 @@ public class TypeUtils {
    */
   public static boolean isPrimitiveOrString(@Nonnull Class<?> clazz) {
     return ClassUtils.isPrimitiveOrWrapper(clazz) || clazz == String.class;
+  }
+
+  /**
+   * 用默认构造函数构建创建新实例
+   * @param cls
+   * @return
+   */
+  public static <T> T newInstance(Class<T> cls) {
+    try {
+      return cls.getDeclaredConstructor().newInstance();
+    } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+        | NoSuchMethodException | SecurityException e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
+
+  /**
+   * 判断instance是否为types中的一种类型
+   * @param instance
+   * @param types
+   * @return
+   */
+  public static boolean isInstanceOfAny(Object instance, Type... types) {
+    for (Type type : types) {
+      if (org.apache.commons.lang3.reflect.TypeUtils.isInstance(instance, type)) {
+        return true;
+      }
+    }
+    return false;
   }
 }

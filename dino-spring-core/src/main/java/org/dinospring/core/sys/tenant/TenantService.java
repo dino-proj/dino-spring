@@ -24,6 +24,8 @@ import org.dinospring.core.service.Service;
 
 public interface TenantService extends Service<TenantEntity, String> {
 
+  TenantRepository tenantRepository();
+
   /**
    * 获取租户信息
    * @param tenantId
@@ -31,5 +33,27 @@ public interface TenantService extends Service<TenantEntity, String> {
    */
   default Tenant findTenantById(String tenantId) {
     return projection(Tenant.class, getById(tenantId));
+  }
+
+  /**
+   * 获取租户信息
+   * @param <T>
+   * @param tenantId
+   * @param cls
+   * @return
+   */
+  default <T> T findTenantById(String tenantId, Class<T> cls) {
+    return projection(cls, getById(tenantId));
+  }
+
+  /**
+   * 根据域名查询Domain
+   * @param <T>
+   * @param domain
+   * @param cls
+   * @return
+   */
+  default <T> T findTenantByDomain(String domain, Class<T> cls) {
+    return projection(cls, tenantRepository().getByDomain(domain));
   }
 }

@@ -23,7 +23,7 @@ import javax.persistence.Table;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 
 import org.dinospring.commons.VisualScope;
-import org.dinospring.data.domain.TenantableEntityBase;
+import org.dinospring.data.domain.TenantRowEntityBase;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
@@ -43,7 +43,7 @@ import lombok.experimental.FieldNameConstants;
 @Entity
 @Table(name = "sys_frame_layout")
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
-public class LayoutEntity extends TenantableEntityBase<Long> {
+public class LayoutEntity extends TenantRowEntityBase<Long> {
   @Schema(description = "布局标题")
   private String title;
 

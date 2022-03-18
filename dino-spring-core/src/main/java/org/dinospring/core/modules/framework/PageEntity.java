@@ -21,7 +21,7 @@ import javax.persistence.Table;
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 
-import org.dinospring.data.domain.TenantableEntityBase;
+import org.dinospring.data.domain.TenantRowEntityBase;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
@@ -44,7 +44,7 @@ import lombok.experimental.FieldNameConstants;
 @Entity
 @Table(name = "sys_frame_page")
 @TypeDef(name = "json", typeClass = JsonBinaryType.class)
-public class PageEntity extends TenantableEntityBase<Long> {
+public class PageEntity extends TenantRowEntityBase<Long> {
 
   @Schema(title = "页面标题")
   @Column(name = "title", length = 64)

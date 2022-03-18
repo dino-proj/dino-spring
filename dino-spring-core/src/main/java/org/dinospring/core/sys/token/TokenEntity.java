@@ -18,7 +18,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.dinospring.data.domain.TenantableEntityBase;
+import org.dinospring.data.domain.TenantRowEntityBase;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -36,7 +36,7 @@ import lombok.experimental.FieldNameConstants;
 @Entity
 @FieldNameConstants
 @Table(name = "sys_token")
-public class TokenEntity extends TenantableEntityBase<String> {
+public class TokenEntity extends TenantRowEntityBase<String> {
 
   @Schema(description = "用户ID")
   @Column(length = 64)

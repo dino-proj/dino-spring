@@ -18,7 +18,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.dinospring.data.domain.TenantableEntityBase;
+import org.dinospring.data.domain.TenantRowEntityBase;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -39,7 +39,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Entity
 @Table(name = "sys_task")
-public class TaskEntity extends TenantableEntityBase<String> {
+public class TaskEntity extends TenantRowEntityBase<String> {
 
   @Schema(description = "任务的名称", maxLength = 256)
   @Column(name = "task_name", length = 256, nullable = false)

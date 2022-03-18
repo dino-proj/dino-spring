@@ -20,7 +20,7 @@ import javax.persistence.MappedSuperclass;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 
 import org.dinospring.commons.Scope;
-import org.dinospring.data.domain.TenantableEntityBase;
+import org.dinospring.data.domain.TenantRowEntityBase;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
@@ -41,7 +41,7 @@ import lombok.experimental.FieldNameConstants;
 @FieldNameConstants
 @MappedSuperclass
 @TypeDef(name = "json", typeClass = JsonType.class)
-public class Configuration extends TenantableEntityBase<Long> {
+public class Configuration extends TenantRowEntityBase<Long> {
 
   @Column(name = "scope", nullable = false)
   private Scope scope;

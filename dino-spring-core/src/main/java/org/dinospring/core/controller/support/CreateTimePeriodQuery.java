@@ -14,11 +14,12 @@
 
 package org.dinospring.core.controller.support;
 
-import com.botbrain.dino.sql.builder.SelectSqlBuilder;
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
 import org.dinospring.commons.data.TimePeriod;
 import org.dinospring.core.service.CustomQuery;
+import org.dinospring.data.sql.builder.SelectSqlBuilder;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 
 /**
  * @author JL

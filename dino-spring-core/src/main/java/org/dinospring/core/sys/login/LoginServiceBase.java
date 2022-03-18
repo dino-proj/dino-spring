@@ -18,8 +18,6 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Optional;
 
-import com.botbrain.dino.utils.ValidateUtil;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.RandomStringGenerator;
@@ -29,6 +27,7 @@ import org.dinospring.commons.sys.Tenant;
 import org.dinospring.commons.sys.User;
 import org.dinospring.commons.utils.Assert;
 import org.dinospring.commons.utils.TypeUtils;
+import org.dinospring.commons.utils.ValidateUtil;
 import org.dinospring.core.entity.Code;
 import org.dinospring.core.modules.message.sms.SmsService;
 import org.dinospring.core.sys.login.config.LoginModuleProperties;
@@ -112,7 +111,7 @@ public abstract interface LoginServiceBase<U extends UserEntityBase<K>, V extend
   default LoginAuth<V, K> loginAuth(Tenant tenant, V user, String plt, String guid) {
     Assert.notNull(user, Status.CODE.FAIL_USER_NOT_EXIST);
 
-    Assert.isTrue(user.getStatus().equals(Code.STATUS.OK.name().toLowerCase()) , Status.CODE.FAIL_LOGIN_DENNY);
+    Assert.isTrue(user.getStatus().equals(Code.STATUS.OK.name().toLowerCase()), Status.CODE.FAIL_LOGIN_DENNY);
 
     var auth = newLoginAuth();
     auth.setUser(user);

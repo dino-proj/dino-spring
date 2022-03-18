@@ -20,8 +20,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.alibaba.fastjson.JSON;
-import com.botbrain.dino.utils.IPUtils;
+import com.google.gson.Gson;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -35,6 +34,7 @@ import org.dinospring.commons.exception.BusinessException;
 import org.dinospring.commons.response.Response;
 import org.dinospring.commons.response.Status;
 import org.dinospring.commons.utils.AsyncWorker;
+import org.dinospring.commons.utils.IPUtils;
 import org.dinospring.core.annotion.AuditLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ResolvableType;
@@ -56,6 +56,10 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class AuditLogAspect {
+
+  @Autowired
+  private Gson gson;
+
   @Autowired
   private AsyncWorker asyncWorker;
 
@@ -152,7 +156,7 @@ public class AuditLogAspect {
     Map<String, String> params = new HashMap<>(16);
     request.getParameterMap().entrySet().stream()
         .forEach(kv -> params.put(kv.getKey(), StringUtils.join(kv.getValue(), ',')));
-    String paramsJson = JSON.toJSONString(params);
+    String paramsJson = gson.toJson(params);
     paramsJson = StringUtils.left(paramsJson, maxLength);
     auditLog.setRequestParams(paramsJson);
 

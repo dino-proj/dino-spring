@@ -16,7 +16,7 @@ package org.dinospring.core.service;
 
 import java.io.Serializable;
 
-import com.botbrain.dino.sql.builder.SelectSqlBuilder;
+import org.dinospring.data.sql.builder.SelectSqlBuilder;
 
 /**
  *

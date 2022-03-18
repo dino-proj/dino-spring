@@ -29,18 +29,17 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
-import com.botbrain.dino.utils.BatchUtils;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.sys.User;
+import org.dinospring.commons.utils.BatchUtils;
 import org.dinospring.commons.utils.ProjectionUtils;
+import org.dinospring.commons.utils.TypeUtils;
 import org.dinospring.core.service.Service;
 import org.dinospring.data.domain.EntityBase;
-import org.dinospring.data.domain.TenantableEntityBase;
+import org.dinospring.data.domain.TenantRowEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -110,7 +109,7 @@ public abstract class ServiceBase<T, K extends Serializable> implements Service<
    * 创建一个新的Entity
    */
   protected T newEntity() {
-    throw new NotImplementedException();
+    return TypeUtils.newInstance(getEntityClass());
   }
 
   /**
@@ -132,8 +131,8 @@ public abstract class ServiceBase<T, K extends Serializable> implements Service<
       }
     }
 
-    if (entity instanceof TenantableEntityBase && StringUtils.isNotEmpty(ContextHelper.currentTenantId())) {
-      var base = (TenantableEntityBase<?>) entity;
+    if (entity instanceof TenantRowEntity && StringUtils.isNotEmpty(ContextHelper.currentTenantId())) {
+      var base = (TenantRowEntity) entity;
       if (StringUtils.isEmpty(base.getTenantId())) {
         base.setTenantId(ContextHelper.currentTenantId());
       }

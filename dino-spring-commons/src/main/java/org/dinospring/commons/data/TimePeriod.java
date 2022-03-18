@@ -14,16 +14,16 @@
 
 package org.dinospring.commons.data;
 
-import com.botbrain.dino.sql.Range;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import java.util.Date;
 
 /**
  *

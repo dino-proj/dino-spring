@@ -18,11 +18,10 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.function.Function;
 
-import com.botbrain.dino.utils.LambdaUtils;
-import com.botbrain.dino.utils.NamingUtils;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.dinospring.commons.utils.LambdaUtils;
+import org.dinospring.commons.utils.NamingUtils;
 import org.dinospring.core.service.Service;
 
 /**

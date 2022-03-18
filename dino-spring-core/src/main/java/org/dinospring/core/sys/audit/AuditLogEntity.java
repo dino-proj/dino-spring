@@ -19,7 +19,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
-import org.dinospring.data.domain.TenantableEntityBase;
+import org.dinospring.data.domain.TenantRowEntityBase;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -38,7 +38,7 @@ import lombok.experimental.FieldNameConstants;
 @FieldNameConstants
 @Entity
 @Table(name = "sys_auditlog")
-public class AuditLogEntity extends TenantableEntityBase<Long> {
+public class AuditLogEntity extends TenantRowEntityBase<Long> {
 
   /**
    * 业务对象

@@ -1,8 +1,7 @@
 package org.dinospring.core.controller.support;
 
-import com.botbrain.dino.sql.builder.SelectSqlBuilder;
-
 import org.dinospring.core.service.CustomQuery;
+import org.dinospring.data.sql.builder.SelectSqlBuilder;
 
 /**
  *

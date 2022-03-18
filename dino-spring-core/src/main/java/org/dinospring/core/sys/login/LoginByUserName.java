@@ -18,12 +18,18 @@ import com.botbrain.dino.utils.ValidateUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import java.io.Serializable;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 import org.dinospring.commons.request.PostBody;
 import org.dinospring.commons.response.Response;
 import org.dinospring.commons.response.Status;
 import org.dinospring.commons.sys.Tenant;
 import org.dinospring.commons.sys.User;
 import org.dinospring.commons.utils.Assert;
+import org.dinospring.commons.utils.ValidateUtil;
 import org.dinospring.core.annotion.param.ParamTenant;
 import org.dinospring.core.sys.user.UserEntityBase;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,7 +66,12 @@ public interface LoginByUserName<U extends UserEntityBase<K>, V extends User<K>,
     Assert.notNull(tenant, Status.CODE.FAIL_TENANT_NOT_EXIST);
     //查询用户
     var username = req.getBody().getUsername();
-
+//    U user;
+//    if (ValidateUtil.isMobile(username)) {
+//      user = loginService().findUserByMobile(tenant.getId(), username).orElse(null);
+//    } else {
+//      user = loginService().findUserByLoginName(tenant.getId(), username).orElse(null);
+//    }
     U user = loginService().findUserByLoginName(tenant.getId(), username).orElse(null);
     Assert.notNull(user, Status.CODE.FAIL_USER_NOT_EXIST);
 

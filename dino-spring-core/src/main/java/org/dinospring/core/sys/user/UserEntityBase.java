@@ -25,7 +25,7 @@ import javax.persistence.MappedSuperclass;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.dinospring.commons.sys.UserType;
-import org.dinospring.data.domain.TenantableEntityBase;
+import org.dinospring.data.domain.EntityBase;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -42,7 +42,7 @@ import lombok.experimental.FieldNameConstants;
 @DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
 @MappedSuperclass
 @FieldNameConstants
-public abstract class UserEntityBase<K extends Serializable> extends TenantableEntityBase<K> {
+public abstract class UserEntityBase<K extends Serializable> extends EntityBase<K> {
 
   @Schema(description = "用户设备ID")
   @Column(name = "guid", length = 64)

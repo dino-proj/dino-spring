@@ -27,24 +27,21 @@ import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
 
 /**
- * 区分租户的实体类
+ * 基于Row的Tenant实体基类，
  * @author tuuboo
  */
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @MappedSuperclass
 @SuperBuilder
 @NoArgsConstructor
 @FieldNameConstants
-public abstract class TenantableEntityBase<K extends Serializable> extends EntityBase<K> {
-  /**
-   * 代表系统的tenant ID；
-   */
-  public static final String TENANT_SYS = "SYS";
+public abstract class TenantRowEntityBase<K extends Serializable> extends EntityBase<K> implements TenantRowEntity {
 
   /**
-   * 租户ID
-   */
+  * 租户ID
+  */
   @Schema(description = "租户ID")
   @Column(name = "tenant_id", nullable = false, updatable = false, length = 16)
   private String tenantId;

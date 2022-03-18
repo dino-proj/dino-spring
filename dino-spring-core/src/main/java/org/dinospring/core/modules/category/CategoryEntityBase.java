@@ -14,15 +14,16 @@
 
 package org.dinospring.core.modules.category;
 
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+
+import org.dinospring.data.domain.EntityBase;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
-import org.dinospring.data.domain.TenantableEntityBase;
-
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
 
 /**
  *
@@ -34,7 +35,7 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 @NoArgsConstructor
 @FieldNameConstants
-public abstract class CategoryEntityBase extends TenantableEntityBase<Long> {
+public abstract class CategoryEntityBase extends EntityBase<Long> {
   @Schema(description = "分类名称", maxLength = 100)
   @Column(nullable = false, length = 200)
   private String name;

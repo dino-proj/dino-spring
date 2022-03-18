@@ -16,13 +16,14 @@
 
 package org.dinospring.core.controller.support;
 
+import java.io.Serializable;
+import java.util.List;
+
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 /**
  * @author JL
@@ -31,7 +32,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SearchFieldMeta<M extends FieldEnum> {
+public class SearchFieldMeta<M extends FieldEnum> implements Serializable {
 
   @Schema(description = "数据库字段名称")
   @Parameter(name = "field", description = "数据库字段名称")

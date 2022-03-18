@@ -27,7 +27,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.dinospring.commons.Orderable;
-import org.dinospring.data.domain.TenantableEntityBase;
+import org.dinospring.data.domain.TenantRowEntityBase;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -45,7 +45,7 @@ import lombok.experimental.FieldNameConstants;
 @FieldNameConstants
 @Entity
 @Table(name = "sys_dictionary", indexes = @Index(name = "idx_sys_dictionary__tenant_key", columnList = "tenant_id,key"))
-public class DictionaryEntity extends TenantableEntityBase<Long> {
+public class DictionaryEntity extends TenantRowEntityBase<Long> {
 
   @Schema(description = "数据字典键值")
   @NotNull(message = "数据字典键值不能为空！")
@@ -71,7 +71,7 @@ public class DictionaryEntity extends TenantableEntityBase<Long> {
   @EqualsAndHashCode(callSuper = true)
   @Entity(name = "DictItem")
   @Table(name = "sys_dictionary_item", indexes = @Index(name = "idx_sys_dictionary__tenant_key_itemkey", columnList = "tenant_id,key,item_key"))
-  public static class DictItem extends TenantableEntityBase<Long> implements Orderable {
+  public static class DictItem extends TenantRowEntityBase<Long> implements Orderable {
 
     @Schema(description = "字典键值")
     @NotNull(message = "数据字典j键值不能为空！")

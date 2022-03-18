@@ -28,6 +28,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public interface Tenant extends Serializable {
   /**
+   * 代表系统的tenant ID；
+   */
+  public static final String TENANT_SYS = "_SYS_";
+
+  /**
    * 租户ID
    * @return
    */
@@ -54,13 +59,6 @@ public interface Tenant extends Serializable {
    */
   @Schema(description = "租户LOGO")
   String getIconUrl();
-
-  /**
-   * 租户子域名, 用于PC和H5端
-   * @return
-   */
-  @Schema(description = "租户子域名, 用于PC和H5端")
-  String getSubDomain();
 
   /**
    * 租户自定义域名,如果用户配置了域名，则用其自己的域名
@@ -90,6 +88,6 @@ public interface Tenant extends Serializable {
    * @return
    */
   static boolean isSys(String tenantId) {
-    return "SYS".equals(tenantId);
+    return TENANT_SYS.equals(tenantId);
   }
 }

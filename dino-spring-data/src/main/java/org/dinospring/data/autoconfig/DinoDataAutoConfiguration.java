@@ -19,10 +19,6 @@ import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 
-import com.botbrain.dino.sql.dialect.Dialect;
-import com.botbrain.dino.sql.dialect.MysqlDialect;
-import com.botbrain.dino.sql.dialect.PostgreSQLDialect;
-import com.botbrain.dino.sql.dialect.SnakeNamingConversition;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,6 +31,10 @@ import com.google.gson.GsonBuilder;
 import org.dinospring.commons.autoconfig.DinoCommonsAutoConfiguration;
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.data.converts.JacksonCustomerModule;
+import org.dinospring.data.sql.dialect.Dialect;
+import org.dinospring.data.sql.dialect.MysqlDialect;
+import org.dinospring.data.sql.dialect.PostgreSQLDialect;
+import org.dinospring.data.sql.dialect.SnakeNamingConversition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;

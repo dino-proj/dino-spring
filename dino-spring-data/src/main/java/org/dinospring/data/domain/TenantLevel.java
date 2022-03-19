@@ -1,5 +1,9 @@
 package org.dinospring.data.domain;
 
+/**
+ * @author tuuboo
+ */
+
 public enum TenantLevel {
   //SCHEMA级别
   SCHEMA,

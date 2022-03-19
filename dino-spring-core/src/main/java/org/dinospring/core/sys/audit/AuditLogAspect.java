@@ -34,7 +34,7 @@ import org.dinospring.commons.exception.BusinessException;
 import org.dinospring.commons.response.Response;
 import org.dinospring.commons.response.Status;
 import org.dinospring.commons.utils.AsyncWorker;
-import org.dinospring.commons.utils.IPUtils;
+import org.dinospring.commons.utils.IpUtils;
 import org.dinospring.core.annotion.AuditLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ResolvableType;
@@ -150,7 +150,7 @@ public class AuditLogAspect {
     }
     HttpServletRequest request = ra.getRequest();
     auditLog.setRequestMethod(request.getMethod()).setRequestUri(request.getRequestURI())
-        .setRequestIp(IPUtils.getIpAddr(request));
+        .setRequestIp(IpUtils.getIpAddr(request));
 
     // 请求参数
     Map<String, String> params = new HashMap<>(16);

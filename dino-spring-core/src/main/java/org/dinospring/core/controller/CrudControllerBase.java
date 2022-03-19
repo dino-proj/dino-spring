@@ -14,7 +14,6 @@
 
 package org.dinospring.core.controller;
 
-import com.botbrain.dino.sql.builder.SelectSqlBuilder;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -35,6 +34,7 @@ import org.dinospring.core.service.Service;
 import org.dinospring.core.vo.VoBase;
 import org.dinospring.data.domain.EntityBase;
 import org.dinospring.data.json.PropertyView;
+import org.dinospring.data.sql.builder.SelectSqlBuilder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.util.CastUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -117,7 +117,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
     var pageable = pageReq.pageable(sortReq);
 
     var query = req.getBody();
-    var pageData = query == null ? service().listPage(pageable, voClass()) : service().listPage(query, pageable,voClass());
+    var pageData = query == null ? service().listPage(pageable, voClass()) : service().listPage(query, pageable, voClass());
 
     return PageResponse.success(pageData, this::processVoList);
   }

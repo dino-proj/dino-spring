@@ -26,11 +26,15 @@ public interface Dialect {
 
   /**
    * 获取名字转换器
+   * @return
    */
   NamingConversition namingConversition();
 
   /**
    * 生成limit offset语句
+   * @param limit
+   * @param offset
+   * @return
    */
   String limitOffset(int limit, long offset);
 
@@ -42,6 +46,7 @@ public interface Dialect {
 
   /**
    * 生成 查询UUID的语句
+   * @return
    */
   String getSelectUUIDSql();
 
@@ -58,6 +63,11 @@ public interface Dialect {
    */
   public boolean supportSequence();
 
+  /**
+   * 表描述
+   * @param name
+   * @return
+   */
   String quoteTableName(String name);
 
   public class DEFAULT implements Dialect {

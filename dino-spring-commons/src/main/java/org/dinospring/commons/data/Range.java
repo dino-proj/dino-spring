@@ -23,7 +23,15 @@ import java.io.Serializable;
  */
 
 public interface Range<T extends Serializable> extends Serializable {
+  /**
+   * 开始
+   * @return
+   */
   T getBegin();
 
+  /**
+   * 结束
+   * @return
+   */
   T getEnd();
 }

@@ -28,6 +28,11 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface TenantRepository extends CrudRepositoryBase<TenantEntity, String> {
 
+  /**
+   * 通过域值获取租户信息
+   * @param domain
+   * @return
+   */
   @Query("SELECT * FROM #{#entityName} e WHERE e.customDomain = :domain")
   Optional<TenantEntity> getByDomain(@Nonnull String domain);
 }

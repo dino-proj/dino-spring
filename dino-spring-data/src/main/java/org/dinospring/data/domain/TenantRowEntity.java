@@ -24,6 +24,7 @@ public interface TenantRowEntity {
 
   /**
    * 获取租户ID
+   * @return
    */
   @Schema(description = "租户ID")
   String getTenantId();

@@ -60,6 +60,7 @@ public interface Promise<D> extends Supplier<D> {
   }
 
   /**
+   * 状态
    * @return the state of this promise.
    */
   State state();

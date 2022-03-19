@@ -14,21 +14,12 @@
 
 package org.dinospring.data.dao;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.botbrain.dino.sql.builder.InsertSqlBuilder;
-import com.botbrain.dino.sql.builder.SelectSqlBuilder;
-import com.botbrain.dino.sql.builder.UpdateSqlBuilder;
-import com.botbrain.dino.sql.dialect.Dialect;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.data.sql.builder.DeleteSqlBuilder;
+import org.dinospring.data.sql.builder.InsertSqlBuilder;
 import org.dinospring.data.sql.builder.SelectSqlBuilder;
+import org.dinospring.data.sql.builder.UpdateSqlBuilder;
 import org.dinospring.data.sql.dialect.Dialect;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -41,6 +32,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  *
@@ -82,13 +74,22 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    */
   default <E> SelectSqlBuilder newSelect(Class<E> entity, String tableAlias) {
     return StringUtils.isEmpty(tableAlias) ? new SelectSqlBuilder(dialect(), this.tableName(entity))
-        : new SelectSqlBuilder(dialect(), this.tableName(entity), tableAlias);
+      : new SelectSqlBuilder(dialect(), this.tableName(entity), tableAlias);
   }
 
+  /**
+   * 针对Entity的删除
+   * @return
+   */
   default DeleteSqlBuilder newDelete() {
     return new DeleteSqlBuilder(this.tableName());
   }
 
+  /**
+   * 针对Entity的删除
+   * @param tableAlias
+   * @return
+   */
   default DeleteSqlBuilder newDelete(String tableAlias) {
     Assert.hasText(tableAlias, "tableAlias is empty");
     return new DeleteSqlBuilder(this.tableName(), tableAlias);
@@ -130,11 +131,11 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
   }
 
   /**
-  * Query list
-  * @param sql
-  * @param sort 排序
-  * @return
-  */
+   * Query list
+   * @param sql
+   * @param sort 排序
+   * @return
+   */
   default List<T> queryList(SelectSqlBuilder sql, Sort sort) {
     return queryList(sql, entityClass(), sort);
   }
@@ -151,13 +152,13 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
   }
 
   /**
-  * Query list
-  * @param <P>
-  * @param sql
-  * @param clazz 结果类
-  * @param sort 排序
-  * @return
-  */
+   * Query list
+   * @param <P>
+   * @param sql
+   * @param clazz 结果类
+   * @param sort 排序
+   * @return
+   */
   default <P> List<P> queryList(SelectSqlBuilder sql, Class<P> clazz, Sort sort) {
     if (!Objects.isNull(sort) && sort.isSorted()) {
       sort.forEach(o -> sql.orderBy(o.getProperty(), o.isAscending()));

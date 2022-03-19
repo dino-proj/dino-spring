@@ -4,6 +4,9 @@ import javax.persistence.Column;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * @author tuuboo
+ */
 public interface Versioned {
 
   /**

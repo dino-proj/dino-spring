@@ -60,7 +60,7 @@ public class WalletService
     return walletBillRepository.queryPage(sql, page, cls);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   public boolean updateBalance(String tenantId, Long accountId, Long change, WalletBillEntity bill) {
     //最大重试5次
     Promise<Boolean> ret = TaskUtils.exec(() -> {
@@ -88,7 +88,7 @@ public class WalletService
     return ret.getOrElse(false);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   public boolean lockBalance(String tenantId, Long accountId, Long amount, WalletBillEntity bill) {
     Assert.isTrue(amount > 0L, Status.fail("锁定金额须>0"));
     //最大重试5次

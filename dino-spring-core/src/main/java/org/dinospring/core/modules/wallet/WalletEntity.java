@@ -1,19 +1,17 @@
 package org.dinospring.core.modules.wallet;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Table;
-
-import org.dinospring.data.domain.TenantRowEntityBase;
-import org.dinospring.data.domain.Versioned;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
+import org.dinospring.data.domain.TenantRowEntityBase;
+import org.dinospring.data.domain.Versioned;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.Table;
 
 /**
  *
@@ -23,12 +21,11 @@ import lombok.experimental.FieldNameConstants;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@MappedSuperclass
 @NoArgsConstructor
 @FieldNameConstants
 @Entity
 @Table(name = "sys_wallet", indexes = {
-    @Index(name = "uniq_ownerId_type", columnList = "owner_id,type", unique = true) })
+  @Index(name = "uniq_ownerId_type", columnList = "owner_id,type", unique = true)})
 public class WalletEntity extends TenantRowEntityBase<Long> implements Versioned {
 
   @Schema(description = "钱包Owner Id")

@@ -33,6 +33,6 @@ public interface TenantRepository extends CrudRepositoryBase<TenantEntity, Strin
    * @param domain
    * @return
    */
-  @Query("SELECT * FROM #{#entityName} e WHERE e.customDomain = :domain")
+  @Query("FROM #{#entityName} e WHERE e.customDomain = :domain")
   Optional<TenantEntity> getByDomain(@Nonnull String domain);
 }

@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 
+/**
+ * @author tuuboo
+ */
 public interface TenantControllerBase extends ControllerBase<TenantService, TenantEntity, TenantVo, String> {
 
   /**
@@ -27,7 +30,7 @@ public interface TenantControllerBase extends ControllerBase<TenantService, Tena
 
   /**
    * 根据域名查询Tenant
-   * @param domain 域名
+   * @param id ID
    * @return
    */
   @Operation(summary = "根据域名查询Tenant")

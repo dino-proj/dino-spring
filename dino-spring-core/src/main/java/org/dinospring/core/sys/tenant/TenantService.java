@@ -24,6 +24,10 @@ import org.dinospring.core.service.Service;
 
 public interface TenantService extends Service<TenantEntity, String> {
 
+  /**
+   * Repository
+   * @return
+   */
   TenantRepository tenantRepository();
 
   /**

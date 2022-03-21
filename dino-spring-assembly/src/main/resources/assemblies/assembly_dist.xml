@@ -21,9 +21,17 @@
 
   <files>
     <file>
-      <source>src/main/resources/application-${spring.profiles.active}.yml</source>
+      <source>src/main/resources/application.yml</source>
       <outputDirectory>conf/</outputDirectory>
       <destName>application.yml</destName>
+      <lineEnding>unix</lineEnding>
+      <fileMode>0755</fileMode>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>src/main/resources/application-${spring.profiles.active}.yml</source>
+      <outputDirectory>conf/</outputDirectory>
+      <destName>application-${spring.profiles.active}.yml</destName>
       <lineEnding>unix</lineEnding>
       <fileMode>0755</fileMode>
       <filtered>true</filtered>

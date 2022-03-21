@@ -12,13 +12,29 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import io.swagger.v3.oas.annotations.Operation;
 
+/**
+ * @author tuuboo
+ */
 public interface WalletControllerBase
     extends ControllerBase<WalletService, WalletEntity, WalletVo, Long> {
 
+  /**
+   * 钱包类型
+   * @return
+   */
   WalletType walletType();
 
+  /**
+   * 业务处理类
+   * @return
+   */
   WalletService walletService();
 
+  /**
+   * 获取账户信息
+   * @param tenantId
+   * @return
+   */
   @Operation(summary = "获取账户信息")
   @ParamTenant
   @GetMapping("/info")
@@ -29,6 +45,12 @@ public interface WalletControllerBase
     return Response.success(walletService().projection(WalletVo.class, wallet));
   }
 
+  /**
+   * 获取流水
+   * @param tenantId
+   * @param pageReq
+   * @return
+   */
   @Operation(summary = "获取流水")
   @ParamTenant
   @ParamPageable

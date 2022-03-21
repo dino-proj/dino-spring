@@ -305,6 +305,18 @@ public interface Service<T, K extends Serializable> {
     return repository().findAll(page);
   }
 
+
+  /**
+   * 分页查询
+   * @param page 分页信息
+   * @param cls 类型
+   * @return
+   */
+  default <C> Page<C> listPage(Pageable page, Class<C> cls) {
+    var sql = repository().newSelect();
+    return repository().queryPage(sql,page, cls);
+  }
+
   /**
    * 分页查询
    * @param search 查询条件
@@ -312,10 +324,25 @@ public interface Service<T, K extends Serializable> {
    * @return
    */
   default Page<T> listPage(CustomQuery search, Pageable page) {
-    var sql = repository().newSelect("t");
+    var sql = repository().newSelect("t").column("t.*");
     search.buildSql(sql);
 
-    return repository().queryPage(sql, page);
+    return repository().queryPage(sql,page);
+  }
+
+
+  /**
+   * 分页查询
+   * @param search 查询条件
+   * @param page 分页信息
+   * @param cls 类型
+   * @return
+   */
+  default <C> Page<C> listPage(CustomQuery search, Pageable page, Class<C> cls) {
+    var sql = repository().newSelect("t").column("t.*");
+    search.buildSql(sql);
+
+    return repository().queryPage(sql,page, cls);
   }
 
   /**

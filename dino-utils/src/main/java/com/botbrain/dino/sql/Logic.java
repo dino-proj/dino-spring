@@ -15,7 +15,14 @@
 package com.botbrain.dino.sql;
 
 public enum Logic {
-  AND("AND"), OR("OR");
+  /**
+   * AND
+   */
+  AND("AND"),
+  /**
+   * OR
+   */
+  OR("OR");
 
   private final String logic;
 

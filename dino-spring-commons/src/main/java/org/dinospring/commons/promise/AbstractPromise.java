@@ -221,9 +221,21 @@ public abstract class AbstractPromise<D> implements Promise<D> {
   }
 
   protected enum CallbackType {
+    /**
+     * 完成
+     */
     DONE_CALLBACK,
+    /**
+     * 失败
+     */
     FAIL_CALLBACK,
+    /**
+     * 进度
+     */
     PROGRESS_CALLBACK,
+    /**
+     * 每次
+     */
     ALWAYS_CALLBACK
   }
 }

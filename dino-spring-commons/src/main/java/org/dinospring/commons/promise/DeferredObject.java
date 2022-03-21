@@ -37,8 +37,9 @@ public class DeferredObject<D> extends AbstractPromise<D> implements Deferred<D>
   @Override
   public Deferred<D> resolve(final D resolve) {
     synchronized (this) {
-      if (!isPending())
+      if (!isPending()) {
         throw new IllegalStateException("Deferred object already finished, cannot resolve again");
+      }
 
       this.state = State.RESOLVED;
       this.resolveResult = resolve;
@@ -55,8 +56,9 @@ public class DeferredObject<D> extends AbstractPromise<D> implements Deferred<D>
   @Override
   public Deferred<D> reject(final Throwable reject) {
     synchronized (this) {
-      if (!isPending())
+      if (!isPending()) {
         throw new IllegalStateException("Deferred object already finished, cannot reject again");
+      }
       this.state = State.REJECTED;
       this.rejectResult = reject;
 
@@ -69,6 +71,7 @@ public class DeferredObject<D> extends AbstractPromise<D> implements Deferred<D>
     return this;
   }
 
+  @Override
   public Promise<D> promise() {
     return this;
   }

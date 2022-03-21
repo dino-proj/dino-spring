@@ -31,6 +31,9 @@ import lombok.Data;
 public class CompTab<T extends Component> implements Component {
   public static final String T_NAME = "tab";
 
+  @Schema(description = "ID")
+  private String id;
+
   @Schema(description = "Tab项标签")
   private String label;
 
@@ -46,4 +49,13 @@ public class CompTab<T extends Component> implements Component {
     return T_NAME;
   }
 
+  @Override
+  public void processVo() {
+    content.processVo();
+  }
+
+  @Override
+  public void processReq() {
+    content.processReq();
+  }
 }

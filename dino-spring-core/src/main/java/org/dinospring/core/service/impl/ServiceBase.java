@@ -180,4 +180,15 @@ public abstract class ServiceBase<T, K extends Serializable> implements Service<
     return saveCount.get() == entityList.size();
   }
 
+  @Override
+  public <S extends T> S updateById(S entity) {
+    beforeUpdateEntity(entity);
+    return Service.super.updateById(entity);
+  }
+
+  protected void beforeUpdateEntity(T entity) {
+    if (entity instanceof EntityBase) {
+      ((EntityBase) entity).setUpdateAt(new Date());
+    }
+  }
 }

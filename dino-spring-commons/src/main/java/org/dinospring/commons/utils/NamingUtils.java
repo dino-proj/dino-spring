@@ -123,8 +123,8 @@ public class NamingUtils {
       throw new IllegalArgumentException(
           "Error parsing property name '" + name + "'.  Didn't start with 'is', 'get' or 'set'.");
     }
-
-    if (name.length() == 1 || (name.length() > 1 && !Character.isUpperCase(name.charAt(1)))) {
+    boolean b = name.length() > 1 && !Character.isUpperCase(name.charAt(1));
+    if (name.length() == 1 || b) {
       name = name.substring(0, 1).toLowerCase(Locale.ENGLISH) + name.substring(1);
     }
     return name;

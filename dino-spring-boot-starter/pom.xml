@@ -401,6 +401,8 @@
       <id>test</id>
       <properties>
         <spring.profiles.active>test</spring.profiles.active>
+        <app.memorySize>1G</app.memorySize>
+        <app.logDir></app.logDir>
       </properties>
       <build>
         <resources>
@@ -431,6 +433,8 @@
       <id>prod</id>
       <properties>
         <spring.profiles.active>prod</spring.profiles.active>
+        <app.memorySize>512M</app.memorySize>
+        <app.logDir>/data/logs</app.logDir>
       </properties>
       <build>
         <resources>

@@ -17,10 +17,62 @@ package com.botbrain.dino.sql;
 import org.apache.commons.lang3.StringUtils;
 
 public enum Oper {
-  EQ("=", "%s = ?"), GT(">", "%s > ?"), LT("<", "%s < ?"), NE("<>", "%s <> ?"), GTE(">=", "%s >= ?"),
-  LTE("<=", "%s <= ?"), LIKE("LIKE", "%s LIKE ?"), NOT_LIKE("NOT LIKE", "%s NOT LIKE ?"), IN("IN", "%s IN (%s)"),
-  NOT_IN("NOT IN", "%s NOT IN (%s)"), IS_NULL("IS NULL", "%s IS NULL"), IS_NOT_NULL("IS NOT NULL", "%s IS NOT NULL"),
-  BETWEEN("BETWEEN", "%s BETWEEN ? AND ?"), EXISTS("EXISTS", "EXISTS (%s)");
+  /**
+   * 等于
+   */
+  EQ("=", "%s = ?"),
+  /**
+   * 大于
+   */
+  GT(">", "%s > ?"),
+  /**
+   * 小于
+   */
+  LT("<", "%s < ?"),
+  /**
+   * 不等于
+   */
+  NE("<>", "%s <> ?"),
+  /**
+   * 大于等于
+   */
+  GTE(">=", "%s >= ?"),
+  /**
+   * 小于等于
+   */
+  LTE("<=", "%s <= ?"),
+  /**
+   * 模糊匹配
+   */
+  LIKE("LIKE", "%s LIKE ?"),
+  /**
+   * 不匹配
+   */
+  NOT_LIKE("NOT LIKE", "%s NOT LIKE ?"),
+  /**
+   * 包含
+   */
+  IN("IN", "%s IN (%s)"),
+  /**
+   * 不包含
+   */
+  NOT_IN("NOT IN", "%s NOT IN (%s)"),
+  /**
+   * 等于空
+   */
+  IS_NULL("IS NULL", "%s IS NULL"),
+  /**
+   * 不等于空
+   */
+  IS_NOT_NULL("IS NOT NULL", "%s IS NOT NULL"),
+  /**
+   * 范围匹配
+   */
+  BETWEEN("BETWEEN", "%s BETWEEN ? AND ?"),
+  /**
+   * 存在
+   */
+  EXISTS("EXISTS", "EXISTS (%s)");
 
   private final String op;
   private final String expr;

@@ -45,6 +45,7 @@ public interface SqlBuilder {
     * @param sep  Separator string to be added between items in the list.
     * @param end  String to be append to the end of the list, after all of the
     * <p>            items.
+    * @return
     */
   default StringBuilder appendList(final StringBuilder sql, final List<?> list, final String start, final String sep,
       final String end) {
@@ -65,6 +66,14 @@ public interface SqlBuilder {
     return sql;
   }
 
+  /**
+   * Constructs a list of items with given separators.
+   * @param sql
+   * @param list
+   * @param start
+   * @param sep
+   * @return
+   */
   default StringBuilder appendList(final StringBuilder sql, final List<?> list, final String start,
       final String sep) {
     return appendList(sql, list, start, sep, null);

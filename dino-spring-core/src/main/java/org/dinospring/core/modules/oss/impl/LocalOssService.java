@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -179,6 +180,11 @@ public class LocalOssService implements OssService {
 
   @Override
   public String getPresignedObjectUrl(String bucket, String objectName) {
+    return null;
+  }
+
+  @Override
+  public String getPresignedObjectUrl(String bucket, String objectName, Integer timeout, TimeUnit unit) {
     return null;
   }
 

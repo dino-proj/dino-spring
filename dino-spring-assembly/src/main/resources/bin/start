@@ -22,9 +22,13 @@ bin=`cd "$bin" > /dev/null; pwd`
 echo $bin
 APP_DIR=$(cd -P -- $bin/.. && pwd -P)
 
-export APP_LOG_DIR=${APP_LOG_DIR:-"@app.logDir@"}
+if [[ -z $APP_LOG_DIR ]]; then
+  export APP_LOG_DIR="@app.logDir@"
+fi
 
-export MEMORY_SIZE=${APP_LOG_DIR:-"1G"}
+if [[ -z $MEMORY_SIZE ]]; then
+  export MEMORY_SIZE="@app.memorySize@"
+fi
 
 export APP_JAVA_OPTS="-Dspring.profiles.active=@spring.profiles.active@"
 

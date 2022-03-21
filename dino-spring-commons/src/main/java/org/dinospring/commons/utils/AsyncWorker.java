@@ -14,6 +14,9 @@
 
 package org.dinospring.commons.utils;
 
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
@@ -23,21 +26,15 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
-
-import lombok.AllArgsConstructor;
-
 /**
  * 异步执行的任务
  * @author tuuboo
  */
 @Async
 @Component
-@AllArgsConstructor
 public class AsyncWorker {
 
-  private final ThreadPoolExecutor executor;
+  private ThreadPoolExecutor executor;
 
   /**
    * 无参数，无返回的异步调用

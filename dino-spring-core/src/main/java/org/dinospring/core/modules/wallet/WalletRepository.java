@@ -1,11 +1,11 @@
 package org.dinospring.core.modules.wallet;
 
+import java.util.Optional;
+
 import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 /**
  *
@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @Repository
 public interface WalletRepository
-  extends CrudRepositoryBase<WalletEntity, Long> {
+    extends CrudRepositoryBase<WalletEntity, Long> {
 
   /**
    * 更新账号余额
@@ -26,8 +26,8 @@ public interface WalletRepository
    * @return
    */
   @Modifying
-  @Query("UPDATE #{#entityName} e SET e.balance = :balance, e.version = :newVersion WHERE e.id = :accountId AND e.version = :oldVersion")
-  Optional<Long> updateBalance(Long accountId, Long balance, Long oldVersion, Long newVersion);
+  @Query("UPDATE #{#entityName} e SET e.balance = :balance, e.version = e.version + 1 WHERE e.id = :accountId AND e.version = :oldVersion")
+  Optional<Long> updateBalance(Long accountId, Long balance, Long oldVersion);
 
   /**
    * 通过钱包所有者id查询钱包信息

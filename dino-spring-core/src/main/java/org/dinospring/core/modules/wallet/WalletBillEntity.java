@@ -29,7 +29,7 @@ import java.io.Serializable;
 @FieldNameConstants
 @Entity
 @Table(name = "sys_wallet_bills", indexes = {
-  @Index(name = "idx_accountId", columnList = "account_id", unique = false)})
+    @Index(name = "idx_accountId", columnList = "account_id", unique = false) })
 @TypeDef(name = "json", typeClass = JsonBinaryType.class)
 public abstract class WalletBillEntity extends TenantRowEntityBase<Long> {
 

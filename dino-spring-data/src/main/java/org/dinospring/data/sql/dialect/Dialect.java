@@ -70,7 +70,7 @@ public interface Dialect {
    */
   String quoteTableName(String name);
 
-  public class DEFAULT implements Dialect {
+  public class Default implements Dialect {
 
     @Override
     public String limitOffset(int limit, long offset) {

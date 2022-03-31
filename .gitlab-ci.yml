@@ -13,7 +13,9 @@ variables:
 deploy:
   stage: deploy
   only:
-    - dev-liujie-deploy
+    refs:
+      - tags
+      - dev-liujie-deploy
   tags:
     - maven
   script:

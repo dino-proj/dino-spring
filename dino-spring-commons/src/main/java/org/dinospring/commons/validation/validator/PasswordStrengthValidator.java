@@ -1,0 +1,132 @@
+// Copyright 2022 dinospring.cn
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+package org.dinospring.commons.validation.validator;
+
+import java.util.Arrays;
+
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.dinospring.commons.validation.constraints.PasswordStrength;
+
+/**
+ * 密码强度校验器
+ * @author tuuboo
+ * @date 2022-04-01 01:03:58
+ */
+
+public class PasswordStrengthValidator implements ConstraintValidator<PasswordStrength, String> {
+
+  private PasswordChecker[] checkers;
+
+  @Override
+  public void initialize(PasswordStrength constraintAnnotation) {
+    switch (constraintAnnotation.format()) {
+      case NUMERIC:
+        checkers = new PasswordChecker[] { PasswordChecker.NUMERIC };
+        break;
+      case NUMERIC_SPECIAL_CHARACTER:
+        checkers = new PasswordChecker[] { PasswordChecker.NUMERIC, PasswordChecker.SPECIAL_CHARACTER };
+        break;
+      case LETTER:
+        checkers = letterChecker(constraintAnnotation.letterType());
+        break;
+      case NUMERIC_LETTER:
+        checkers = ArrayUtils.addAll(letterChecker(constraintAnnotation.letterType()), PasswordChecker.NUMERIC);
+        break;
+      case LETTER_SPECIAL_CHARACTER:
+        checkers = ArrayUtils.addAll(letterChecker(constraintAnnotation.letterType()),
+            PasswordChecker.SPECIAL_CHARACTER);
+        break;
+      case NUMERIC_LETTER_SPECIAL_CHARACTER:
+        checkers = ArrayUtils.addAll(letterChecker(constraintAnnotation.letterType()), PasswordChecker.NUMERIC,
+            PasswordChecker.SPECIAL_CHARACTER);
+        break;
+    }
+  }
+
+  @Override
+  public boolean isValid(String value, ConstraintValidatorContext context) {
+    if (StringUtils.isBlank(value)) {
+      return true;
+    }
+    boolean[] checkHits = new boolean[checkers.length];
+    Arrays.fill(checkHits, false);
+    for (int i = 0; i < value.length(); i++) {
+      char c = value.charAt(i);
+      for (int j = 0; j < checkers.length; j++) {
+        if (checkers[j].check(c)) {
+          checkHits[j] = true;
+        }
+      }
+    }
+    return !ArrayUtils.contains(checkHits, false);
+  }
+
+  private static PasswordChecker[] letterChecker(PasswordStrength.LetterType type) {
+    switch (type) {
+      case ANY:
+        return new PasswordChecker[] { PasswordChecker.LETTER };
+      case LOWER:
+        return new PasswordChecker[] { PasswordChecker.LETTER_LOWER };
+      case UPPER:
+        return new PasswordChecker[] { PasswordChecker.LETTER_UPPER };
+      default:
+        return new PasswordChecker[] { PasswordChecker.LETTER_LOWER, PasswordChecker.LETTER_UPPER };
+    }
+  }
+
+  enum PasswordChecker {
+    NUMERIC {
+      @Override
+      boolean check(char ch) {
+        return Character.isDigit(ch);
+      }
+    },
+    LETTER {
+      @Override
+      boolean check(char ch) {
+        return Character.isLowerCase(ch) || Character.isUpperCase(ch);
+      }
+    },
+    LETTER_LOWER {
+      @Override
+      boolean check(char ch) {
+        return Character.isLowerCase(ch);
+      }
+    },
+    LETTER_UPPER {
+      @Override
+      boolean check(char ch) {
+        return Character.isUpperCase(ch);
+      }
+    },
+    SPECIAL_CHARACTER {
+      @Override
+      boolean check(char ch) {
+        return Arrays.binarySearch(SYMBOLS, ch) >= 0;
+      }
+    };
+
+    private static final char[] SYMBOLS = ")!@#$%^&*()".toCharArray();
+    static {
+      Arrays.sort(SYMBOLS);
+    }
+
+    abstract boolean check(char ch);
+  }
+}

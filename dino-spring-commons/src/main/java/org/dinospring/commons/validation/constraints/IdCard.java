@@ -22,27 +22,24 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-import org.dinospring.commons.validation.validator.ChinaMobileValidator;
+import org.dinospring.commons.validation.validator.ChinaIdCardValidator;
 
 /**
- * 手机号格式检查，对字符串进行手机号格式验证
+ *
  * @author tuuboo
- * @date 2022-04-01 00:14:44
+ * @date 2022-04-01 00:50:23
  */
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.METHOD, ElementType.FIELD, ElementType.CONSTRUCTOR, ElementType.PARAMETER })
-@Constraint(validatedBy = { ChinaMobileValidator.class })
-public @interface Mobile {
-  String message() default "{org.dinospring.validation.Mobile.message}";
+@Constraint(validatedBy = { ChinaIdCardValidator.class })
+public @interface IdCard {
+  String message() default "{org.dinospring.validation.IdCard.message}";
 
   Class<?>[] groups() default {};
 
   Class<? extends Payload>[] payload() default {};
 
-  // 允许的国家，将对国家手机码进行验证
-  Country[] allowedCountries() default {};
-
-  // 默认国家，如果没有指定国家，则使用默认国家
-  Country defaultCountry() default Country.CHINA;
+  // 国家，将根据该国家身份证信息进行验证，默认为中国
+  Country country() default Country.CHINA;
 }

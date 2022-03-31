@@ -22,27 +22,34 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-import org.dinospring.commons.validation.validator.ChinaMobileValidator;
+import org.dinospring.commons.validation.validator.IpValidator;
 
 /**
- * 手机号格式检查，对字符串进行手机号格式验证
+ *
  * @author tuuboo
- * @date 2022-04-01 00:14:44
+ * @date 2022-04-01 00:54:36
  */
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.METHOD, ElementType.FIELD, ElementType.CONSTRUCTOR, ElementType.PARAMETER })
-@Constraint(validatedBy = { ChinaMobileValidator.class })
-public @interface Mobile {
-  String message() default "{org.dinospring.validation.Mobile.message}";
+@Constraint(validatedBy = { IpValidator.class })
+public @interface Ip {
+
+  String message() default "{org.dinospring.validation.Ip.message}";
 
   Class<?>[] groups() default {};
 
   Class<? extends Payload>[] payload() default {};
 
-  // 允许的国家，将对国家手机码进行验证
-  Country[] allowedCountries() default {};
+  // 默认为任意版本
+  IpVersion version() default IpVersion.ANY;
 
-  // 默认国家，如果没有指定国家，则使用默认国家
-  Country defaultCountry() default Country.CHINA;
+  enum IpVersion {
+    // 任意版本
+    ANY,
+    //IPv4
+    IPV4,
+    //IPv6
+    IPV6
+  }
 }

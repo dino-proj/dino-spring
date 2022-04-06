@@ -22,6 +22,12 @@ import javax.validation.ConstraintValidatorContext;
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.validation.constraints.Ip;
 
+/**
+ * 检查IP格式
+ * @author tuuboo
+ * @date 2022-04-06 19:36:05
+ */
+
 public class IpValidator implements ConstraintValidator<Ip, String> {
   private final static Pattern PATTERN_V4 = Pattern
       .compile("^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");

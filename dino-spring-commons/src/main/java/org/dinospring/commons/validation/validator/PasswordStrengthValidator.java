@@ -56,6 +56,9 @@ public class PasswordStrengthValidator implements ConstraintValidator<PasswordSt
         checkers = ArrayUtils.addAll(letterChecker(constraintAnnotation.letterType()), PasswordChecker.NUMERIC,
             PasswordChecker.SPECIAL_CHARACTER);
         break;
+      default:
+        checkers = new PasswordChecker[0];
+        break;
     }
   }
 
@@ -90,31 +93,39 @@ public class PasswordStrengthValidator implements ConstraintValidator<PasswordSt
     }
   }
 
+  /**
+   * 密码校验器
+   */
   enum PasswordChecker {
+    // 数字
     NUMERIC {
       @Override
       boolean check(char ch) {
         return Character.isDigit(ch);
       }
     },
+    // 大小写字母
     LETTER {
       @Override
       boolean check(char ch) {
         return Character.isLowerCase(ch) || Character.isUpperCase(ch);
       }
     },
+    // 小写字母
     LETTER_LOWER {
       @Override
       boolean check(char ch) {
         return Character.isLowerCase(ch);
       }
     },
+    // 大写字母
     LETTER_UPPER {
       @Override
       boolean check(char ch) {
         return Character.isUpperCase(ch);
       }
     },
+    // 特殊字符
     SPECIAL_CHARACTER {
       @Override
       boolean check(char ch) {

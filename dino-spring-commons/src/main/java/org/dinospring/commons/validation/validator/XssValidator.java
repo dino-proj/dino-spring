@@ -20,10 +20,17 @@ import javax.validation.ConstraintValidatorContext;
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.validation.constraints.Xss;
 
+/**
+ * 检测XSS注入
+ * @author tuuboo
+ * @date 2022-04-06 19:38:07
+ */
+
 public class XssValidator implements ConstraintValidator<Xss, String> {
 
   @Override
   public void initialize(Xss constraintAnnotation) {
+    //do nothing
   }
 
   @Override

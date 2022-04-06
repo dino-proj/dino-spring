@@ -48,7 +48,9 @@ public @interface PasswordStrength {
   // 字母类型，默认为大小写字母都可以，可选为大写字母，小写字母，大小写都可以，大小写都需要
   LetterType letterType() default LetterType.ANY;
 
-  // 字母类型
+  /**
+   * 字母类型
+   */
   enum LetterType {
     // 小写字母
     LOWER,
@@ -60,7 +62,9 @@ public @interface PasswordStrength {
     BOTH
   }
 
-  // 密码格式
+  /**
+   * 密码格式
+   */
   enum Format {
     // 纯数字
     NUMERIC,

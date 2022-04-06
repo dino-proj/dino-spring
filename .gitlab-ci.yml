@@ -7,7 +7,7 @@ stages:
 variables:
   MVN_OPT: -e
   BUILD_OPT: -Dmaven.test.skip=true
-  DEPLOY_OPT: '-DaltDeploymentRepository=deploy-repo::default::${MVN_REPO_URL_RELEASES}'
+  DEPLOY_OPT: "-DMVN_REPO_USER_NAME=${MVN_REPO_USER_NAME} -DMVN_REPO_USER_PASSWORD=${MVN_REPO_USER_PASSWORD} -DaltDeploymentRepository=deploy-repo::default::${MVN_REPO_URL_RELEASES}"
 
 # 打包
 deploy:

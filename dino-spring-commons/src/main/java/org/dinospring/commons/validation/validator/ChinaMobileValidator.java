@@ -30,6 +30,7 @@ public class ChinaMobileValidator implements ConstraintValidator<Mobile, String>
 
   @Override
   public void initialize(Mobile constraintAnnotation) {
+    //do nothing
   }
 
   @Override

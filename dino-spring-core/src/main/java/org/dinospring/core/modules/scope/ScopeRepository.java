@@ -30,7 +30,7 @@ import org.springframework.stereotype.Repository;
 public interface ScopeRepository extends CrudRepositoryBase<ScopeEntity, Long> {
 
   /**
-   * 通过哈希值获取规则
+   * 根据Hash值查询ScopeID
    * @param hash
    * @return
    */

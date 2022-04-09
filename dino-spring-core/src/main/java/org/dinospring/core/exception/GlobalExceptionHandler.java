@@ -14,7 +14,10 @@
 
 package org.dinospring.core.exception;
 
+import java.util.stream.Collectors;
+
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 import org.dinospring.commons.exception.BusinessException;
@@ -64,7 +67,9 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(ConstraintViolationException.class)
   public Response<Void> validateExceptionHandler(HttpServletResponse response, ConstraintViolationException ex) {
     log.error("validate exception occured", ex);
-    return Response.fail(Status.CODE.FAIL_VALIDATION.withMsg(ex.toString()));
+    var msg = ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage)
+        .collect(Collectors.joining("\n"));
+    return Response.fail(Status.CODE.FAIL_VALIDATION.withMsg(msg));
   }
 
 }

@@ -28,11 +28,11 @@ import org.apache.commons.codec.digest.HmacUtils;
 import lombok.experimental.UtilityClass;
 
 /**
- * Copyright：botBrain.ai
- * Author: SongXiaoGuang
- * Date: 2018/3/13.
- * Description:
+ *
+ * @author tuuboo
+ * @date 2022-03-31 22:03:02
  */
+
 @UtilityClass
 public class EncryptUtil {
 

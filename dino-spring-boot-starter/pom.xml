@@ -4,12 +4,12 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.5.5</version>
+    <version>2.6.6</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
   <groupId>org.dinospring</groupId>
   <artifactId>dino-spring-boot-starter</artifactId>
-  <version>2.0.0.RELEASE</version>
+  <version>2.1.0.RELEASE</version>
   <packaging>pom</packaging>
 
   <properties>
@@ -17,10 +17,10 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>11</java.version>
 
-    <dino-spring.version>2.0.0.RELEASE</dino-spring.version>
+    <dino-spring.version>2.1.0.RELEASE</dino-spring.version>
 
     <!-- plugin -->
-    <maven-pmd-plugin.version>3.15.0</maven-pmd-plugin.version>
+    <maven-pmd-plugin.version>3.16.0</maven-pmd-plugin.version>
     <p3c-pmd.version>2.1.1</p3c-pmd.version>
 
     <!-- managedDep persistent-->
@@ -32,10 +32,10 @@
     <okhttp3.version>4.9.1</okhttp3.version>
 
     <!-- secrity -->
-    <shiro.version>1.7.1</shiro.version>
+    <shiro.version>1.9.0</shiro.version>
 
     <!-- open api-->
-    <springdoc.version>1.5.10</springdoc.version>
+    <springdoc.version>1.6.6</springdoc.version>
     <knife4j.version>3.0.3</knife4j.version>
 
     <!-- weixin sdk -->

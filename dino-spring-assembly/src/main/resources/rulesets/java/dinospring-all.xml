@@ -21,7 +21,7 @@
     <exclude name="AbstractClassShouldStartWithAbstractNamingRule" />
     <exclude name="LowerCamelCaseVariableNamingRule" />
     <exclude name="ServiceOrDaoClassShouldEndWithImplRule" />
-<!--    <exclude name="ClassNamingShouldBeCamelRule" />-->
+    <exclude name="ClassNamingShouldBeCamelRule" />
   </rule>
   <rule ref="rulesets/java/ali-oop.xml"></rule>
   <rule ref="rulesets/java/ali-orm.xml"></rule>

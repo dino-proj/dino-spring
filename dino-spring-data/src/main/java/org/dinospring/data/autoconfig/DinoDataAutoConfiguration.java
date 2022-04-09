@@ -92,7 +92,7 @@ public class DinoDataAutoConfiguration {
       }
 
       log.warn("Couldn't determine DB Dialect for {}", name);
-      return new Dialect.DEFAULT();
+      return new Dialect.Default();
     });
   }
 

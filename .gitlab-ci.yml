@@ -5,18 +5,21 @@ stages:
   - verify
 
 variables:
-  MVN_OPT: --settings /usr/share/maven/ref/settings.xml
+  MVN_OPT: -e
   BUILD_OPT: -Dmaven.test.skip=true
-  DEPLOY_OPT: '-DaltDeploymentRepository=botbrain-repo-releases::default::http://mvn.botbrain.ai/nexus/content/repositories/releases'
+  DEPLOY_OPT: "-DMVN_REPO_USER_NAME=${MVN_REPO_USER_NAME} -DMVN_REPO_USER_PASSWORD=${MVN_REPO_USER_PASSWORD} -DaltDeploymentRepository=deploy-repo::default::${MVN_REPO_URL_RELEASES}"
 
 # 打包
 deploy:
   stage: deploy
   only:
-    - dev-liujie-deploy
+    refs:
+      - tags
+      - dev-liujie-deploy
   tags:
     - maven
   script:
+    - echo deploy into ${MVN_REPO_USER_NAME}@${MVN_REPO_URL_RELEASES}
     - cd dino-dependencies-root
     - echo "=============== 开始部署 dino-dependencies-root  ==============="
     - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT

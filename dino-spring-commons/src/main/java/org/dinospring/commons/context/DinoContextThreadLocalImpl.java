@@ -15,13 +15,11 @@
 package org.dinospring.commons.context;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.collections4.MapUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.dinospring.commons.sys.Tenant;
 import org.dinospring.commons.sys.User;
+import org.dinospring.commons.utils.InheritableThreadLocalMap;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.util.CastUtils;
 
@@ -30,7 +28,7 @@ import org.springframework.data.util.CastUtils;
  * @author tuuboo
  */
 public class DinoContextThreadLocalImpl implements DinoContext {
-  private static final ThreadLocal<Map<String, Object>> RESOURCES = new InheritableThreadLocalMap<>();
+  private static final InheritableThreadLocalMap RESOURCES = new InheritableThreadLocalMap();
   private static final String KEY_CURRENT_TENANT = DinoContextThreadLocalImpl.class.getName() + "_CURRENT_TENANT";
   private static final String KEY_CURRENT_USER = DinoContextThreadLocalImpl.class.getName() + "_CURRENT_USER";
 
@@ -41,11 +39,10 @@ public class DinoContextThreadLocalImpl implements DinoContext {
   }
 
   public static void setCurrentTenant(Tenant tenant) {
-    ensureResourcesInitialized();
     if (tenant == null) {
-      RESOURCES.get().remove(KEY_CURRENT_TENANT);
+      RESOURCES.remove(KEY_CURRENT_TENANT);
     } else {
-      RESOURCES.get().put(KEY_CURRENT_TENANT, tenant);
+      RESOURCES.put(KEY_CURRENT_TENANT, tenant);
     }
   }
 
@@ -54,15 +51,14 @@ public class DinoContextThreadLocalImpl implements DinoContext {
   }
 
   public static <T extends User<?>> T getCurrentUser() {
-    return CastUtils.cast(MapUtils.getObject(RESOURCES.get(), KEY_CURRENT_USER));
+    return RESOURCES.get(KEY_CURRENT_USER);
   }
 
   public static <T extends User<?>> void setCurrentUser(T user) {
-    ensureResourcesInitialized();
     if (user == null) {
-      RESOURCES.get().remove(KEY_CURRENT_USER);
+      RESOURCES.remove(KEY_CURRENT_USER);
     } else {
-      RESOURCES.get().put(KEY_CURRENT_USER, user);
+      RESOURCES.put(KEY_CURRENT_USER, user);
     }
   }
 
@@ -72,29 +68,6 @@ public class DinoContextThreadLocalImpl implements DinoContext {
 
   public static ApplicationContext getApplicationContext() {
     return applicationContext;
-  }
-
-  private static void ensureResourcesInitialized() {
-    if (RESOURCES.get() == null) {
-      RESOURCES.set(new HashMap<>(16));
-    }
-  }
-
-  private static final class InheritableThreadLocalMap<T extends Map<String, Object>>
-      extends InheritableThreadLocal<T> {
-
-    /**
-     * @param parentValue the parent value, a HashMap as defined in the {@link #initialValue()} method.
-     * @return the HashMap to be used by any parent-spawned child threads (a clone of the parent HashMap).
-     */
-    @Override
-    protected T childValue(T parentValue) {
-      if (parentValue != null) {
-        return ObjectUtils.clone(parentValue);
-      } else {
-        return null;
-      }
-    }
   }
 
   @Override

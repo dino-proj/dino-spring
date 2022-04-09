@@ -96,7 +96,42 @@ public interface Predicates {
    * @return
    */
   static <T> Predicate<T> in(Collection<T> values) {
-    return t -> values.contains(t);
+    return values::contains;
+  }
+
+  /**
+   * "hasAny"预测器
+   *
+   * @param values
+   * @return
+   */
+
+  static <T extends Comparable<T>> Predicate<Collection<T>> hasAny(T... values) {
+    return t -> {
+      for (T value : values) {
+        if (t.contains(value)) {
+          return true;
+        }
+      }
+      return false;
+    };
+  }
+
+  /**
+   * "hasAll"预测器
+   *
+   * @param values
+   * @return
+   */
+  static <T extends Comparable<T>> Predicate<Collection<T>> hasAll(T... values) {
+    return t -> {
+      for (T value : values) {
+        if (!t.contains(value)) {
+          return false;
+        }
+      }
+      return true;
+    };
   }
 
   /**

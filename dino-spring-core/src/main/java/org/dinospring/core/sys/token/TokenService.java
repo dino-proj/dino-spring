@@ -41,7 +41,7 @@ import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- *
+ * Token相关的服务
  * @author tuuboo
  */
 
@@ -149,7 +149,7 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
 
   }
 
-  private String generateTokenId(TokenPrincaple princ) {
+  public String generateTokenId(TokenPrincaple princ) {
     var idBuilder = new StringBuilder();
     idBuilder.append(princ.getTenantId()).append('_').append(princ.getUserId()).append('@').append(princ.getUserType());
     //允许多设备登录，则增加设备ID作为Token ID的一部分。
@@ -167,7 +167,11 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
   }
 
   /**
-   * 生成 token
+   * 生成登录Token
+   * @param princ 用户信息
+   * @param secretKey 秘钥
+   * @param authAt 时间戳
+   * @return
    */
   private String generateToken(TokenPrincaple princ, String secretKey, long authAt) {
     return calculateToken(princ, secretKey, authAt,

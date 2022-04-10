@@ -32,6 +32,12 @@ public interface UserType extends Serializable {
   String getType();
 
   /**
+   * 是否为隶属于某个租户下面的用户
+   * @return
+   */
+  boolean isTenantUser();
+
+  /**
    * 所有用户类型
    * @return
    */

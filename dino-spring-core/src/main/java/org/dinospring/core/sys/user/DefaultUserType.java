@@ -27,25 +27,35 @@ import org.dinospring.commons.sys.UserType;
 
 public enum DefaultUserType implements UserType {
   //系统用户
-  SYS("sys"),
+  SYS("sys", false),
+  //系统API接口用户
+  SYS_API("sysapi", false),
   //后台管理用户
-  ADMIN("admin"),
+  ADMIN("admin", true),
   //前端用户
-  CLIENT("client"),
-  //api用户
-  API("api"),
+  CLIENT("client", true),
+  //租户api接口用户
+  API("api", true),
   //访客用户
-  GUEST("guest");
+  GUEST("guest", true);
 
-  private String userType;
+  private final String userType;
 
-  private DefaultUserType(String userType) {
+  private final boolean tenantUser;
+
+  private DefaultUserType(String userType, boolean tenantUser) {
     this.userType = userType;
+    this.tenantUser = tenantUser;
   }
 
   @Override
   public String getType() {
     return userType;
+  }
+
+  @Override
+  public boolean isTenantUser() {
+    return tenantUser;
   }
 
   @Override

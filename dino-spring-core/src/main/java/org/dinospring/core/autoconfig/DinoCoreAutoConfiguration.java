@@ -20,11 +20,13 @@ import javax.annotation.PostConstruct;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-import org.dinospring.core.modules.framework.annotion.PageTemplate;
 import org.dinospring.commons.annotion.AnnotionedJsonTypeIdResolver;
+import org.dinospring.core.modules.framework.annotion.PageTemplate;
+import org.dinospring.core.security.DinoAuthAutoConfig;
 import org.dinospring.data.autoconfig.DinoDataAutoConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -42,8 +44,9 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
-@ImportAutoConfiguration(DinoDataAutoConfiguration.class)
+@ImportAutoConfiguration({ DinoDataAutoConfiguration.class, DinoAuthAutoConfig.class })
 @AutoConfigureAfter(DinoDataAutoConfiguration.class)
+@AutoConfigureBefore(DinoAuthAutoConfig.class)
 public class DinoCoreAutoConfiguration {
 
   @Autowired

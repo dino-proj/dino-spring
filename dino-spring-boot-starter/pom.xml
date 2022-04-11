@@ -9,7 +9,7 @@
   </parent>
   <groupId>org.dinospring</groupId>
   <artifactId>dino-spring-boot-starter</artifactId>
-  <version>2.1.0.RELEASE</version>
+  <version>2.2.0.RELEASE</version>
   <packaging>pom</packaging>
 
   <properties>
@@ -17,22 +17,19 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>11</java.version>
 
-    <dino-spring.version>2.1.0.RELEASE</dino-spring.version>
+    <dino-spring.version>2.2.0.RELEASE</dino-spring.version>
 
     <!-- plugin -->
     <maven-pmd-plugin.version>3.16.0</maven-pmd-plugin.version>
     <p3c-pmd.version>2.1.1</p3c-pmd.version>
 
     <!-- managedDep persistent-->
-    <hibernate.version>5.5.3.Final</hibernate.version>
-    <hibernate-types.version>2.12.0</hibernate-types.version>
+    <hibernate.version>5.6.7.Final</hibernate.version>
+    <hibernate-types.version>2.15.1</hibernate-types.version>
 
     <!-- managedDep tools -->
     <httpclient.version>4.5.13</httpclient.version>
     <okhttp3.version>4.9.1</okhttp3.version>
-
-    <!-- secrity -->
-    <shiro.version>1.9.0</shiro.version>
 
     <!-- open api-->
     <springdoc.version>1.6.6</springdoc.version>
@@ -83,14 +80,6 @@
         <artifactId>okhttp</artifactId>
         <version>${okhttp3.version}</version>
       </dependency>
-
-      <!-- secrity -->
-      <dependency>
-        <groupId>org.apache.shiro</groupId>
-        <artifactId>shiro-spring-boot-web-starter</artifactId>
-        <version>${shiro.version}</version>
-      </dependency>
-
 
       <!-- tools-weixin-java-sdk starter-->
       <dependency>

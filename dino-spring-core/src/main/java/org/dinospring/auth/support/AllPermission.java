@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2022 dinospring.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,37 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.core.security.shiro;
+package org.dinospring.auth.support;
 
-import org.apache.shiro.authc.AuthenticationToken;
-import org.dinospring.core.sys.token.TokenPrincaple;
-
-import lombok.Data;
+import org.dinospring.auth.Permission;
 
 /**
- *
+ * 所有权限，总是有权限访问
  * @author tuuboo
+ * @date 2022-04-07 03:26:06
  */
 
-@Data(staticConstructor = "of")
-public class ShiroAuthToken implements AuthenticationToken {
-  private final TokenPrincaple princ;
-
-  private final String token;
-
-  public ShiroAuthToken(TokenPrincaple princ, String token) {
-    this.princ = princ;
-    this.token = token;
-  }
+public class AllPermission implements Permission {
+  private static final AllPermission INSTANCE = new AllPermission();
 
   @Override
-  public Object getPrincipal() {
-    return princ;
+  public boolean implies(Permission permission) {
+    return true;
   }
 
-  @Override
-  public Object getCredentials() {
-    return token;
+  public static AllPermission of() {
+    return INSTANCE;
   }
 
 }

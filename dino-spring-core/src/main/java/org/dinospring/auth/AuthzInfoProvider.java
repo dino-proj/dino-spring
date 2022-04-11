@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2022 dinospring.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,36 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.commons.sys;
+package org.dinospring.auth;
 
-import java.io.Serializable;
-import java.util.List;
-
-import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Collection;
 
 /**
+ * 用户认证信息提供者
  * @author tuuboo
+ * @date 2022-04-09 22:22:42
  */
-public interface UserType extends Serializable {
+
+public interface AuthzInfoProvider<S> {
 
   /**
-   * 用户类型名称
-   * @return
+   * 获取用户角色
+   * @param subject 用户
+   * @return 用户角色列表
    */
-  @Schema(description = "用户类型名称")
-  String getType();
+  Collection<String> getRoles(S subject);
 
   /**
-   * 是否为隶属于某个租户下面的用户
-   * @return
+   * 获取用户权限
+   * @param subject 用户
+   * @return 用户权限列表
    */
-  boolean isTenantUser();
+  Collection<Permission> getPermissions(S subject);
 
   /**
-   * 所有用户类型
-   * @return
+   * 获取用户类型
+   * @param subject 用户
+   * @return 用户角色列表
    */
-  @Schema(description = "所有用户类型", hidden = true)
-  List<UserType> allTypes();
-
+  String getType(S subject);
 }

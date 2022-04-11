@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2022 dinospring.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,22 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.core.security;
-
-import java.io.Serializable;
-
-import org.dinospring.commons.sys.Tenant;
-import org.dinospring.commons.sys.User;
-
-import lombok.Data;
+package org.dinospring.auth;
 
 /**
- *
+ * 权限接口
  * @author tuuboo
+ * @date 2022-04-07 03:05:11
  */
 
-@Data(staticConstructor = "of")
-public class DinoPrincipal implements Serializable {
-  private final User<?> user;
-  private final Tenant tenant;
+public interface Permission {
+
+  /**
+  * 判断用户是否有权限访问某个资源
+  * @param permission 权限对象
+  * @return true:有权限，false:无权限
+  */
+  boolean implies(Permission permission);
 }

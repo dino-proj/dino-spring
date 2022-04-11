@@ -23,6 +23,8 @@ import javax.validation.ConstraintViolationException;
 import org.dinospring.commons.exception.BusinessException;
 import org.dinospring.commons.response.Response;
 import org.dinospring.commons.response.Status;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -36,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestControllerAdvice
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class GlobalExceptionHandler {
 
   @ExceptionHandler(BusinessException.class)

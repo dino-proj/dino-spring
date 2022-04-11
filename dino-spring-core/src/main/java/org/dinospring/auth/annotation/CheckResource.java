@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2022 dinospring.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,36 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.commons.sys;
+package org.dinospring.auth.annotation;
 
-import java.io.Serializable;
-import java.util.List;
-
-import io.swagger.v3.oas.annotations.media.Schema;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
+ * 权限所对应的资源的名称
  * @author tuuboo
+ * @date 2022-04-06 23:32:36
  */
-public interface UserType extends Serializable {
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.TYPE })
+@Documented
+public @interface CheckResource {
 
   /**
-   * 用户类型名称
+   * 资源的名称
+   * @see #name()
    * @return
    */
-  @Schema(description = "用户类型名称")
-  String getType();
-
-  /**
-   * 是否为隶属于某个租户下面的用户
-   * @return
-   */
-  boolean isTenantUser();
-
-  /**
-   * 所有用户类型
-   * @return
-   */
-  @Schema(description = "所有用户类型", hidden = true)
-  List<UserType> allTypes();
-
+  String value();
 }

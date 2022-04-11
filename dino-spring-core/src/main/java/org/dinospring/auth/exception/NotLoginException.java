@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2022 dinospring.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,36 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.commons.sys;
-
-import java.io.Serializable;
-import java.util.List;
-
-import io.swagger.v3.oas.annotations.media.Schema;
+package org.dinospring.auth.exception;
 
 /**
+ * 未登录异常，用于标识用户未登录、登录已过期或者登录身份不匹配
  * @author tuuboo
+ * @date 2022-04-06 23:05:50
  */
-public interface UserType extends Serializable {
 
-  /**
-   * 用户类型名称
-   * @return
-   */
-  @Schema(description = "用户类型名称")
-  String getType();
-
-  /**
-   * 是否为隶属于某个租户下面的用户
-   * @return
-   */
-  boolean isTenantUser();
-
-  /**
-   * 所有用户类型
-   * @return
-   */
-  @Schema(description = "所有用户类型", hidden = true)
-  List<UserType> allTypes();
+public class NotLoginException extends AuthorizationException {
 
 }

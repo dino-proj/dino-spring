@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -49,7 +50,6 @@ import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.jdbc.core.ConnectionCallback;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.util.Assert;
@@ -101,14 +101,17 @@ public class DinoDataAutoConfiguration {
   @ConditionalOnMissingBean
   public ObjectMapper objectMapper() {
     log.info("--->>>> new jacksonObjectMapper");
-    ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().defaultViewInclusion(true).build();
-    objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-    objectMapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
-    objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
-    objectMapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
-    objectMapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
-    objectMapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
+    var builder = JsonMapper.builder();
+    builder.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+    builder.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+    builder.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
+    builder.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
+    builder.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
+    builder.enable(MapperFeature.DEFAULT_VIEW_INCLUSION);
 
+    var objectMapper = builder.build();
+
+    objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
     objectMapper.registerModule(new JacksonCustomerModule());
     return objectMapper;
   }

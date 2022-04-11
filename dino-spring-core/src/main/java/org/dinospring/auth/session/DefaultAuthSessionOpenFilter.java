@@ -15,6 +15,7 @@
 package org.dinospring.auth.session;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -44,7 +45,12 @@ public class DefaultAuthSessionOpenFilter extends OncePerRequestFilter {
       throws ServletException, IOException {
     var authSession = authSessionHttpResolver.resolveSession(request);
     DinoAuth.setAuthSession(authSession);
-    filterChain.doFilter(request, response);
+    try {
+      filterChain.doFilter(request, response);
+    } finally {
+      DinoAuth.setAuthSession(null);
+      authSessionHttpResolver.closeSession(request, Objects.nonNull(authSession) ? authSession.getSessionId() : null);
+    }
 
   }
 

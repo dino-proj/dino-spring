@@ -34,4 +34,11 @@ public interface AuthSessionHttpResolver<S extends AuthSession> {
    * @return {@link AuthSession}，如果不存在，返回null
    */
   S resolveSession(HttpServletRequest request);
+
+  /**
+   * <p>关闭{@link AuthSession}</p>
+   * @param request http请求
+   * @param sessionId 会话ID，如果不存在，则为null
+   */
+  void closeSession(HttpServletRequest request, String sessionId);
 }

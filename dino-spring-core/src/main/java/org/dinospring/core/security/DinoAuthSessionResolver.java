@@ -17,10 +17,10 @@ package org.dinospring.core.security;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -104,6 +104,8 @@ public class DinoAuthSessionResolver implements AuthSessionHttpResolver<DinoAuth
       var user = userService.getUserById(userType, princ.getUserId()).orElse(null);
       Assert.notNull(user, Status.CODE.FAIL_USER_NOT_EXIST);
 
+      context.currentUser(user);
+
       var urlTenant = context.currentTenant();
 
       if (StringUtils.isNotBlank(princ.getTenantId())) {
@@ -118,11 +120,18 @@ public class DinoAuthSessionResolver implements AuthSessionHttpResolver<DinoAuth
       }
       // 用tokenId作为sessionId
       var sessionId = tokenService.generateTokenId(princ);
-      return new DinoAuthSession(sessionId, userType, user.getId().toString(), userService);
+      return new DinoAuthSession(sessionId, userType, Objects.nonNull(user) ? Objects.toString(user.getId()) : null,
+          userService);
     } catch (IOException e) {
       log.error("error occured while create AuthSession from[{}]", prinStr, e);
       return null;
     }
+  }
+
+  @Override
+  public void closeSession(HttpServletRequest request, String sessionId) {
+    // 将当前登录用户清空
+    context.currentUser(null);
   }
 
   public static class DinoAuthSession implements AuthSession {
@@ -145,15 +154,12 @@ public class DinoAuthSessionResolver implements AuthSessionHttpResolver<DinoAuth
       this.userType = userType;
       this.userId = userId;
       this.permissions = Lazy.of(
-          new Supplier<List<Permission>>() {
-            @Override
-            public List<Permission> get() {
-              var perms = userService.getPermissions(userType, userId);
-              if (Objects.isNull(perms)) {
-                return List.of();
-              }
-              return perms.stream().map(WildcardPermission::of).collect(Collectors.toList());
+          () -> {
+            var perms = userService.getPermissions(userType, userId);
+            if (Objects.isNull(perms)) {
+              return List.of();
             }
+            return perms.stream().map(WildcardPermission::of).collect(Collectors.toList());
           });
 
       this.roles = Lazy.of(() -> userService.getRoles(userType, userId));
@@ -192,7 +198,7 @@ public class DinoAuthSessionResolver implements AuthSessionHttpResolver<DinoAuth
       if (isLogin()) {
         return roles.get();
       }
-      return null;
+      return Collections.emptyList();
     }
 
     @Override
@@ -200,7 +206,7 @@ public class DinoAuthSessionResolver implements AuthSessionHttpResolver<DinoAuth
       if (isLogin()) {
         return permissions.get();
       }
-      return null;
+      return Collections.emptyList();
     }
 
   }

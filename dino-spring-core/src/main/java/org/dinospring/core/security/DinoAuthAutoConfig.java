@@ -22,6 +22,7 @@ import org.dinospring.auth.session.AuthSession;
 import org.dinospring.auth.session.AuthSessionHttpResolver;
 import org.dinospring.auth.session.DefaultAuthSessionOpenFilter;
 import org.dinospring.core.security.config.SecurityProperties;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -34,14 +35,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DinoAuthAutoConfig {
 
+  @ConditionalOnProperty(prefix = SecurityProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
   @Bean
   public AuthzAnnotationPointcutAdvisor authzMethodPointcutAdvisor(SecurityProperties securityProperties,
       Supplier<AuthSession> sessionSupplier) {
-    // 如果开启权限验证，则创建拦截器
-    if (securityProperties.isEnabled()) {
-      return new AuthzAnnotationPointcutAdvisor(sessionSupplier);
-    }
-    return null;
+
+    return new AuthzAnnotationPointcutAdvisor(sessionSupplier);
   }
 
   @Bean

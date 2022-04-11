@@ -87,6 +87,9 @@ public class AuthzAnnotationPointcutAdvisor extends StaticMethodMatcherPointcutA
   }
 
   protected boolean isAuthzAnnotationPresent(Method method) {
+    if(Objects.isNull(method)){
+      return false;
+    }
     for (Class<? extends Annotation> annoClss : AUTHZ_ANNOTATION_CLASSES) {
       if (AnnotatedElementUtils.hasAnnotation(method, annoClss)) {
         return true;

@@ -104,6 +104,6 @@ public class AuthzAnnotationPointcutAdvisor extends StaticMethodMatcherPointcutA
 
   @Override
   public int getOrder() {
-    return Ordered.HIGHEST_PRECEDENCE;
+    return Ordered.HIGHEST_PRECEDENCE + 10000;
   }
 }

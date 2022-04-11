@@ -44,8 +44,8 @@
     <mariadb.version>2.7.1</mariadb.version>
 
     <!-- managedDep io -->
-    <minio.version>8.3.0</minio.version>
-    <qcloud-cos.version>5.6.58</qcloud-cos.version>
+    <minio.version>8.3.8</minio.version>
+    <qcloud-cos.version>5.6.72</qcloud-cos.version>
     <okhttp3.version>4.9.1</okhttp3.version>
 
     <!-- managedDep servlet-api -->
@@ -467,7 +467,7 @@
     <repository>
       <id>botbrain-repo</id>
       <name>Botbrain Repository</name>
-      <url>http://mvn.botbrain.ai/nexus/content/groups/public/</url>
+      <url>http://mvn.botzhiyu.com/nexus/content/groups/public/</url>
       <releases>
         <enabled>true</enabled>
       </releases>
@@ -476,18 +476,5 @@
       </snapshots>
     </repository>
   </repositories>
-  <pluginRepositories>
-    <pluginRepository>
-      <id>botbrain-plug-repo</id>
-      <name>Botbrain pluginRepository</name>
-      <url>http://mvn.botbrain.ai/nexus/content/groups/public/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
 
 </project>

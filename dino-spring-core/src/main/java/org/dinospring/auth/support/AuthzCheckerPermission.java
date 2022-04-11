@@ -45,7 +45,7 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 public class AuthzCheckerPermission extends AbstractAuthzChecker<CheckPermission, List<Predicate<AuthSession>>> {
 
   public AuthzCheckerPermission() {
-    super(CheckPermission.class);
+    super(CheckPermission.class, true);
   }
 
   @Override

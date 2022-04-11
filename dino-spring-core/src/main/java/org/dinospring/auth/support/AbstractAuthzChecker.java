@@ -23,6 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.collections4.CollectionUtils;
 import org.dinospring.auth.AuthzChecker;
+import org.dinospring.auth.annotation.CheckIgnore;
 import org.dinospring.auth.session.AuthSession;
 import org.springframework.context.expression.AnnotatedElementKey;
 import org.springframework.core.annotation.AnnotatedElementUtils;
@@ -38,9 +39,11 @@ public abstract class AbstractAuthzChecker<A extends Annotation, M> implements A
   protected Map<AnnotatedElementKey, M> methodInvocationCache = new ConcurrentHashMap<>(64);
 
   private final Class<A> annotationClass;
+  private final boolean enableCheckIgnoreAnnotation;
 
-  public AbstractAuthzChecker(Class<A> annotationClass) {
+  protected AbstractAuthzChecker(Class<A> annotationClass, boolean enableCheckIgnoreAnnotation) {
     this.annotationClass = annotationClass;
+    this.enableCheckIgnoreAnnotation = enableCheckIgnoreAnnotation;
   }
 
   @Override
@@ -49,9 +52,15 @@ public abstract class AbstractAuthzChecker<A extends Annotation, M> implements A
     if (methodInvocationCache.containsKey(methodKey)) {
       return methodInvocationCache.get(methodKey) != null;
     }
+    // 检查是否忽略权限检查
+    if (isIgnore(mi)) {
+      methodInvocationCache.put(methodKey, null);
+      return false;
+    }
+    // 查询类和方法上的权限注解
     var annosInClass = AnnotatedElementUtils.findMergedRepeatableAnnotations(mi.getThis().getClass(), annotationClass);
     var annosInMethod = AnnotatedElementUtils.findMergedRepeatableAnnotations(mi.getMethod(), annotationClass);
-    // not support CheckPermission in this invocation
+    // 如果没有权限注解，则返回false
     if (CollectionUtils.isEmpty(annosInClass) && CollectionUtils.isEmpty(annosInMethod)) {
       methodInvocationCache.put(methodKey, null);
       return false;
@@ -60,6 +69,18 @@ public abstract class AbstractAuthzChecker<A extends Annotation, M> implements A
     var meta = getMethodInvocationMeta(mi, annosInClass, annosInMethod);
     methodInvocationCache.put(methodKey, meta);
     return meta != null;
+  }
+
+  protected boolean isIgnore(MethodInvocation mi) {
+    if (!enableCheckIgnoreAnnotation) {
+      return false;
+    }
+    if (AnnotatedElementUtils.hasAnnotation(mi.getThis().getClass(), CheckIgnore.class)) {
+      return true;
+    } else if (AnnotatedElementUtils.hasAnnotation(mi.getMethod(), CheckIgnore.class)) {
+      return true;
+    }
+    return false;
   }
 
   /**

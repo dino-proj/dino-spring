@@ -36,7 +36,7 @@ import org.dinospring.auth.session.AuthSession;
 public class AuthzCheckerLogin extends AbstractAuthzChecker<CheckLogin, List<String[]>> {
 
   public AuthzCheckerLogin() {
-    super(CheckLogin.class);
+    super(CheckLogin.class, true);
   }
 
   @Override

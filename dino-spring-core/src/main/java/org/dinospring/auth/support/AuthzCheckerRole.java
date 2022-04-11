@@ -40,7 +40,7 @@ import org.dinospring.commons.function.Predicates;
 public class AuthzCheckerRole extends AbstractAuthzChecker<CheckRole, List<Predicate<AuthSession>>> {
 
   public AuthzCheckerRole() {
-    super(CheckRole.class);
+    super(CheckRole.class, true);
   }
 
   @Override
@@ -69,7 +69,7 @@ public class AuthzCheckerRole extends AbstractAuthzChecker<CheckRole, List<Predi
     if (rules.isEmpty()) {
       throw new IllegalArgumentException("@CheckRole.value must have at least one rule");
     }
-    var predicates = rules.stream().map(t -> makeRolePredicate(t)).collect(Collectors.toList());
+    var predicates = rules.stream().map(AuthzCheckerRole::makeRolePredicate).collect(Collectors.toList());
 
     if (predicates.size() == 1) {
       return new RoleAnnoPredicate(predicates.get(0), roleAnno.subjectType());

@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,6 +28,8 @@ import org.dinospring.auth.AuthzChecker;
 import org.dinospring.auth.annotation.CheckAuthz;
 import org.dinospring.auth.annotation.Logic;
 import org.dinospring.auth.session.AuthSession;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 
 /**
@@ -42,7 +43,7 @@ public class AuthzCheckerCustomBean extends AbstractAuthzChecker<CheckAuthz, Lis
   private final BeanFactory beanFactory;
 
   public AuthzCheckerCustomBean(BeanFactory beanFactory) {
-    super(CheckAuthz.class);
+    super(CheckAuthz.class, false);
     this.beanFactory = beanFactory;
   }
 
@@ -52,8 +53,7 @@ public class AuthzCheckerCustomBean extends AbstractAuthzChecker<CheckAuthz, Lis
       Collection<CheckAuthz> annosInMethod) {
 
     return Stream.concat(annosInClass.stream(), annosInMethod.stream())
-        .map(t -> makeAnnoPredicate(t)).collect(
-            Collectors.toList());
+        .map(this::makeAnnoPredicate).collect(Collectors.toList());
   }
 
   @Override
@@ -63,27 +63,33 @@ public class AuthzCheckerCustomBean extends AbstractAuthzChecker<CheckAuthz, Lis
     for (var predicate : predicates) {
       var logic = predicate.getRight();
       var beans = predicate.getLeft();
-      var result = true;
-      if (logic == Logic.ALL) {
-        for (var bean : beans) {
-          if (!bean.isPermmited(session, mi)) {
-            result = false;
-            break;
-          }
-        }
-      } else {
-        for (var bean : beans) {
-          if (bean.isPermmited(session, mi)) {
-            break;
-          }
-        }
-        result = false;
-      }
+      var result = logic == Logic.ALL ? isAllPermmited(session, mi, beans)
+          : isAnyPermmited(session, mi, beans);
       if (!result) {
         return false;
       }
     }
     return true;
+  }
+
+  private boolean isAllPermmited(AuthSession session, MethodInvocation mi,
+      AuthzChecker[] checkers) {
+    for (var bean : checkers) {
+      if (!bean.isPermmited(session, mi)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private boolean isAnyPermmited(AuthSession session, MethodInvocation mi,
+      AuthzChecker[] checkers) {
+    for (var bean : checkers) {
+      if (bean.isPermmited(session, mi)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private Pair<AuthzChecker[], Logic> makeAnnoPredicate(CheckAuthz anno) {
@@ -96,20 +102,15 @@ public class AuthzCheckerCustomBean extends AbstractAuthzChecker<CheckAuthz, Lis
   private AuthzChecker[] getBeans(Class<? extends AuthzChecker>[] beanClass, List<String> beanName) {
     var beans = new ArrayList<AuthzChecker>();
     for (var clazz : beanClass) {
-      var bean = beanFactory.getBean(clazz);
-      if (Objects.isNull(bean)) {
-        distinctAdd(beans, bean);
-      } else {
-        distinctAdd(beans, bean);
+      try {
+        distinctAdd(beans, beanFactory.getBean(clazz));
+      } catch (BeansException e) {
+        distinctAdd(beans, BeanUtils.instantiateClass(clazz));
       }
 
     }
     for (var name : beanName) {
-      var bean = beanFactory.getBean(name, AuthzChecker.class);
-      if (Objects.isNull(bean)) {
-        throw new IllegalArgumentException("bean not found:" + name);
-      }
-      distinctAdd(beans, bean);
+      distinctAdd(beans, beanFactory.getBean(name, AuthzChecker.class));
     }
 
     return beans.toArray(new AuthzChecker[beans.size()]);

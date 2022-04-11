@@ -24,6 +24,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.dinospring.auth.DinoAuth;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+/**
+ * 缺省的会话打开过滤器，用于在每次请求时打开Auth会话
+ *
+ * @author tuuboo
+ * @date 2022-04-11 17:38:45
+ */
+
 public class DefaultAuthSessionOpenFilter extends OncePerRequestFilter {
 
   private final AuthSessionHttpResolver<? extends AuthSession> authSessionHttpResolver;

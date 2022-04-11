@@ -27,7 +27,7 @@ public interface AuthzChecker {
   /**
    * 权限断言，如果权限不足，则抛出异常
    * @param session 登录会话
-   * @param invocation 方法调用
+   * @param mi 方法调用
    * @throws AuthorizationException 权限不足时，抛出异常
    */
   default void assertPermmited(AuthSession session, MethodInvocation mi) throws AuthorizationException {

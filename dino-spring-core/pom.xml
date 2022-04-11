@@ -62,12 +62,6 @@
       <artifactId>jolokia-core</artifactId>
     </dependency>
 
-    <!-- security -->
-    <dependency>
-      <groupId>org.apache.shiro</groupId>
-      <artifactId>shiro-spring-boot-web-starter</artifactId>
-    </dependency>
-
     <!-- database -->
     <dependency>
       <groupId>org.postgresql</groupId>

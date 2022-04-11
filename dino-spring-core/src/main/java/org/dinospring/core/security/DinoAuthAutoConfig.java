@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Configuration;
  */
 
 @Configuration
-public class DinoAuthConfig {
+public class DinoAuthAutoConfig {
 
   @Bean
   public AuthzAnnotationPointcutAdvisor authzMethodPointcutAdvisor(SecurityProperties securityProperties,
@@ -50,7 +50,7 @@ public class DinoAuthConfig {
   }
 
   @Bean
-  public AuthSessionHttpResolver<?> authSessionHttpResolver(SecurityProperties securityProperties) {
+  public DinoAuthSessionResolver authSessionHttpResolver(SecurityProperties securityProperties) {
     return new DinoAuthSessionResolver(securityProperties.getHttpHeaderName());
   }
 

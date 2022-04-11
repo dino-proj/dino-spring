@@ -20,8 +20,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.springframework.core.annotation.AliasFor;
-
 /**
  * 权限所对应的资源的名称
  * @author tuuboo
@@ -38,6 +36,5 @@ public @interface CheckResource {
    * @see #name()
    * @return
    */
-  @AliasFor("name")
   String value();
 }

@@ -54,8 +54,12 @@ public class DinoAuthAutoConfig {
   }
 
   @Bean
-  public DefaultAuthSessionOpenFilter authSessionOpenFilter(AuthSessionHttpResolver<?> sessionResolver) {
-    return new DefaultAuthSessionOpenFilter(sessionResolver);
+  public DefaultAuthSessionOpenFilter authSessionOpenFilter(SecurityProperties securityProperties,
+      AuthSessionHttpResolver<?> sessionResolver) {
+    var filter = new DefaultAuthSessionOpenFilter(sessionResolver);
+    // 添加白名单，在白名单里的请求不会打开session
+    filter.setWhitelist(securityProperties.getWhiteList());
+    return filter;
   }
 
 }

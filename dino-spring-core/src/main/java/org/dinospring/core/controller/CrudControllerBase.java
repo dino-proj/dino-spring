@@ -133,11 +133,19 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @Parameter(in = ParameterIn.QUERY, name = "id", required = true)
   @GetMapping("id")
   @JsonView(PropertyView.OnDetail.class)
-  default Response<VO> getByid(@PathVariable("tenant_id") String tenantId, @RequestParam K id) {
+  default Response<VO> getById(@PathVariable("tenant_id") String tenantId, @RequestParam K id) {
 
+    return Response.success(processVo(getById(id)));
+  }
+
+  /**
+   * 更加id查询返回VO
+   * @param id
+   * @return
+   */
+  default VO getById(K id) {
     SelectSqlBuilder selectSqlBuilder = service().repository().newSelect().eq("id", id);
-
-    return Response.success(processVo(service().repository().getOne(selectSqlBuilder, voClass())));
+    return service().repository().getOne(selectSqlBuilder, voClass());
   }
 
   /**
@@ -158,9 +166,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
 
     VO vo = add(body);
 
-    SelectSqlBuilder selectSqlBuilder = service().repository().newSelect().eq("id", vo.getId());
-
-    return Response.success(processVo(service().repository().getOne(selectSqlBuilder, voClass())));
+    return Response.success(processVo(vo));
   }
 
   /**
@@ -172,6 +178,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
     E item = service().projection(entityClass(), req);
 
     item = service().save(item);
+
     return service().projection(voClass(), item);
   }
 
@@ -194,7 +201,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
     Assert.notNull(body, Status.CODE.FAIL_INVALID_PARAM);
 
     VO vo = update(body, id);
-    return Response.success(processVo(service().getById(id, voClass())));
+    return Response.success(processVo(vo));
   }
 
   /**
@@ -210,6 +217,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
     BeanUtils.copyProperties(req, item);
 
     item = service().updateById(item);
+
     return service().projection(voClass(), item);
   }
 

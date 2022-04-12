@@ -20,6 +20,8 @@ import javax.persistence.EntityManager;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import org.dinospring.data.sql.builder.DeleteSqlBuilder;
+import org.dinospring.data.sql.builder.UpdateSqlBuilder;
 import org.springframework.data.jpa.repository.Modifying;
 
 /**
@@ -153,4 +155,21 @@ public interface JpaHelperExcutor<T, K> {
    */
   @Modifying
   boolean updateByIdWithVersion(K id, Map<String, Object> columnValue, Number version);
+
+  /**
+   * 修改
+   * @param updateSqlBuilder
+   * @return
+   */
+  @Modifying
+  long update(UpdateSqlBuilder updateSqlBuilder);
+
+
+  /**
+   * 删除
+   * @param deleteSqlBuilder
+   * @return
+   */
+  @Modifying
+  long delete(DeleteSqlBuilder deleteSqlBuilder);
 }

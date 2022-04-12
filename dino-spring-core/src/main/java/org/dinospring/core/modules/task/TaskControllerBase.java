@@ -38,7 +38,7 @@ public interface TaskControllerBase {
   * @return
   */
   @Nonnull
-  default TaskService service() {
+  default TaskService taskService() {
     return ContextHelper.findBean(TaskService.class);
   }
 
@@ -53,6 +53,6 @@ public interface TaskControllerBase {
   @Parameter(name = "id", description = "任务的ID")
   @GetMapping("/info")
   default Response<TaskVo> getTaskInfo(@PathVariable("tenant_id") String tenantId, @RequestParam String id) {
-    return Response.success(service().getTaskInfo(id));
+    return Response.success(taskService().getTaskInfo(id));
   }
 }

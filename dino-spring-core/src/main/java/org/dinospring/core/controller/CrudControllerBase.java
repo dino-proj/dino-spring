@@ -34,7 +34,6 @@ import org.dinospring.core.service.Service;
 import org.dinospring.core.vo.VoBase;
 import org.dinospring.data.domain.EntityBase;
 import org.dinospring.data.json.PropertyView;
-import org.dinospring.data.sql.builder.SelectSqlBuilder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.util.CastUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -135,17 +134,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @JsonView(PropertyView.OnDetail.class)
   default Response<VO> getById(@PathVariable("tenant_id") String tenantId, @RequestParam K id) {
 
-    return Response.success(processVo(getById(id)));
-  }
-
-  /**
-   * 更加id查询返回VO
-   * @param id
-   * @return
-   */
-  default VO getById(K id) {
-    SelectSqlBuilder selectSqlBuilder = service().repository().newSelect().eq("id", id);
-    return service().repository().getOne(selectSqlBuilder, voClass());
+    return Response.success(processVo(service().getById(id, voClass())));
   }
 
   /**

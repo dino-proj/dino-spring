@@ -14,25 +14,24 @@
 
 package org.dinospring.data.domain;
 
+import java.io.Serializable;
+import java.util.Properties;
+
 import org.dinospring.commons.context.ContextHelper;
 import org.hibernate.HibernateException;
 import org.hibernate.MappingException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
-import org.hibernate.id.Configurable;
 import org.hibernate.id.IdentifierGeneratorHelper;
 import org.hibernate.id.IdentityGenerator;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.type.Type;
-
-import java.io.Serializable;
-import java.util.Properties;
 
 /**
  * 根据ID类型生成ID
  * @author tuuboo
  */
 
-public class IdGenerator extends IdentityGenerator implements Configurable {
+public class IdGenerator extends IdentityGenerator {
   private String entityName;
 
   private IdService idService;

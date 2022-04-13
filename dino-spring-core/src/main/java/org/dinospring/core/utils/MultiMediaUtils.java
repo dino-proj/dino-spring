@@ -17,6 +17,7 @@ package org.dinospring.core.utils;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.UUID;
 
 import com.drew.imaging.FileType;
@@ -48,6 +49,7 @@ import ws.schild.jave.EncoderException;
 import ws.schild.jave.MultimediaObject;
 
 /**
+ * 多媒体工具类、图片、视频、音频、文件等处理
  *
  * @author tuuboo
  */
@@ -157,6 +159,26 @@ public class MultiMediaUtils {
     FileUtils.copyToFile(input, tempFile);
     var mediaInfo = new MultimediaObject(tempFile).getInfo();
     return mediaInfo.getDuration();
+  }
+
+  /**
+   * 将图片转换为ico格式文件，并写出到指定流
+   * @param image 图片
+   * @param out 输出流
+   * @param size ico图片大小，width = height = size，如：32。如果为0，则使用原图片
+   * @throws IOException
+   */
+  public static void writeIcoImage(java.awt.image.BufferedImage image, OutputStream out, int size) throws IOException {
+    if (size == 0) {
+      net.sf.image4j.codec.ico.ICOEncoder.write(image, out);
+    } else {
+      var ico = new java.awt.image.BufferedImage(size, size, java.awt.image.BufferedImage.TYPE_INT_RGB);
+      java.awt.Graphics2D g = ico.createGraphics();
+      g.setColor(java.awt.Color.WHITE);
+      g.drawImage(image.getScaledInstance(size, size, java.awt.Image.SCALE_SMOOTH), 0, 0, null);
+
+      net.sf.image4j.codec.ico.ICOEncoder.write(ico, out);
+    }
   }
 
   /**

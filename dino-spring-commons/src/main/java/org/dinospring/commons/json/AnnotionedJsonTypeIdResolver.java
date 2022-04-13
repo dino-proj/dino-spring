@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.dinospring.commons.annotion;
+package org.dinospring.commons.json;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;

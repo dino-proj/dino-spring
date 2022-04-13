@@ -16,25 +16,18 @@
 
 package org.dinospring.core.modules.framework;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
-import org.dinospring.commons.annotion.AnnotionedJsonTypeIdResolver;
-
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import org.dinospring.commons.json.annotation.JsonDiscriminator;
 
 /**
  * @Author: Jack
  * @Date: 2021/11/25 16:10
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonTypeInfo(
-  use = JsonTypeInfo.Id.CUSTOM,
-  include = JsonTypeInfo.As.PROPERTY,
-  visible = true,
-  property = "@t"
-)
-@JsonTypeIdResolver(AnnotionedJsonTypeIdResolver.class)
+@JsonDiscriminator
 public interface LayoutConfig extends Serializable {
 
 }

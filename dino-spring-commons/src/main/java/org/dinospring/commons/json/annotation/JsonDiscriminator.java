@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.data.annotion;
+package org.dinospring.commons.json.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -25,11 +25,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
 
-import org.dinospring.commons.annotion.AnnotionedJsonTypeIdResolver;
+import org.dinospring.commons.json.AnnotionedJsonTypeIdResolver;
 import org.springframework.core.annotation.AliasFor;
 
 /**
- * json类型多态的实现，请使用<pre> @JsonTypeName </pre>来定义实现类的ID
+ * json类型多态的实现，请使用<pre>@ {@link com.fasterxml.jackson.annotation.JsonTypeName} </pre>来定义实现类的ID
  * 如果从自定义注解中抽取id，请请先注册，例如：
  * 将<pre> @PageTemplate </pre>注解中的name作为ID，这按照如下方式添加：
  *  <pre> AnnotionedJsonTypeIdResolver.addAnnotion(PageTemplate.class, PageTemplate::name, "com.botbrain");</pre>
@@ -43,6 +43,11 @@ import org.springframework.core.annotation.AliasFor;
 @JacksonAnnotation
 public @interface JsonDiscriminator {
 
+  /**
+   * Alias for {@link JsonTypeInfo#property()}.
+   *
+   * @return
+   */
   @AliasFor(annotation = JsonTypeInfo.class)
   String property() default "@t";
 }

@@ -14,11 +14,7 @@
 
 package org.dinospring.core.data;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
-import org.dinospring.commons.annotion.AnnotionedJsonTypeIdResolver;
+import org.dinospring.commons.json.annotation.JsonDiscriminator;
 import org.dinospring.core.modules.framework.Component;
 
 /**
@@ -26,8 +22,7 @@ import org.dinospring.core.modules.framework.Component;
  * @author tuuboo
  */
 
-@JsonTypeInfo(use = Id.CUSTOM, include = As.PROPERTY, visible = true, property = "@t")
-@JsonTypeIdResolver(AnnotionedJsonTypeIdResolver.class)
+@JsonDiscriminator
 public interface DataProvider extends Component {
 
 }

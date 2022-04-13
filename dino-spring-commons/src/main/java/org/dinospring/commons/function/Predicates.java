@@ -105,7 +105,7 @@ public interface Predicates {
    * @param values
    * @return
    */
-
+  @SafeVarargs
   static <T extends Comparable<T>> Predicate<Collection<T>> hasAny(T... values) {
     return t -> {
       for (T value : values) {
@@ -123,6 +123,7 @@ public interface Predicates {
    * @param values
    * @return
    */
+  @SafeVarargs
   static <T extends Comparable<T>> Predicate<Collection<T>> hasAll(T... values) {
     return t -> {
       for (T value : values) {

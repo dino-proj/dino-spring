@@ -80,6 +80,8 @@
       <artifactId>cos_api</artifactId>
       <scope>provided</scope>
     </dependency>
+
+    <!-- miltiMedia -->
     <dependency>
       <groupId>com.drewnoakes</groupId>
       <artifactId>metadata-extractor</artifactId>
@@ -91,6 +93,13 @@
       <artifactId>thumbnailator</artifactId>
       <scope>provided</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.jclarion</groupId>
+      <artifactId>image4j</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
 
     <!-- https://mvnrepository.com/artifact/ws.schild/jave-core -->
     <dependency>

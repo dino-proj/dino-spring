@@ -58,6 +58,7 @@
     <metadata-extractor.version>2.16.0</metadata-extractor.version>
     <thumbnailator.version>0.4.14</thumbnailator.version>
     <jave.version>3.2.0</jave.version>
+    <image4j.version>0.7</image4j.version>
 
     <!-- test -->
     <junit.version>5.7.0</junit.version>
@@ -188,6 +189,12 @@
         <artifactId>thumbnailator</artifactId>
         <version>${thumbnailator.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.jclarion</groupId>
+        <artifactId>image4j</artifactId>
+        <version>${image4j.version}</version>
+      </dependency>
+
       <!-- https://mvnrepository.com/artifact/ws.schild/jave-core -->
       <dependency>
         <groupId>ws.schild</groupId>

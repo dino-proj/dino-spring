@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.dinospring.auth.DinoAuth;
+import org.dinospring.auth.exception.NotLoginException;
 import org.springframework.http.server.PathContainer;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.pattern.PathPattern;
@@ -55,6 +56,10 @@ public class DefaultAuthSessionOpenFilter extends OncePerRequestFilter {
       return;
     }
     var authSession = authSessionHttpResolver.resolveSession(request);
+    if (Objects.isNull(authSession)) {
+      throw new NotLoginException();
+    }
+
     DinoAuth.setAuthSession(authSession);
     try {
       filterChain.doFilter(request, response);
@@ -80,7 +85,7 @@ public class DefaultAuthSessionOpenFilter extends OncePerRequestFilter {
       return false;
     }
 
-    var requestPath = PathContainer.parsePath(request.getRequestURI());
+    var requestPath = PathContainer.parsePath(request.getServletPath());
     return whiteListPattern.stream().anyMatch(pattern -> pattern.matches(requestPath));
   }
 

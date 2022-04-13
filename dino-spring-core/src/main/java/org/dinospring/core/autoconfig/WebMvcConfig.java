@@ -33,6 +33,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.BufferedImageHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -103,6 +104,10 @@ public class WebMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
   @Override
   public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
     WebMvcConfigurer.super.extendMessageConverters(converters);
+    // 添加图片转换器
+    converters.add(new BufferedImageHttpMessageConverter());
+
+    // 添加自定义的jackson转换器
     for (var i = 0; i < converters.size(); i++) {
       if (converters.get(i) instanceof MappingJackson2HttpMessageConverter) {
         var converter = (MappingJackson2HttpMessageConverter) converters.get(i);

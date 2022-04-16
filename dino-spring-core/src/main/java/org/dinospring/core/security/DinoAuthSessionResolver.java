@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,8 +32,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.dinospring.auth.Permission;
 import org.dinospring.auth.session.AuthSession;
 import org.dinospring.auth.session.AuthSessionHttpResolver;
+import org.dinospring.auth.support.AllPermission;
 import org.dinospring.auth.support.WildcardPermission;
 import org.dinospring.commons.context.DinoContext;
+import org.dinospring.commons.function.Suppliers;
 import org.dinospring.commons.response.Status;
 import org.dinospring.commons.sys.UserType;
 import org.dinospring.commons.utils.Assert;
@@ -44,7 +47,6 @@ import org.dinospring.core.sys.token.TokenService;
 import org.dinospring.core.sys.user.UserService;
 import org.dinospring.core.sys.user.UserServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.Lazy;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -142,9 +144,9 @@ public class DinoAuthSessionResolver implements AuthSessionHttpResolver<DinoAuth
 
     private final String userId;
 
-    private final Lazy<List<Permission>> permissions;
+    private final Supplier<List<Permission>> permissions;
 
-    private final Lazy<Set<String>> roles;
+    private final Supplier<Set<String>> roles;
 
     /**
      * @param user
@@ -153,8 +155,12 @@ public class DinoAuthSessionResolver implements AuthSessionHttpResolver<DinoAuth
       this.sessionId = sessionId;
       this.userType = userType;
       this.userId = userId;
-      this.permissions = Lazy.of(
+      this.permissions = Suppliers.lazy(
           () -> {
+            // 超级用户，拥有所有权限
+            if (userService.isSuperAdmin(userType, userId)) {
+              return Collections.singletonList(AllPermission.of());
+            }
             var perms = userService.getPermissions(userType, userId);
             if (Objects.isNull(perms)) {
               return List.of();
@@ -162,7 +168,7 @@ public class DinoAuthSessionResolver implements AuthSessionHttpResolver<DinoAuth
             return perms.stream().map(WildcardPermission::of).collect(Collectors.toList());
           });
 
-      this.roles = Lazy.of(() -> userService.getRoles(userType, userId));
+      this.roles = Suppliers.lazy(() -> userService.getRoles(userType, userId));
     }
 
     @Override

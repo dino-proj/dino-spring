@@ -46,6 +46,10 @@ public interface Status {
     //账号不允许登录
     FAIL_LOGIN_DENNY(601, "账号不允许登录"),
 
+    //未登录
+
+    FAIL_NOT_LOGIN(602, "未登录"),
+
     //账号或密码错误
     FAIL_INVALID_PASSWORD(610, "账号或密码错误"),
 

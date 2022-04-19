@@ -14,6 +14,8 @@
 
 package org.dinospring.core.security;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 import org.dinospring.auth.DinoAuth;
@@ -58,7 +60,17 @@ public class DinoAuthAutoConfig {
       AuthSessionHttpResolver<?> sessionResolver) {
     var filter = new DefaultAuthSessionOpenFilter(sessionResolver);
     // 添加白名单，在白名单里的请求不会打开session
-    filter.setWhitelist(securityProperties.getWhiteList());
+    var whiltes = new ArrayList<>(securityProperties.getWhiteList());
+    whiltes.add("/actuator/**");
+    whiltes.add("/swagger-ui/**");
+    whiltes.add("/swagger-ui.html");
+    whiltes.add("/v3/api-doc/**");
+    whiltes.add("/v3/api-docs/**");
+    whiltes.add("*.html");
+    whiltes.add("*.htm");
+    whiltes.add("*.css");
+    whiltes.add("*.js");
+    filter.setWhitelist(whiltes);
     return filter;
   }
 

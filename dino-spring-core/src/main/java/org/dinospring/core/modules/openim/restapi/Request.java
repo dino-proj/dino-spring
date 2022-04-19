@@ -35,4 +35,12 @@ public abstract class Request {
   @JsonProperty("operationID")
   @Getter
   private String operationId = ID_GEN.incrementAndGet() + "";
+
+  /**
+   * 请求的时候是否需要token
+   * @return
+   */
+  public boolean isRequiredToken(){
+   return false;
+  }
 }

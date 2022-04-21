@@ -17,9 +17,11 @@ package org.dinospring.core.modules.iam;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import org.dinospring.data.domain.TenantRowEntityBase;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,14 +29,20 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
+/**
+ * @author tuuboo
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor
 @Entity
 @Table(name = "iam_action_group")
-public class ActionGroupEnyity extends TenantRowEntityBase<Long> {
+@TypeDef(name = "json", typeClass = JsonBinaryType.class)
+public class ActionGroupEntity extends TenantRowEntityBase<Long> {
 
   @Schema(description = "权限组的名字")
   @Column(length = 64)
@@ -44,6 +52,8 @@ public class ActionGroupEnyity extends TenantRowEntityBase<Long> {
   @Column(length = 128)
   private String remark;
 
+  @Type(type = "json")
+  @Convert(disableConversion = true)
   @Schema(description = "包含的权限")
   @Column(columnDefinition = "jsonb")
   private List<Action> actions;

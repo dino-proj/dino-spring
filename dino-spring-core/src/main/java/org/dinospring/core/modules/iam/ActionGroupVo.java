@@ -21,6 +21,9 @@ import org.dinospring.core.vo.VoImplBase;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+/**
+ * @author tuuboo
+ */
 @Data
 public class ActionGroupVo extends VoImplBase<Long> {
 

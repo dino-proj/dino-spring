@@ -17,6 +17,8 @@ package org.dinospring.core.modules.openim;
 import lombok.extern.slf4j.Slf4j;
 import org.dinospring.commons.utils.AsmUtils;
 import org.dinospring.core.modules.openim.config.OpenimModuleProperties;
+import org.dinospring.core.modules.openim.restapi.AccountCheck;
+import org.dinospring.core.modules.openim.restapi.AccountCheckReq;
 import org.dinospring.core.modules.openim.restapi.Group;
 import org.dinospring.core.modules.openim.restapi.GroupReq;
 import org.dinospring.core.modules.openim.restapi.Request;
@@ -101,8 +103,22 @@ public class OpenimService {
     return post(UserRegReq.PATH, request, UserToken.class);
   }
 
+  /**
+   * 创建群组
+   * @param groupReq
+   * @return
+   */
   public Group createGroup(GroupReq groupReq) {
     return post(GroupReq.PATH, groupReq, Group.class);
+  }
+
+  /**
+   * 查询用户是否在IM中已经注册接口
+   * @param accountCheckReq
+   * @return
+   */
+  public AccountCheck accountCheck(AccountCheckReq accountCheckReq) {
+    return post(AccountCheckReq.PATH, accountCheckReq, AccountCheck.class);
   }
 
   protected String makeUrl(String path) {

@@ -31,6 +31,7 @@ import com.google.gson.GsonBuilder;
 
 import org.dinospring.commons.autoconfig.DinoCommonsAutoConfiguration;
 import org.dinospring.commons.context.ContextHelper;
+import org.dinospring.commons.json.JsonDiscriminatorModule;
 import org.dinospring.data.converts.JacksonCustomerModule;
 import org.dinospring.data.sql.dialect.Dialect;
 import org.dinospring.data.sql.dialect.MysqlDialect;
@@ -113,6 +114,7 @@ public class DinoDataAutoConfiguration {
 
     objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
     objectMapper.registerModule(new JacksonCustomerModule());
+    objectMapper.registerModule(new JsonDiscriminatorModule());
     return objectMapper;
   }
 

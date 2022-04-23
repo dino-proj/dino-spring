@@ -16,7 +16,6 @@ package org.dinospring.core.controller.support;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.dinospring.core.service.CustomQuery;
-import org.dinospring.data.domain.EntityBase;
 import org.dinospring.data.sql.builder.SelectSqlBuilder;
 
 import io.swagger.v3.oas.annotations.media.Schema;

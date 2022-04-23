@@ -15,7 +15,6 @@
 package org.dinospring.core.modules.openim.restapi;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -53,4 +52,40 @@ public class UserRegReq extends Request {
    */
   @JsonProperty("nickname")
   private String nickname;
+
+  /**
+   * 用户头像或者群头像url，根据上下文理解
+   */
+  @JsonProperty("faceURL")
+  private String faceURL;
+
+  /**
+   * 用户性别(1 表示男，2 表示女)
+   */
+  @JsonProperty("gender")
+  private int gender;
+
+  /**
+   * 用户手机号码，包括地区，(如香港：+852-xxxxxxxx)
+   */
+  @JsonProperty("phoneNumber")
+  private String phoneNumber;
+
+  /**
+   * 用户生日，Unix时间戳（秒）
+   */
+  @JsonProperty("birth")
+  private String birth;
+
+  /**
+   * 邮箱地址
+   */
+  @JsonProperty("email")
+  private String email;
+
+  /**
+   * 扩展字段，用户可自行扩展，建议封装成 JSON 字符串
+   */
+  @JsonProperty("ex")
+  private String ex;
 }

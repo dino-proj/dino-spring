@@ -51,6 +51,12 @@ public interface TenantControllerBase extends ControllerBase<TenantService, Tena
     return Response.success(service().findTenantById(id, TenantVo.class));
   }
 
+  /**
+   * 根据域名查询favorit.ico
+   * @param domain
+   * @param response
+   * @throws IOException
+   */
   @Operation(summary = "根据域名查询favorit.ico")
   @Parameter(name = "domain", description = "域名")
   @GetMapping(value = "/favicon.ico")

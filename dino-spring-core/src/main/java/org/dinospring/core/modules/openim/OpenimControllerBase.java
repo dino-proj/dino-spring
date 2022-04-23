@@ -29,12 +29,11 @@ import io.swagger.v3.oas.annotations.Operation;
 public interface OpenimControllerBase {
 
   /**
-   * 获取当前用户的ID
+   * 获取当前用户的openim ID
    *
-   * @param userId
    * @return
    */
-  String currentUserId();
+  String currentUserImId();
 
   /**
    * 获取当前用户的Token
@@ -46,6 +45,6 @@ public interface OpenimControllerBase {
   @GetMapping("/auth")
   default Response<UserToken> auth(int platform) {
     var service = ContextHelper.findBean(OpenimService.class);
-    return Response.success(service.getUserToken(currentUserId(), platform));
+    return Response.success(service.getUserToken(currentUserImId(), platform));
   }
 }

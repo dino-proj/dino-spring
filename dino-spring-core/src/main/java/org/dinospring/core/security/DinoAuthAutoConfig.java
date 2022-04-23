@@ -18,10 +18,13 @@ import java.util.function.Supplier;
 
 import org.dinospring.auth.DinoAuth;
 import org.dinospring.auth.aop.AuthzAnnotationPointcutAdvisor;
+import org.dinospring.auth.session.AuthInfoProvider;
 import org.dinospring.auth.session.AuthSession;
-import org.dinospring.auth.session.AuthSessionHttpResolver;
+import org.dinospring.auth.session.AuthSessionResolver;
 import org.dinospring.auth.session.DefaultAuthSessionOpenFilter;
 import org.dinospring.core.security.config.SecurityProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,15 +36,8 @@ import org.springframework.context.annotation.Configuration;
  */
 
 @Configuration
+@ConditionalOnProperty(prefix = SecurityProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 public class DinoAuthAutoConfig {
-
-  @ConditionalOnProperty(prefix = SecurityProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
-  @Bean
-  public AuthzAnnotationPointcutAdvisor authzMethodPointcutAdvisor(SecurityProperties securityProperties,
-      Supplier<AuthSession> sessionSupplier) {
-
-    return new AuthzAnnotationPointcutAdvisor(sessionSupplier);
-  }
 
   @Bean
   public Supplier<AuthSession> sessionSupplier() {
@@ -49,14 +45,29 @@ public class DinoAuthAutoConfig {
   }
 
   @Bean
+  public AuthzAnnotationPointcutAdvisor authzMethodPointcutAdvisor(SecurityProperties securityProperties,
+      Supplier<AuthSession> sessionSupplier) {
+
+    return new AuthzAnnotationPointcutAdvisor(sessionSupplier);
+  }
+
+  @ConditionalOnMissingBean(AuthInfoProvider.class)
+  @Bean
+  public DinoAuthInfoProvider authInfoProvider() {
+    return new DinoAuthInfoProvider();
+  }
+
+  @ConditionalOnMissingBean(AuthSessionResolver.class)
+  @Bean
   public DinoAuthSessionResolver authSessionHttpResolver(SecurityProperties securityProperties) {
     return new DinoAuthSessionResolver(securityProperties.getHttpHeaderName());
   }
 
+  @ConditionalOnMissingBean(DefaultAuthSessionOpenFilter.class)
   @Bean
   public DefaultAuthSessionOpenFilter authSessionOpenFilter(SecurityProperties securityProperties,
-      AuthSessionHttpResolver<?> sessionResolver) {
-    var filter = new DefaultAuthSessionOpenFilter(sessionResolver);
+      @Autowired AuthSessionResolver<?>[] sessionResolvers) {
+    var filter = new DefaultAuthSessionOpenFilter(sessionResolvers);
     // 添加白名单，在白名单里的请求不会打开session
     filter.setWhitelist(securityProperties.getWhiteList());
     return filter;

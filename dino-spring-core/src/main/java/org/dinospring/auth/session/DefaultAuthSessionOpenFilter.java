@@ -15,6 +15,7 @@
 package org.dinospring.auth.session;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -24,6 +25,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.dinospring.auth.DinoAuth;
 import org.dinospring.auth.exception.NotLoginException;
 import org.springframework.http.server.PathContainer;
@@ -40,12 +42,13 @@ import org.springframework.web.util.pattern.PathPatternParser;
 
 public class DefaultAuthSessionOpenFilter extends OncePerRequestFilter {
 
-  private final AuthSessionHttpResolver<? extends AuthSession> authSessionHttpResolver;
+  private final List<AuthSessionResolver<? extends AuthSession>> authSessionResolvers;
 
   private List<PathPattern> whiteListPattern = List.of();
 
-  public DefaultAuthSessionOpenFilter(AuthSessionHttpResolver<? extends AuthSession> authSessionHttpResolver) {
-    this.authSessionHttpResolver = authSessionHttpResolver;
+  public DefaultAuthSessionOpenFilter(AuthSessionResolver<? extends AuthSession>[] authSessionResolvers) {
+
+    this.authSessionResolvers = new ArrayList<>(authSessionResolvers.length);
   }
 
   @Override
@@ -55,19 +58,29 @@ public class DefaultAuthSessionOpenFilter extends OncePerRequestFilter {
       filterChain.doFilter(request, response);
       return;
     }
-    var authSession = authSessionHttpResolver.resolveSession(request);
+    var authSession = resolveSession(request);
     if (Objects.isNull(authSession)) {
       throw new NotLoginException();
     }
 
-    DinoAuth.setAuthSession(authSession);
+    DinoAuth.setAuthSession(authSession.getRight());
     try {
       filterChain.doFilter(request, response);
     } finally {
       DinoAuth.setAuthSession(null);
-      authSessionHttpResolver.closeSession(request, Objects.nonNull(authSession) ? authSession.getSessionId() : null);
+      authSession.getLeft().closeSession(request, authSession.getRight());
     }
 
+  }
+
+  protected Pair<AuthSessionResolver<? extends AuthSession>, AuthSession> resolveSession(HttpServletRequest request) {
+    for (var authSessionResolver : authSessionResolvers) {
+      var authSession = authSessionResolver.resolveSession(request);
+      if (Objects.nonNull(authSession)) {
+        return Pair.of(authSessionResolver, authSession);
+      }
+    }
+    return null;
   }
 
   /**

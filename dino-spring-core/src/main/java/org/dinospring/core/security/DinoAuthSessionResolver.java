@@ -18,11 +18,11 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,21 +30,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.auth.Permission;
+import org.dinospring.auth.session.AuthInfoProvider;
 import org.dinospring.auth.session.AuthSession;
-import org.dinospring.auth.session.AuthSessionHttpResolver;
-import org.dinospring.auth.support.AllPermission;
-import org.dinospring.auth.support.WildcardPermission;
+import org.dinospring.auth.session.AuthSessionResolver;
 import org.dinospring.commons.context.DinoContext;
 import org.dinospring.commons.function.Suppliers;
 import org.dinospring.commons.response.Status;
-import org.dinospring.commons.sys.UserType;
+import org.dinospring.commons.sys.User;
 import org.dinospring.commons.utils.Assert;
 import org.dinospring.core.security.DinoAuthSessionResolver.DinoAuthSession;
 import org.dinospring.core.sys.tenant.TenantService;
 import org.dinospring.core.sys.token.Token;
 import org.dinospring.core.sys.token.TokenPrincaple;
 import org.dinospring.core.sys.token.TokenService;
-import org.dinospring.core.sys.user.UserService;
 import org.dinospring.core.sys.user.UserServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -58,7 +56,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
-public class DinoAuthSessionResolver implements AuthSessionHttpResolver<DinoAuthSession> {
+public class DinoAuthSessionResolver implements AuthSessionResolver<DinoAuthSession> {
 
   @Autowired
   TokenService tokenService;
@@ -74,6 +72,9 @@ public class DinoAuthSessionResolver implements AuthSessionHttpResolver<DinoAuth
 
   @Autowired
   private DinoContext context;
+
+  @Autowired
+  private AuthInfoProvider<User<?>> authzInfoProvider;
 
   @Getter
   private final String authHeader;
@@ -122,8 +123,7 @@ public class DinoAuthSessionResolver implements AuthSessionHttpResolver<DinoAuth
       }
       // 用tokenId作为sessionId
       var sessionId = tokenService.generateTokenId(princ);
-      return new DinoAuthSession(sessionId, userType, Objects.nonNull(user) ? Objects.toString(user.getId()) : null,
-          userService);
+      return new DinoAuthSession(sessionId, user, authzInfoProvider);
     } catch (IOException e) {
       log.error("error occured while create AuthSession from[{}]", prinStr, e);
       return null;
@@ -131,7 +131,7 @@ public class DinoAuthSessionResolver implements AuthSessionHttpResolver<DinoAuth
   }
 
   @Override
-  public void closeSession(HttpServletRequest request, String sessionId) {
+  public void closeSession(HttpServletRequest request, Object session) {
     // 将当前登录用户清空
     context.currentUser(null);
   }
@@ -140,9 +140,7 @@ public class DinoAuthSessionResolver implements AuthSessionHttpResolver<DinoAuth
 
     private final String sessionId;
 
-    private final UserType userType;
-
-    private final String userId;
+    private final User<?> user;
 
     private final Supplier<List<Permission>> permissions;
 
@@ -151,24 +149,19 @@ public class DinoAuthSessionResolver implements AuthSessionHttpResolver<DinoAuth
     /**
      * @param user
      */
-    public DinoAuthSession(String sessionId, UserType userType, String userId, UserService<?, ?> userService) {
+    public DinoAuthSession(String sessionId, User<?> user, AuthInfoProvider<User<?>> authInfoService) {
       this.sessionId = sessionId;
-      this.userType = userType;
-      this.userId = userId;
-      this.permissions = Suppliers.lazy(
+      this.user = user;
+      this.permissions = Suppliers.<List<Permission>>lazy(
           () -> {
-            // 超级用户，拥有所有权限
-            if (userService.isSuperAdmin(userType, userId)) {
-              return Collections.singletonList(AllPermission.of());
-            }
-            var perms = userService.getPermissions(userType, userId);
+            var perms = authInfoService.getPermissions(user);
             if (Objects.isNull(perms)) {
               return List.of();
             }
-            return perms.stream().map(WildcardPermission::of).collect(Collectors.toList());
+            return List.copyOf(perms);
           });
 
-      this.roles = Suppliers.lazy(() -> userService.getRoles(userType, userId));
+      this.roles = Suppliers.lazy(() -> new HashSet<>(authInfoService.getRoles(user)));
     }
 
     @Override
@@ -178,23 +171,23 @@ public class DinoAuthSessionResolver implements AuthSessionHttpResolver<DinoAuth
 
     @Override
     public boolean isLogin() {
-      return Objects.nonNull(userId);
+      return Objects.nonNull(user);
     }
 
     @Override
     public boolean isLoginAs(String subjectType) {
-      return isLogin() && userType.getType().equals(subjectType);
+      return isLogin() && user.getUserType().getType().equals(subjectType);
     }
 
     @Override
     public String getSubjectId() {
-      return userId;
+      return Objects.isNull(user) ? null : user.getId().toString();
     }
 
     @Override
     public String getSubjectType() {
       if (isLogin()) {
-        return userType.getType();
+        return user.getUserType().getType();
       }
       return null;
     }

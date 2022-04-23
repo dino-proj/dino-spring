@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.auth;
+package org.dinospring.auth.session;
 
 import java.util.Collection;
+
+import org.dinospring.auth.Permission;
 
 /**
  * 用户认证信息提供者
@@ -22,7 +24,7 @@ import java.util.Collection;
  * @date 2022-04-09 22:22:42
  */
 
-public interface AuthzInfoProvider<S> {
+public interface AuthInfoProvider<S> {
 
   /**
    * 获取用户角色
@@ -38,10 +40,4 @@ public interface AuthzInfoProvider<S> {
    */
   Collection<Permission> getPermissions(S subject);
 
-  /**
-   * 获取用户类型
-   * @param subject 用户
-   * @return 用户角色列表
-   */
-  String getType(S subject);
 }

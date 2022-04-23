@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
  * @date 2022-04-09 21:50:24
  */
 
-public interface AuthSessionHttpResolver<S extends AuthSession> {
+public interface AuthSessionResolver<S extends AuthSession> {
 
   /**
    * <p>从{@link HttpServletRequest}中获取{@link AuthSession}</p>
@@ -38,7 +38,7 @@ public interface AuthSessionHttpResolver<S extends AuthSession> {
   /**
    * <p>关闭{@link AuthSession}</p>
    * @param request http请求
-   * @param sessionId 会话ID，如果不存在，则为null
+   * @param session 会话，如果不存在，则为null
    */
-  void closeSession(HttpServletRequest request, String sessionId);
+  void closeSession(HttpServletRequest request, Object session);
 }

@@ -15,7 +15,6 @@
 package org.dinospring.auth.session;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -24,6 +23,8 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.dinospring.auth.DinoAuth;
@@ -48,7 +49,7 @@ public class DefaultAuthSessionOpenFilter extends OncePerRequestFilter {
 
   public DefaultAuthSessionOpenFilter(AuthSessionResolver<? extends AuthSession>[] authSessionResolvers) {
 
-    this.authSessionResolvers = new ArrayList<>(authSessionResolvers.length);
+    this.authSessionResolvers = Lists.newArrayList(authSessionResolvers);
   }
 
   @Override

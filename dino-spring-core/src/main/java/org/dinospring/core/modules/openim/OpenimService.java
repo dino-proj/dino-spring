@@ -14,12 +14,15 @@
 
 package org.dinospring.core.modules.openim;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.utils.AsmUtils;
 import org.dinospring.core.modules.openim.config.OpenimModuleProperties;
 import org.dinospring.core.modules.openim.restapi.AccountCheck;
 import org.dinospring.core.modules.openim.restapi.AccountCheckReq;
 import org.dinospring.core.modules.openim.restapi.Group;
 import org.dinospring.core.modules.openim.restapi.GroupReq;
+import org.dinospring.core.modules.openim.restapi.MessageReq;
+import org.dinospring.core.modules.openim.restapi.MessageResp;
 import org.dinospring.core.modules.openim.restapi.MuteGroupMember;
 import org.dinospring.core.modules.openim.restapi.MuteGroupMemberReq;
 import org.dinospring.core.modules.openim.restapi.Request;
@@ -122,6 +125,19 @@ public class OpenimService {
    */
   public MuteGroupMember muteGroupMember(MuteGroupMemberReq muteGroupMemberReq) {
     return post(MuteGroupMemberReq.PATH, muteGroupMemberReq, MuteGroupMember.class);
+  }
+
+  /**
+   * 管理员通过后台接口发送单聊群聊消息，可以以管理员身份发消息，也可以以其他用户的身份发消息，通过sendID区分
+   * @param messageReq
+   * @return
+   */
+  public MessageResp sendMsg(MessageReq messageReq) {
+    String sendId = messageReq.getSendId();
+    if (StringUtils.isBlank(sendId)) {
+      sendId = properties.getAdminId();
+    }
+    return post(MessageReq.PATH, messageReq, MessageResp.class);
   }
 
   /**

@@ -14,13 +14,14 @@
 
 package org.dinospring.core.modules.openim;
 
-import lombok.extern.slf4j.Slf4j;
 import org.dinospring.commons.utils.AsmUtils;
 import org.dinospring.core.modules.openim.config.OpenimModuleProperties;
 import org.dinospring.core.modules.openim.restapi.AccountCheck;
 import org.dinospring.core.modules.openim.restapi.AccountCheckReq;
 import org.dinospring.core.modules.openim.restapi.Group;
 import org.dinospring.core.modules.openim.restapi.GroupReq;
+import org.dinospring.core.modules.openim.restapi.MuteGroupMember;
+import org.dinospring.core.modules.openim.restapi.MuteGroupMemberReq;
 import org.dinospring.core.modules.openim.restapi.Request;
 import org.dinospring.core.modules.openim.restapi.Response;
 import org.dinospring.core.modules.openim.restapi.UserRegReq;
@@ -32,6 +33,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * openim的restful接口实现
@@ -110,6 +113,15 @@ public class OpenimService {
    */
   public Group createGroup(GroupReq groupReq) {
     return post(GroupReq.PATH, groupReq, Group.class);
+  }
+
+  /**
+   * 禁言群成员
+   * @param muteGroupMemberReq
+   * @return
+   */
+  public MuteGroupMember muteGroupMember(MuteGroupMemberReq muteGroupMemberReq) {
+    return post(MuteGroupMemberReq.PATH, muteGroupMemberReq, MuteGroupMember.class);
   }
 
   /**

@@ -54,7 +54,6 @@ public class OpenApiAutoConfiguration {
   @Bean
   public OpenAPI customOpenAPI() {
     log.info("start custom open api info");
-    Json.mapper().setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
     return new OpenAPI()
         .info(new Info()
             .title(StringUtils.capitalize(apiName) + " Open API")

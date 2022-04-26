@@ -2,6 +2,7 @@ package org.dinospring.core.modules.openim.restapi;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import java.util.List;
  * @Date: 2022/4/16 1:24
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class GroupReq extends Request {
   public static final String PATH = "/group/create_group";
 

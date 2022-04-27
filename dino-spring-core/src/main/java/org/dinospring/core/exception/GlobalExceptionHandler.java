@@ -16,10 +16,12 @@ package org.dinospring.core.exception;
 
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
+import org.dinospring.auth.exception.NotLoginException;
 import org.dinospring.commons.exception.BusinessException;
 import org.dinospring.commons.response.Response;
 import org.dinospring.commons.response.Status;
@@ -59,6 +61,12 @@ public class GlobalExceptionHandler {
   public Response<Void> dataAccessExceptionHandler(HttpServletResponse response, DataAccessException ex) {
     log.error("data access exception occured", ex);
     return Response.fail(Status.CODE.FAIL_QUERY_EXCEPTION);
+  }
+
+  @ExceptionHandler(NotLoginException.class)
+  public Response<Void> notLoginExceptionHandler(HttpServletRequest request, NotLoginException ex) {
+    log.error("user not login exception on request {}", request.getRequestURL());
+    return Response.fail(Status.CODE.FAIL_NOT_LOGIN);
   }
 
   @ExceptionHandler(IllegalArgumentException.class)

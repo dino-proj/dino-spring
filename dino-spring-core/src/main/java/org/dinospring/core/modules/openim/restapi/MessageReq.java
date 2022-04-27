@@ -93,7 +93,7 @@ public class MessageReq extends Request {
 
   @Override
   public boolean isRequiredToken() {
-    return false;
+    return true;
   }
 
   @Data

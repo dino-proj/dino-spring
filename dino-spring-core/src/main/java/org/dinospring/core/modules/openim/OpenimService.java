@@ -136,8 +136,8 @@ public class OpenimService {
     String sendId = messageReq.getSendId();
     if (StringUtils.isBlank(sendId)) {
       sendId = properties.getAdminId();
-      messageReq.setSendId(sendId);
     }
+    messageReq.setSendId(sendId);
     return post(MessageReq.PATH, messageReq, MessageResp.class);
   }
 

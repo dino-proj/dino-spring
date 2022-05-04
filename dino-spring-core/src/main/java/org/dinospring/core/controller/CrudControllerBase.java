@@ -50,13 +50,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * @param S service类型
+ * @param E entity类型
+ * @param VO vo类型
+ * @param SRC search query类型
+ * @param REQ add和update的post body类型
+ * @param K entity的主键类型
  *
  * @author tuuboo
  * @author JL
  */
 
 public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBase<K>, VO extends VoBase<K>, SRC extends CustomQuery, REQ, K extends Serializable>
-  extends ControllerBase<S, E, VO, K> {
+    extends ControllerBase<S, E, VO, K> {
 
   /**
    * 对VO对象进行返回前的处理
@@ -106,7 +112,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @PostMapping("list")
   @JsonView(PropertyView.OnSummary.class)
   default PageResponse<VO> list(@PathVariable("tenant_id") String tenantId, PageReq pageReq, SortReq sortReq,
-                                @RequestBody PostBody<SRC> req) {
+      @RequestBody PostBody<SRC> req) {
 
     List<String> sort = sortReq.getSort();
     if (CollectionUtils.isNotEmpty(sort)) {
@@ -116,7 +122,8 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
     var pageable = pageReq.pageable(sortReq);
 
     var query = req.getBody();
-    var pageData = query == null ? service().listPage(pageable, voClass()) : service().listPage(query, pageable, voClass());
+    var pageData = query == null ? service().listPage(pageable, voClass())
+        : service().listPage(query, pageable, voClass());
 
     return PageResponse.success(pageData, this::processVoList);
   }
@@ -183,7 +190,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @PostMapping("update")
   @Transactional(rollbackFor = Exception.class)
   default Response<VO> update(@PathVariable("tenant_id") String tenantId, @RequestParam K id,
-                              @RequestBody PostBody<REQ> req) {
+      @RequestBody PostBody<REQ> req) {
 
     var body = processReq(tenantId, req, id);
 
@@ -235,8 +242,9 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @ParamTenant
   @GetMapping("status")
   @Transactional(rollbackFor = Exception.class)
-  default Response<Boolean> status(@PathVariable("tenant_id") String tenantId, @RequestParam List<K> ids, @RequestParam String status) {
-    service().repository().updateStatusByIds(ids, status);
+  default Response<Boolean> status(@PathVariable("tenant_id") String tenantId, @RequestParam List<K> ids,
+      @RequestParam String status) {
+    service().updateStatusByIds(ids, status);
     return Response.success(true);
   }
 

@@ -188,7 +188,7 @@ public abstract class ServiceBase<T, K extends Serializable> implements Service<
 
   protected void beforeUpdateEntity(T entity) {
     if (entity instanceof EntityBase) {
-      ((EntityBase) entity).setUpdateAt(new Date());
+      ((EntityBase<?>) entity).setUpdateAt(new Date());
     }
   }
 }

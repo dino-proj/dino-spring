@@ -16,19 +16,26 @@
 
 package org.dinospring.core.sys.user;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-import org.dinospring.commons.sys.UserType;
-import org.dinospring.core.vo.VoImplBase;
-
 import java.io.Serializable;
 import java.util.Date;
 
+import org.dinospring.commons.sys.UserType;
+import org.dinospring.core.vo.VoImplBase;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 /**
+ * @param K 用户主键类型
+ *
+ * @author tuuboo
  * @author JL
  * @Date: 2021/11/10
  */
+
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class UserVoBase<K extends Serializable> extends VoImplBase<K> implements UserBase<K> {
 
   @Schema(name = "nick_name", description = "用户昵称")

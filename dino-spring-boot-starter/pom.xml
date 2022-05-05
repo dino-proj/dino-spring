@@ -24,8 +24,8 @@
     <p3c-pmd.version>2.1.1</p3c-pmd.version>
 
     <!-- managedDep persistent-->
-    <hibernate.version>5.6.7.Final</hibernate.version>
-    <hibernate-types.version>2.15.1</hibernate-types.version>
+    <hibernate.version>5.6.8.Final</hibernate.version>
+    <hibernate-types.version>2.16.2</hibernate-types.version>
 
     <!-- managedDep tools -->
     <httpclient.version>4.5.13</httpclient.version>

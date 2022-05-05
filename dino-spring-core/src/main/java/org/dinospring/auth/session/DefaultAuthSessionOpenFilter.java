@@ -15,6 +15,7 @@
 package org.dinospring.auth.session;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -24,8 +25,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.common.collect.Lists;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.dinospring.auth.DinoAuth;
 import org.dinospring.auth.exception.NotLoginException;
@@ -34,6 +33,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.pattern.PathPattern;
 import org.springframework.web.util.pattern.PathPatternParser;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 缺省的会话打开过滤器，用于在每次请求时打开Auth会话
  *
@@ -41,15 +42,16 @@ import org.springframework.web.util.pattern.PathPatternParser;
  * @date 2022-04-11 17:38:45
  */
 
+@Slf4j
 public class DefaultAuthSessionOpenFilter extends OncePerRequestFilter {
 
   private final List<AuthSessionResolver<? extends AuthSession>> authSessionResolvers;
 
   private List<PathPattern> whiteListPattern = List.of();
 
-  public DefaultAuthSessionOpenFilter(AuthSessionResolver<? extends AuthSession>[] authSessionResolvers) {
-
-    this.authSessionResolvers = Lists.newArrayList(authSessionResolvers);
+  public DefaultAuthSessionOpenFilter(Collection<AuthSessionResolver<? extends AuthSession>> authSessionResolvers) {
+    this.authSessionResolvers = List.copyOf(authSessionResolvers);
+    log.info("{} authSessionResolvers added: {}", authSessionResolvers.size(), authSessionResolvers);
   }
 
   @Override
@@ -74,6 +76,7 @@ public class DefaultAuthSessionOpenFilter extends OncePerRequestFilter {
 
   }
 
+  @SuppressWarnings("squid:S1452")
   protected Pair<AuthSessionResolver<? extends AuthSession>, AuthSession> resolveSession(HttpServletRequest request) {
     for (var authSessionResolver : authSessionResolvers) {
       var authSession = authSessionResolver.resolveSession(request);

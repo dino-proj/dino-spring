@@ -18,6 +18,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
@@ -31,9 +32,10 @@ import lombok.experimental.SuperBuilder;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @SuperBuilder
 @FieldNameConstants
-public class VoImplBase<K extends Serializable> implements VoBase<K> {
+public abstract class VoImplBase<K extends Serializable> implements VoBase<K> {
 
   @Schema(description = "ID")
   private K id;

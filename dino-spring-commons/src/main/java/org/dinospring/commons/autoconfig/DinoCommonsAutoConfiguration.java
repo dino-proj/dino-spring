@@ -23,6 +23,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
-@Order(0)
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class DinoCommonsAutoConfiguration implements ApplicationContextAware {
 
   @Override

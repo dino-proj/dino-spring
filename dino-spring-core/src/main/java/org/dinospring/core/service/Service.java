@@ -240,6 +240,7 @@ public interface Service<T, K extends Serializable> {
    * 状态设置
    * @param ids
    * @param status
+   * @return 更新记录数
    */
   @Transactional(rollbackFor = Exception.class)
   default long updateStatusByIds(Collection<K> ids, String status) {
@@ -250,6 +251,7 @@ public interface Service<T, K extends Serializable> {
    * 状态设置
    * @param id
    * @param status
+   * @return 更新记录数
    */
   @Transactional(rollbackFor = Exception.class)
   default long updateStatusById(K id, String status) {

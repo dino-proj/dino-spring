@@ -69,11 +69,6 @@
       <scope>provided</scope>
     </dependency>
 
-    <dependency>
-      <groupId>org.flywaydb</groupId>
-      <artifactId>flyway-core</artifactId>
-    </dependency>
-
     <!-- file system -->
     <dependency>
       <groupId>io.minio</groupId>

@@ -36,4 +36,7 @@ public class Option<V extends Serializable> implements ValueLabel<V> {
   @Schema(description = "选项的图标")
   private String icon;
 
+  @Schema(description = "选项的样式")
+  private String style;
+
 }

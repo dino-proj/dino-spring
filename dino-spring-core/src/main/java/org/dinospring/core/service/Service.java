@@ -237,6 +237,26 @@ public interface Service<T, K extends Serializable> {
   }
 
   /**
+   * 状态设置
+   * @param ids
+   * @param status
+   */
+  @Transactional(rollbackFor = Exception.class)
+  default long updateStatusByIds(Collection<K> ids, String status) {
+    return repository().updateStatusByIds(ids, status).orElse(0L);
+  }
+
+  /**
+   * 状态设置
+   * @param id
+   * @param status
+   */
+  @Transactional(rollbackFor = Exception.class)
+  default long updateStatusById(K id, String status) {
+    return repository().updateStatusById(id, status).orElse(0L);
+  }
+
+  /**
    * 根据 ID 查询
    *
    * @param id 主键ID
@@ -305,7 +325,6 @@ public interface Service<T, K extends Serializable> {
     return repository().findAll(page);
   }
 
-
   /**
    * 分页查询
    * @param page 分页信息
@@ -314,7 +333,7 @@ public interface Service<T, K extends Serializable> {
    */
   default <C> Page<C> listPage(Pageable page, Class<C> cls) {
     var sql = repository().newSelect();
-    return repository().queryPage(sql,page, cls);
+    return repository().queryPage(sql, page, cls);
   }
 
   /**
@@ -327,9 +346,8 @@ public interface Service<T, K extends Serializable> {
     var sql = repository().newSelect("t").column("t.*");
     search.buildSql(sql);
 
-    return repository().queryPage(sql,page);
+    return repository().queryPage(sql, page);
   }
-
 
   /**
    * 分页查询
@@ -342,7 +360,7 @@ public interface Service<T, K extends Serializable> {
     var sql = repository().newSelect("t").column("t.*");
     search.buildSql(sql);
 
-    return repository().queryPage(sql,page, cls);
+    return repository().queryPage(sql, page, cls);
   }
 
   /**

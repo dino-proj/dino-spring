@@ -17,6 +17,7 @@ package org.dinospring.core.exception;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -26,9 +27,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @date 2022-05-06 19:46:56
  */
 @Controller
+@RequestMapping("${server.error.path:${error.path:/error}}")
 public class ErrorRethrowController implements ErrorController {
 
-  @RequestMapping("/error")
+  @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public void handleError(HttpServletRequest request) throws Throwable {
     if (request.getAttribute("javax.servlet.error.exception") != null) {
       throw (Throwable) request.getAttribute("javax.servlet.error.exception");

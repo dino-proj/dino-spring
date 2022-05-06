@@ -34,6 +34,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface UserRoleRepository extends CrudRepositoryBase<UserRoleEntity, Long> {
 
+  /**
+   * 添加用户的角色
+   * @param tenantId
+   * @param userType
+   * @param userId
+   * @param roleIds
+   * @return
+   */
   @Modifying
   @Transactional(rollbackFor = Exception.class)
   default Optional<Long> addUserRoles(String tenantId, String userType, String userId, List<Long> roleIds) {
@@ -57,6 +65,14 @@ public interface UserRoleRepository extends CrudRepositoryBase<UserRoleEntity, L
     return Optional.of(Long.valueOf(roleIds.size()));
   }
 
+  /**
+   * 移除用户的角色
+   * @param tenantId
+   * @param userType
+   * @param userId
+   * @param roleIds
+   * @return
+   */
   @Modifying
   @Transactional(rollbackFor = Exception.class)
   default Optional<Long> removeUserRoles(String tenantId, String userType, String userId, List<Long> roleIds) {
@@ -69,6 +85,13 @@ public interface UserRoleRepository extends CrudRepositoryBase<UserRoleEntity, L
     return Optional.of(this.delete(sql));
   }
 
+  /**
+   * 获取用户的角色id列表，无分页
+   * @param tenantId
+   * @param userType
+   * @param userId
+   * @return
+   */
   default List<Long> getUserRoles(String tenantId, String userType, String userId) {
     var sql = newSelect();
     sql.column("role_id");
@@ -78,6 +101,14 @@ public interface UserRoleRepository extends CrudRepositoryBase<UserRoleEntity, L
     return this.queryList(sql, Long.class);
   }
 
+  /**
+   * 获取用户的角色id列表，分页
+   * @param tenantId
+   * @param userType
+   * @param userId
+   * @param pageable
+   * @return
+   */
   default Page<Long> listUserRoles(String tenantId, String userType, String userId, Pageable pageable) {
     var sql = newSelect();
     sql.column("role_id");

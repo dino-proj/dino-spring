@@ -86,6 +86,14 @@ public interface IamControllerBase<UK extends Serializable> {
     return PageResponse.success(userRoles);
   }
 
+  /**
+   * 为用户分配角色
+   * @param tenantId
+   * @param utype
+   * @param uid
+   * @param req
+   * @return
+   */
   @Operation(summary = "为用户分配角色")
   @ParamTenant
   @Parameter(name = "utype", description = "用户类型", required = true)
@@ -98,6 +106,14 @@ public interface IamControllerBase<UK extends Serializable> {
     return Response.success(result);
   }
 
+  /**
+   * 取消用户角色
+   * @param tenantId
+   * @param utype
+   * @param uid
+   * @param req
+   * @return
+   */
   @Operation(summary = "取消用户角色")
   @ParamTenant
   @Parameter(name = "utype", description = "用户类型", required = true)

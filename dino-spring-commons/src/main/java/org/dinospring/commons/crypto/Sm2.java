@@ -24,6 +24,11 @@ import org.bouncycastle.crypto.signers.StandardDSAEncoding;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.math.ec.custom.gm.SM2P256V1Curve;
+/**
+ *
+ * @author tuuboo
+ * @date 2022-05-06 06:40:57
+ */
 
 public class Sm2 {
 

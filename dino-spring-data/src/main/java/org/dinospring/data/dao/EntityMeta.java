@@ -14,8 +14,8 @@
 
 package org.dinospring.data.dao;
 
-import javax.persistence.Table;
-
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.utils.NamingUtils;
 import org.dinospring.data.domain.EntityBase;
@@ -29,8 +29,10 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.util.Lazy;
 import org.springframework.util.Assert;
 
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import javax.persistence.Table;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  *
@@ -40,6 +42,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Data
 public class EntityMeta {
+
+  private static final Map<Class<?>, EntityMeta> ENTITY_META_CACHE = new HashMap<>();
+
+  private static final Lazy<Dialect> DEFAULT_DIALECT = Lazy.of(() -> ContextHelper.findBean(Dialect.class));
+
   private final Dialect dialect;
 
   private final Class<?> domainClass;
@@ -55,15 +62,15 @@ public class EntityMeta {
   private final Lazy<String> quotedTableName;
 
   private EntityMeta(Dialect dialect, Class<?> domainClass, TenantLevel tenantLevel, String tableName,
-      boolean logicalDelete, boolean versioned) {
+                     boolean logicalDelete, boolean versioned) {
     this.dialect = dialect;
     this.domainClass = domainClass;
     this.tenantLevel = tenantLevel;
     this.tableName = tableName;
     this.logicalDelete = logicalDelete;
     this.versioned = versioned;
-
     this.quotedTableName = Lazy.of(() -> dialect.quoteTableName(tableName));
+    ENTITY_META_CACHE.put(domainClass, this);
   }
 
   /**
@@ -111,6 +118,11 @@ public class EntityMeta {
   }
 
   public static EntityMeta of(Dialect dialect, Class<?> cls) {
+    var cachedMeta = ENTITY_META_CACHE.get(cls);
+    if(Objects.nonNull(cachedMeta)){
+      return cachedMeta;
+    }
+
     var tenantLevel = TenantLevel.NOT;
     if (TenantRowEntity.class.isAssignableFrom(cls)) {
       tenantLevel = TenantLevel.ROW;
@@ -136,5 +148,9 @@ public class EntityMeta {
     var versioned = Versioned.class.isAssignableFrom(cls);
 
     return new EntityMeta(dialect, cls, tenantLevel, tableName, logicalDelete, versioned);
+  }
+
+  public static EntityMeta of(Class<?> cls) {
+    return of(DEFAULT_DIALECT.get(), cls);
   }
 }

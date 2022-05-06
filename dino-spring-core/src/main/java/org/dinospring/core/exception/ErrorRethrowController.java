@@ -15,8 +15,10 @@
 package org.dinospring.core.exception;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,8 +33,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ErrorRethrowController implements ErrorController {
 
   @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public void handleError(HttpServletRequest request) throws Throwable {
+  public void handleError(HttpServletRequest request, HttpServletResponse response) throws Throwable {
     if (request.getAttribute("javax.servlet.error.exception") != null) {
+      response.setStatus(HttpStatus.OK.value());
       throw (Throwable) request.getAttribute("javax.servlet.error.exception");
     }
   }

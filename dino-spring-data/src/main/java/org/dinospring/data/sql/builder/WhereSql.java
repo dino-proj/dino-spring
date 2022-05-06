@@ -14,18 +14,18 @@
 
 package org.dinospring.data.sql.builder;
 
+import org.apache.commons.lang3.StringUtils;
+import org.dinospring.commons.data.Range;
+import org.dinospring.data.sql.Logic;
+import org.dinospring.data.sql.Oper;
+import org.dinospring.data.sql.SqlBuilder;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-import org.dinospring.commons.data.Range;
-import org.dinospring.data.sql.Logic;
-import org.dinospring.data.sql.Oper;
-import org.dinospring.data.sql.SqlBuilder;
 
 /**
  *
@@ -91,7 +91,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * @return
    */
   public T where(final String expr) {
-    whereColumns.add(expr);
+    appendWhere(Logic.AND, expr);
     return that;
   }
 
@@ -107,7 +107,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * @return
    */
   public T where(final String expr, final Object... values) {
-    whereColumns.add(expr);
+    appendWhere(Logic.AND, expr);
     whereParams.addAll(Arrays.asList(values));
     return that;
   }
@@ -1176,7 +1176,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    */
 
   private void appendNColumnExpr(final Logic logicOp, final String[] columns, final Oper op, final Object value,
-      final Logic innerLogic) {
+                                 final Logic innerLogic) {
     var joiner = Collectors.joining(StringUtils.wrap(innerLogic.getLogic(), ' '), "(", ")");
     var expr = Arrays.stream(columns).map(op::makeExpr).collect(joiner);
     appendWhere(logicOp, expr);

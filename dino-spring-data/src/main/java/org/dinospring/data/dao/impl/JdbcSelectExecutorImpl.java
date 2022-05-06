@@ -64,9 +64,6 @@ import java.util.Map;
 
 @Slf4j
 public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> implements JdbcSelectExecutor<T, K> {
-
-  private static final Map<Class<?>, EntityMeta> ENTITY_INFO_CACHE = new HashMap<>();
-
   private final JpaEntityInformation<T, K> entityInformation;
   private final EntityManager entityManager;
 
@@ -95,7 +92,7 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
     this.conversionService = ContextHelper.findBean("dataConversionService", ConversionService.class);
     this.entityInfo = EntityMeta.of(dialect, entityClass());
 
-    ENTITY_INFO_CACHE.put(getDomainClass(), entityInfo);
+
   }
 
   public JdbcSelectExecutorImpl(Class<T> domainClass, EntityManager entityManager) {
@@ -136,14 +133,8 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
 
   @Override
   public <C> String tableName(Class<C> cls) {
-    ENTITY_INFO_CACHE.computeIfAbsent(cls, c -> EntityMeta.of(dialect, c));
-    var info = ENTITY_INFO_CACHE.get(cls);
-    if (info.isTenantTable()) {
-      Assert.notNull(ContextHelper.currentTenantId(), Status.CODE.FAIL_TENANT_NOT_EXIST);
-      return dialect.quoteTableName(
-          StringUtils.appendIfMissing(info.getTableName(), "_", "_") + ContextHelper.currentTenantId());
-    }
-    return info.getQuotedTableName();
+    var meta = EntityMeta.of(dialect, cls);
+    return meta.getQuotedTableName();
   }
 
   @Override

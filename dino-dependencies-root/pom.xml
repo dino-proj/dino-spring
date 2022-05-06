@@ -60,6 +60,9 @@
     <jave.version>3.2.0</jave.version>
     <image4j.version>0.7</image4j.version>
 
+    <!-- managedDep crypto -->
+    <bcrypt.version>1.71</bcrypt.version>
+
     <!-- test -->
     <junit.version>5.7.0</junit.version>
     <h2database.version>1.4.200</h2database.version>
@@ -276,6 +279,18 @@
         <groupId>io.lettuce</groupId>
         <artifactId>lettuce-core</artifactId>
         <version>${lettuce.version}</version>
+      </dependency>
+
+      <!-- crypto-bcrypt -->
+      <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcprov-jdk18on</artifactId>
+        <version>${bcrypt.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcpkix-jdk18on</artifactId>
+        <version>${bcrypt.version}</version>
       </dependency>
 
       <!-- filesystem-minio-->

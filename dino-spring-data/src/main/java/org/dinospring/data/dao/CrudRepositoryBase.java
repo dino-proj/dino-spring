@@ -18,14 +18,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -57,21 +56,23 @@ public interface CrudRepositoryBase<T, K> extends JpaRepository<T, K>, JdbcSelec
 
   /**
    * 状态设置
-   * @param ids
-   * @param status
+   * @param ids 主键id集合
+   * @param status 状态
+   * @return 更新记录数
    */
   @Modifying
-  @Transactional(rollbackOn = Exception.class)
+  @Transactional(rollbackFor = Exception.class)
   @Query("UPDATE #{#entityName} e SET e.status=:status WHERE e.id in :ids")
   Optional<Long> updateStatusByIds(@Param("ids") Collection<K> ids, @Param("status") String status);
 
   /**
    * 状态设置
-   * @param id
-   * @param status
+   * @param id 主键id
+   * @param status 状态
+   * @return 更新记录数
    */
   @Modifying
-  @Transactional(rollbackOn = Exception.class)
+  @Transactional(rollbackFor = Exception.class)
   @Query("UPDATE #{#entityName} e SET e.status=:status WHERE e.id = :id")
   Optional<Long> updateStatusById(@Param("id") K id, @Param("status") String status);
 

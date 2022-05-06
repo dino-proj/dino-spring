@@ -15,8 +15,8 @@
 package org.dinospring.core.security;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.dinospring.auth.DinoAuth;
 import org.dinospring.auth.aop.AuthzAnnotationPointcutAdvisor;
@@ -25,6 +25,7 @@ import org.dinospring.auth.session.AuthSession;
 import org.dinospring.auth.session.AuthSessionResolver;
 import org.dinospring.auth.session.DefaultAuthSessionOpenFilter;
 import org.dinospring.core.security.config.SecurityProperties;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -37,7 +38,7 @@ import org.springframework.context.annotation.Configuration;
  * @date 2022-04-10 18:52:46
  */
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @ConditionalOnProperty(prefix = SecurityProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 public class DinoAuthAutoConfig {
 
@@ -68,8 +69,8 @@ public class DinoAuthAutoConfig {
   @ConditionalOnMissingBean(DefaultAuthSessionOpenFilter.class)
   @Bean
   public DefaultAuthSessionOpenFilter authSessionOpenFilter(SecurityProperties securityProperties,
-      @Autowired AuthSessionResolver<?>[] sessionResolvers) {
-    var filter = new DefaultAuthSessionOpenFilter(sessionResolvers);
+      @Autowired ObjectProvider<AuthSessionResolver<?>> sessionResolverProvider) {
+    var filter = new DefaultAuthSessionOpenFilter(sessionResolverProvider.orderedStream().collect(Collectors.toList()));
     // 添加白名单，在白名单里的请求不会打开session
     var whiltes = new ArrayList<>(securityProperties.getWhiteList());
     whiltes.add("/actuator/**");

@@ -22,7 +22,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.dinospring.data.autoconfig.CustomJpaRepositoryFactoryBean;
+import org.dinospring.data.autoconfig.DinoDataAutoConfiguration;
 import org.dinospring.data.dao.impl.JdbcSelectExecutorImpl;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
@@ -36,6 +38,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Documented
 @Inherited
 @EnableJpaRepositories(basePackages = "org.dinospring", repositoryFactoryBeanClass = CustomJpaRepositoryFactoryBean.class, repositoryBaseClass = JdbcSelectExecutorImpl.class)
+@Import(DinoDataAutoConfiguration.class)
 public @interface EnableDinoData {
   /**
    * Base packages to scan for annotated components. please include "org.dinospring"

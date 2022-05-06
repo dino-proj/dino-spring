@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2022 dinospring.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,43 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.core.vo;
+package org.dinospring.commons.crypto;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.FieldNameConstants;
-import lombok.experimental.SuperBuilder;
 
 /**
  *
  * @author tuuboo
- * @author JL
+ * @date 2022-05-06 06:40:57
  */
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-@FieldNameConstants
-public abstract class VoImplBase<K extends Serializable> implements VoBase<K> {
+public class KeyPair {
 
-  @Schema(description = "ID")
-  private K id;
-
-  @Schema(description = "创建时间")
-  private Date createAt;
-
-  @Schema(description = "最后更新时间")
-  private Date updateAt;
-
-  @Schema(description = "状态")
-  private String status;
-
-  @Schema(description = "创建用户")
-  private String createBy;
+  private byte[] privateKey;
+  private byte[] publicKey;
 }

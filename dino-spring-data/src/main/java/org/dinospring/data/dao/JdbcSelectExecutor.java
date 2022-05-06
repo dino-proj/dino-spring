@@ -50,7 +50,7 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
   Dialect dialect();
 
   /**
-   * 针对此Entity的新的查询
+   * 针对此Entity的新的查询，并自动添加TenantId
    * @return
    */
   default SelectSqlBuilder newSelect() {
@@ -62,7 +62,15 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
   }
 
   /**
-   * 针对此Entity的新的查询
+   * 针对此Entity的新的查询，不添加TenantId
+   * @return
+   */
+  default SelectSqlBuilder newSelectWithoutTenant() {
+    return new SelectSqlBuilder(dialect(), this.tableName());
+  }
+
+  /**
+   * 针对此Entity的新的查询, 并自动添加TenantId
    * @param tableAlias 表的别名
    * @return
    */
@@ -73,6 +81,16 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
       select.eq("tenant_id", ContextHelper.currentTenantId());
     }
     return select;
+  }
+
+  /**
+   * 针对此Entity的新的查询, 不添加TenantId
+   * @param tableAlias 表的别名
+   * @return
+   */
+  default SelectSqlBuilder newSelectWithoutTenant(String tableAlias) {
+    Assert.hasText(tableAlias, "tableAlias is empty");
+    return new SelectSqlBuilder(dialect(), this.tableName(), tableAlias);
   }
 
   /**

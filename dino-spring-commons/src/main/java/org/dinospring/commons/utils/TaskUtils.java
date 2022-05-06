@@ -7,6 +7,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.apache.commons.lang3.ThreadUtils;
 import org.dinospring.commons.promise.Defer;
@@ -102,7 +103,7 @@ public class TaskUtils {
   }
 
   /**
-   * 无参数，无返回的任务调用
+   * 无参数，有返回的任务调用
    * @param <R> 返回值类型
    * @param task 任务
    * @param checker 检查task返回值是否符合要求，不符合则重试
@@ -110,13 +111,13 @@ public class TaskUtils {
    * @param throwOutExceptions 直接抛出的异常的类型
    */
   @SafeVarargs
-  public static <R> Promise<R> exec(Callable<R> task, Function<R, Boolean> checker, int attempts,
+  public static <R> Promise<R> exec(Callable<R> task, Predicate<R> checker, int attempts,
       Class<? extends RuntimeException>... throwOutExceptions) {
     return exec(task, checker, attempts, null, throwOutExceptions);
   }
 
   /**
-   * 无参数，无返回的任务调用
+   * 无参数，有返回的任务调用
    * @param <R> 返回值类型
    * @param task 任务
    * @param checker 检查task返回值是否符合要求，不符合则重试
@@ -125,12 +126,12 @@ public class TaskUtils {
    * @param throwOutExceptions 直接抛出的异常的类型
    */
   @SafeVarargs
-  public static <R> Promise<R> exec(Callable<R> task, Function<R, Boolean> checker, int attempts,
+  public static <R> Promise<R> exec(Callable<R> task, Predicate<R> checker, int attempts,
       Duration nap, Class<? extends RuntimeException>... throwOutExceptions) {
     while (attempts-- > 0) {
       try {
         var ret = task.call();
-        if (checker.apply(ret)) {
+        if (checker.test(ret)) {
           return Defer.resolve(ret);
         }
       } catch (Exception t) {
@@ -160,7 +161,7 @@ public class TaskUtils {
    * @return
    */
   @SafeVarargs
-  public <T, R> Promise<R> exec(Function<T, R> task, final T param, Function<R, Boolean> checker, int attempts,
+  public <T, R> Promise<R> exec(Function<T, R> task, final T param, Predicate<R> checker, int attempts,
       Class<? extends RuntimeException>... throwOutExceptions) {
     return exec(task, param, checker, attempts, null, throwOutExceptions);
   }
@@ -178,7 +179,7 @@ public class TaskUtils {
    * @return
    */
   @SafeVarargs
-  public <T, R> Promise<R> exec(Function<T, R> task, final T param, Function<R, Boolean> checker, int attempts,
+  public <T, R> Promise<R> exec(Function<T, R> task, final T param, Predicate<R> checker, int attempts,
       Duration nap, Class<? extends RuntimeException>... throwOutExceptions) {
     return exec(() -> task.apply(param), checker, attempts, nap, throwOutExceptions);
   }
@@ -198,7 +199,7 @@ public class TaskUtils {
    */
   @SafeVarargs
   public <T, U, R> Promise<R> exec(BiFunction<T, U, R> task, final T paramFirst, final U paramSecond,
-      Function<R, Boolean> checker, int attempts, Class<? extends RuntimeException>... throwOutExceptions) {
+      Predicate<R> checker, int attempts, Class<? extends RuntimeException>... throwOutExceptions) {
     return exec(task, paramFirst, paramSecond, checker, attempts, null, throwOutExceptions);
   }
 
@@ -218,7 +219,7 @@ public class TaskUtils {
    */
   @SafeVarargs
   public <T, U, R> Promise<R> exec(BiFunction<T, U, R> task, final T paramFirst, final U paramSecond,
-      Function<R, Boolean> checker, int attempts, Duration nap,
+      Predicate<R> checker, int attempts, Duration nap,
       Class<? extends RuntimeException>... throwOutExceptions) {
     return exec(() -> task.apply(paramFirst, paramSecond), checker, attempts, nap, throwOutExceptions);
   }

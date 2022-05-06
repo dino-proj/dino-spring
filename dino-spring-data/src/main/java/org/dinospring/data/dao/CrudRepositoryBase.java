@@ -63,7 +63,7 @@ public interface CrudRepositoryBase<T, K> extends JpaRepository<T, K>, JdbcSelec
   @Modifying
   @Transactional(rollbackOn = Exception.class)
   @Query("UPDATE #{#entityName} e SET e.status=:status WHERE e.id in :ids")
-  void updateStatusByIds(@Param("ids") Collection<K> ids, @Param("status") String status);
+  Optional<Long> updateStatusByIds(@Param("ids") Collection<K> ids, @Param("status") String status);
 
   /**
    * 状态设置
@@ -73,7 +73,7 @@ public interface CrudRepositoryBase<T, K> extends JpaRepository<T, K>, JdbcSelec
   @Modifying
   @Transactional(rollbackOn = Exception.class)
   @Query("UPDATE #{#entityName} e SET e.status=:status WHERE e.id = :id")
-  void updateStatusById(@Param("id") K id, @Param("status") String status);
+  Optional<Long> updateStatusById(@Param("id") K id, @Param("status") String status);
 
   /**
    * 查询状态为‘ok’的记录数量

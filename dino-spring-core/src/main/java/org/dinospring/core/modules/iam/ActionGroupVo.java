@@ -20,11 +20,13 @@ import org.dinospring.core.vo.VoImplBase;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author tuuboo
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class ActionGroupVo extends VoImplBase<Long> {
 
   @Schema(description = "权限组的名字")

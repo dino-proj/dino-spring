@@ -14,28 +14,22 @@
 
 package org.dinospring.core.modules.iam;
 
-import java.io.Serializable;
+import java.util.List;
 
-import org.dinospring.commons.data.ValueLabel;
-
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-import lombok.Data;
+import org.dinospring.data.dao.CrudRepositoryBase;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author tuuboo
- * @date 2022-04-12 14:21:19
+ * @date 2022-05-04 23:19:34
  */
 
-@Data
-@Builder
-public class Action implements ValueLabel<String>, Serializable {
+@Repository
+public interface ActionGroupRepository extends CrudRepositoryBase<ActionGroupEntity, Long> {
 
-  @Schema(description = "权限：如user:create，多个操作用逗号分隔，如user:create,update")
-  private String value;
-
-  @Schema(description = "权限名字：如 “创建")
-  private String label;
+  @Query("FROM ActionGroupEntity a where a.userType is null or a.userType = :userType")
+  List<ActionGroupVo> findAllByUserType(String userType, Class<ActionGroupVo> class1);
 
 }

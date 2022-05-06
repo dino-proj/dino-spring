@@ -22,12 +22,14 @@ import org.dinospring.core.vo.VoImplBase;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author tuuboo
  */
 @Data
-public class RoleVo<K extends Serializable> extends VoImplBase<Long> {
+@EqualsAndHashCode(callSuper = true)
+public class RoleVo extends VoImplBase<Long> {
 
   @Schema(description = "角色名字")
   private String name;
@@ -39,7 +41,7 @@ public class RoleVo<K extends Serializable> extends VoImplBase<Long> {
   private List<Action> actions;
 
   @Schema(description = "包含的用户")
-  private List<User<K>> users;
+  private List<User<Serializable>> users;
 
   @Schema(description = "角色操作权限", required = false)
   private List<String> permissions;

@@ -14,28 +14,26 @@
 
 package org.dinospring.core.modules.iam;
 
-import java.io.Serializable;
-
-import org.dinospring.commons.data.ValueLabel;
-
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-import lombok.Data;
+import org.dinospring.core.service.impl.ServiceBase;
+import org.dinospring.data.dao.CrudRepositoryBase;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author tuuboo
- * @date 2022-04-12 14:21:19
+ * @date 2022-05-04 22:42:20
  */
 
-@Data
-@Builder
-public class Action implements ValueLabel<String>, Serializable {
+@Service
+public class RoleService extends ServiceBase<RoleEntity, Long> {
 
-  @Schema(description = "权限：如user:create，多个操作用逗号分隔，如user:create,update")
-  private String value;
+  @Autowired
+  private RoleRepository roleRepository;
 
-  @Schema(description = "权限名字：如 “创建")
-  private String label;
+  @Override
+  public CrudRepositoryBase<RoleEntity, Long> repository() {
+    return roleRepository;
+  }
 
 }

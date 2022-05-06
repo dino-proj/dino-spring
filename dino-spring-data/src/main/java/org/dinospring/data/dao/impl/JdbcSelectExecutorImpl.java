@@ -22,6 +22,7 @@ import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.response.Status;
 import org.dinospring.commons.utils.Assert;
 import org.dinospring.commons.utils.TypeUtils;
+import org.dinospring.data.dao.EntityMeta;
 import org.dinospring.data.dao.JdbcSelectExecutor;
 import org.dinospring.data.domain.Versioned;
 import org.dinospring.data.sql.builder.DeleteSqlBuilder;
@@ -64,12 +65,12 @@ import java.util.Map;
 @Slf4j
 public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> implements JdbcSelectExecutor<T, K> {
 
-  private static final Map<Class<?>, EntityInfo> ENTITY_INFO_CACHE = new HashMap<>();
+  private static final Map<Class<?>, EntityMeta> ENTITY_INFO_CACHE = new HashMap<>();
 
   private final JpaEntityInformation<T, K> entityInformation;
   private final EntityManager entityManager;
 
-  private final EntityInfo entityInfo;
+  private final EntityMeta entityInfo;
 
   @Nonnull
   private JdbcTemplate jdbcTemplate;
@@ -92,7 +93,7 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
     this.objectMapper = ContextHelper.findBean(ObjectMapper.class);
     this.dialect = ContextHelper.findBean(Dialect.class);
     this.conversionService = ContextHelper.findBean("dataConversionService", ConversionService.class);
-    this.entityInfo = EntityInfo.of(dialect, entityClass());
+    this.entityInfo = EntityMeta.of(dialect, entityClass());
 
     ENTITY_INFO_CACHE.put(getDomainClass(), entityInfo);
   }
@@ -109,6 +110,11 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
   @Override
   public Class<T> entityClass() {
     return getDomainClass();
+  }
+
+  @Override
+  public EntityMeta entityMeta() {
+    return this.entityInfo;
   }
 
   @Override
@@ -130,12 +136,12 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
 
   @Override
   public <C> String tableName(Class<C> cls) {
-    ENTITY_INFO_CACHE.computeIfAbsent(cls, c -> EntityInfo.of(dialect, c));
+    ENTITY_INFO_CACHE.computeIfAbsent(cls, c -> EntityMeta.of(dialect, c));
     var info = ENTITY_INFO_CACHE.get(cls);
     if (info.isTenantTable()) {
       Assert.notNull(ContextHelper.currentTenantId(), Status.CODE.FAIL_TENANT_NOT_EXIST);
       return dialect.quoteTableName(
-        StringUtils.appendIfMissing(info.getTableName(), "_", "_") + ContextHelper.currentTenantId());
+          StringUtils.appendIfMissing(info.getTableName(), "_", "_") + ContextHelper.currentTenantId());
     }
     return info.getQuotedTableName();
   }
@@ -154,10 +160,10 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
 
   @Override
   public <MK, MV> Map<MK, MV> queryForMap(SelectSqlBuilder sql, String keyColumn, Class<MK> keyClass,
-                                          String valueColumn, Class<MV> valueClass) {
+      String valueColumn, Class<MV> valueClass) {
     if (log.isDebugEnabled()) {
       log.debug("query for map: {}:{}, {}:{},\nSQL:{},\nPARAMs:", keyColumn, keyClass, valueColumn, valueClass,
-        sql.getSql(), sql.getParams());
+          sql.getSql(), sql.getParams());
     }
     org.springframework.util.Assert.isTrue(TypeUtils.isPrimitiveOrString(keyClass), "key must be primitive class");
     org.springframework.util.Assert.isTrue(TypeUtils.isPrimitiveOrString(valueClass), "value must be primitive class");
@@ -179,7 +185,7 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
 
   @Override
   public <MK, MV> Map<MK, MV> queryForMap(String sql, String keyColumn, Class<MK> keyClass, Class<MV> valueClass,
-                                          Object... params) {
+      Object... params) {
     if (log.isDebugEnabled()) {
       log.debug("query for map: {}:{}, valueClass:{},\nSQL:{},\nPARAMs:", keyColumn, keyClass, valueClass, sql, params);
     }
@@ -187,7 +193,7 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
 
     boolean isPrimitiveValue = TypeUtils.isPrimitiveOrString(valueClass);
     BeanPropertyRowMapper<MV> mapper = isPrimitiveValue ? null
-      : BeanPropertyRowMapper.newInstance(valueClass, conversionService);
+        : BeanPropertyRowMapper.newInstance(valueClass, conversionService);
 
     return jdbcTemplate.query(sql, new ResultSetExtractor<Map<MK, MV>>() {
 
@@ -196,7 +202,7 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
         Map<MK, MV> result = new HashMap<>(20);
         if (isPrimitiveValue) {
           org.springframework.util.Assert.isTrue(rs.getMetaData().getColumnCount() == 2,
-            "resulset column count must be 2,as valueClass is primitive class");
+              "resulset column count must be 2,as valueClass is primitive class");
         }
 
         var keyIndex = rs.findColumn(keyColumn);
@@ -284,7 +290,7 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
   @Override
   public boolean updateByIdWithVersion(K id, Map<String, Object> columnValue, Number version) {
     org.springframework.util.Assert.isTrue(entityInfo.isVersioned(),
-      entityInfo.getDomainClass() + " must implements " + Versioned.class);
+        entityInfo.getDomainClass() + " must implements " + Versioned.class);
     var sql = new UpdateSqlBuilder(tableName());
     sql.eq("id", id);
     sql.eq("version", version);

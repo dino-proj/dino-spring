@@ -14,9 +14,14 @@
 
 package org.dinospring.core.modules.iam;
 
-import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,32 +30,48 @@ import org.springframework.stereotype.Service;
 @Service
 public class IamService {
 
-  public List<ActionGroupVo> getAllActionGroups(String tenantId) {
-    return null;
-  }
+  @Autowired
+  private RoleRepository roleRepository;
 
-  public List<ActionGroupVo> getTenantActionGroups(String tenantId) {
-    return null;
+  @Autowired
+  private UserRoleRepository userRoleRepository;
+
+  @Autowired
+  private ActionGroupRepository actionGroupRepository;
+
+  public List<ActionGroupVo> getAllActionGroups(String userType) {
+    if (Objects.isNull(userType)) {
+      return actionGroupRepository.findAll(ActionGroupVo.class);
+    }
+    return actionGroupRepository.findAllByUserType(userType, ActionGroupVo.class);
   }
 
   public List<String> getUserPermissions(String tenantId, String userType, String userId) {
-    return null;
+    var roles = userRoleRepository.getUserRoles(tenantId, userType, userId);
+    var roleEntities = roleRepository.findAllById(roles);
+    return roleEntities.stream().map(RoleEntity::getPermissions).flatMap(List<String>::stream)
+        .collect(Collectors.toList());
   }
 
-  public <K extends Serializable> List<RoleVo<K>> getUserRoles(String tenantId, String userType, String userId) {
-    return null;
+  public List<String> getUserRoles(String tenantId, String userType, String userId) {
+    var roles = userRoleRepository.getUserRoles(tenantId, userType, userId);
+    var roleEntities = roleRepository.findAllById(roles);
+    return roleEntities.stream().map(RoleEntity::getCode).collect(Collectors.toList());
   }
 
-  public <K extends Serializable> List<RoleVo<K>> getTenantRoles(String tenantId) {
-    return null;
+  public Page<RoleVo> listUserRoles(String tenantId, String userType, String userId,
+      Pageable pageable) {
+    var roles = userRoleRepository.listUserRoles(tenantId, userType, userId, pageable);
+    var roleVos = roleRepository.findAllById(roles, RoleVo.class);
+    return new PageImpl<>(roleVos, pageable, roles.getTotalElements());
   }
 
-  public RoleEntity saveRole(RoleEntity role) {
-    return null;
+  public long grantRoles(String tenantId, String userType, String userId, List<Long> roleIds) {
+    return userRoleRepository.addUserRoles(tenantId, userType, userId, roleIds).orElse(0L);
   }
 
-  public boolean saveRoleUser(List<UserRoleEntity> roleUsers) {
-    return false;
+  public long revokeRoles(String tenantId, String userType, String userId, List<Long> roleIds) {
+    return userRoleRepository.removeUserRoles(tenantId, userType, userId, roleIds).orElse(0L);
   }
 
 }

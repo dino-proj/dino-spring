@@ -26,6 +26,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -38,6 +39,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor
+@FieldNameConstants
 @Entity
 @Table(name = "iam_role")
 public class RoleEntity extends TenantRowEntityBase<Long> {
@@ -46,8 +48,8 @@ public class RoleEntity extends TenantRowEntityBase<Long> {
   private String code;
 
   @Schema(description = "角色名称", required = true, maxLength = 64)
-  @Column(name = "title", length = 64, nullable = false)
-  private String title;
+  @Column(name = "name", length = 64, nullable = false)
+  private String name;
 
   @Schema(description = "角色备注", required = false, maxLength = 255)
   @Column(name = "remark", length = 255)

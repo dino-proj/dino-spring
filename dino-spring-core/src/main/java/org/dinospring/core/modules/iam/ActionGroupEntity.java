@@ -22,27 +22,35 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import org.dinospring.data.domain.TenantRowEntityBase;
+
+import org.dinospring.data.domain.EntityBase;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 
 /**
  * @author tuuboo
  */
+
 @Data
 @EqualsAndHashCode(callSuper = true)
-@SuperBuilder
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "iam_action_group")
 @TypeDef(name = "json", typeClass = JsonBinaryType.class)
-public class ActionGroupEntity extends TenantRowEntityBase<Long> {
+public class ActionGroupEntity extends EntityBase<Long> {
+
+  @Schema(name = "user_type", description = "用户类型，null表示适用所有用户", required = false, maxLength = 64)
+  @Column(name = "user_type", nullable = true, length = 64)
+  private String userType;
 
   @Schema(description = "权限组的名字")
   @Column(length = 64)

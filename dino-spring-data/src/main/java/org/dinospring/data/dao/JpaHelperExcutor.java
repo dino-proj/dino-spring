@@ -50,6 +50,12 @@ public interface JpaHelperExcutor<T, K> {
   Class<K> keyClass();
 
   /**
+   * 获取实体元信息
+   * @return entity 元信息
+   */
+  EntityMeta entityMeta();
+
+  /**
    * 返回表名，并根据{@code TenantTable#TenantLevel}分表策略组合表名
    * @return
    */
@@ -163,7 +169,6 @@ public interface JpaHelperExcutor<T, K> {
    */
   @Modifying
   long update(UpdateSqlBuilder updateSqlBuilder);
-
 
   /**
    * 删除

@@ -16,6 +16,7 @@ package org.dinospring.data.dao;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.data.sql.builder.DeleteSqlBuilder;
 import org.dinospring.data.sql.builder.InsertSqlBuilder;
 import org.dinospring.data.sql.builder.SelectSqlBuilder;
@@ -53,7 +54,11 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    * @return
    */
   default SelectSqlBuilder newSelect() {
-    return new SelectSqlBuilder(dialect(), this.tableName());
+    var select = new SelectSqlBuilder(dialect(), this.tableName());
+    if (entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
+      select.eq("tenant_id", ContextHelper.currentTenantId());
+    }
+    return select;
   }
 
   /**
@@ -63,7 +68,11 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    */
   default SelectSqlBuilder newSelect(String tableAlias) {
     Assert.hasText(tableAlias, "tableAlias is empty");
-    return new SelectSqlBuilder(dialect(), this.tableName(), tableAlias);
+    var select = new SelectSqlBuilder(dialect(), this.tableName(), tableAlias);
+    if (entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
+      select.eq("tenant_id", ContextHelper.currentTenantId());
+    }
+    return select;
   }
 
   /**
@@ -74,7 +83,7 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    */
   default <E> SelectSqlBuilder newSelect(Class<E> entity, String tableAlias) {
     return StringUtils.isEmpty(tableAlias) ? new SelectSqlBuilder(dialect(), this.tableName(entity))
-      : new SelectSqlBuilder(dialect(), this.tableName(entity), tableAlias);
+        : new SelectSqlBuilder(dialect(), this.tableName(entity), tableAlias);
   }
 
   /**
@@ -82,7 +91,11 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    * @return
    */
   default DeleteSqlBuilder newDelete() {
-    return new DeleteSqlBuilder(this.tableName());
+    var delete = new DeleteSqlBuilder(this.tableName());
+    if (entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
+      delete.eq("tenant_id", ContextHelper.currentTenantId());
+    }
+    return delete;
   }
 
   /**
@@ -92,7 +105,11 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    */
   default DeleteSqlBuilder newDelete(String tableAlias) {
     Assert.hasText(tableAlias, "tableAlias is empty");
-    return new DeleteSqlBuilder(this.tableName(), tableAlias);
+    var delete = new DeleteSqlBuilder(this.tableName(), tableAlias);
+    if (entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
+      delete.eq("tenant_id", ContextHelper.currentTenantId());
+    }
+    return delete;
   }
 
   /**
@@ -100,7 +117,11 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    * @return
    */
   default UpdateSqlBuilder newUpdate() {
-    return new UpdateSqlBuilder(this.tableName());
+    var update = new UpdateSqlBuilder(this.tableName());
+    if (entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
+      update.eq("tenant_id", ContextHelper.currentTenantId());
+    }
+    return update;
   }
 
   /**
@@ -109,16 +130,47 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    * @return
    */
   default UpdateSqlBuilder newUpdate(String alias) {
-    return new UpdateSqlBuilder(this.tableName(), alias);
+    var update = new UpdateSqlBuilder(this.tableName(), alias);
+    if (entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
+      update.eq("tenant_id", ContextHelper.currentTenantId());
+    }
+    return update;
   }
-
 
   /**
    * 针对此Entity的新的新增
    * @return
    */
   default InsertSqlBuilder newInsert() {
-    return new InsertSqlBuilder(this.tableName());
+    var insert = new InsertSqlBuilder(this.tableName());
+    if (entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
+      insert.set("tenant_id", ContextHelper.currentTenantId());
+    }
+    return insert;
+  }
+
+  /**
+  * 查出所有主键记录
+  * @param <C>
+  * @param ids 主键集合
+  * @param cls 类型
+  * @return
+  */
+  default <C> List<C> findAllById(Iterable<K> ids, Class<C> cls) {
+    var sql = newSelect();
+    sql.where("id", "in", ids);
+    return this.queryList(sql, cls);
+  }
+
+  /**
+   * 查出所有记录
+   * @param <C>
+   * @param cls 类型
+   * @return
+   */
+  default <C> List<C> findAll(Class<C> cls) {
+    var sql = newSelect();
+    return this.queryList(sql, cls);
   }
 
   /**
@@ -255,7 +307,7 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    * @return
    */
   default <MK, MV> Map<MK, MV> queryForMap(SelectSqlBuilder sql, String keyColumn, Class<MK> keyClass,
-                                           Class<MV> valueClass) {
+      Class<MV> valueClass) {
     return queryForMap(sql.getSql(), keyColumn, keyClass, valueClass, sql.getParams());
   }
 
@@ -271,7 +323,7 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    * @return
    */
   <MK, MV> Map<MK, MV> queryForMap(SelectSqlBuilder sql, String keyColumn, Class<MK> keyClass, String valueColumn,
-                                   Class<MV> valueClass);
+      Class<MV> valueClass);
 
   /**
    * 将查询结果放到Map中
@@ -285,7 +337,7 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    * @return
    */
   <MK, MV> Map<MK, MV> queryForMap(String sql, String keyColumn, Class<MK> keyClass, Class<MV> valueClass,
-                                   Object... params);
+      Object... params);
 
   /**
    * 分页查询

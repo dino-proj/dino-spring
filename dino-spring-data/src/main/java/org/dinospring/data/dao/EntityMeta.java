@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.data.dao.impl;
+package org.dinospring.data.dao;
 
 import javax.persistence.Table;
 
@@ -39,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Data
-public class EntityInfo {
+public class EntityMeta {
   private final Dialect dialect;
 
   private final Class<?> domainClass;
@@ -54,7 +54,7 @@ public class EntityInfo {
 
   private final Lazy<String> quotedTableName;
 
-  private EntityInfo(Dialect dialect, Class<?> domainClass, TenantLevel tenantLevel, String tableName,
+  private EntityMeta(Dialect dialect, Class<?> domainClass, TenantLevel tenantLevel, String tableName,
       boolean logicalDelete, boolean versioned) {
     this.dialect = dialect;
     this.domainClass = domainClass;
@@ -67,11 +67,35 @@ public class EntityInfo {
   }
 
   /**
-   * 是否是Tenant表
+   * 是否是Tenant Table表
    * @return
    */
   public boolean isTenantTable() {
     return tenantLevel == TenantLevel.TABLE;
+  }
+
+  /**
+   * 是否是Tenant Row表
+   * @return
+   */
+  public boolean isTenantRow() {
+    return tenantLevel == TenantLevel.ROW;
+  }
+
+  /**
+   * 是否是Tenant Schema表
+   * @return
+   */
+  public boolean isTenantSchema() {
+    return tenantLevel == TenantLevel.SCHEMA;
+  }
+
+  /**
+   * 是否是Tenant表
+   * @return
+   */
+  public boolean isTenantable() {
+    return isTenantTable() || isTenantRow() || isTenantSchema();
   }
 
   /**
@@ -86,7 +110,7 @@ public class EntityInfo {
     }
   }
 
-  public static EntityInfo of(Dialect dialect, Class<?> cls) {
+  public static EntityMeta of(Dialect dialect, Class<?> cls) {
     var tenantLevel = TenantLevel.NOT;
     if (TenantRowEntity.class.isAssignableFrom(cls)) {
       tenantLevel = TenantLevel.ROW;
@@ -111,6 +135,6 @@ public class EntityInfo {
 
     var versioned = Versioned.class.isAssignableFrom(cls);
 
-    return new EntityInfo(dialect, cls, tenantLevel, tableName, logicalDelete, versioned);
+    return new EntityMeta(dialect, cls, tenantLevel, tableName, logicalDelete, versioned);
   }
 }

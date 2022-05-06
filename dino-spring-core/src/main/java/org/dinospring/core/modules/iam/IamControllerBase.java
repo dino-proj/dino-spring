@@ -48,7 +48,7 @@ public interface IamControllerBase<UK extends Serializable> {
    * 获取IamService
    * @return
    */
-  default IamService service() {
+  default IamService iamService() {
     return ContextHelper.findBean(IamService.class);
   }
 
@@ -62,7 +62,7 @@ public interface IamControllerBase<UK extends Serializable> {
   @CheckPermission("sys.iam:grant")
   default Response<List<ActionGroupVo>> listActionGroups(String userType) {
 
-    return Response.success(service().getAllActionGroups(userType));
+    return Response.success(iamService().getAllActionGroups(userType));
   }
 
   /**
@@ -82,10 +82,18 @@ public interface IamControllerBase<UK extends Serializable> {
   @CheckPermission("sys.iam:grant")
   default PageResponse<RoleVo> listUserRoles(@PathVariable("tenant_id") String tenantId, String utype, UK uid,
       PageReq page) {
-    Page<RoleVo> userRoles = service().listUserRoles(tenantId, utype, uid.toString(), page.pageable());
+    Page<RoleVo> userRoles = iamService().listUserRoles(tenantId, utype, uid.toString(), page.pageable());
     return PageResponse.success(userRoles);
   }
 
+  /**
+   * 为用户分配角色
+   * @param tenantId
+   * @param utype
+   * @param uid
+   * @param req
+   * @return
+   */
   @Operation(summary = "为用户分配角色")
   @ParamTenant
   @Parameter(name = "utype", description = "用户类型", required = true)
@@ -94,10 +102,18 @@ public interface IamControllerBase<UK extends Serializable> {
   @CheckPermission("sys.iam:grant")
   default Response<Long> grantRoles(@PathVariable("tenant_id") String tenantId, String utype, UK uid,
       @RequestBody PostBody<List<Long>> req) {
-    var result = service().grantRoles(tenantId, utype, utype, req.getBody());
+    var result = iamService().grantRoles(tenantId, utype, utype, req.getBody());
     return Response.success(result);
   }
 
+  /**
+   * 取消用户角色
+   * @param tenantId
+   * @param utype
+   * @param uid
+   * @param req
+   * @return
+   */
   @Operation(summary = "取消用户角色")
   @ParamTenant
   @Parameter(name = "utype", description = "用户类型", required = true)
@@ -106,7 +122,7 @@ public interface IamControllerBase<UK extends Serializable> {
   @CheckPermission("sys.iam:grant")
   default Response<Long> revokeRoles(@PathVariable("tenant_id") String tenantId, String utype, UK uid,
       @RequestBody PostBody<List<Long>> req) {
-    var result = service().revokeRoles(tenantId, utype, utype, req.getBody());
+    var result = iamService().revokeRoles(tenantId, utype, utype, req.getBody());
     return Response.success(result);
   }
 

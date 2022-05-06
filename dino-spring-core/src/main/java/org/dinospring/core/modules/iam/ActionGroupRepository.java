@@ -29,6 +29,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ActionGroupRepository extends CrudRepositoryBase<ActionGroupEntity, Long> {
 
+  /**
+   * 通过用户类型查询所有权限
+   * @param userType
+   * @param class1
+   * @return
+   */
   @Query("FROM ActionGroupEntity a where a.userType is null or a.userType = :userType")
   List<ActionGroupVo> findAllByUserType(String userType, Class<ActionGroupVo> class1);
 

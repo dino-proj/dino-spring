@@ -108,6 +108,11 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- tools-excel -->
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>easyexcel</artifactId>
+    </dependency>
   </dependencies>
 
   <profiles>

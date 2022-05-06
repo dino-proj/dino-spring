@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
+import org.dinospring.auth.exception.AuthorizationException;
+import org.dinospring.auth.exception.NoPermissionException;
 import org.dinospring.auth.exception.NotLoginException;
 import org.dinospring.commons.exception.BusinessException;
 import org.dinospring.commons.response.Response;
@@ -45,7 +47,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(BusinessException.class)
   public Response<Object> businessExceptionHandler(HttpServletResponse response, BusinessException ex) {
-    log.warn("business exception occured: code-{}, msg-{}", ex.getCode(), ex.getMessage(), ex);
+    log.error("business exception occured: code-{}, msg-{}", ex.getCode(), ex.getMessage(), ex);
     var resp = Response.fail(Status.fail(ex.getCode(), ex.getMessage()));
     resp.setData(ex.getData());
     return resp;
@@ -67,6 +69,18 @@ public class GlobalExceptionHandler {
   public Response<Void> notLoginExceptionHandler(HttpServletRequest request, NotLoginException ex) {
     log.error("user not login exception on request {}", request.getRequestURL());
     return Response.fail(Status.CODE.FAIL_NOT_LOGIN);
+  }
+
+  @ExceptionHandler(NoPermissionException.class)
+  public Response<Void> noPermissionExceptionHandler(HttpServletRequest request, NoPermissionException ex) {
+    log.error("user has no permission exception on request {}, {}", request.getRequestURL(), ex.getMessage());
+    return Response.fail(Status.CODE.FAIL_NO_PERMISSION);
+  }
+
+  @ExceptionHandler(AuthorizationException.class)
+  public Response<Void> authExceptionHandler(HttpServletRequest request, AuthorizationException ex) {
+    log.error("auth exception on request {}, {}", request.getRequestURL(), ex.getMessage());
+    return Response.fail(Status.CODE.FAIL_AUTH);
   }
 
   @ExceptionHandler(IllegalArgumentException.class)

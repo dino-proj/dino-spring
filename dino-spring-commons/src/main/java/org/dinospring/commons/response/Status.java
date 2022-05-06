@@ -80,6 +80,9 @@ public interface Status {
     //无权执行该操作
     FAIL_NO_PERMISSION(4003, "无权执行该操作"),
 
+    //权限认证失败
+    FAIL_AUTH(4003, "权限认证失败"),
+
     //资源不存在
     FAIL_NOT_FOUND(4004, "资源不存在"),
 

@@ -12,17 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.core.db.migration;
+package org.dinospring.core.flyway.migration;
 
+import java.util.Date;
 import java.util.List;
 
+import org.dinospring.core.entity.Code;
 import org.dinospring.core.modules.iam.Action;
 import org.dinospring.core.modules.iam.ActionGroupEntity;
+import org.dinospring.core.modules.iam.ActionGroupRepository;
 import org.flywaydb.core.api.migration.BaseJavaMigration;
 import org.flywaydb.core.api.migration.Context;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
@@ -31,14 +35,16 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
+@Slf4j
 public class V2_2__DinoSpringCore extends BaseJavaMigration {
 
   @Autowired
-  private JdbcTemplate jdbcTemplate;
+  private ActionGroupRepository actionGroupRepository;
 
   @Override
   public void migrate(Context context) throws Exception {
-    //actionGroupRepository.saveAllAndFlush(actionGroups());
+    log.info("exec migration: V2_2__DinoSpringCore.migrate");
+    actionGroupRepository.saveAllAndFlush(actionGroups());
   }
 
   private List<ActionGroupEntity> actionGroups() {
@@ -48,7 +54,8 @@ public class V2_2__DinoSpringCore extends BaseJavaMigration {
         Action.builder().value("sys.iam.role:view").label("角色查看").build());
 
     return List.of(
-        ActionGroupEntity.builder().userType("admin").name("权限管理").remark("权限分配，角色管理").actions(iamActions).build());
+        ActionGroupEntity.builder().userType("admin").name("权限管理").remark("权限分配，角色管理").actions(iamActions)
+            .createAt(new Date()).updateAt(new Date()).status(Code.STATUS.OK.getName()).build());
   }
 
 }

@@ -33,6 +33,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /**
  * @author tuuboo
@@ -40,8 +41,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Builder
-@AllArgsConstructor
+@SuperBuilder
 @NoArgsConstructor
 @Entity
 @Table(name = "iam_action_group")

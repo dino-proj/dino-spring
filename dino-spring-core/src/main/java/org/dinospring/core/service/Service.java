@@ -244,7 +244,7 @@ public interface Service<T, K extends Serializable> {
    */
   @Transactional(rollbackFor = Exception.class)
   default long updateStatusByIds(Collection<K> ids, String status) {
-    return repository().updateStatusByIds(ids, status).orElse(0L);
+    return repository().updateStatusByIds(ids, status);
   }
 
   /**
@@ -255,7 +255,7 @@ public interface Service<T, K extends Serializable> {
    */
   @Transactional(rollbackFor = Exception.class)
   default long updateStatusById(K id, String status) {
-    return repository().updateStatusById(id, status).orElse(0L);
+    return repository().updateStatusById(id, status);
   }
 
   /**
@@ -290,7 +290,6 @@ public interface Service<T, K extends Serializable> {
 
   /**
    * 获取指定数量的entity记录
-   * @param queryWrapper
    * @param limit 条数
    * @param offset 从0开始
    * @return
@@ -380,7 +379,7 @@ public interface Service<T, K extends Serializable> {
   * @return
   */
   default long countOk() {
-    return repository().countOk().orElse(0L);
+    return repository().countOk();
   }
 
   /**

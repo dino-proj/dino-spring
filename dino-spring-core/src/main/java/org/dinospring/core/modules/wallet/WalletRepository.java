@@ -27,7 +27,7 @@ public interface WalletRepository
    */
   @Modifying
   @Query("UPDATE #{#entityName} e SET e.balance = :balance, e.version = e.version + 1 WHERE e.id = :accountId AND e.version = :oldVersion")
-  Optional<Long> updateBalance(Long accountId, Long balance, Long oldVersion);
+  int updateBalance(Long accountId, Long balance, Long oldVersion);
 
   /**
    * 通过钱包所有者id查询钱包信息

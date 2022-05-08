@@ -14,9 +14,9 @@
 
 package org.dinospring.core.modules.iam;
 
-import java.io.Serializable;
-import java.util.List;
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.dinospring.auth.annotation.CheckPermission;
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.request.PageReq;
@@ -30,9 +30,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  *
@@ -58,9 +59,10 @@ public interface IamControllerBase<UK extends Serializable> {
    * @return
    */
   @Operation(summary = "获取权限组列表")
+  @ParamTenant
   @GetMapping("/action/groups")
   @CheckPermission("sys.iam:grant")
-  default Response<List<ActionGroupVo>> listActionGroups(String userType) {
+  default Response<List<ActionGroupVo>> listActionGroups(@Schema(name = "user_type", description = "用户类型") @RequestParam(name = "user_type", required = false) String userType) {
 
     return Response.success(iamService().getAllActionGroups(userType));
   }
@@ -81,7 +83,7 @@ public interface IamControllerBase<UK extends Serializable> {
   @Parameter(name = "uid", description = "用户ID", required = true)
   @CheckPermission("sys.iam:grant")
   default PageResponse<RoleVo> listUserRoles(@PathVariable("tenant_id") String tenantId, String utype, UK uid,
-      PageReq page) {
+                                             PageReq page) {
     Page<RoleVo> userRoles = iamService().listUserRoles(tenantId, utype, uid.toString(), page.pageable());
     return PageResponse.success(userRoles);
   }
@@ -101,7 +103,7 @@ public interface IamControllerBase<UK extends Serializable> {
   @PostMapping("/user/grant")
   @CheckPermission("sys.iam:grant")
   default Response<Long> grantRoles(@PathVariable("tenant_id") String tenantId, String utype, UK uid,
-      @RequestBody PostBody<List<Long>> req) {
+                                    @RequestBody PostBody<List<Long>> req) {
     var result = iamService().grantRoles(tenantId, utype, utype, req.getBody());
     return Response.success(result);
   }
@@ -121,7 +123,7 @@ public interface IamControllerBase<UK extends Serializable> {
   @PostMapping("/user/revoke")
   @CheckPermission("sys.iam:grant")
   default Response<Long> revokeRoles(@PathVariable("tenant_id") String tenantId, String utype, UK uid,
-      @RequestBody PostBody<List<Long>> req) {
+                                     @RequestBody PostBody<List<Long>> req) {
     var result = iamService().revokeRoles(tenantId, utype, utype, req.getBody());
     return Response.success(result);
   }

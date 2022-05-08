@@ -144,7 +144,7 @@ public class AuthzCheckerPermission extends AbstractAuthzChecker<CheckPermission
         return false;
       }
       return permissions.stream()
-          .anyMatch(t -> this.permission.implies(t));
+          .anyMatch(t -> t.implies(this.permission));
     }
   }
 
@@ -162,11 +162,10 @@ public class AuthzCheckerPermission extends AbstractAuthzChecker<CheckPermission
     public boolean test(AuthSession session) {
       //check user type
       var userType = session.getSubjectType();
-      if (Objects.isNull(userType) && !userTypes.isEmpty()) {
-        return false;
-      }
-      if (Objects.nonNull(userType) && !userTypes.contains(userType)) {
-        return false;
+      if (!userTypes.isEmpty()){
+        if (Objects.isNull(userType) || !userTypes.contains(userType)){
+          return false;
+        }
       }
       return permission.test(session.getSubjectPermissions());
     }

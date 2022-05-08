@@ -14,15 +14,16 @@
 
 package org.dinospring.core.modules.iam;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
+import org.dinospring.data.sql.builder.SelectSqlBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author tuuboo
@@ -43,14 +44,15 @@ public class IamService {
     if (Objects.isNull(userType)) {
       return actionGroupRepository.findAll(ActionGroupVo.class);
     }
-    return actionGroupRepository.findAllByUserType(userType, ActionGroupVo.class);
+    SelectSqlBuilder selectSqlBuilder = actionGroupRepository.newSelect().isNotNull("user_type").eq("user_type", userType);
+    return actionGroupRepository.queryList(selectSqlBuilder, ActionGroupVo.class);
   }
 
   public List<String> getUserPermissions(String tenantId, String userType, String userId) {
     var roles = userRoleRepository.getUserRoles(tenantId, userType, userId);
     var roleEntities = roleRepository.findAllById(roles);
     return roleEntities.stream().map(RoleEntity::getPermissions).flatMap(List<String>::stream)
-        .collect(Collectors.toList());
+      .collect(Collectors.toList());
   }
 
   public List<String> getUserRoles(String tenantId, String userType, String userId) {
@@ -60,7 +62,7 @@ public class IamService {
   }
 
   public Page<RoleVo> listUserRoles(String tenantId, String userType, String userId,
-      Pageable pageable) {
+                                    Pageable pageable) {
     var roles = userRoleRepository.listUserRoles(tenantId, userType, userId, pageable);
     var roleVos = roleRepository.findAllById(roles, RoleVo.class);
     return new PageImpl<>(roleVos, pageable, roles.getTotalElements());

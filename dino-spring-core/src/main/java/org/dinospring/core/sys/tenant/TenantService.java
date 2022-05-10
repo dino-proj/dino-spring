@@ -60,4 +60,9 @@ public interface TenantService extends Service<TenantEntity, String> {
   default <T> T findTenantByDomain(String domain, Class<T> cls) {
     return projection(cls, tenantRepository().getByDomain(domain));
   }
+
+
+  default <T> T findTenantByCode(String code, Class<T> cls) {
+    return projection(cls, tenantRepository().getByCode(code));
+  }
 }

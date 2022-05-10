@@ -35,4 +35,13 @@ public interface TenantRepository extends CrudRepositoryBase<TenantEntity, Strin
    */
   @Query("FROM #{#entityName} e WHERE e.customDomain = :domain")
   Optional<TenantEntity> getByDomain(@Nonnull String domain);
+
+
+  /**
+   * 通过code获取租户信息
+   * @param code
+   * @return
+   */
+  @Query("FROM #{#entityName} e WHERE e.code = :code")
+  Optional<TenantEntity> getByCode(@Nonnull String code);
 }

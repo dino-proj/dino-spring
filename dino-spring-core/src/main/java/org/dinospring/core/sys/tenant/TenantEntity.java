@@ -64,4 +64,7 @@ public class TenantEntity extends EntityBase<String> {
   @Column(name = "secret_key", length = 256)
   String secretKey;
 
+  @Schema(description = "租户编码", required = true, maxLength = 64)
+  @Column(name = "code", length = 64, nullable = false)
+  private String code;
 }

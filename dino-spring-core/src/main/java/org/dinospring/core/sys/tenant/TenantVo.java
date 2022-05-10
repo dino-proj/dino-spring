@@ -1,12 +1,11 @@
 package org.dinospring.core.sys.tenant;
 
-import org.apache.commons.lang3.StringUtils;
-import org.dinospring.commons.sys.Tenant;
-import org.dinospring.core.vo.VoImplBase;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.StringUtils;
+import org.dinospring.commons.sys.Tenant;
+import org.dinospring.core.vo.VoImplBase;
 
 /**
  *
@@ -32,6 +31,9 @@ public class TenantVo extends VoImplBase<String> implements Tenant {
 
   @Schema(description = "租户秘钥，请不要随便显示")
   String secretKey;
+
+  @Schema(description = "租户编码")
+  private String code;
 
   @Override
   public String getSecretKey() {

@@ -104,7 +104,7 @@ public interface IamControllerBase<UK extends Serializable> {
   @CheckPermission("sys.iam:grant")
   default Response<Long> grantRoles(@PathVariable("tenant_id") String tenantId, String utype, UK uid,
                                     @RequestBody PostBody<List<Long>> req) {
-    var result = iamService().grantRoles(tenantId, utype, utype, req.getBody());
+    var result = iamService().grantRoles(tenantId, utype, uid.toString(), req.getBody());
     return Response.success(result);
   }
 

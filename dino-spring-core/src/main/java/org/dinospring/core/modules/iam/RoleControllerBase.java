@@ -15,12 +15,10 @@ package org.dinospring.core.modules.iam;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import org.dinospring.auth.annotation.CheckPermission;
-import org.dinospring.commons.context.ContextHelper;
-import org.dinospring.commons.utils.TypeUtils;
 import org.dinospring.core.controller.CrudControllerBase;
 import org.dinospring.core.modules.iam.RoleControllerBase.RoleReq;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -31,17 +29,27 @@ import java.util.List;
  * @author tuuboo
  * @date 2022-05-04 23:43:44
  */
-@CheckPermission("sys.role:grant")
 public interface RoleControllerBase
   extends CrudControllerBase<RoleService, RoleEntity, RoleVo, RoleSearch, RoleReq, Long> {
 
   /**
-   * 服务实例
+   * Vo类的Class
    * @return
    */
+  @Nonnull
   @Override
-  default RoleService service() {
-    return ContextHelper.findBean(TypeUtils.getGenericParamClass(this, RoleControllerBase.class, 0));
+  default Class<RoleVo> voClass() {
+    return RoleVo.class;
+  }
+
+  /**
+   * Entity类的Class
+   * @return
+   */
+  @Nonnull
+  @Override
+  default Class<RoleEntity> entityClass() {
+    return RoleEntity.class;
   }
 
   @Data
@@ -54,7 +62,7 @@ public interface RoleControllerBase
     @Schema(description = "角色名称", required = true, maxLength = 64)
     @NotBlank
     @Size(max = 64)
-    private String title;
+    private String name;
 
     @Schema(description = "角色备注", required = false, maxLength = 255)
     @Nullable

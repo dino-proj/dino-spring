@@ -62,6 +62,13 @@ public interface TenantService extends Service<TenantEntity, String> {
   }
 
 
+  /**
+   * 根据code查询租户信息
+   * @param code
+   * @param cls
+   * @param <T>
+   * @return
+   */
   default <T> T findTenantByCode(String code, Class<T> cls) {
     return projection(cls, tenantRepository().getByCode(code));
   }

@@ -105,6 +105,11 @@ public interface TenantControllerBase extends ControllerBase<TenantService, Tena
 
   }
 
+  /**
+   * 根据code查询Tenant
+   * @param code
+   * @return
+   */
   @Operation(summary = "根据code查询Tenant")
   @Parameter(name = "code", description = "Tenant Code")
   @GetMapping("/byCode")

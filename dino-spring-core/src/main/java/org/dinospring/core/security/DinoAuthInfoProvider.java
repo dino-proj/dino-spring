@@ -25,7 +25,6 @@ import org.dinospring.auth.session.AuthInfoProvider;
 import org.dinospring.auth.support.AllPermission;
 import org.dinospring.auth.support.WildcardPermission;
 import org.dinospring.commons.sys.User;
-import org.dinospring.core.modules.iam.IamService;
 import org.dinospring.core.sys.user.UserServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -39,9 +38,6 @@ public class DinoAuthInfoProvider implements AuthInfoProvider<User<?>> {
   @Autowired
   private UserServiceProvider userServiceProvider;
 
-  @Autowired
-  private IamService iamService;
-
   @Override
   public Collection<Permission> getPermissions(User<?> subject) {
     var userService = userServiceProvider.resolveUserService(subject.getUserType());
@@ -49,8 +45,7 @@ public class DinoAuthInfoProvider implements AuthInfoProvider<User<?>> {
     if (userService.isSuperAdmin(subject.getUserType(), subject.getId().toString())) {
       return Collections.singletonList(AllPermission.of());
     }
-    var perms = iamService.getUserPermissions(subject.getTenantId(), subject.getUserType().getType(),
-        subject.getId().toString());
+    var perms = userService.getPermissions(subject.getUserType(), subject.getId().toString());
     if (Objects.isNull(perms)) {
       return List.of();
     }
@@ -59,7 +54,8 @@ public class DinoAuthInfoProvider implements AuthInfoProvider<User<?>> {
 
   @Override
   public Collection<String> getRoles(User<?> subject) {
-    return List.of("@" + subject.getUserType().getType());
+    var userService = userServiceProvider.resolveUserService(subject.getUserType());
+    return List.copyOf(userService.getRoles(subject.getUserType(), subject.getId().toString()));
   }
 
 }

@@ -16,6 +16,7 @@ package org.dinospring.core.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import org.dinospring.auth.annotation.CheckPermission;
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.response.Response;
 import org.dinospring.commons.utils.TypeUtils;
@@ -55,6 +56,7 @@ public interface CategoryControllerBase<S extends CategoryServiceBase<N>, N exte
   @Parameter(name = "parent")
   @Parameter(name = "keyword")
   @GetMapping("/tree")
+  @CheckPermission(":tree")
   default Response<List<N>> getCategoryTree(@PathVariable("tenant_id") String tenantId, @Nullable Long parent,
                                             @Nullable String keyword) {
     return Response.success(categoryService().findCategory(parent, keyword));

@@ -15,6 +15,7 @@
 package org.dinospring.core.sys.user;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Optional;
 
 import org.dinospring.commons.sys.User;
@@ -42,6 +43,22 @@ public interface UserService<T extends User<K>, K extends Serializable> {
    * @return
    */
   boolean isSuperAdmin(UserType userType, String userId);
+
+  /**
+   * 获取用户所有角色
+   * @param userType 用户类型
+   * @param userId 用户ID
+   * @return
+   */
+  Collection<String> getRoles(UserType userType, String userId);
+
+  /**
+   * 获取用户所有权限
+   * @param userType 用户类型
+   * @param userId 用户ID
+   * @return
+   */
+  Collection<String> getPermissions(UserType userType, String userId);
 
   /**
    * 用户登录后的回调

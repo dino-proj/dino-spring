@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import org.apache.commons.collections4.CollectionUtils;
+import org.dinospring.auth.Operations;
 import org.dinospring.auth.annotation.CheckPermission;
 import org.dinospring.commons.request.PageReq;
 import org.dinospring.commons.request.PostBody;
@@ -112,7 +113,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @ParamSort
   @PostMapping("list")
   @JsonView(PropertyView.OnSummary.class)
-  @CheckPermission(":list")
+  @CheckPermission(Operations.LIST)
   default PageResponse<VO> list(@PathVariable("tenant_id") String tenantId, PageReq pageReq, SortReq sortReq,
                                 @RequestBody PostBody<SRC> req) {
 
@@ -141,7 +142,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @Parameter(in = ParameterIn.QUERY, name = "id", required = true)
   @GetMapping("id")
   @JsonView(PropertyView.OnDetail.class)
-  @CheckPermission(":detail")
+  @CheckPermission(Operations.READ)
   default Response<VO> getById(@PathVariable("tenant_id") String tenantId, @RequestParam K id) {
 
     return Response.success(processVo(service().getById(id, voClass())));
@@ -157,7 +158,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @ParamTenant
   @PostMapping("add")
   @Transactional(rollbackFor = Exception.class)
-  @CheckPermission(":add")
+  @CheckPermission(Operations.CREATE)
   default Response<VO> add(@PathVariable("tenant_id") String tenantId, @RequestBody PostBody<REQ> req) {
 
     var body = processReq(tenantId, req, null);
@@ -193,7 +194,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @ParamTenant
   @PostMapping("update")
   @Transactional(rollbackFor = Exception.class)
-  @CheckPermission(":update")
+  @CheckPermission(Operations.UPDATE)
   default Response<VO> update(@PathVariable("tenant_id") String tenantId, @RequestParam K id,
                               @RequestBody PostBody<REQ> req) {
 
@@ -231,7 +232,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @Operation(summary = "删除")
   @ParamTenant
   @GetMapping("delete")
-  @CheckPermission(":delete")
+  @CheckPermission(Operations.DELETE)
   default Response<Boolean> dels(@PathVariable("tenant_id") String tenantId, @RequestParam List<K> ids) {
     service().removeByIds(ids);
     return Response.success(true);
@@ -248,7 +249,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @ParamTenant
   @GetMapping("status")
   @Transactional(rollbackFor = Exception.class)
-  @CheckPermission(":status")
+  @CheckPermission(Operations.EXECUTE)
   default Response<Boolean> status(@PathVariable("tenant_id") String tenantId, @RequestParam List<K> ids,
                                    @RequestParam String status) {
     service().updateStatusByIds(ids, status);

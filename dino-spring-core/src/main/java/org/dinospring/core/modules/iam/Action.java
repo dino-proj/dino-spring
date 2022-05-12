@@ -16,6 +16,7 @@ package org.dinospring.core.modules.iam;
 
 import java.io.Serializable;
 
+import lombok.extern.jackson.Jacksonized;
 import org.dinospring.commons.data.ValueLabel;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,6 +31,7 @@ import lombok.Data;
 
 @Data
 @Builder
+@Jacksonized
 public class Action implements ValueLabel<String>, Serializable {
 
   @Schema(description = "权限：如user:create，多个操作用逗号分隔，如user:create,update")

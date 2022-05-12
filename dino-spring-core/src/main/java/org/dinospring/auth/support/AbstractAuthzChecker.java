@@ -18,7 +18,9 @@ import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.collections4.CollectionUtils;
@@ -37,7 +39,7 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 public abstract class AbstractAuthzChecker<A extends Annotation, M> implements AuthzChecker {
 
   protected Map<AnnotatedElementKey, M> methodInvocationCache = new ConcurrentHashMap<>(64);
-
+  protected Set<AnnotatedElementKey> noCheckMethods = new ConcurrentSkipListSet<>();
   private final Class<A> annotationClass;
   private final boolean enableCheckIgnoreAnnotation;
 
@@ -50,11 +52,14 @@ public abstract class AbstractAuthzChecker<A extends Annotation, M> implements A
   public boolean support(MethodInvocation mi) {
     var methodKey = new AnnotatedElementKey(mi.getMethod(), mi.getThis().getClass());
     if (methodInvocationCache.containsKey(methodKey)) {
-      return methodInvocationCache.get(methodKey) != null;
+      return true;
+    }
+    if(noCheckMethods.contains(methodKey)){
+      return false;
     }
     // 检查是否忽略权限检查
     if (isIgnore(mi)) {
-      methodInvocationCache.put(methodKey, null);
+      noCheckMethods.add(methodKey);
       return false;
     }
     // 查询类和方法上的权限注解
@@ -62,12 +67,16 @@ public abstract class AbstractAuthzChecker<A extends Annotation, M> implements A
     var annosInMethod = AnnotatedElementUtils.findMergedRepeatableAnnotations(mi.getMethod(), annotationClass);
     // 如果没有权限注解，则返回false
     if (CollectionUtils.isEmpty(annosInClass) && CollectionUtils.isEmpty(annosInMethod)) {
-      methodInvocationCache.put(methodKey, null);
+      noCheckMethods.add(methodKey);
       return false;
     }
 
     var meta = getMethodInvocationMeta(mi, annosInClass, annosInMethod);
-    methodInvocationCache.put(methodKey, meta);
+    if(Objects.nonNull(meta)) {
+      methodInvocationCache.put(methodKey, meta);
+    }else {
+      noCheckMethods.add(methodKey);
+    }
     return meta != null;
   }
 

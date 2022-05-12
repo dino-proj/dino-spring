@@ -13,49 +13,35 @@
 // limitations under the License.
 package org.dinospring.core.modules.iam;
 
-import java.io.Serializable;
-import java.util.List;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import org.dinospring.auth.annotation.CheckPermission;
+import org.dinospring.commons.context.ContextHelper;
+import org.dinospring.commons.utils.TypeUtils;
+import org.dinospring.core.controller.CrudControllerBase;
+import org.dinospring.core.modules.iam.RoleControllerBase.RoleReq;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
-import org.dinospring.commons.request.PostBody;
-import org.dinospring.commons.response.Response;
-import org.dinospring.core.annotion.param.ParamTenant;
-import org.dinospring.core.controller.CrudControllerBase;
-import org.dinospring.core.modules.iam.RoleControllerBase.RoleReq;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
+import java.util.List;
 
 /**
  *
  * @author tuuboo
  * @date 2022-05-04 23:43:44
  */
-
+@CheckPermission("sys.role:grant")
 public interface RoleControllerBase
-    extends CrudControllerBase<RoleService, RoleEntity, RoleVo, RoleSearch, RoleReq, Long> {
+  extends CrudControllerBase<RoleService, RoleEntity, RoleVo, RoleSearch, RoleReq, Long> {
 
   /**
-   * 为角色赋权
-   * @param tenantId
-   * @param req
-   * @param id
+   * 服务实例
    * @return
    */
-  @Operation(summary = "设置角色权限")
-  @ParamTenant
-  @PostMapping("/grant")
-  default Response<RoleVo> post(@PathVariable("tenant_id") String tenantId,
-      @RequestBody PostBody<List<String>> req, Long id) {
-
-    return Response.success(null);
+  @Override
+  default RoleService service() {
+    return ContextHelper.findBean(TypeUtils.getGenericParamClass(this, RoleControllerBase.class, 0));
   }
 
   @Data
@@ -74,6 +60,9 @@ public interface RoleControllerBase
     @Nullable
     @Size(max = 255)
     private String remark;
+
+    @Schema(description = "角色操作权限")
+    private List<String> permissions;
   }
 
 }

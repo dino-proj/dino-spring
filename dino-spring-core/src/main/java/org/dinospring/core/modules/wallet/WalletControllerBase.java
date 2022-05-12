@@ -1,5 +1,6 @@
 package org.dinospring.core.modules.wallet;
 
+import org.dinospring.auth.annotation.CheckPermission;
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.request.PageReq;
 import org.dinospring.commons.response.PageResponse;
@@ -38,6 +39,7 @@ public interface WalletControllerBase
   @Operation(summary = "获取账户信息")
   @ParamTenant
   @GetMapping("/info")
+  @CheckPermission(":wallet.info")
   default Response<WalletVo> getSummary(@PathVariable("tenant_id") String tenantId) {
     var wallet = walletService().getOrCreateAccountByOwner(tenantId, ContextHelper.currentUser().getId().toString(),
         walletType());
@@ -55,6 +57,7 @@ public interface WalletControllerBase
   @ParamTenant
   @ParamPageable
   @GetMapping("/bills")
+  @CheckPermission(":wallet.bills")
   default PageResponse<WalletBillVo> getBills(@PathVariable("tenant_id") String tenantId, PageReq pageReq) {
     var wallet = walletService().getOrCreateAccountByOwner(tenantId, ContextHelper.currentUser().getId().toString(),
         walletType());

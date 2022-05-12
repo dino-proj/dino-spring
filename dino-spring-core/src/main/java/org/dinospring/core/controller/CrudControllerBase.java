@@ -112,7 +112,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @ParamSort
   @PostMapping("list")
   @JsonView(PropertyView.OnSummary.class)
-  @CheckPermission("list | supper")
+  @CheckPermission(":list")
   default PageResponse<VO> list(@PathVariable("tenant_id") String tenantId, PageReq pageReq, SortReq sortReq,
                                 @RequestBody PostBody<SRC> req) {
 
@@ -141,7 +141,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @Parameter(in = ParameterIn.QUERY, name = "id", required = true)
   @GetMapping("id")
   @JsonView(PropertyView.OnDetail.class)
-  @CheckPermission("detail | supper")
+  @CheckPermission(":detail")
   default Response<VO> getById(@PathVariable("tenant_id") String tenantId, @RequestParam K id) {
 
     return Response.success(processVo(service().getById(id, voClass())));
@@ -157,7 +157,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @ParamTenant
   @PostMapping("add")
   @Transactional(rollbackFor = Exception.class)
-  @CheckPermission("add | supper")
+  @CheckPermission(":add")
   default Response<VO> add(@PathVariable("tenant_id") String tenantId, @RequestBody PostBody<REQ> req) {
 
     var body = processReq(tenantId, req, null);
@@ -193,7 +193,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @ParamTenant
   @PostMapping("update")
   @Transactional(rollbackFor = Exception.class)
-  @CheckPermission("update | supper")
+  @CheckPermission(":update")
   default Response<VO> update(@PathVariable("tenant_id") String tenantId, @RequestParam K id,
                               @RequestBody PostBody<REQ> req) {
 
@@ -231,7 +231,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @Operation(summary = "删除")
   @ParamTenant
   @GetMapping("delete")
-  @CheckPermission("delete | supper")
+  @CheckPermission(":delete")
   default Response<Boolean> dels(@PathVariable("tenant_id") String tenantId, @RequestParam List<K> ids) {
     service().removeByIds(ids);
     return Response.success(true);
@@ -248,7 +248,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @ParamTenant
   @GetMapping("status")
   @Transactional(rollbackFor = Exception.class)
-  @CheckPermission("status | supper")
+  @CheckPermission(":status")
   default Response<Boolean> status(@PathVariable("tenant_id") String tenantId, @RequestParam List<K> ids,
                                    @RequestParam String status) {
     service().updateStatusByIds(ids, status);

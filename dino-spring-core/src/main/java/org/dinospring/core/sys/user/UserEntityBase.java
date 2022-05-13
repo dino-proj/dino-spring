@@ -53,7 +53,7 @@ public abstract class UserEntityBase<K extends Serializable> extends EntityBase<
   UserType userType;
 
   @Schema(description = "用户登录ID")
-  @Column(name = "login_name", unique = true, nullable = true, length = 20)
+  @Column(name = "login_name", nullable = true, length = 20)
   String loginName;
 
   @Schema(description = "用户头像 url")
@@ -74,7 +74,7 @@ public abstract class UserEntityBase<K extends Serializable> extends EntityBase<
   String realName;
 
   @Schema(description = "用户手机号")
-  @Column(name = "mobile", unique = true, nullable = true, length = 16)
+  @Column(name = "mobile", nullable = true, length = 16)
   String mobile;
 
   @Schema(description = "用户私钥")

@@ -14,12 +14,6 @@
 
 package org.dinospring.core.utils;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.UUID;
-
 import com.drew.imaging.FileType;
 import com.drew.imaging.FileTypeDetector;
 import com.drew.imaging.ImageMetadataReader;
@@ -38,15 +32,21 @@ import com.drew.metadata.mp4.media.Mp4VideoDirectory;
 import com.drew.metadata.png.PngDirectory;
 import com.drew.metadata.wav.WavDirectory;
 import com.drew.metadata.webp.WebpDirectory;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import lombok.Data;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 import ws.schild.jave.EncoderException;
 import ws.schild.jave.MultimediaObject;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.UUID;
 
 /**
  * 多媒体工具类、图片、视频、音频、文件等处理
@@ -60,19 +60,33 @@ public class MultiMediaUtils {
 
   /**
    * 获取视频、图片、音频的元信息
-   * @param input
+   * @param file
    * @return
    */
-  public static MediaInfo extractMediaInfo(BufferedInputStream input) {
+  public static MediaInfo extractMediaInfo(MultipartFile file) {
 
     try {
+      var fileInputStream = file.getInputStream();
+      if (!fileInputStream.markSupported()) {
+        fileInputStream = new BufferedInputStream(fileInputStream);
+      }
+      fileInputStream.mark(Integer.MAX_VALUE);
+
+      BufferedInputStream input = new BufferedInputStream(fileInputStream);
+      MediaInfo media;
       var fileType = FileTypeDetector.detectFileType(input);
       if (fileType.getMimeType() == null || fileType == FileType.Zip) {
-        return null;
+        String fileContentType = file.getContentType();
+        String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
+        if (StringUtils.isBlank(fileContentType)) {
+          return null;
+        }
+        media = new MediaInfo(fileExtension, fileContentType);
+      } else {
+        media = new MediaInfo(fileType.getName(), fileType.getMimeType());
       }
-      var media = new MediaInfo(fileType.getName(), fileType.getMimeType());
 
-      if (!isMultiMediaMime(fileType.getMimeType())) {
+      if (!isMultiMediaMime(media.getMime())) {
         return media;
       }
 

@@ -256,13 +256,7 @@ public interface OssControllerBase {
   private void saveFile(String tenantId, String serviceId, MultipartFile file,
       Function<MediaInfo, FileMeta> metaProvider) throws IOException {
 
-    var input = file.getInputStream();
-    if (!input.markSupported()) {
-      input = new BufferedInputStream(input);
-    }
-    input.mark(Integer.MAX_VALUE);
-
-    var media = MultiMediaUtils.extractMediaInfo(new BufferedInputStream(input));
+    var media = MultiMediaUtils.extractMediaInfo(file);
     var meta = metaProvider.apply(media);
 
     meta.setSize(file.getSize());

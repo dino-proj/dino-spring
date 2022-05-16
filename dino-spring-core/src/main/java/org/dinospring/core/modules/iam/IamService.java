@@ -14,6 +14,7 @@
 
 package org.dinospring.core.modules.iam;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.dinospring.data.sql.builder.SelectSqlBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -64,8 +65,12 @@ public class IamService {
   public Page<RoleVo> listUserRoles(String tenantId, String userType, String userId,
                                     Pageable pageable) {
     var roles = userRoleRepository.listUserRoles(tenantId, userType, userId, pageable);
-    var roleVos = roleRepository.findAllById(roles, RoleVo.class);
-    return new PageImpl<>(roleVos, pageable, roles.getTotalElements());
+    var roleIds = roles.getContent();
+    if (CollectionUtils.isNotEmpty(roleIds)) {
+      var roleVos = roleRepository.findAllById(roleIds, RoleVo.class);
+      return new PageImpl<>(roleVos, pageable, roles.getTotalElements());
+    }
+    return new PageImpl<>(List.of(), pageable, roles.getTotalElements());
   }
 
   public long grantRoles(String tenantId, String userType, String userId, List<Long> roleIds) {
@@ -74,6 +79,10 @@ public class IamService {
 
   public long revokeRoles(String tenantId, String userType, String userId, List<Long> roleIds) {
     return userRoleRepository.removeUserRoles(tenantId, userType, userId, roleIds).orElse(0L);
+  }
+
+  public long revokeUserRoles(String tenantId, String userType, String userId) {
+    return revokeRoles(tenantId, userType, userId, List.of());
   }
 
 }

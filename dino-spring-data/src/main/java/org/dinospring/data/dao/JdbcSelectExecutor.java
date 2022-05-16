@@ -31,6 +31,7 @@ import org.springframework.util.Assert;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -174,9 +175,9 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    * @param cls 类型
    * @return
    */
-  default <C> List<C> findAllById(Iterable<K> ids, Class<C> cls) {
+  default <C> List<C> findAllById(Collection<K> ids, Class<C> cls) {
     var sql = newSelect();
-    sql.where("id", "in", ids);
+    sql.in("id", ids);
     return this.queryList(sql, cls);
   }
 

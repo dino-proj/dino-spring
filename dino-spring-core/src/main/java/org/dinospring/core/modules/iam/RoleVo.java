@@ -14,15 +14,14 @@
 
 package org.dinospring.core.modules.iam;
 
-import java.io.Serializable;
-import java.util.List;
-
-import org.dinospring.commons.sys.User;
-import org.dinospring.core.vo.VoImplBase;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dinospring.commons.sys.User;
+import org.dinospring.core.vo.VoImplBase;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author tuuboo
@@ -30,6 +29,9 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class RoleVo extends VoImplBase<Long> {
+
+  @Schema(description = "角色编码")
+  private String code;
 
   @Schema(description = "角色名字")
   private String name;

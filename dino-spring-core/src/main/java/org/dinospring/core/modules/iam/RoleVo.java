@@ -48,10 +48,10 @@ public class RoleVo extends VoImplBase<Long> {
   @Schema(description = "角色操作权限", required = false)
   private List<String> permissions;
 
-  @Schema(description = "角色数据权限", required = false)
+  @Schema(name = "data_permissions", description = "角色数据权限", required = false)
   private List<String> dataPermissions;
 
-  @Schema(description = "角色菜单权限", required = false)
+  @Schema(name = "menu_permissions", description = "角色菜单权限", required = false)
   private List<String> menuPermissions;
 
 }

@@ -72,7 +72,7 @@ public interface RoleControllerBase
     @Schema(description = "角色操作权限")
     private List<String> permissions;
 
-    @Schema(description = "角色菜单权限")
+    @Schema(name = "menu_permissions", description = "角色菜单权限")
     private List<String> menuPermissions;
   }
 

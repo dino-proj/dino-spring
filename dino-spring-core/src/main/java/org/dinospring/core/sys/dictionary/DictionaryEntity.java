@@ -17,6 +17,7 @@ package org.dinospring.core.sys.dictionary;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -54,7 +55,7 @@ public class DictionaryEntity extends TenantRowEntityBase<Long> {
   private String key;
 
   @Schema(description = "数据字典项")
-  @OneToMany(fetch = FetchType.EAGER)
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private List<DictItem> items = new ArrayList<>();
 
   @Schema(description = "备注")
@@ -79,24 +80,24 @@ public class DictionaryEntity extends TenantRowEntityBase<Long> {
     @Column(name = "key", length = 50)
     private String key;
 
-    @Schema(description = "数据字典项的键值（编码）")
+    @Schema(name = "item_key", description = "数据字典项的键值（编码）")
     @NotNull(message = "数据字典项名称不能为空！")
     @Size(max = 100, message = "数据字典项键值长度不能大于100！")
     @Column(name = "item_key", length = 100)
     private String itemKey;
 
-    @Schema(description = "数据字典项的显示名称")
+    @Schema(name = "item_name", description = "数据字典项的显示名称")
     @NotNull(message = "数据字典项名称不能为空！")
     @Size(max = 100, message = "数据字典项名称长度不能大于100！")
     @Column(name = "item_name", length = 100)
     private String itemName;
 
-    @Schema(description = "数据字典项的图标")
+    @Schema(name = "item_icon", description = "数据字典项的图标")
     @Size(max = 100, message = "字典对应的图标")
     @Column(name = "item_icon", length = 100)
     private String itemIcon;
 
-    @Schema(description = "排序号")
+    @Schema(name = "order_num", description = "排序号")
     @Column(name = "order_num", nullable = true)
     private Integer orderNum;
   }

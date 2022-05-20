@@ -14,12 +14,13 @@
 
 package org.dinospring.core.sys.dictionary;
 
-import java.util.List;
-
-import org.dinospring.commons.Orderable;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.dinospring.commons.Orderable;
+import org.dinospring.core.vo.VoImplBase;
+
+import java.util.List;
 
 /**
  *
@@ -27,7 +28,8 @@ import lombok.Data;
  */
 
 @Data
-public class DictionaryVO {
+@EqualsAndHashCode(callSuper = true)
+public class DictionaryVO extends VoImplBase<Long> {
 
   @Schema(description = "数据字典键值", maxLength = 50)
   private String key;

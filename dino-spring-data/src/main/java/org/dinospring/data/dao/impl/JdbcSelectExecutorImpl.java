@@ -17,10 +17,7 @@ package org.dinospring.data.dao.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.context.ContextHelper;
-import org.dinospring.commons.response.Status;
-import org.dinospring.commons.utils.Assert;
 import org.dinospring.commons.utils.TypeUtils;
 import org.dinospring.data.dao.EntityMeta;
 import org.dinospring.data.dao.JdbcSelectExecutor;
@@ -56,6 +53,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  *
@@ -151,13 +149,13 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
 
   @Override
   public <MK, MV> Map<MK, MV> queryForMap(SelectSqlBuilder sql, String keyColumn, Class<MK> keyClass,
-      String valueColumn, Class<MV> valueClass) {
+                                          String valueColumn, Class<MV> valueClass) {
     if (log.isDebugEnabled()) {
       log.debug("query for map: {}:{}, {}:{},\nSQL:{},\nPARAMs:", keyColumn, keyClass, valueColumn, valueClass,
-          sql.getSql(), sql.getParams());
+        sql.getSql(), sql.getParams());
     }
     org.springframework.util.Assert.isTrue(TypeUtils.isPrimitiveOrString(keyClass), "key must be primitive class");
-    org.springframework.util.Assert.isTrue(TypeUtils.isPrimitiveOrString(valueClass), "value must be primitive class");
+    var isPrimitiveForValueColumn = TypeUtils.isPrimitiveOrString(valueClass);
 
     Map<MK, MV> result = new HashMap<>(20);
     jdbcTemplate.query(sql.getSql(), new RowCallbackHandler() {
@@ -165,18 +163,23 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
       @Override
       public void processRow(ResultSet rs) throws SQLException {
 
-        MK key = CastUtils.cast(JdbcUtils.getResultSetValue(rs, rs.findColumn(keyColumn), keyClass));
-        MV value = CastUtils.cast(JdbcUtils.getResultSetValue(rs, rs.findColumn(valueColumn), valueClass));
-        result.put(key, value);
+        MK key = CastUtils.cast(Objects.requireNonNull(JdbcUtils.getResultSetValue(rs, rs.findColumn(keyColumn), keyClass)));
+        if (isPrimitiveForValueColumn) {
+          MV value = CastUtils.cast(Objects.requireNonNull(JdbcUtils.getResultSetValue(rs, rs.findColumn(valueColumn), valueClass)));
+          result.put(key, value);
+        } else {
+          Object resultSetValue = JdbcUtils.getResultSetValue(rs, rs.findColumn(valueColumn));
+          MV convert = conversionService.convert(resultSetValue, valueClass);
+          result.put(key, convert);
+        }
       }
-
     }, sql.getParams());
     return result;
   }
 
   @Override
   public <MK, MV> Map<MK, MV> queryForMap(String sql, String keyColumn, Class<MK> keyClass, Class<MV> valueClass,
-      Object... params) {
+                                          Object... params) {
     if (log.isDebugEnabled()) {
       log.debug("query for map: {}:{}, valueClass:{},\nSQL:{},\nPARAMs:", keyColumn, keyClass, valueClass, sql, params);
     }
@@ -184,7 +187,7 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
 
     boolean isPrimitiveValue = TypeUtils.isPrimitiveOrString(valueClass);
     BeanPropertyRowMapper<MV> mapper = isPrimitiveValue ? null
-        : BeanPropertyRowMapper.newInstance(valueClass, conversionService);
+      : BeanPropertyRowMapper.newInstance(valueClass, conversionService);
 
     return jdbcTemplate.query(sql, new ResultSetExtractor<Map<MK, MV>>() {
 
@@ -193,7 +196,7 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
         Map<MK, MV> result = new HashMap<>(20);
         if (isPrimitiveValue) {
           org.springframework.util.Assert.isTrue(rs.getMetaData().getColumnCount() == 2,
-              "resulset column count must be 2,as valueClass is primitive class");
+            "resulset column count must be 2,as valueClass is primitive class");
         }
 
         var keyIndex = rs.findColumn(keyColumn);
@@ -281,7 +284,7 @@ public class JdbcSelectExecutorImpl<T, K> extends SimpleJpaRepository<T, K> impl
   @Override
   public boolean updateByIdWithVersion(K id, Map<String, Object> columnValue, Number version) {
     org.springframework.util.Assert.isTrue(entityInfo.isVersioned(),
-        entityInfo.getDomainClass() + " must implements " + Versioned.class);
+      entityInfo.getDomainClass() + " must implements " + Versioned.class);
     var sql = new UpdateSqlBuilder(tableName());
     sql.eq("id", id);
     sql.eq("version", version);

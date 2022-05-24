@@ -34,6 +34,6 @@ public interface ScopeRepository extends CrudRepositoryBase<ScopeEntity, Long> {
    * @param hash
    * @return
    */
-  @Query("FROM #{#entityName} e WHERE e.ruleHash = :hash")
+  @Query("SELECT e.id FROM #{#entityName} e WHERE e.ruleHash = :hash")
   Optional<Long> getByRuleHash(String hash);
 }

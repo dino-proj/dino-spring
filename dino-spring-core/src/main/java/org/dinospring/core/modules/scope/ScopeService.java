@@ -14,12 +14,14 @@
 
 package org.dinospring.core.modules.scope;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.dinospring.core.modules.scope.ScopeRuleMatcher.HIT;
+import org.dinospring.core.service.impl.ServiceBase;
+import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -28,7 +30,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class ScopeService {
+public class ScopeService extends ServiceBase<ScopeEntity, Long> {
 
   @Autowired
   private ScopeRepository scopeRepository;
@@ -44,14 +46,14 @@ public class ScopeService {
       var e = new ScopeEntity();
       e.setScopeRule(rule);
       e.setRuleHash(hash);
+      beforeSaveEntity(e);
       return scopeRepository.saveAndFlush(e).getId();
     });
   }
 
   public <T> List<Long> hit(ScopeRuleMatcher<T> matcher, Class<T> ruleClass) {
     var sql = scopeRepository.newSelect();
-    sql.columns("id, scope_rule");
-    var maps = scopeRepository.queryForMap(sql, "id", Long.class, ruleClass);
+    var maps = scopeRepository.queryForMap(sql, "id", Long.class, "scope_rule", ruleClass);
     var matched = new ArrayList<Long>();
     maps.forEach((id, rule) -> {
       if (matcher.test(rule) == HIT.ACCEPT) {
@@ -59,5 +61,10 @@ public class ScopeService {
       }
     });
     return matched;
+  }
+
+  @Override
+  public CrudRepositoryBase<ScopeEntity, Long> repository() {
+    return scopeRepository;
   }
 }

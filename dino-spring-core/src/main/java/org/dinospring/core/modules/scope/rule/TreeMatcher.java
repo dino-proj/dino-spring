@@ -14,14 +14,15 @@
 
 package org.dinospring.core.modules.scope.rule;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.dinospring.core.modules.scope.ScopeRuleMatcher;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.dinospring.core.modules.scope.ScopeRuleMatcher;
+import java.util.Objects;
 
 /**
  *
@@ -50,11 +51,14 @@ public class TreeMatcher<T extends Serializable & Comparable<T>> implements Scop
 
   @Override
   public HIT test(IncludeExcludeRule<T> rule) {
+    if (Objects.isNull(rule)) {
+      return HIT.MISS;
+    }
     for (T value : reversePaths) {
-      if (Collections.binarySearch(rule.getExclude(), value) >= 0) {
+      if (CollectionUtils.isNotEmpty(rule.getExclude()) && Collections.binarySearch(rule.getExclude(), value) >= 0) {
         return HIT.REJECT;
       }
-      if (Collections.binarySearch(rule.getInclude(), value) >= 0) {
+      if (CollectionUtils.isNotEmpty(rule.getInclude()) && Collections.binarySearch(rule.getInclude(), value) >= 0) {
         return HIT.ACCEPT;
       }
     }

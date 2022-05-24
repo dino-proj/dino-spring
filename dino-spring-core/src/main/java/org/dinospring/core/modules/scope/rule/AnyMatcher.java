@@ -16,6 +16,7 @@ package org.dinospring.core.modules.scope.rule;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.dinospring.core.modules.scope.ScopeRuleMatcher;
@@ -36,13 +37,13 @@ public class AnyMatcher<T extends Serializable & Comparable<T>> implements Scope
 
   @Override
   public HIT test(IncludeExcludeRule<T> rule) {
-    if (CollectionUtils.isEmpty(values)) {
+    if (CollectionUtils.isEmpty(values) || Objects.isNull(rule)) {
       return HIT.MISS;
     }
-    if (CollectionUtils.containsAny(rule.getExclude(), values)) {
+    if (CollectionUtils.isNotEmpty(rule.getExclude()) && CollectionUtils.containsAny(rule.getExclude(), values)) {
       return HIT.REJECT;
     }
-    if (CollectionUtils.containsAny(rule.getInclude(), values)) {
+    if (CollectionUtils.isNotEmpty(rule.getInclude()) && CollectionUtils.containsAny(rule.getInclude(), values)) {
       return HIT.ACCEPT;
     }
     return HIT.MISS;

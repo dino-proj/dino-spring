@@ -54,7 +54,7 @@ public abstract class AbstractAuthzChecker<A extends Annotation, M> implements A
     if (methodInvocationCache.containsKey(methodKey)) {
       return true;
     }
-    if(noCheckMethods.contains(methodKey)){
+    if (noCheckMethods.contains(methodKey)) {
       return false;
     }
     // 检查是否忽略权限检查
@@ -72,9 +72,9 @@ public abstract class AbstractAuthzChecker<A extends Annotation, M> implements A
     }
 
     var meta = getMethodInvocationMeta(mi, annosInClass, annosInMethod);
-    if(Objects.nonNull(meta)) {
+    if (Objects.nonNull(meta)) {
       methodInvocationCache.put(methodKey, meta);
-    }else {
+    } else {
       noCheckMethods.add(methodKey);
     }
     return meta != null;
@@ -84,12 +84,8 @@ public abstract class AbstractAuthzChecker<A extends Annotation, M> implements A
     if (!enableCheckIgnoreAnnotation) {
       return false;
     }
-    if (AnnotatedElementUtils.hasAnnotation(mi.getThis().getClass(), CheckIgnore.class)) {
-      return true;
-    } else if (AnnotatedElementUtils.hasAnnotation(mi.getMethod(), CheckIgnore.class)) {
-      return true;
-    }
-    return false;
+    return AnnotatedElementUtils.hasAnnotation(mi.getThis().getClass(), CheckIgnore.class)
+        || AnnotatedElementUtils.hasAnnotation(mi.getMethod(), CheckIgnore.class);
   }
 
   /**

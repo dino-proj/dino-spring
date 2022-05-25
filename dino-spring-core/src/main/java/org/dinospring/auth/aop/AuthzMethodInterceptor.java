@@ -60,7 +60,17 @@ public class AuthzMethodInterceptor implements MethodInterceptor {
     } catch (AuthorizationException e) {
       if (Objects.isNull(e.getCause())) {
         // tell the user which method they attempted to invoke
-        e.initCause(new AuthorizationException("Not authorized to invoke method: " + invocation.getMethod()));
+        e.initCause(new AuthorizationException(
+            "Not authorized to invoke method: " + invocation.getMethod().getName() + "(...) @ "
+                + invocation.getThis().getClass()));
+      }
+      throw e;
+    } catch (RuntimeException e) {
+      if (Objects.isNull(e.getCause())) {
+        // tell the user which method they attempted to invoke
+        e.initCause(
+            new Throwable("Exception occured when invoke method: " + invocation.getMethod().getName() + "(...) @ "
+                + invocation.getThis().getClass()));
       }
       throw e;
     }

@@ -123,7 +123,8 @@ public class AuthzCheckerPermission extends AbstractAuthzChecker<CheckPermission
     permission = StringUtils.trim(permission);
     if (StringUtils.startsWith(permission, ":")) {
       if (StringUtils.isBlank(resourceName)) {
-        throw new IllegalArgumentException("CheckPermission can't start with ':' when resource is null");
+        throw new IllegalArgumentException(
+            "@CheckPermission(" + permission + ") can't start with ':' without @CheckResource specified.");
       }
       permission = resourceName + permission;
     }
@@ -162,10 +163,8 @@ public class AuthzCheckerPermission extends AbstractAuthzChecker<CheckPermission
     public boolean test(AuthSession session) {
       //check user type
       var userType = session.getSubjectType();
-      if (!userTypes.isEmpty()){
-        if (Objects.isNull(userType) || !userTypes.contains(userType)){
-          return false;
-        }
+      if (!userTypes.isEmpty() && (Objects.isNull(userType) || !userTypes.contains(userType))) {
+        return false;
       }
       return permission.test(session.getSubjectPermissions());
     }

@@ -14,8 +14,6 @@
 
 package org.dinospring.commons.response;
 
-import org.springframework.http.MediaType;
-
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,7 +25,7 @@ import lombok.experimental.Accessors;
  * @author tuuboo
  */
 
-@ApiResponse(description = "restApi响应", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
+@ApiResponse(description = "restApi响应", content = @Content(mediaType = "application/json"))
 @Data
 @Accessors(chain = true)
 public class Response<T> {

@@ -19,7 +19,6 @@ import org.springframework.asm.MethodVisitor;
 import org.springframework.asm.Opcodes;
 import org.springframework.asm.Type;
 import org.springframework.cglib.core.ReflectUtils;
-import org.springframework.data.util.CastUtils;
 
 /**
  * asm工具类
@@ -44,7 +43,7 @@ public interface AsmUtils {
     var classLoader = Thread.currentThread().getContextClassLoader();
 
     try {
-      return CastUtils.cast(classLoader.loadClass(className));
+      return TypeUtils.cast(classLoader.loadClass(className));
     } catch (ClassNotFoundException e) {
       // ignore
     }
@@ -73,7 +72,7 @@ public interface AsmUtils {
     cw.visitEnd();
     var code = cw.toByteArray();
     var newClass = ReflectUtils.defineClass(className, code, classLoader);
-    return CastUtils.cast(newClass);
+    return TypeUtils.cast(newClass);
   }
 
   /**

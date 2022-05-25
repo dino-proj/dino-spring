@@ -20,8 +20,8 @@ import org.apache.commons.collections4.MapUtils;
 import org.dinospring.commons.sys.Tenant;
 import org.dinospring.commons.sys.User;
 import org.dinospring.commons.utils.InheritableThreadLocalMap;
+import org.dinospring.commons.utils.TypeUtils;
 import org.springframework.context.ApplicationContext;
-import org.springframework.data.util.CastUtils;
 
 /**
  * {@link #DinoContext} 的ThreadLocal版本的实现
@@ -35,7 +35,7 @@ public class DinoContextThreadLocalImpl implements DinoContext {
   private static ApplicationContext applicationContext;
 
   public static Tenant getCurrentTenant() {
-    return CastUtils.cast(MapUtils.getObject(RESOURCES.get(), KEY_CURRENT_TENANT));
+    return TypeUtils.cast(MapUtils.getObject(RESOURCES.get(), KEY_CURRENT_TENANT));
   }
 
   public static void setCurrentTenant(Tenant tenant) {

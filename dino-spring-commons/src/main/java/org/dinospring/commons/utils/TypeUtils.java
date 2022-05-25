@@ -122,4 +122,14 @@ public class TypeUtils {
     }
     return false;
   }
+
+  /**
+   * 类型转换
+   * @param object
+   * @return
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> T cast(Object object) {
+    return (T) object;
+  }
 }

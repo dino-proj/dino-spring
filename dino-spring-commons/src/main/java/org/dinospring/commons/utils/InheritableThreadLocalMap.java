@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.data.util.CastUtils;
 
 /**
  * InheritableThreadLocalMap
@@ -59,7 +58,7 @@ public class InheritableThreadLocalMap extends InheritableThreadLocal<Map<String
    */
   public <T> T get(String key) {
     ensureResourcesInitialized();
-    return CastUtils.cast(get().get(key));
+    return TypeUtils.cast(get().get(key));
   }
 
   /**
@@ -69,7 +68,7 @@ public class InheritableThreadLocalMap extends InheritableThreadLocal<Map<String
    */
   public <T> T getOrDefault(String key, T defaultValue) {
     ensureResourcesInitialized();
-    return CastUtils.cast(get().getOrDefault(key, defaultValue));
+    return TypeUtils.cast(get().getOrDefault(key, defaultValue));
   }
 
   /**

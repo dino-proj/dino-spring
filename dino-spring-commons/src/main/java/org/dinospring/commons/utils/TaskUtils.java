@@ -12,7 +12,6 @@ import java.util.function.Predicate;
 import org.apache.commons.lang3.ThreadUtils;
 import org.dinospring.commons.promise.Defer;
 import org.dinospring.commons.promise.Promise;
-import org.springframework.data.util.CastUtils;
 
 import lombok.experimental.UtilityClass;
 
@@ -137,7 +136,7 @@ public class TaskUtils {
       } catch (Exception t) {
         // throw out the exception
         if (!Objects.isNull(throwOutExceptions) && TypeUtils.isInstanceOfAny(t, throwOutExceptions)) {
-          throw CastUtils.<RuntimeException>cast(t);
+          throw TypeUtils.<RuntimeException>cast(t);
         }
         // nap and retry again
         if (attempts == 0) {

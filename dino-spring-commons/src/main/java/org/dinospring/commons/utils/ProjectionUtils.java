@@ -20,7 +20,6 @@ import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.core.ResolvableType;
-import org.springframework.data.util.CastUtils;
 import org.springframework.util.ClassUtils;
 
 import javax.annotation.Nullable;
@@ -114,7 +113,7 @@ public class ProjectionUtils {
    * @see BeanWrapper
    */
   private static void projectProperties(Object source, Object target, @Nullable Class<?> editable,
-                                        @Nullable String... ignoreProperties) throws BeansException {
+      @Nullable String... ignoreProperties) throws BeansException {
 
     Assert.notNull(source, "Source must not be null");
     Assert.notNull(target, "Target must not be null");
@@ -123,7 +122,7 @@ public class ProjectionUtils {
     if (editable != null) {
       if (!editable.isInstance(target)) {
         throw new IllegalArgumentException("Target class [" + target.getClass().getName()
-          + "] not assignable to Editable class [" + editable.getName() + "]");
+            + "] not assignable to Editable class [" + editable.getName() + "]");
       }
       actualEditable = editable;
     }
@@ -145,9 +144,10 @@ public class ProjectionUtils {
 
       // Ignore generic types in assignable check if either ResolvableType has unresolvable generics.
       boolean isAssignable = (sourceResolvableType.hasUnresolvableGenerics()
-        || targetResolvableType.hasUnresolvableGenerics()
-        ? ClassUtils.isAssignable(writeMethod.getParameterTypes()[0], readMethod.getReturnType())
-        : targetResolvableType.isAssignableFrom(sourceResolvableType) ? true : BeanUtils.isSimpleValueType(targetResolvableType.getRawClass()));
+          || targetResolvableType.hasUnresolvableGenerics()
+              ? ClassUtils.isAssignable(writeMethod.getParameterTypes()[0], readMethod.getReturnType())
+              : targetResolvableType.isAssignableFrom(sourceResolvableType) ? true
+                  : BeanUtils.isSimpleValueType(targetResolvableType.getRawClass()));
       try {
         if (!Modifier.isPublic(readMethod.getDeclaringClass().getModifiers())) {
           readMethod.setAccessible(true);
@@ -200,7 +200,7 @@ public class ProjectionUtils {
   }
 
   private static List<?> newList(ResolvableType type, Object value) {
-    Collection<?> valueList = CastUtils.cast(value);
+    Collection<?> valueList = TypeUtils.cast(value);
     var list = new ArrayList<>(valueList.size());
     var genericCls = type.getGeneric(0);
     for (var v : valueList) {
@@ -214,7 +214,7 @@ public class ProjectionUtils {
   }
 
   private static Map<?, ?> newMap(ResolvableType type, Object value) {
-    Map<?, ?> valueMap = CastUtils.cast(value);
+    Map<?, ?> valueMap = TypeUtils.cast(value);
     var map = new HashMap<>(valueMap.size());
     var genericCls = type.getGeneric(1);
     for (var v : valueMap.entrySet()) {
@@ -228,7 +228,7 @@ public class ProjectionUtils {
   }
 
   private static Set<?> newSet(ResolvableType type, Object value) {
-    Set<?> valueSet = CastUtils.cast(value);
+    Set<?> valueSet = TypeUtils.cast(value);
     var set = new HashSet<>(valueSet.size());
     var genericCls = type.getGeneric(0);
     for (var v : valueSet) {
@@ -245,13 +245,13 @@ public class ProjectionUtils {
     Object[] srcArr;
     var type = ResolvableType.forClass(componentClass);
     if (ClassUtils.isAssignableValue(Collection.class, value)) {
-      Collection<?> col = CastUtils.cast(value);
+      Collection<?> col = TypeUtils.cast(value);
       srcArr = col.toArray();
 
     } else {
-      srcArr = CastUtils.cast(value);
+      srcArr = TypeUtils.cast(value);
     }
-    Object[] destArr = CastUtils.cast(Array.newInstance(componentClass, srcArr.length));
+    Object[] destArr = TypeUtils.cast(Array.newInstance(componentClass, srcArr.length));
 
     for (int i = 0; i < destArr.length; i++) {
       var v = srcArr[i];

@@ -17,6 +17,7 @@ package org.dinospring.core.autoconfig;
 import java.util.Iterator;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springdoc.core.customizers.OpenApiCustomiser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,8 +25,6 @@ import org.springframework.context.annotation.Configuration;
 import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.core.converter.ModelConverter;
 import io.swagger.v3.core.converter.ModelConverterContext;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.media.Schema;
 import lombok.extern.slf4j.Slf4j;
@@ -49,14 +48,11 @@ public class OpenApiAutoConfiguration {
   private String apiDescription;
 
   @Bean
-  public OpenAPI customOpenAPI() {
-    log.info("start custom open api info");
-    return new OpenAPI()
-        .info(new Info()
-            .title(StringUtils.capitalize(apiName) + " Open API")
-            .description(StringUtils.defaultString(apiDescription, "开放API"))
-            .version(apiVersion)
-            .contact(new Contact().name("botbrain").email("luxueyu@botbrain.ai").url("https://botbrain.ai")));
+  public OpenApiCustomiser openApiCustomiser() {
+    return openAPI -> openAPI.info(new Info()
+        .title(StringUtils.capitalize(apiName) + " Open API")
+        .description(StringUtils.defaultString(apiDescription, "开放API"))
+        .version(apiVersion));
   }
 
   public static class JsonModelConverter implements ModelConverter {

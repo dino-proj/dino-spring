@@ -43,7 +43,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import lombok.extern.slf4j.Slf4j;
@@ -79,6 +78,7 @@ public class WebMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
 
   @Bean
   public CorsFilter corsFilter() {
+    log.info("--->> config cors filter");
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     // 对接口配置跨域设置
     source.registerCorsConfiguration("/**", buildConfig());
@@ -92,18 +92,9 @@ public class WebMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
   }
 
   @Override
-  public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    WebMvcConfigurer.super.addResourceHandlers(registry);
-
-    log.info("add knife4j support");
-    //for knife4j
-    registry.addResourceHandler("api-doc.html").addResourceLocations("classpath:/META-INF/resources/doc.html");
-    registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-  }
-
-  @Override
   public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
     WebMvcConfigurer.super.extendMessageConverters(converters);
+    log.info("--->> add Image converter");
     // 添加图片转换器
     converters.add(new BufferedImageHttpMessageConverter());
 
@@ -113,6 +104,7 @@ public class WebMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
         var converter = (MappingJackson2HttpMessageConverter) converters.get(i);
         var objectMapper = this.applicationContext.getBean("objectMapper", ObjectMapper.class);
 
+        log.info("--->> config objectMapper to {}", converter);
         converter.setObjectMapper(objectMapper);
         break;
       }

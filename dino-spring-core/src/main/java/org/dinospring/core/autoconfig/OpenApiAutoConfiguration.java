@@ -15,8 +15,11 @@
 package org.dinospring.core.autoconfig;
 
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.dinospring.commons.utils.NamingUtils;
 import org.springdoc.core.customizers.OpenApiCustomiser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -49,10 +52,31 @@ public class OpenApiAutoConfiguration {
 
   @Bean
   public OpenApiCustomiser openApiCustomiser() {
-    return openAPI -> openAPI.info(new Info()
-        .title(StringUtils.capitalize(apiName) + " Open API")
-        .description(StringUtils.defaultString(apiDescription, "开放API"))
-        .version(apiVersion));
+    log.info("--->> customize open api");
+    return openAPI -> {
+      openAPI.info(new Info()
+          .title(StringUtils.capitalize(apiName) + " Open API")
+          .description(StringUtils.defaultString(apiDescription, "开放API"))
+          .version(apiVersion));
+      log.info("--->> snake schema property");
+      if (openAPI.getComponents() != null && openAPI.getComponents().getSchemas() != null) {
+        openAPI.getComponents().getSchemas().values().forEach(this::snakeSchemaProperties);
+      }
+    };
+  }
+
+  @SuppressWarnings("rawtypes")
+  private void snakeSchemaProperties(Schema<?> schema) {
+    if (schema.getProperties() != null) {
+      var kvs = schema.getProperties().entrySet().iterator();
+      Map<String, Schema> newProps = new LinkedHashMap<>();
+      while (kvs.hasNext()) {
+        var kv = kvs.next();
+        var newKey = NamingUtils.toSnake(kv.getKey());
+        newProps.put(newKey, kv.getValue());
+      }
+      schema.setProperties(newProps);
+    }
   }
 
   public static class JsonModelConverter implements ModelConverter {

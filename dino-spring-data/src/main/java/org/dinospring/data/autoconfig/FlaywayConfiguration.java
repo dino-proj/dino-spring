@@ -25,37 +25,28 @@ import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
-import org.dinospring.commons.autoconfig.DinoCommonsAutoConfiguration;
 import org.dinospring.commons.context.ContextHelper;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.MigrationVersion;
 import org.flywaydb.core.api.callback.Callback;
 import org.flywaydb.core.api.configuration.FluentConfiguration;
 import org.flywaydb.core.api.migration.JavaMigration;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
 import org.springframework.boot.autoconfigure.flyway.FlywayConfigurationCustomizer;
 import org.springframework.boot.autoconfigure.flyway.FlywayDataSource;
-import org.springframework.boot.autoconfigure.flyway.FlywayMigrationInitializer;
-import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
 import org.springframework.boot.autoconfigure.flyway.FlywayProperties;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.jdbc.DatabaseDriver;
-import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.core.io.ResourceLoader;
@@ -85,7 +76,7 @@ public class FlaywayConfiguration implements ApplicationListener<ApplicationRead
 
   @Override
   public void onApplicationEvent(ApplicationReadyEvent event) {
-    log.info("gogogogoogogogogogogogogogooggo");
+    log.info("--->> exec flyway java migration");
     var configuration = ContextHelper.findBean(FluentConfiguration.class);
     var javaMigrations = ContextHelper.getApplicationContext().getBeansOfType(JavaMigration.class).values()
         .toArray(new JavaMigration[0]);
@@ -108,6 +99,7 @@ public class FlaywayConfiguration implements ApplicationListener<ApplicationRead
       ObjectProvider<DataSource> dataSource, @FlywayDataSource ObjectProvider<DataSource> flywayDataSource,
       ObjectProvider<FlywayConfigurationCustomizer> fluentConfigurationCustomizers,
       ObjectProvider<Callback> callbacks) {
+    log.info("--->> flywayConfiguration");
     FluentConfiguration configuration = new FluentConfiguration(resourceLoader.getClassLoader());
     configureDataSource(configuration, properties, flywayDataSource.getIfAvailable(), dataSource.getIfUnique());
     configureProperties(configuration, properties);

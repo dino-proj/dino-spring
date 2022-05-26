@@ -40,7 +40,7 @@ public class DinoCommonsAutoConfiguration implements ApplicationContextAware {
 
   @Override
   public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-    log.info("setup ContextHelper with applicationContext[class={}]", applicationContext.getClass());
+    log.info("--->> setup ContextHelper with applicationContext[class={}]", applicationContext.getClass());
     ContextHelper.setApplicationContext(applicationContext);
 
   }
@@ -54,7 +54,7 @@ public class DinoCommonsAutoConfiguration implements ApplicationContextAware {
   @Bean
   @ConditionalOnMissingBean
   public ContextHelper contextHelper(DinoContext dinoContext) {
-    log.info("setup ContextHelper with dinoContext[class={}]", dinoContext.getClass());
+    log.info("--->> setup ContextHelper with dinoContext[class={}]", dinoContext.getClass());
     ContextHelper.setDinoContext(dinoContext);
 
     return ContextHelper.INST;

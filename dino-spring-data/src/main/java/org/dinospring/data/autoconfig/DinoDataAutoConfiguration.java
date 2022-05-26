@@ -81,6 +81,7 @@ public class DinoDataAutoConfiguration {
   public Dialect dialect(JdbcOperations jdbcOperations) {
 
     return jdbcOperations.execute((ConnectionCallback<Dialect>) conn -> {
+      log.info("--->> setup database dialect");
       DatabaseMetaData metaData = conn.getMetaData();
 
       String name = metaData.getDatabaseProductName().toLowerCase(Locale.ENGLISH);
@@ -101,7 +102,7 @@ public class DinoDataAutoConfiguration {
   @Primary
   @ConditionalOnMissingBean
   public ObjectMapper objectMapper() {
-    log.info("--->>>> new jacksonObjectMapper");
+    log.info("--->> create jacksonObjectMapper");
     var builder = JsonMapper.builder();
     builder.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     builder.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
@@ -132,7 +133,7 @@ public class DinoDataAutoConfiguration {
 
   @Bean("dataConversionService")
   public ConversionService dataConversionService(ApplicationContext applicationContext) {
-    log.info("--->>>> new dataConversionService");
+    log.info("--->> create dataConversionService");
     var dataConversionService = new DefaultConversionService();
     ApplicationConversionService.addApplicationConverters(dataConversionService);
 

@@ -62,7 +62,7 @@ public class DinoCoreAutoConfiguration {
   @Bean
   @ConditionalOnMissingBean(RestTemplate.class)
   public RestTemplate restTemplate() {
-    log.info("--->>>> new restTemplate");
+    log.info("--->> create restTemplate");
     SimpleClientHttpRequestFactory simpleClientHttpRequestFactory = new SimpleClientHttpRequestFactory();
     simpleClientHttpRequestFactory.setConnectTimeout(5000);
     simpleClientHttpRequestFactory.setReadTimeout(5000);

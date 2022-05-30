@@ -84,7 +84,7 @@ public interface LoginByMobile<U extends UserEntityBase<K>, V extends User<K>, K
       throw BusinessException.of(Status.CODE.FAIL_USER_NOT_EXIST);
     }
     return Response.success(loginService().loginAuth(tenant,
-        tenantService().projection(loginService().userClass(), user), req.getPlt(), req.getUid()));
+        tenantService().projection(loginService().userClass(), user), req.getPlt(), req.getGuid()));
   }
 
   @Data

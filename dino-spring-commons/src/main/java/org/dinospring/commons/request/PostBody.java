@@ -14,6 +14,8 @@
 
 package org.dinospring.commons.request;
 
+import javax.validation.Valid;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -41,5 +43,6 @@ public class PostBody<T> {
   private String sid;
 
   @Schema(description = "Post数据")
+  @Valid
   private T body;
 }

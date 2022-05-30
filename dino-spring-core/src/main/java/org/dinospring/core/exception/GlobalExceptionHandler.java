@@ -30,6 +30,7 @@ import org.dinospring.commons.response.Status;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataAccessException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -93,6 +94,15 @@ public class GlobalExceptionHandler {
   public Response<Void> validateExceptionHandler(HttpServletResponse response, ConstraintViolationException ex) {
     log.error("validate exception occured", ex);
     var msg = ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage)
+        .collect(Collectors.joining("\n"));
+    return Response.fail(Status.CODE.FAIL_VALIDATION.withMsg(msg));
+  }
+
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public Response<Void> methodArgumentNotValidExceptionHandler(HttpServletResponse response,
+      MethodArgumentNotValidException ex) {
+    log.error("validate exception occured", ex);
+    var msg = ex.getBindingResult().getFieldErrors().stream().map(e -> e.getField() + ":" + e.getDefaultMessage())
         .collect(Collectors.joining("\n"));
     return Response.fail(Status.CODE.FAIL_VALIDATION.withMsg(msg));
   }

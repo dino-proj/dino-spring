@@ -14,10 +14,15 @@
 
 package org.dinospring.core.controller;
 
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nonnull;
+
 import com.fasterxml.jackson.annotation.JsonView;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.dinospring.auth.Operations;
 import org.dinospring.auth.annotation.CheckPermission;
@@ -28,6 +33,7 @@ import org.dinospring.commons.response.PageResponse;
 import org.dinospring.commons.response.Response;
 import org.dinospring.commons.response.Status;
 import org.dinospring.commons.utils.Assert;
+import org.dinospring.commons.utils.ProjectionUtils;
 import org.dinospring.core.annotion.param.ParamPageable;
 import org.dinospring.core.annotion.param.ParamSort;
 import org.dinospring.core.annotion.param.ParamTenant;
@@ -35,21 +41,19 @@ import org.dinospring.core.service.CustomQuery;
 import org.dinospring.core.service.Service;
 import org.dinospring.core.vo.VoBase;
 import org.dinospring.data.domain.EntityBase;
-import org.dinospring.data.json.PropertyView;
-import org.springframework.beans.BeanUtils;
+import org.dinospring.commons.property.PropertyView;
 import org.springframework.data.util.CastUtils;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.annotation.Nonnull;
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 
 /**
  * @param S service类型
@@ -64,7 +68,7 @@ import java.util.stream.Collectors;
  */
 
 public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBase<K>, VO extends VoBase<K>, SRC extends CustomQuery, REQ, K extends Serializable>
-  extends ControllerBase<S, E, VO, K> {
+    extends ControllerBase<S, E, VO, K> {
 
   /**
    * 对VO对象进行返回前的处理
@@ -112,10 +116,10 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @ParamPageable
   @ParamSort
   @PostMapping("list")
-  @JsonView(PropertyView.OnSummary.class)
+  @JsonView(PropertyView.Summary.class)
   @CheckPermission(Operations.LIST)
   default PageResponse<VO> list(@PathVariable("tenant_id") String tenantId, PageReq pageReq, SortReq sortReq,
-                                @RequestBody PostBody<SRC> req) {
+      @RequestBody PostBody<SRC> req) {
 
     List<String> sort = sortReq.getSort();
     if (CollectionUtils.isNotEmpty(sort)) {
@@ -126,7 +130,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
 
     var query = req.getBody();
     var pageData = query == null ? service().listPage(pageable, voClass())
-      : service().listPage(query, pageable, voClass());
+        : service().listPage(query, pageable, voClass());
 
     return PageResponse.success(pageData, this::processVoList);
   }
@@ -141,7 +145,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @ParamTenant
   @Parameter(in = ParameterIn.QUERY, name = "id", required = true)
   @GetMapping("id")
-  @JsonView(PropertyView.OnDetail.class)
+  @JsonView(PropertyView.Detail.class)
   @CheckPermission(Operations.READ)
   default Response<VO> getById(@PathVariable("tenant_id") String tenantId, @RequestParam K id) {
 
@@ -158,8 +162,10 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @ParamTenant
   @PostMapping("add")
   @Transactional(rollbackFor = Exception.class)
+  @JsonView(PropertyView.Detail.class)
   @CheckPermission(Operations.CREATE)
-  default Response<VO> add(@PathVariable("tenant_id") String tenantId, @RequestBody PostBody<REQ> req) {
+  default Response<VO> add(@PathVariable("tenant_id") String tenantId,
+      @RequestBody @Validated(PropertyView.Insert.class) @JsonView(PropertyView.Insert.class) PostBody<REQ> req) {
 
     var body = processReq(tenantId, req, null);
 
@@ -194,9 +200,10 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @ParamTenant
   @PostMapping("update")
   @Transactional(rollbackFor = Exception.class)
+  @JsonView(PropertyView.Detail.class)
   @CheckPermission(Operations.UPDATE)
   default Response<VO> update(@PathVariable("tenant_id") String tenantId, @RequestParam K id,
-                              @RequestBody PostBody<REQ> req) {
+      @RequestBody @Validated(PropertyView.Update.class) @JsonView(PropertyView.Update.class) PostBody<REQ> req) {
 
     var body = processReq(tenantId, req, id);
 
@@ -216,7 +223,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
     E item = service().getById(id);
     Assert.notNull(item, Status.CODE.FAIL_NOT_FOUND);
 
-    BeanUtils.copyProperties(req, item);
+    ProjectionUtils.projectPropertiesWithView(req, item, PropertyView.Update.class);
 
     item = service().updateById(item);
 
@@ -251,7 +258,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @Transactional(rollbackFor = Exception.class)
   @CheckPermission(Operations.EXECUTE)
   default Response<Boolean> status(@PathVariable("tenant_id") String tenantId, @RequestParam List<K> ids,
-                                   @RequestParam String status) {
+      @RequestParam String status) {
     service().updateStatusByIds(ids, status);
     return Response.success(true);
   }

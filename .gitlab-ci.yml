@@ -7,7 +7,7 @@ stages:
 variables:
   MVN_OPT: -e
   BUILD_OPT: -Dmaven.test.skip=true
-  DEPLOY_OPT: "-DMVN_REPO_USER_NAME=${MVN_REPO_USER_NAME} -DMVN_REPO_USER_PASSWORD=${MVN_REPO_USER_PASSWORD} -DaltDeploymentRepository=deploy-repo::default::${MVN_REPO_URL_RELEASES}"
+  DEPLOY_OPT: '-DMVN_REPO_USER_NAME=${MVN_REPO_USER_NAME} -DMVN_REPO_USER_PASSWORD=${MVN_REPO_USER_PASSWORD} -DaltDeploymentRepository=deploy-repo::default::${MVN_REPO_URL_RELEASES}'
 
 # 打包
 deploy:
@@ -22,35 +22,31 @@ deploy:
     - echo deploy into ${MVN_REPO_USER_NAME}@${MVN_REPO_URL_RELEASES}
     - cd dino-dependencies-root
     - echo "=============== 开始部署 dino-dependencies-root  ==============="
-    - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+    - mvn clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
     - cd ..
     - cd dino-spring-assembly
     - echo "=============== 开始部署 dino-spring-assembly  ==============="
-    - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
-    - cd ..
-    - cd dino-utils
-    - echo "=============== 开始部署 dino-utils  ==============="
-    - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+    - mvn clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
     - cd ..
     - cd dino-spring-boot-starter
     - echo "=============== 开始部署 dino-spring-boot-starter  ==============="
-    - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+    - mvn clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
     - cd ..
     - cd dino-spring-cloud-starter
     - echo "=============== 开始部署 dino-spring-cloud-starter  ==============="
-    - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+    - mvn clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
     - cd ..
     - cd dino-spring-commons
     - echo "=============== 开始部署 dino-spring-commons  ==============="
-    - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+    - mvn clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
     - cd ..
     - cd dino-spring-data
     - echo "=============== 开始部署 dino-spring-data  ==============="
-    - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+    - mvn clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
     - cd ..
     - cd dino-spring-core
     - echo "=============== 开始部署 dino-spring-core  ==============="
-    - mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+    - mvn clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
     - cd ..
   after_script:
     - echo "${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME} TAG=\"${CI_COMMIT_TAG}\" 发布${CI_JOB_STATUS}.-->${CI_COMMIT_DESCRIPTION} <--> ${CI_COMMIT_MESSAGE} ${CI_JOB_URL}" | bash ./.cicd/msg.sh

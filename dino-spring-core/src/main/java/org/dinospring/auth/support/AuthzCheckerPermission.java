@@ -161,9 +161,12 @@ public class AuthzCheckerPermission extends AbstractAuthzChecker<CheckPermission
 
     @Override
     public boolean test(AuthSession session) {
+      if (userTypes.isEmpty()) {
+        return true;
+      }
       //check user type
       var userType = session.getSubjectType();
-      if (!userTypes.isEmpty() && (Objects.isNull(userType) || !userTypes.contains(userType))) {
+      if (Objects.isNull(userType) || !userTypes.contains(userType)) {
         return false;
       }
       return permission.test(session.getSubjectPermissions());

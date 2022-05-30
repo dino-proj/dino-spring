@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.data.json;
+package org.dinospring.commons.property;
 
 import lombok.experimental.UtilityClass;
 
@@ -27,20 +27,20 @@ public class PropertyView {
    * 当显示简要信息的时候，使用，如下：
    * <pre>@JsonView(PropertyView.OnSummary.class)</pre>
    */
-  public static interface OnSummary {
+  public static interface Summary {
   }
 
   /**
    * 当显示详情信息的时候，使用，其包含了 OnSummary 注解的属性 如下：
    * <pre>@JsonView(PropertyView.OnDetail.class)</pre>
    */
-  public static interface OnDetail extends OnSummary {
+  public static interface Detail extends Summary {
   }
 
-  public static interface OnUpdate {
+  public static interface Update {
   }
 
-  public static interface OnInsert extends OnUpdate {
+  public static interface Insert extends Update {
   }
 
 }

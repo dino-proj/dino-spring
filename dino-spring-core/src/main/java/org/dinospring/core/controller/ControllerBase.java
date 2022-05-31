@@ -18,9 +18,9 @@ import java.io.Serializable;
 
 import javax.annotation.Nonnull;
 
-import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.utils.TypeUtils;
 import org.dinospring.core.service.Service;
+import org.dinospring.core.service.ServiceBeanResolver;
 import org.dinospring.core.vo.VoBase;
 import org.dinospring.data.domain.EntityBase;
 
@@ -29,16 +29,8 @@ import org.dinospring.data.domain.EntityBase;
  * @author tuuboo
  */
 
-public interface ControllerBase<S extends Service<E, K>, E extends EntityBase<K>, VO extends VoBase<K>, K extends Serializable> {
-
-  /**
-   * Service 服务实例
-   * @return
-   */
-  @Nonnull
-  default S service() {
-    return ContextHelper.findBean(TypeUtils.getGenericParamClass(this, CrudControllerBase.class, 0));
-  }
+public interface ControllerBase<S extends Service<E, K>, E extends EntityBase<K>, VO extends VoBase<K>, K extends Serializable>
+    extends ServiceBeanResolver<S> {
 
   /**
    * Vo类的Class

@@ -42,7 +42,6 @@ import org.dinospring.core.service.CustomQuery;
 import org.dinospring.core.service.Service;
 import org.dinospring.core.vo.VoBase;
 import org.dinospring.data.domain.EntityBase;
-import org.springframework.data.util.CastUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -85,11 +84,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
    * @return
    */
   default List<VO> processVoList(@Nonnull Collection<VO> voList) {
-    voList.forEach(CrudControllerBase.this::processVo);
-    if (List.class.isAssignableFrom(voList.getClass())) {
-      return CastUtils.cast(voList);
-    }
-    return List.copyOf(voList);
+    return voList.stream().map(this::processVo).collect(Collectors.toList());
   }
 
   /**

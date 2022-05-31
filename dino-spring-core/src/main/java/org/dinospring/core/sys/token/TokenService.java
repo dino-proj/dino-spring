@@ -88,7 +88,7 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
     var t = this.projection(Token.class, token);
     try {
       t.setPrinc(Base64.getUrlEncoder().encodeToString(objectMapper.writeValueAsBytes(princ)));
-      t.setAuthHeaderName(securityProperties.getHttpHeaderName());
+      t.setAuthHeaderName(securityProperties.getAuthHeaderName());
     } catch (JsonProcessingException e) {
       log.error("Impossible!", e);
     }

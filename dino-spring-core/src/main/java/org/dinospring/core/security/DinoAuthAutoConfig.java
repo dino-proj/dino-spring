@@ -25,6 +25,7 @@ import org.dinospring.auth.session.AuthSession;
 import org.dinospring.auth.session.AuthSessionResolver;
 import org.dinospring.auth.session.DefaultAuthSessionOpenFilter;
 import org.dinospring.core.security.config.SecurityProperties;
+import org.springdoc.core.customizers.OpenApiCustomiser;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -32,15 +33,31 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import lombok.extern.slf4j.Slf4j;
+
 /**
  *
  * @author tuuboo
  * @date 2022-04-10 18:52:46
  */
 
+@Slf4j
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnProperty(prefix = SecurityProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 public class DinoAuthAutoConfig {
+
+  @Bean
+  public OpenApiCustomiser openApiAuthCustomiser(SecurityProperties securityProperties) {
+    log.info("--->> add api-doc auth header:{}", securityProperties.getAuthHeaderName());
+    return openApi -> openApi.components(new Components()
+        .addSecuritySchemes("security", new SecurityScheme()
+            .in(SecurityScheme.In.HEADER)
+            .name(securityProperties.getAuthHeaderName())
+            .description("请将用户登录后的token放在该头部")
+            .type(SecurityScheme.Type.APIKEY)));
+  }
 
   @Bean
   public Supplier<AuthSession> sessionSupplier() {
@@ -63,7 +80,7 @@ public class DinoAuthAutoConfig {
   @ConditionalOnMissingBean(AuthSessionResolver.class)
   @Bean
   public DinoAuthSessionResolver authSessionHttpResolver(SecurityProperties securityProperties) {
-    return new DinoAuthSessionResolver(securityProperties.getHttpHeaderName());
+    return new DinoAuthSessionResolver(securityProperties.getAuthHeaderName());
   }
 
   @ConditionalOnMissingBean(DefaultAuthSessionOpenFilter.class)

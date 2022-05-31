@@ -46,5 +46,5 @@ public class SecurityProperties {
   /**
    * 传递签名的HTTP头名字， 默认为"D-auth-token"
    */
-  private String httpHeaderName = "D-auth-token";
+  private String authHeaderName = "D-auth-token";
 }

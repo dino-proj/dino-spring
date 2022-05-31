@@ -17,6 +17,7 @@ package org.dinospring.core.autoconfig;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.utils.NamingUtils;
@@ -52,15 +53,17 @@ public class OpenApiAutoConfiguration {
 
   @Bean
   public OpenApiCustomiser openApiCustomiser() {
-    log.info("--->> customize open api");
-    return openAPI -> {
-      openAPI.info(new Info()
-          .title(StringUtils.capitalize(apiName) + " Open API")
-          .description(StringUtils.defaultString(apiDescription, "开放API"))
-          .version(apiVersion));
+    log.info("--->> customize api-doc info");
+    return openApi -> {
+      if (Objects.isNull(openApi.getInfo())) {
+        openApi.info(new Info()
+            .title(StringUtils.capitalize(apiName) + " Open API")
+            .description(StringUtils.defaultString(apiDescription, "开放API"))
+            .version(apiVersion));
+      }
       log.info("--->> snake schema property");
-      if (openAPI.getComponents() != null && openAPI.getComponents().getSchemas() != null) {
-        openAPI.getComponents().getSchemas().values().forEach(this::snakeSchemaProperties);
+      if (openApi.getComponents() != null && openApi.getComponents().getSchemas() != null) {
+        openApi.getComponents().getSchemas().values().forEach(this::snakeSchemaProperties);
       }
     };
   }

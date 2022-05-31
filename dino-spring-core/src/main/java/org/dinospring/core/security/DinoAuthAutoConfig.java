@@ -15,6 +15,7 @@
 package org.dinospring.core.security;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -51,12 +52,18 @@ public class DinoAuthAutoConfig {
   @Bean
   public OpenApiCustomiser openApiAuthCustomiser(SecurityProperties securityProperties) {
     log.info("--->> add api-doc auth header:{}", securityProperties.getAuthHeaderName());
-    return openApi -> openApi.components(new Components()
-        .addSecuritySchemes("security", new SecurityScheme()
-            .in(SecurityScheme.In.HEADER)
-            .name(securityProperties.getAuthHeaderName())
-            .description("请将用户登录后的token放在该头部")
-            .type(SecurityScheme.Type.APIKEY)));
+    return openApi -> {
+      var components = openApi.getComponents();
+      if (Objects.isNull(components)) {
+        components = new Components();
+        openApi.components(components);
+      }
+      components.addSecuritySchemes("security", new SecurityScheme()
+          .in(SecurityScheme.In.HEADER)
+          .name(securityProperties.getAuthHeaderName())
+          .description("请将用户登录后的token放在该头部")
+          .type(SecurityScheme.Type.APIKEY));
+    };
   }
 
   @Bean

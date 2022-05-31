@@ -18,6 +18,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -390,6 +391,26 @@ public interface Service<T, K extends Serializable> {
    */
   default <S extends T> long count(Example<S> example) {
     return repository().count(example);
+  }
+
+  /**
+   * 检查是否存在记录
+   * @param id 主键ID
+   */
+  default boolean exists(K id) {
+    return repository().existsById(id);
+  }
+
+  /**
+   * 根据条件检查是否存在记录
+   * @param search 查询条件
+   */
+  default boolean exists(CustomQuery search) {
+    var sql = repository().newSelect("t").column("t.id");
+    search.buildSql(sql);
+    sql.limit(1);
+
+    return Objects.nonNull(repository().getOne(sql, repository().keyClass()));
   }
 
 }

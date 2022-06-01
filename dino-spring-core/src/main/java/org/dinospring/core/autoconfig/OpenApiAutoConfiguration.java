@@ -14,7 +14,6 @@
 
 package org.dinospring.core.autoconfig;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -22,14 +21,15 @@ import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.utils.NamingUtils;
 import org.springdoc.core.customizers.OpenApiCustomiser;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
-import io.swagger.v3.core.converter.AnnotatedType;
-import io.swagger.v3.core.converter.ModelConverter;
-import io.swagger.v3.core.converter.ModelConverterContext;
+import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.media.Schema;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,6 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
+@Profile({ "test", "dev" })
 public class OpenApiAutoConfiguration {
 
   @Value("${spring.application.name}")
@@ -52,15 +53,29 @@ public class OpenApiAutoConfiguration {
   private String apiDescription;
 
   @Bean
-  public OpenApiCustomiser openApiCustomiser() {
-    log.info("--->> customize api-doc info");
+  public OpenApiCustomiser openApiCustomiser(ObjectProvider<Info> infoProvider, ObjectProvider<Contact> contactProvider,
+      ObjectProvider<License> licenseProvider) {
+    log.info("--->> api-doc: add info, contact:{}, license:{}", contactProvider.getIfAvailable(),
+        licenseProvider.getIfAvailable());
     return openApi -> {
-      if (Objects.isNull(openApi.getInfo())) {
-        openApi.info(new Info()
+      var info = openApi.getInfo();
+      if (Objects.isNull(info)) {
+        info = infoProvider.getIfAvailable();
+      }
+      if (Objects.isNull(info)) {
+        info = new Info()
             .title(StringUtils.capitalize(apiName) + " Open API")
             .description(StringUtils.defaultString(apiDescription, "开放API"))
-            .version(apiVersion));
+            .version(apiVersion);
+
       }
+      if (Objects.isNull(info.getContact())) {
+        info.setContact(contactProvider.getIfAvailable());
+      }
+      if (Objects.isNull(info.getLicense())) {
+        info.setLicense(licenseProvider.getIfAvailable());
+      }
+      openApi.setInfo(info);
       log.info("--->> snake schema property");
       if (openApi.getComponents() != null && openApi.getComponents().getSchemas() != null) {
         openApi.getComponents().getSchemas().values().forEach(this::snakeSchemaProperties);
@@ -80,15 +95,5 @@ public class OpenApiAutoConfiguration {
       }
       schema.setProperties(newProps);
     }
-  }
-
-  public static class JsonModelConverter implements ModelConverter {
-
-    @Override
-    public Schema<?> resolve(AnnotatedType type, ModelConverterContext context, Iterator<ModelConverter> chain) {
-      log.warn("type:{} context:{}", type, context);
-      return chain.hasNext() ? chain.next().resolve(type, context, chain) : null;
-    }
-
   }
 }

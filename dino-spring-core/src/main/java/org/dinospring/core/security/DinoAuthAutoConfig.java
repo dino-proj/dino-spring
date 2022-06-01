@@ -27,6 +27,7 @@ import org.dinospring.auth.session.AuthSessionResolver;
 import org.dinospring.auth.session.DefaultAuthSessionOpenFilter;
 import org.dinospring.core.security.config.SecurityProperties;
 import org.springdoc.core.customizers.OpenApiCustomiser;
+import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -35,6 +36,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,18 +53,29 @@ public class DinoAuthAutoConfig {
 
   @Bean
   public OpenApiCustomiser openApiAuthCustomiser(SecurityProperties securityProperties) {
-    log.info("--->> add api-doc auth header:{}", securityProperties.getAuthHeaderName());
+    log.info("--->> api-doc: add securitySchema['dino-auth'] with auth header:{}",
+        securityProperties.getAuthHeaderName());
     return openApi -> {
       var components = openApi.getComponents();
       if (Objects.isNull(components)) {
         components = new Components();
         openApi.components(components);
       }
-      components.addSecuritySchemes("security", new SecurityScheme()
+      components.addSecuritySchemes("dino-auth", new SecurityScheme()
           .in(SecurityScheme.In.HEADER)
           .name(securityProperties.getAuthHeaderName())
           .description("请将用户登录后的token放在该头部")
           .type(SecurityScheme.Type.APIKEY));
+    };
+  }
+
+  @Bean
+  public OperationCustomizer operationCustomizerAddSecurity() {
+    log.info("--->> api-doc: add 'dino-auth' security to operations");
+    var sec = new SecurityRequirement().addList("dino-auth");
+    return (operation, method) -> {
+      operation.addSecurityItem(sec);
+      return operation;
     };
   }
 

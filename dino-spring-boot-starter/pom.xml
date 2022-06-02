@@ -32,7 +32,7 @@
     <okhttp3.version>4.9.1</okhttp3.version>
 
     <!-- open api-->
-    <springdoc.version>1.6.8</springdoc.version>
+    <springdoc.version>1.6.9</springdoc.version>
     <swagger.version>2.2.0</swagger.version>
 
     <!-- weixin sdk -->

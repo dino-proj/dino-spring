@@ -43,11 +43,6 @@ import lombok.experimental.FieldNameConstants;
 @MappedSuperclass
 @FieldNameConstants
 public abstract class UserEntityBase<K extends Serializable> extends EntityBase<K> {
-
-  @Schema(description = "用户设备ID")
-  @Column(name = "guid", length = 64)
-  String guid;
-
   @Schema(description = "用户类型")
   @Column(name = "user_type", nullable = false, columnDefinition = "varchar(8)")
   UserType userType;

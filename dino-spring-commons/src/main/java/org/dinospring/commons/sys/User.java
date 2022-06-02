@@ -70,7 +70,15 @@ public interface User<K extends Serializable> extends Serializable {
   String getDisplayName();
 
   /**
-   * 用户的SecretKey
+  * 用户的密码Hash，@JsonIgnore，对外不可见
+  * @return
+  */
+  @Schema(description = "用户的密码Hash", hidden = true)
+  @JsonIgnore
+  String getPasswordHash();
+
+  /**
+   * 用户的SecretKey，@JsonIgnore，对外不可见
    * @return
    */
   @Schema(description = "用户的SecretKey", hidden = true)

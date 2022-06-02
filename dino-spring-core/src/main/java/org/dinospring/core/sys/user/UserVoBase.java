@@ -62,7 +62,10 @@ public class UserVoBase<K extends Serializable> extends VoImplBase<K> implements
   @Schema(name = "avatar_url", description = "用户头像 url")
   private String avatarUrl;
 
-  @Schema(name = "secret_key", description = "用户的SecretKey")
+  @Schema(name = "password_hash", description = "用户密码Hash", hidden = true)
+  String passwordHash;
+
+  @Schema(name = "secret_key", description = "用户的SecretKey", hidden = true)
   private String secretKey;
 
   @Schema(name = "user_type", description = "用户类型")

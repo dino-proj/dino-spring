@@ -35,13 +35,6 @@ public interface User<K extends Serializable> extends Serializable {
   K getId();
 
   /**
-   * 用户设备ID
-   * @return
-   */
-  @Schema(description = "用户设备ID")
-  String getGuid();
-
-  /**
    * 用户类型
    * @return
    */

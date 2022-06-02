@@ -394,6 +394,18 @@ public interface Service<T, K extends Serializable> {
   }
 
   /**
+   * 根据 自定义查询条件，查询总记录数
+   *
+   * @param query 查询条件组装
+   * @return
+   */
+  default long count(CustomQuery query) {
+    var sql = repository().newSelect("t").column("count(1)");
+    query.buildSql(sql);
+    return repository().getOne(sql, Long.class);
+  }
+
+  /**
    * 检查是否存在记录
    * @param id 主键ID
    */

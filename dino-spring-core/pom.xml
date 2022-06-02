@@ -56,17 +56,6 @@
       <artifactId>spring-boot-starter-hateoas</artifactId>
     </dependency>
 
-    <!-- springdoc-->
-
-    <dependency>
-      <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-data-rest</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-ui</artifactId>
-    </dependency>
-
     <!-- jolokia 监控服务-->
     <dependency>
       <groupId>org.jolokia</groupId>
@@ -127,6 +116,43 @@
   </dependencies>
 
   <profiles>
+    <!-- profiles for build environment -->
+    <profile>
+      <id>dev</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <dependencies>
+        <!-- springdoc-->
+        <dependency>
+          <groupId>org.springdoc</groupId>
+          <artifactId>springdoc-openapi-data-rest</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.springdoc</groupId>
+          <artifactId>springdoc-openapi-ui</artifactId>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>test</id>
+      <dependencies>
+        <!-- springdoc-->
+        <dependency>
+          <groupId>org.springdoc</groupId>
+          <artifactId>springdoc-openapi-data-rest</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.springdoc</groupId>
+          <artifactId>springdoc-openapi-ui</artifactId>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>prod</id>
+    </profile>
+
+    <!-- profiles for jave -->
     <profile>
       <id>os-win</id>
       <dependencies>

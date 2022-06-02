@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.core.sys.login;
+package org.dinospring.core.modules.login;
 
 import java.io.Serializable;
 
@@ -26,7 +26,6 @@ import org.dinospring.commons.sys.Tenant;
 import org.dinospring.commons.sys.User;
 import org.dinospring.commons.utils.Assert;
 import org.dinospring.core.annotion.param.ParamTenant;
-import org.dinospring.core.sys.user.UserEntityBase;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,8 +39,8 @@ import lombok.Data;
  * @author tuuboo
  */
 
-public interface LoginByUserName<U extends UserEntityBase<K>, V extends User<K>, K extends Serializable>
-    extends LoginControllerBase<U, V, K> {
+public interface LoginByUserName<U extends User<K>, K extends Serializable>
+    extends LoginControllerBase<U, K> {
 
   /**
    * 用户名密码登录
@@ -52,7 +51,7 @@ public interface LoginByUserName<U extends UserEntityBase<K>, V extends User<K>,
   @Operation(summary = "用户名密码登录")
   @ParamTenant
   @PostMapping("/username")
-  default Response<LoginAuth<V, K>> byUserName(@PathVariable("tenant_id") String tenantId,
+  default Response<LoginAuth<U, K>> byUserName(@PathVariable("tenant_id") String tenantId,
       @RequestBody PostBody<UserNameLoginBody> req) {
     if (Tenant.isSys(tenantId)) {
       return Response.fail(Status.CODE.FAIL_TENANT_NOT_EXIST);

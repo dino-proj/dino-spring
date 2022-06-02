@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.core.sys.login;
+package org.dinospring.core.modules.login;
 
 import java.io.Serializable;
 import java.security.MessageDigest;
@@ -33,7 +33,6 @@ import org.dinospring.commons.sys.User;
 import org.dinospring.commons.utils.Assert;
 import org.dinospring.core.annotion.param.ParamJsonBody;
 import org.dinospring.core.annotion.param.ParamTenant;
-import org.dinospring.core.sys.user.UserEntityBase;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,8 +48,8 @@ import lombok.Data;
  * @author tuuboo
  */
 
-public interface LoginByMobile<U extends UserEntityBase<K>, V extends User<K>, K extends Serializable>
-    extends LoginControllerBase<U, V, K> {
+public interface LoginByMobile<U extends User<K>, K extends Serializable>
+    extends LoginControllerBase<U, K> {
 
   /**
        * 用手机短信验证码登录
@@ -62,7 +61,7 @@ public interface LoginByMobile<U extends UserEntityBase<K>, V extends User<K>, K
   @ParamTenant
   @ParamJsonBody(example = "{\"mobile\":\"13800138000\", \"captcha\":\"1234\"}")
   @PostMapping("/mobile")
-  default Response<LoginAuth<V, K>> byMobile(@PathVariable("tenant_id") String tenantId, //
+  default Response<LoginAuth<U, K>> byMobile(@PathVariable("tenant_id") String tenantId, //
       @RequestBody PostBody<MobileLoginBody> req) {
 
     if (Tenant.isSys(tenantId)) {

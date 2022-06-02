@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.core.sys.login.config;
+package org.dinospring.core.modules.login.config;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;

@@ -12,14 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.core.sys.login;
+package org.dinospring.core.modules.login;
 
 import java.io.Serializable;
 
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.sys.User;
+import org.dinospring.commons.utils.TypeUtils;
 import org.dinospring.core.sys.tenant.TenantService;
-import org.dinospring.core.sys.user.UserEntityBase;
+import org.dinospring.core.sys.token.TokenService;
+import org.dinospring.core.sys.user.UserServiceProvider;
 import org.slf4j.Logger;
 
 /**
@@ -27,13 +29,21 @@ import org.slf4j.Logger;
  * @author tuuboo
  */
 
-public interface LoginControllerBase<U extends UserEntityBase<K>, V extends User<K>, K extends Serializable> {
+public interface LoginControllerBase<U extends User<K>, K extends Serializable> {
 
   /**
    * Logger
    * @return
    */
   Logger log();
+
+  /**
+   * User class
+   * @return
+   */
+  default Class<U> userClass() {
+    return TypeUtils.getGenericParamClass(this, LoginControllerBase.class, 1);
+  }
 
   /**
    * 租户Service
@@ -44,8 +54,24 @@ public interface LoginControllerBase<U extends UserEntityBase<K>, V extends User
   }
 
   /**
+  * token Service
+  * @return
+  */
+  default TokenService tokenService() {
+    return ContextHelper.findBean(TokenService.class);
+  }
+
+  /**
+   * 用户Service Provider
+   * @return
+   */
+  default UserServiceProvider userServiceProvider() {
+    return ContextHelper.findBean(UserServiceProvider.class);
+  }
+
+  /**
    * 登录Service
    * @return
    */
-  LoginServiceBase<U, V, K> loginService();
+  LoginServiceBase<U, K> loginService();
 }

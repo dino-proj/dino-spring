@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.core.sys.login;
+package org.dinospring.core.modules.login;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -29,11 +29,10 @@ import org.dinospring.commons.utils.Assert;
 import org.dinospring.commons.utils.TypeUtils;
 import org.dinospring.commons.utils.ValidateUtil;
 import org.dinospring.core.entity.Code;
+import org.dinospring.core.modules.login.config.LoginModuleProperties;
 import org.dinospring.core.modules.message.sms.SmsService;
-import org.dinospring.core.sys.login.config.LoginModuleProperties;
 import org.dinospring.core.sys.token.TokenPrincaple;
 import org.dinospring.core.sys.token.TokenService;
-import org.dinospring.core.sys.user.UserEntityBase;
 import org.dinospring.core.sys.user.UserService;
 
 /**
@@ -41,13 +40,13 @@ import org.dinospring.core.sys.user.UserService;
  * @author tuuboo
  */
 
-public abstract interface LoginServiceBase<U extends UserEntityBase<K>, V extends User<K>, K extends Serializable> {
+public abstract interface LoginServiceBase<U extends User<K>, K extends Serializable> {
 
   /**
    * UserService
    * @return
    */
-  UserService<V, K> userService();
+  UserService<U, K> userService();
 
   /**
    * TokenService
@@ -69,7 +68,7 @@ public abstract interface LoginServiceBase<U extends UserEntityBase<K>, V extend
    * User class
    * @return
    */
-  default Class<V> userClass() {
+  default Class<U> userClass() {
     return TypeUtils.getGenericParamClass(this, LoginServiceBase.class, 1);
   }
 
@@ -85,7 +84,7 @@ public abstract interface LoginServiceBase<U extends UserEntityBase<K>, V extend
    * 生成LoginAuth对象
    * @return
    */
-  default LoginAuth<V, K> newLoginAuth() {
+  default LoginAuth<U, K> newLoginAuth() {
     return new LoginAuth<>();
   }
 
@@ -108,7 +107,7 @@ public abstract interface LoginServiceBase<U extends UserEntityBase<K>, V extend
    * @param guid
    * @return
    */
-  default LoginAuth<V, K> loginAuth(Tenant tenant, V user, String plt, String guid) {
+  default LoginAuth<U, K> loginAuth(Tenant tenant, U user, String plt, String guid) {
     Assert.notNull(user, Status.CODE.FAIL_USER_NOT_EXIST);
 
     Assert.isTrue(user.getStatus().equals(Code.STATUS.OK.name().toLowerCase()), Status.CODE.FAIL_LOGIN_DENNY);

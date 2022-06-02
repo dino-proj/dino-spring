@@ -21,6 +21,7 @@ import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.utils.NamingUtils;
 import org.springdoc.core.customizers.OpenApiCustomiser;
+import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -31,6 +32,7 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.servers.Server;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -40,7 +42,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
-@Profile({ "test", "dev" })
 public class OpenApiAutoConfiguration {
 
   @Value("${spring.application.name}")
@@ -54,7 +55,7 @@ public class OpenApiAutoConfiguration {
 
   @Bean
   public OpenApiCustomiser openApiCustomiser(ObjectProvider<Info> infoProvider, ObjectProvider<Contact> contactProvider,
-      ObjectProvider<License> licenseProvider) {
+      ObjectProvider<License> licenseProvider, ObjectProvider<Server> serverProvider) {
     log.info("--->> api-doc: add info, contact:{}, license:{}", contactProvider.getIfAvailable(),
         licenseProvider.getIfAvailable());
     return openApi -> {
@@ -76,6 +77,9 @@ public class OpenApiAutoConfiguration {
         info.setLicense(licenseProvider.getIfAvailable());
       }
       openApi.setInfo(info);
+
+      serverProvider.forEach(openApi::addServersItem);
+
       log.info("--->> snake schema property");
       if (openApi.getComponents() != null && openApi.getComponents().getSchemas() != null) {
         openApi.getComponents().getSchemas().values().forEach(this::snakeSchemaProperties);

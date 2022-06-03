@@ -25,6 +25,7 @@ import org.dinospring.commons.response.Status;
 import org.dinospring.commons.sys.Tenant;
 import org.dinospring.commons.sys.User;
 import org.dinospring.commons.utils.Assert;
+import org.dinospring.commons.utils.ValidateUtil;
 import org.dinospring.core.annotion.param.ParamTenant;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,7 +62,12 @@ public interface LoginByUserName<U extends User<K>, K extends Serializable>
     //查询用户
     var username = req.getBody().getUsername();
     //通过用户名登录，如果用户使用手机号作为登录名，则和其他用户相同的手机号字段冲突，登录的时候存在不确定性
-    U user = loginService().findUserByLoginName(tenant.getId(), username).orElse(null);
+    U user;
+    if (ValidateUtil.isMobile(username)) {
+      user = loginService().findUserByMobile(tenant.getId(), username).orElse(null);
+    } else {
+      user = loginService().findUserByLoginName(tenant.getId(), username).orElse(null);
+    }
     Assert.notNull(user, Status.CODE.FAIL_USER_NOT_EXIST);
 
     //验证用户密码

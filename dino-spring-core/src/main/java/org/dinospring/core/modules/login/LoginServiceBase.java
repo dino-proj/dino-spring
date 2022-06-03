@@ -69,7 +69,7 @@ public abstract interface LoginServiceBase<U extends User<K>, K extends Serializ
    * @return
    */
   default Class<U> userClass() {
-    return TypeUtils.getGenericParamClass(this, LoginServiceBase.class, 1);
+    return TypeUtils.getGenericParamClass(this, LoginServiceBase.class, 0);
   }
 
   /**

@@ -60,4 +60,12 @@ public class PageReq {
     return PageRequest.of(pn, pl, sortReq == null ? Sort.unsorted() : sortReq.sortable());
   }
 
+  public Pageable pageable(SortReq sortReq, String prefix) {
+    Sort sort = null;
+    if (sortReq != null) {
+      sort = sortReq.sortable(prefix);
+    }
+    return PageRequest.of(pn, pl, sort);
+  }
+
 }

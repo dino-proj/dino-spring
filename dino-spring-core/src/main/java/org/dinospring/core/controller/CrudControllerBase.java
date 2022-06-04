@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.dinospring.auth.Operations;
 import org.dinospring.auth.annotation.CheckPermission;
 import org.dinospring.commons.property.PropertyView;
@@ -115,13 +114,7 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
   @CheckPermission(Operations.LIST)
   default PageResponse<VO> list(@PathVariable("tenant_id") String tenantId, PageReq pageReq, SortReq sortReq,
       @RequestBody PostBody<SRC> req) {
-
-    List<String> sort = sortReq.getSort();
-    if (CollectionUtils.isNotEmpty(sort)) {
-      sort = sort.stream().map(s -> "t." + s).collect(Collectors.toList());
-      sortReq.setSort(sort);
-    }
-    var pageable = pageReq.pageable(sortReq);
+    var pageable = pageReq.pageable(sortReq, "t.");
 
     var query = req.getBody();
     var pageData = query == null ? service().listPage(pageable, voClass())

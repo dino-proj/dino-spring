@@ -17,7 +17,6 @@ package org.dinospring.data.domain;
 import java.io.Serializable;
 import java.util.Properties;
 
-import org.dinospring.commons.context.ContextHelper;
 import org.hibernate.HibernateException;
 import org.hibernate.MappingException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
@@ -25,15 +24,19 @@ import org.hibernate.id.IdentifierGeneratorHelper;
 import org.hibernate.id.IdentityGenerator;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.type.Type;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * 根据ID类型生成ID
  * @author tuuboo
  */
 
+@Component
 public class IdGenerator extends IdentityGenerator {
   private String entityName;
 
+  @Autowired
   private IdService idService;
 
   @Override
@@ -56,7 +59,6 @@ public class IdGenerator extends IdentityGenerator {
     if (entityName == null) {
       throw new MappingException("no entity name");
     }
-    idService = ContextHelper.findBean(IdService.class);
   }
 
 }

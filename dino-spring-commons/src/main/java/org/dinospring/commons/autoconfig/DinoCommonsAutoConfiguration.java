@@ -18,13 +18,14 @@ import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.context.DinoContext;
 import org.dinospring.commons.context.DinoContextThreadLocalImpl;
 import org.springframework.beans.BeansException;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,23 +36,27 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
-@Order(Ordered.HIGHEST_PRECEDENCE)
+@AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)
 public class DinoCommonsAutoConfiguration implements ApplicationContextAware {
 
   @Override
   public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-    log.info("--->> setup ContextHelper with applicationContext[class={}]", applicationContext.getClass());
-    ContextHelper.setApplicationContext(applicationContext);
+    if (ContextHelper.getApplicationContext() == null) {
+      log.info("--->> setup ContextHelper with applicationContext[id={}]", applicationContext.getId());
+      ContextHelper.setApplicationContext(applicationContext);
+    }
 
   }
 
   @Bean
   @ConditionalOnMissingBean
   public DinoContext dinoContext() {
+    log.info("--->> use defalut dinoContext[class={}]", DinoContextThreadLocalImpl.class);
     return new DinoContextThreadLocalImpl();
   }
 
   @Bean
+  @Lazy(false)
   @ConditionalOnMissingBean
   public ContextHelper contextHelper(DinoContext dinoContext) {
     log.info("--->> setup ContextHelper with dinoContext[class={}]", dinoContext.getClass());

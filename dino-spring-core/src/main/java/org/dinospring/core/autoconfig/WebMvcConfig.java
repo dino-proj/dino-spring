@@ -22,8 +22,7 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.context.DinoContext;
 import org.dinospring.commons.sys.Tenant;
 import org.dinospring.core.sys.tenant.TenantService;
@@ -44,6 +43,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -157,6 +158,8 @@ public class WebMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
   @Override
   public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
     this.applicationContext = applicationContext;
+    log.info("--->> setup ContextHelper with applicationContext[id={}]", applicationContext.getId());
+    ContextHelper.setApplicationContext(applicationContext);
   }
 
 }

@@ -20,9 +20,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
 
-import com.fasterxml.jackson.annotation.JsonView;
-
 import org.dinospring.commons.function.Suppliers;
+import org.dinospring.commons.json.JsonViewUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.ReflectionUtils;
 
@@ -143,30 +142,14 @@ public class BeanInfoWithJsonView extends BeanInfo {
     var properties = BeanUtils.getPropertyDescriptors(cls);
     //check method
     for (var property : properties) {
-      if (read) {
-        if (property.getReadMethod() == null) {
-          ignoreProperties.add(property.getName());
-          continue;
-        }
-        var viewAnno = property.getReadMethod().getAnnotation(JsonView.class);
-        if (viewAnno != null && !inView(activeView, viewAnno.value())) {
-          ignoreProperties.add(property.getName());
-        }
-      } else {
-        if (property.getWriteMethod() == null) {
-          ignoreProperties.add(property.getName());
-          continue;
-        }
-        var viewAnno = property.getWriteMethod().getAnnotation(JsonView.class);
-        if (viewAnno != null && !inView(activeView, viewAnno.value())) {
-          ignoreProperties.add(property.getName());
-        }
+      var method = read ? property.getReadMethod() : property.getWriteMethod();
+      if (method == null || JsonViewUtils.isInView(method, activeView)) {
+        ignoreProperties.add(property.getName());
       }
     }
     //check field
     ReflectionUtils.doWithFields(cls, field -> {
-      var viewAnno = field.getAnnotation(JsonView.class);
-      if (viewAnno != null && !inView(activeView, viewAnno.value())) {
+      if (!JsonViewUtils.isInView(field, activeView)) {
         ignoreProperties.add(field.getName());
       }
     });
@@ -177,22 +160,9 @@ public class BeanInfoWithJsonView extends BeanInfo {
 
   }
 
-  private static boolean inView(Class<?> activeView, Class<?>[] views) {
-    if (activeView == null || views == null || views.length == 0) {
-      return true;
-    }
-    final int len = views.length;
-    for (int i = 0; i < len; ++i) {
-      if (views[i].isAssignableFrom(activeView)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   @Override
   public boolean equals(Object obj) {
-    if (obj == null || !(obj instanceof BeanInfoWithJsonView)) {
+    if (!(obj instanceof BeanInfoWithJsonView)) {
       return false;
     }
     return super.equals(obj) && ((BeanInfoWithJsonView) obj).activeView.equals(activeView);

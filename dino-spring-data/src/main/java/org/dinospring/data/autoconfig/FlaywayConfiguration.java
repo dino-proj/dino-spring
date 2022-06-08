@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -76,12 +77,12 @@ public class FlaywayConfiguration implements ApplicationListener<ApplicationRead
 
   @Override
   public void onApplicationEvent(ApplicationReadyEvent event) {
-    log.info("--->> exec flyway java migration");
     var configuration = ContextHelper.findBean(FluentConfiguration.class);
-    var javaMigrations = ContextHelper.getApplicationContext().getBeansOfType(JavaMigration.class).values()
-        .toArray(new JavaMigration[0]);
-    log.info("javaMigrations = {}, count:{}", javaMigrations, javaMigrations.length);
-    configuration.javaMigrations(javaMigrations);
+    var javaMigrations = ContextHelper.getApplicationContext().getBeansOfType(JavaMigration.class).values();
+    log.info("--->> flyway: exec java migration, count:{}", javaMigrations.size());
+    javaMigrations.forEach(
+        migration -> log.info("   -- {}, class:{}", buildJavaMigrationName(migration), migration.getClass().getName()));
+    configuration.javaMigrations(javaMigrations.toArray(new JavaMigration[javaMigrations.size()]));
     var flyway = configuration.load();
     flyway.migrate();
   }
@@ -99,7 +100,7 @@ public class FlaywayConfiguration implements ApplicationListener<ApplicationRead
       ObjectProvider<DataSource> dataSource, @FlywayDataSource ObjectProvider<DataSource> flywayDataSource,
       ObjectProvider<FlywayConfigurationCustomizer> fluentConfigurationCustomizers,
       ObjectProvider<Callback> callbacks) {
-    log.info("--->> flywayConfiguration");
+    log.info("--->> flyway: setup FlywayConfiguration");
     FluentConfiguration configuration = new FluentConfiguration(resourceLoader.getClassLoader());
     configureDataSource(configuration, properties, flywayDataSource.getIfAvailable(), dataSource.getIfUnique());
     configureProperties(configuration, properties);
@@ -150,10 +151,14 @@ public class FlaywayConfiguration implements ApplicationListener<ApplicationRead
     PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
     String[] locations = new LocationResolver(configuration.getDataSource())
         .resolveLocations(properties.getLocations()).toArray(new String[0]);
+
     configuration.failOnMissingLocations(properties.isFailOnMissingLocations());
-    map.from(locations).to(configuration::locations);
-    map.from(properties.getEncoding()).to(configuration::encoding);
-    map.from(properties.getConnectRetries()).to(configuration::connectRetries);
+    map.from(locations)
+        .to(configuration::locations);
+    map.from(properties.getEncoding())
+        .to(configuration::encoding);
+    map.from(properties.getConnectRetries())
+        .to(configuration::connectRetries);
     // No method reference for compatibility with Flyway < 7.15
     map.from(properties.getConnectRetriesInterval())
         .to(interval -> configuration.connectRetriesInterval((int) interval.getSeconds()));
@@ -161,37 +166,66 @@ public class FlaywayConfiguration implements ApplicationListener<ApplicationRead
     map.from(properties.getLockRetryCount())
         .to(configuration::lockRetryCount);
     // No method reference for compatibility with Flyway 5.x
-    map.from(properties.getDefaultSchema()).to(configuration::defaultSchema);
-    map.from(properties.getSchemas()).as(StringUtils::toStringArray).to(configuration::schemas);
+    map.from(properties.getDefaultSchema())
+        .to(configuration::defaultSchema);
+    map.from(properties.getSchemas())
+        .as(StringUtils::toStringArray)
+        .to(configuration::schemas);
+
     configuration.createSchemas(properties.isCreateSchemas());
-    map.from(properties.getTable()).to(configuration::table);
+    map.from(properties.getTable())
+        .to(configuration::table);
     // No method reference for compatibility with Flyway 5.x
-    map.from(properties.getTablespace()).to(configuration::tablespace);
-    map.from(properties.getBaselineDescription()).to(configuration::baselineDescription);
-    map.from(properties.getBaselineVersion()).to(configuration::baselineVersion);
-    map.from(properties.getInstalledBy()).to(configuration::installedBy);
-    map.from(properties.getPlaceholders()).to(configuration::placeholders);
-    map.from(properties.getPlaceholderPrefix()).to(configuration::placeholderPrefix);
-    map.from(properties.getPlaceholderSuffix()).to(configuration::placeholderSuffix);
-    map.from(properties.isPlaceholderReplacement()).to(configuration::placeholderReplacement);
-    map.from(properties.getSqlMigrationPrefix()).to(configuration::sqlMigrationPrefix);
-    map.from(properties.getSqlMigrationSuffixes()).as(StringUtils::toStringArray)
+    map.from(properties.getTablespace())
+        .to(configuration::tablespace);
+    map.from(properties.getBaselineDescription())
+        .to(configuration::baselineDescription);
+    map.from(properties.getBaselineVersion())
+        .to(configuration::baselineVersion);
+    map.from(properties.getInstalledBy())
+        .to(configuration::installedBy);
+    map.from(properties.getPlaceholders())
+        .to(configuration::placeholders);
+    map.from(properties.getPlaceholderPrefix())
+        .to(configuration::placeholderPrefix);
+    map.from(properties.getPlaceholderSuffix())
+        .to(configuration::placeholderSuffix);
+    map.from(properties.isPlaceholderReplacement())
+        .to(configuration::placeholderReplacement);
+    map.from(properties.getSqlMigrationPrefix())
+        .to(configuration::sqlMigrationPrefix);
+    map.from(properties.getSqlMigrationSuffixes())
+        .as(StringUtils::toStringArray)
         .to(configuration::sqlMigrationSuffixes);
-    map.from(properties.getSqlMigrationSeparator()).to(configuration::sqlMigrationSeparator);
-    map.from(properties.getRepeatableSqlMigrationPrefix()).to(configuration::repeatableSqlMigrationPrefix);
-    map.from(properties.getTarget()).to(configuration::target);
-    map.from(properties.isBaselineOnMigrate()).to(configuration::baselineOnMigrate);
-    map.from(properties.isCleanDisabled()).to(configuration::cleanDisabled);
-    map.from(properties.isCleanOnValidationError()).to(configuration::cleanOnValidationError);
-    map.from(properties.isGroup()).to(configuration::group);
-    configureIgnoredMigrations(configuration, properties, map);
-    map.from(properties.isMixed()).to(configuration::mixed);
-    map.from(properties.isOutOfOrder()).to(configuration::outOfOrder);
-    map.from(properties.isSkipDefaultCallbacks()).to(configuration::skipDefaultCallbacks);
-    map.from(properties.isSkipDefaultResolvers()).to(configuration::skipDefaultResolvers);
+    map.from(properties.getSqlMigrationSeparator())
+        .to(configuration::sqlMigrationSeparator);
+    map.from(properties.getRepeatableSqlMigrationPrefix())
+        .to(configuration::repeatableSqlMigrationPrefix);
+    map.from(properties.getTarget())
+        .to(configuration::target);
+    map.from(properties.isBaselineOnMigrate())
+        .to(configuration::baselineOnMigrate);
+    map.from(properties.isCleanDisabled())
+        .to(configuration::cleanDisabled);
+    map.from(properties.isCleanOnValidationError())
+        .to(configuration::cleanOnValidationError);
+    map.from(properties.isGroup())
+        .to(configuration::group);
+
+    map.from(properties.isMixed())
+        .to(configuration::mixed);
+    map.from(properties.isOutOfOrder())
+        .to(configuration::outOfOrder);
+    map.from(properties.isSkipDefaultCallbacks())
+        .to(configuration::skipDefaultCallbacks);
+    map.from(properties.isSkipDefaultResolvers())
+        .to(configuration::skipDefaultResolvers);
+
     configuration.validateMigrationNaming(properties.isValidateMigrationNaming());
-    map.from(properties.isValidateOnMigrate()).to(configuration::validateOnMigrate);
-    map.from(properties.getInitSqls()).whenNot(CollectionUtils::isEmpty)
+    map.from(properties.isValidateOnMigrate())
+        .to(configuration::validateOnMigrate);
+    map.from(properties.getInitSqls())
+        .whenNot(CollectionUtils::isEmpty)
         .as(initSqls -> StringUtils.collectionToDelimitedString(initSqls, "\n"))
         .to(configuration::initSql);
     map.from(properties.getScriptPlaceholderPrefix())
@@ -199,21 +233,30 @@ public class FlaywayConfiguration implements ApplicationListener<ApplicationRead
     map.from(properties.getScriptPlaceholderSuffix())
         .to(configuration::scriptPlaceholderSuffix);
     // Pro properties
-    map.from(properties.getBatch()).to(configuration::batch);
-    map.from(properties.getDryRunOutput()).to(configuration::dryRunOutput);
-    map.from(properties.getErrorOverrides()).to(configuration::errorOverrides);
-    map.from(properties.getLicenseKey()).to(configuration::licenseKey);
-    map.from(properties.getOracleSqlplus()).to(configuration::oracleSqlplus);
+    map.from(properties.getBatch())
+        .to(configuration::batch);
+    map.from(properties.getDryRunOutput())
+        .to(configuration::dryRunOutput);
+    map.from(properties.getErrorOverrides())
+        .to(configuration::errorOverrides);
+    map.from(properties.getLicenseKey())
+        .to(configuration::licenseKey);
+    map.from(properties.getOracleSqlplus())
+        .to(configuration::oracleSqlplus);
     // No method reference for compatibility with Flyway 5.x
     map.from(properties.getOracleSqlplusWarn())
         .to(configuration::oracleSqlplusWarn);
-    map.from(properties.getStream()).to(configuration::stream);
-    map.from(properties.getUndoSqlMigrationPrefix()).to(configuration::undoSqlMigrationPrefix);
+    map.from(properties.getStream())
+        .to(configuration::stream);
+    map.from(properties.getUndoSqlMigrationPrefix())
+        .to(configuration::undoSqlMigrationPrefix);
     // No method reference for compatibility with Flyway 6.x
-    map.from(properties.getCherryPick()).to((cherryPick) -> configuration.cherryPick(cherryPick));
+    map.from(properties.getCherryPick())
+        .to(configuration::cherryPick);
     // No method reference for compatibility with Flyway 6.x
-    map.from(properties.getJdbcProperties()).whenNot(Map::isEmpty)
-        .to((jdbcProperties) -> configuration.jdbcProperties(jdbcProperties));
+    map.from(properties.getJdbcProperties())
+        .whenNot(Map::isEmpty)
+        .to(configuration::jdbcProperties);
     // No method reference for compatibility with Flyway 6.x
     map.from(properties.getKerberosConfigFile())
         .to(configuration::kerberosConfigFile);
@@ -224,13 +267,15 @@ public class FlaywayConfiguration implements ApplicationListener<ApplicationRead
     map.from(properties.getOutputQueryResults())
         .to(configuration::outputQueryResults);
     // No method reference for compatibility with Flyway 6.x
-    map.from(properties.getSqlServerKerberosLoginFile()).to(configuration::sqlServerKerberosLoginFile);
+    map.from(properties.getSqlServerKerberosLoginFile())
+        .to(configuration::sqlServerKerberosLoginFile);
     // No method reference for compatibility with Flyway 6.x
     map.from(properties.getSkipExecutingMigrations())
         .to(configuration::skipExecutingMigrations);
     // No method reference for compatibility with Flyway < 7.8
-    map.from(properties.getIgnoreMigrationPatterns()).whenNot(List::isEmpty)
-        .to((ignoreMigrationPatterns) -> configuration
+    map.from(properties.getIgnoreMigrationPatterns())
+        .whenNot(List::isEmpty)
+        .to(ignoreMigrationPatterns -> configuration
             .ignoreMigrationPatterns(ignoreMigrationPatterns.toArray(new String[0])));
     // No method reference for compatibility with Flyway version < 7.9
     map.from(properties.getDetectEncoding())
@@ -238,15 +283,6 @@ public class FlaywayConfiguration implements ApplicationListener<ApplicationRead
     // No method reference for compatibility with Flyway version < 8.0
     map.from(properties.getBaselineMigrationPrefix())
         .to(configuration::baselineMigrationPrefix);
-  }
-
-  @SuppressWarnings("deprecation")
-  private void configureIgnoredMigrations(FluentConfiguration configuration, FlywayProperties properties,
-      PropertyMapper map) {
-    map.from(properties.isIgnoreMissingMigrations()).to(configuration::ignoreMissingMigrations);
-    map.from(properties.isIgnoreIgnoredMigrations()).to(configuration::ignoreIgnoredMigrations);
-    map.from(properties.isIgnorePendingMigrations()).to(configuration::ignorePendingMigrations);
-    map.from(properties.isIgnoreFutureMigrations()).to(configuration::ignoreFutureMigrations);
   }
 
   private void configureCallbacks(FluentConfiguration configuration, List<Callback> callbacks) {
@@ -259,6 +295,17 @@ public class FlaywayConfiguration implements ApplicationListener<ApplicationRead
     if (!callbacks.isEmpty()) {
       flyway.callbacks(callbacks.toArray(new Callback[0]));
     }
+  }
+
+  private String buildJavaMigrationName(JavaMigration javaMigration) {
+    var nameBuilder = new StringBuilder();
+    if (Objects.nonNull(javaMigration.getVersion())) {
+      nameBuilder.append('V').append(javaMigration.getVersion());
+    } else {
+      nameBuilder.append('R');
+    }
+    nameBuilder.append("__").append(javaMigration.getDescription());
+    return nameBuilder.toString();
   }
 
   private static class LocationResolver {
@@ -284,7 +331,7 @@ public class FlaywayConfiguration implements ApplicationListener<ApplicationRead
         return locations;
       }
       String vendor = databaseDriver.getId();
-      return locations.stream().map((location) -> location.replace(VENDOR_PLACEHOLDER, vendor))
+      return locations.stream().map(location -> location.replace(VENDOR_PLACEHOLDER, vendor))
           .collect(Collectors.toList());
     }
 

@@ -41,7 +41,7 @@ public @interface Mobile {
   Class<? extends Payload>[] payload() default {};
 
   // 允许的国家，将对国家手机码进行验证
-  Country[] allowedCountries() default {};
+  Country[] allowedCountries() default { Country.CHINA };
 
   // 默认国家，如果没有指定国家，则使用默认国家
   Country defaultCountry() default Country.CHINA;

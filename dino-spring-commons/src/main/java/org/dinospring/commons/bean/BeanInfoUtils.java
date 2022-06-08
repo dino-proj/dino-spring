@@ -35,7 +35,7 @@ public class BeanInfoUtils {
    * @return
    */
   public static BeanInfo forClass(Class<?> beanClass) {
-    return BEANINFO_CACHE.getOrElse(beanClass, (bc) -> new BeanInfo(bc));
+    return BEANINFO_CACHE.getOrElse(beanClass, BeanInfo::new);
   }
 
   /**
@@ -47,6 +47,6 @@ public class BeanInfoUtils {
    * @return
    */
   public static BeanInfoWithJsonView forClassWithJsonView(Class<?> beanClass, Class<?> activeView) {
-    return BEANINFO_JSONVIEW_CACHE.getOrElse(beanClass, (bc) -> new BeanInfoWithJsonView(bc, activeView));
+    return BEANINFO_JSONVIEW_CACHE.getOrElse(beanClass, bc -> new BeanInfoWithJsonView(bc, activeView));
   }
 }

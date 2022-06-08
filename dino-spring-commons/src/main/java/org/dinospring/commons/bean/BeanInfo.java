@@ -65,7 +65,7 @@ public class BeanInfo {
   @Override
   public boolean equals(Object obj) {
 
-    if (obj == null || !(obj instanceof BeanInfo)) {
+    if (!(obj instanceof BeanInfo)) {
       return false;
     }
     return ((BeanInfo) obj).beanClass.equals(beanClass);

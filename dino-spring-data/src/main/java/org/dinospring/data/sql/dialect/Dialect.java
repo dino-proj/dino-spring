@@ -55,13 +55,13 @@ public interface Dialect {
    * @param sequenceName
    * @return
    */
-  public String getSequenceNextValSql(String sequenceName);
+  String getSequenceNextValSql(String sequenceName);
 
   /**
    * 是否支持sequence
    * @return
    */
-  public boolean supportSequence();
+  boolean supportSequence();
 
   /**
    * 表描述
@@ -70,7 +70,12 @@ public interface Dialect {
    */
   String quoteTableName(String name);
 
+  static Dialect ofDefault() {
+    return Default.INST_DEFAULT;
+  }
+
   public class Default implements Dialect {
+    private static final Default INST_DEFAULT = new Default();
 
     @Override
     public String limitOffset(int limit, long offset) {
@@ -109,5 +114,6 @@ public interface Dialect {
     public boolean supportUUID() {
       return false;
     }
+
   }
 }

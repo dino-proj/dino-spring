@@ -16,8 +16,7 @@ package org.dinospring.core.autoconfig;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,14 +34,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.BufferedImageHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.server.PathContainer;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.util.ServletRequestPathUtils;
+import org.springframework.web.util.pattern.PathPattern;
+import org.springframework.web.util.pattern.PathPatternParser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -79,7 +83,7 @@ public class WebMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
 
   @Bean
   public CorsFilter corsFilter() {
-    log.info("--->> config cors filter");
+    log.info("--->> mvc: config cors filter");
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     // 对接口配置跨域设置
     source.registerCorsConfiguration("/**", buildConfig());
@@ -89,13 +93,14 @@ public class WebMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
     WebMvcConfigurer.super.addInterceptors(registry);
+    log.info("--->> mvc: add TenantSupportInterceptor");
     registry.addInterceptor(tenantSupportInterceptor());
   }
 
   @Override
   public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
     WebMvcConfigurer.super.extendMessageConverters(converters);
-    log.info("--->> add Image converter");
+    log.info("--->> mvc: add Image converter");
     // 添加图片转换器
     converters.add(new BufferedImageHttpMessageConverter());
 
@@ -105,11 +110,20 @@ public class WebMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
         var converter = (MappingJackson2HttpMessageConverter) converters.get(i);
         var objectMapper = this.applicationContext.getBean("objectMapper", ObjectMapper.class);
 
-        log.info("--->> config objectMapper to {}", converter);
+        log.info("--->> mvc: config objectMapper to {}", converter);
         converter.setObjectMapper(objectMapper);
         break;
       }
     }
+  }
+
+  @Override
+  public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+    WebMvcConfigurer.super.addArgumentResolvers(resolvers);
+    log.info("--->> mvc: add TenantArgumentResolver");
+    resolvers.add(new TenantArgumentResolver());
+    log.info("--->> mvc: add UserArgumentResolver");
+    resolvers.add(new UserArgumentResolver());
   }
 
   @Bean
@@ -119,8 +133,8 @@ public class WebMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
 
   public static class TenantSupportInterceptor implements HandlerInterceptor {
 
-    private static final Pattern P_TENANT = Pattern.compile("(/[0-9a-zA-Z_\\-]+)?/v[0-9]+/([0-9A-Z]+)/.+");
-
+    private static final PathPattern TENANT_PATH_PATTERN = PathPatternParser.defaultInstance
+        .parse("/v\\d+/{tenant_id:[0-9A-Z]+}/**");
     @Autowired
     private DinoContext dinoContext;
 
@@ -143,10 +157,10 @@ public class WebMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
         throws Exception {
-      String uri = request.getRequestURI();
-      Matcher m = P_TENANT.matcher(uri);
-      if (m.matches()) {
-        var tenant = tenantService.getById(m.group(2));
+      PathContainer path = ServletRequestPathUtils.getParsedRequestPath(request).pathWithinApplication();
+      var m = TENANT_PATH_PATTERN.matchAndExtract(path);
+      if (Objects.nonNull(m)) {
+        var tenant = tenantService.getById(m.getUriVariables().get("tenant_id"));
 
         dinoContext.currentTenant(tenantService.projection(Tenant.class, tenant));
       }

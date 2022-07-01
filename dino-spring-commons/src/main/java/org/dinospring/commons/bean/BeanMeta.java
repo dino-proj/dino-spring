@@ -14,11 +14,15 @@
 
 package org.dinospring.commons.bean;
 
+import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import org.dinospring.commons.function.Suppliers;
 import org.springframework.beans.BeanUtils;
+import org.springframework.core.convert.Property;
 
 /**
  *
@@ -26,14 +30,20 @@ import org.springframework.beans.BeanUtils;
  * @date 2022-05-30 10:31:18
  */
 
-public class BeanInfo {
+public class BeanMeta {
   private Class<?> beanClass;
 
-  private Supplier<PropertyDescriptor[]> propertyDescriptorsSupplier = Suppliers.lazy(() -> {
-    return BeanUtils.getPropertyDescriptors(beanClass);
+  private Supplier<Map<String, Property>> propertyDescriptorsSupplier = Suppliers.lazy(() -> {
+    var pds = BeanUtils.getPropertyDescriptors(beanClass);
+    Map<String, Property> map = new LinkedHashMap<>(pds.length);
+    for (PropertyDescriptor propertyDescriptor : pds) {
+      map.put(propertyDescriptor.getName(), new Property(beanClass, propertyDescriptor.getReadMethod(),
+          propertyDescriptor.getWriteMethod(), propertyDescriptor.getName()));
+    }
+    return map;
   });
 
-  public BeanInfo(Class<?> beanClass) {
+  public BeanMeta(Class<?> beanClass) {
     this.beanClass = beanClass;
   }
 
@@ -50,16 +60,18 @@ public class BeanInfo {
    * @param propertyName
    * @return the property descriptor, or null if not found
    */
-  public PropertyDescriptor getPropertyDescriptor(String propertyName) {
-    return BeanUtils.getPropertyDescriptor(beanClass, propertyName);
+  public Property getPropertyDescriptor(String propertyName) {
+    var pds = propertyDescriptorsSupplier.get();
+    return pds.get(propertyName);
   }
 
   /**
    * bean property descriptors of the bean class
    * @return the property descriptors, or empty array if not found
    */
-  public PropertyDescriptor[] getPropertyDescriptors() {
-    return propertyDescriptorsSupplier.get();
+  public Property[] getPropertyDescriptors() {
+    var pds = propertyDescriptorsSupplier.get();
+    return pds.values().toArray(new Property[pds.size()]);
   }
 
   @Override
@@ -68,7 +80,7 @@ public class BeanInfo {
     if (!(obj instanceof BeanInfo)) {
       return false;
     }
-    return ((BeanInfo) obj).beanClass.equals(beanClass);
+    return ((BeanMeta) obj).beanClass.equals(beanClass);
   }
 
   @Override

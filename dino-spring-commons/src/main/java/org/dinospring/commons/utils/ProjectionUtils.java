@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.dinospring.commons.bean.BeanInfoUtils;
+import org.dinospring.commons.bean.BeanMetaUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeansException;
@@ -202,10 +202,10 @@ public class ProjectionUtils {
       throws BeansException {
     Class<?> actualEditable = Objects.nonNull(editable) ? editable : target.getClass();
     var ignoredProperties = new HashSet<String>();
-    var unreadableProperties = BeanInfoUtils.forClassWithJsonView(source.getClass(), activeView)
+    var unreadableProperties = BeanMetaUtils.forClassWithJsonView(source.getClass(), activeView)
         .getUnreadablePropertyNames();
     CollectionUtils.addAll(ignoredProperties, unreadableProperties);
-    var unwritableProperties = BeanInfoUtils.forClassWithJsonView(actualEditable, activeView)
+    var unwritableProperties = BeanMetaUtils.forClassWithJsonView(actualEditable, activeView)
         .getUnwritablePropertyNames();
     CollectionUtils.addAll(ignoredProperties, unwritableProperties);
     projectProperties(source, target, editable, ignoredProperties);

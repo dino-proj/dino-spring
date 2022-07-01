@@ -14,7 +14,6 @@
 
 package org.dinospring.commons.bean;
 
-import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,6 +22,7 @@ import java.util.function.Supplier;
 import org.dinospring.commons.function.Suppliers;
 import org.dinospring.commons.json.JsonViewUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.core.convert.Property;
 import org.springframework.util.ReflectionUtils;
 
 /**
@@ -31,7 +31,7 @@ import org.springframework.util.ReflectionUtils;
  * @date 2022-05-28 03:54:53
  */
 
-public class BeanInfoWithJsonView extends BeanInfo {
+public class BeanMetaWithJsonView extends BeanMeta {
 
   private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
@@ -43,7 +43,7 @@ public class BeanInfoWithJsonView extends BeanInfo {
   private Supplier<String[]> unwritablePropertySupplier = Suppliers
       .lazy(() -> findIgnoredProperties(getActiveView(), false));
 
-  public BeanInfoWithJsonView(Class<?> beanClass, Class<?> activeView) {
+  public BeanMetaWithJsonView(Class<?> beanClass, Class<?> activeView) {
     super(beanClass);
     this.activeView = activeView;
   }
@@ -108,32 +108,32 @@ public class BeanInfoWithJsonView extends BeanInfo {
    * readable property descriptors
    * @return
    */
-  public PropertyDescriptor[] getReadablePropertyDescriptors() {
+  public Property[] getReadablePropertyDescriptors() {
     var ignores = Set.of(getUnreadablePropertyNames());
-    var readableProperties = new ArrayList<PropertyDescriptor>();
+    var readableProperties = new ArrayList<Property>();
     var properties = getPropertyDescriptors();
     for (var property : properties) {
       if (!ignores.contains(property.getName())) {
         readableProperties.add(property);
       }
     }
-    return readableProperties.toArray(new PropertyDescriptor[0]);
+    return readableProperties.toArray(new Property[0]);
   }
 
   /**
    * writable property descriptors
    * @return
    */
-  public PropertyDescriptor[] getWritablePropertyDescriptors() {
+  public Property[] getWritablePropertyDescriptors() {
     var ignores = Set.of(getUnwritablePropertyNames());
-    var writableProperties = new ArrayList<PropertyDescriptor>();
+    var writableProperties = new ArrayList<Property>();
     var properties = getPropertyDescriptors();
     for (var property : properties) {
       if (!ignores.contains(property.getName())) {
         writableProperties.add(property);
       }
     }
-    return writableProperties.toArray(new PropertyDescriptor[0]);
+    return writableProperties.toArray(new Property[0]);
   }
 
   private String[] findIgnoredProperties(Class<?> activeView, boolean read) {
@@ -162,10 +162,10 @@ public class BeanInfoWithJsonView extends BeanInfo {
 
   @Override
   public boolean equals(Object obj) {
-    if (!(obj instanceof BeanInfoWithJsonView)) {
+    if (!(obj instanceof BeanMetaWithJsonView)) {
       return false;
     }
-    return super.equals(obj) && ((BeanInfoWithJsonView) obj).activeView.equals(activeView);
+    return super.equals(obj) && ((BeanMetaWithJsonView) obj).activeView.equals(activeView);
   }
 
   @Override

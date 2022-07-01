@@ -70,6 +70,10 @@ public interface Dialect {
    */
   String quoteTableName(String name);
 
+  /**
+   * 返回缺省的Dialect
+   * @return
+   */
   static Dialect ofDefault() {
     return Default.INST_DEFAULT;
   }

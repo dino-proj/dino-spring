@@ -14,16 +14,8 @@
 
 package org.dinospring.commons.bean;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.function.Supplier;
-
-import org.dinospring.commons.function.Suppliers;
-import org.dinospring.commons.json.JsonViewUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.core.convert.Property;
-import org.springframework.util.ReflectionUtils;
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  *
@@ -31,20 +23,13 @@ import org.springframework.util.ReflectionUtils;
  * @date 2022-05-28 03:54:53
  */
 
-public class BeanMetaWithJsonView extends BeanMeta {
+public class BeanMetaWithJsonView implements BeanMeta {
 
-  private static final String[] EMPTY_STRING_ARRAY = new String[0];
+  private final BeanMeta beanMeta;
+  private final Class<?> activeView;
 
-  private Class<?> activeView;
-
-  private Supplier<String[]> unreadablePropertySupplier = Suppliers
-      .lazy(() -> findIgnoredProperties(getActiveView(), true));
-
-  private Supplier<String[]> unwritablePropertySupplier = Suppliers
-      .lazy(() -> findIgnoredProperties(getActiveView(), false));
-
-  public BeanMetaWithJsonView(Class<?> beanClass, Class<?> activeView) {
-    super(beanClass);
+  public BeanMetaWithJsonView(BeanMeta beanMeta, Class<?> activeView) {
+    this.beanMeta = beanMeta;
     this.activeView = activeView;
   }
 
@@ -56,108 +41,83 @@ public class BeanMetaWithJsonView extends BeanMeta {
     return activeView;
   }
 
-  /**
-   * unreadable property names
-   * @return the unreadable property names, or empty array if not found
-   */
-  public String[] getUnreadablePropertyNames() {
-    return unreadablePropertySupplier.get();
+  @Override
+  public Class<?> getBeanClass() {
+    return beanMeta.getBeanClass();
   }
 
-  /**
-   * readable property names
-   * @return  the readable property names, or empty array if not found
-   */
+  @Override
+  public String[] getPropertyNames() {
+    var pds = beanMeta.getProperties();
+    return Arrays.stream(pds).filter(p -> p.isVisiableInJsonView(this.activeView)).map(Property::getName)
+        .toArray(String[]::new);
+  }
+
+  @Override
+  public Property[] getProperties() {
+    var pds = beanMeta.getProperties();
+    return Arrays.stream(pds).filter(p -> p.isVisiableInJsonView(this.activeView)).toArray(Property[]::new);
+  }
+
+  @Override
+  public Property getProperty(String propertyName) {
+    var pd = beanMeta.getProperty(propertyName);
+    if (Objects.nonNull(pd) && pd.isVisiableInJsonView(this.activeView)) {
+      return pd;
+    }
+    return null;
+  }
+
+  @Override
+  public Property[] getReadableProperties() {
+    var pds = beanMeta.getProperties();
+    return Arrays.stream(pds).filter(p -> p.isReadableInJsonView(this.activeView)).toArray(Property[]::new);
+  }
+
+  @Override
+  public Property[] getWritableProperties() {
+    var pds = beanMeta.getProperties();
+    return Arrays.stream(pds).filter(p -> p.isWritableInJsonView(this.activeView)).toArray(Property[]::new);
+  }
+
+  @Override
   public String[] getReadablePropertyNames() {
-    var ignores = Set.of(getUnreadablePropertyNames());
-    var readableProperties = new ArrayList<String>();
-    var properties = getPropertyDescriptors();
-    for (var property : properties) {
-      if (!ignores.contains(property.getName())) {
-        readableProperties.add(property.getName());
-      }
-    }
-    return readableProperties.toArray(EMPTY_STRING_ARRAY);
+    var pds = beanMeta.getProperties();
+    return Arrays.stream(pds).filter(p -> p.isReadableInJsonView(this.activeView)).map(Property::getName)
+        .toArray(String[]::new);
   }
 
-  /**
-   * unwritable property names
-   * @return the unwritable property names, or empty array if not found
-   */
-  public String[] getUnwritablePropertyNames() {
-    return unwritablePropertySupplier.get();
-  }
-
-  /**
-   * writable property names
-   * @return the writable property names, or empty array if not found
-   */
+  @Override
   public String[] getWritablePropertyNames() {
-    var ignores = Set.of(getUnwritablePropertyNames());
-    var writableProperties = new ArrayList<String>();
-    var properties = getPropertyDescriptors();
-    for (var property : properties) {
-      if (!ignores.contains(property.getName())) {
-        writableProperties.add(property.getName());
-      }
-    }
-    return writableProperties.toArray(EMPTY_STRING_ARRAY);
+    var pds = beanMeta.getProperties();
+    return Arrays.stream(pds).filter(p -> p.isWritableInJsonView(this.activeView)).map(Property::getName)
+        .toArray(String[]::new);
   }
 
-  /**
-   * readable property descriptors
-   * @return
-   */
-  public Property[] getReadablePropertyDescriptors() {
-    var ignores = Set.of(getUnreadablePropertyNames());
-    var readableProperties = new ArrayList<Property>();
-    var properties = getPropertyDescriptors();
-    for (var property : properties) {
-      if (!ignores.contains(property.getName())) {
-        readableProperties.add(property);
-      }
-    }
-    return readableProperties.toArray(new Property[0]);
+  @Override
+  public String[] getUnreadablePropertyNames() {
+    var pds = beanMeta.getProperties();
+    return Arrays.stream(pds).filter(p -> !p.isReadableInJsonView(this.activeView)).map(Property::getName)
+        .toArray(String[]::new);
   }
 
-  /**
-   * writable property descriptors
-   * @return
-   */
-  public Property[] getWritablePropertyDescriptors() {
-    var ignores = Set.of(getUnwritablePropertyNames());
-    var writableProperties = new ArrayList<Property>();
-    var properties = getPropertyDescriptors();
-    for (var property : properties) {
-      if (!ignores.contains(property.getName())) {
-        writableProperties.add(property);
-      }
-    }
-    return writableProperties.toArray(new Property[0]);
+  @Override
+  public Property[] getUnreadableProperties() {
+    var pds = beanMeta.getProperties();
+    return Arrays.stream(pds).filter(p -> !p.isReadableInJsonView(this.activeView)).toArray(Property[]::new);
   }
 
-  private String[] findIgnoredProperties(Class<?> activeView, boolean read) {
-    var cls = getBeanClass();
-    var ignoreProperties = new HashSet<String>();
-    var properties = BeanUtils.getPropertyDescriptors(cls);
-    //check method
-    for (var property : properties) {
-      var method = read ? property.getReadMethod() : property.getWriteMethod();
-      if (method == null || JsonViewUtils.isInView(method, activeView)) {
-        ignoreProperties.add(property.getName());
-      }
-    }
-    //check field
-    ReflectionUtils.doWithFields(cls, field -> {
-      if (!JsonViewUtils.isInView(field, activeView)) {
-        ignoreProperties.add(field.getName());
-      }
-    });
-    if (ignoreProperties.isEmpty()) {
-      return EMPTY_STRING_ARRAY;
-    }
-    return ignoreProperties.toArray(new String[0]);
+  @Override
+  public String[] getUnwritablePropertyNames() {
+    var pds = beanMeta.getProperties();
+    return Arrays.stream(pds).filter(p -> !p.isWritableInJsonView(this.activeView)).map(Property::getName)
+        .toArray(String[]::new);
+  }
 
+  @Override
+  public Property[] getUnwritableProperties() {
+    var pds = beanMeta.getProperties();
+    return Arrays.stream(pds).filter(p -> !p.isWritableInJsonView(this.activeView)).toArray(Property[]::new);
   }
 
   @Override
@@ -165,13 +125,15 @@ public class BeanMetaWithJsonView extends BeanMeta {
     if (!(obj instanceof BeanMetaWithJsonView)) {
       return false;
     }
-    return super.equals(obj) && ((BeanMetaWithJsonView) obj).activeView.equals(activeView);
+    return beanMeta.equals(((BeanMetaWithJsonView) obj).beanMeta)
+        && activeView.equals(((BeanMetaWithJsonView) obj).activeView);
   }
 
   @Override
   public int hashCode() {
-    int hashCode = super.hashCode();
+    int hashCode = beanMeta.hashCode();
     hashCode = 29 * hashCode + activeView.hashCode();
     return hashCode;
   }
+
 }

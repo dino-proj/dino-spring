@@ -27,15 +27,13 @@ public class BeanMetaUtils {
 
   private static final BeanSafeCache<BeanMeta> BEANINFO_CACHE = new BeanSafeCache<>();
 
-  private static final BeanSafeCache<BeanMetaWithJsonView> BEANINFO_JSONVIEW_CACHE = new BeanSafeCache<>();
-
   /**
    * the bean info of the bean class
    * @param beanClass
    * @return
    */
   public static BeanMeta forClass(Class<?> beanClass) {
-    return BEANINFO_CACHE.getOrElse(beanClass, BeanMeta::new);
+    return BEANINFO_CACHE.getOrElse(beanClass, BeanMetaImpl::new);
   }
 
   /**
@@ -47,6 +45,7 @@ public class BeanMetaUtils {
    * @return
    */
   public static BeanMetaWithJsonView forClassWithJsonView(Class<?> beanClass, Class<?> activeView) {
-    return BEANINFO_JSONVIEW_CACHE.getOrElse(beanClass, bc -> new BeanMetaWithJsonView(bc, activeView));
+    var beanMeta = forClass(beanClass);
+    return new BeanMetaWithJsonView(beanMeta, activeView);
   }
 }

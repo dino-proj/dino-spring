@@ -14,77 +14,84 @@
 
 package org.dinospring.commons.bean;
 
-import java.beans.BeanInfo;
-import java.beans.PropertyDescriptor;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.function.Supplier;
-
-import org.dinospring.commons.function.Suppliers;
-import org.springframework.beans.BeanUtils;
-import org.springframework.core.convert.Property;
-
 /**
- *
+ * bean meta info
  * @author tuuboo
- * @date 2022-05-30 10:31:18
+ * @date 2022-07-01 10:43:49
  */
 
-public class BeanMeta {
-  private Class<?> beanClass;
-
-  private Supplier<Map<String, Property>> propertyDescriptorsSupplier = Suppliers.lazy(() -> {
-    var pds = BeanUtils.getPropertyDescriptors(beanClass);
-    Map<String, Property> map = new LinkedHashMap<>(pds.length);
-    for (PropertyDescriptor propertyDescriptor : pds) {
-      map.put(propertyDescriptor.getName(), new Property(beanClass, propertyDescriptor.getReadMethod(),
-          propertyDescriptor.getWriteMethod(), propertyDescriptor.getName()));
-    }
-    return map;
-  });
-
-  public BeanMeta(Class<?> beanClass) {
-    this.beanClass = beanClass;
-  }
+public interface BeanMeta {
 
   /**
    * bean class
    * @return the beanClass
    */
-  public Class<?> getBeanClass() {
-    return beanClass;
-  }
+  Class<?> getBeanClass();
+
+  /**
+   * bean property names
+   * @return the property names
+   */
+  String[] getPropertyNames();
+
+  /**
+   * bean property descriptors of the bean class
+   * @return the property descriptors, or empty array if not found
+   */
+  Property[] getProperties();
 
   /**
    * bean property descriptor of property name
    * @param propertyName
    * @return the property descriptor, or null if not found
    */
-  public Property getPropertyDescriptor(String propertyName) {
-    var pds = propertyDescriptorsSupplier.get();
-    return pds.get(propertyName);
-  }
+  Property getProperty(String propertyName);
 
   /**
-   * bean property descriptors of the bean class
-   * @return the property descriptors, or empty array if not found
+   * readable property names
+   * @return  the readable property names, or empty array if not found
    */
-  public Property[] getPropertyDescriptors() {
-    var pds = propertyDescriptorsSupplier.get();
-    return pds.values().toArray(new Property[pds.size()]);
-  }
+  String[] getReadablePropertyNames();
 
-  @Override
-  public boolean equals(Object obj) {
+  /**
+   * readable property descriptors
+   * @return the readable property descriptors, or empty array if not found
+   */
+  Property[] getReadableProperties();
 
-    if (!(obj instanceof BeanInfo)) {
-      return false;
-    }
-    return ((BeanMeta) obj).beanClass.equals(beanClass);
-  }
+  /**
+   * writable property names
+   * @return the writable property names, or empty array if not found
+   */
+  String[] getWritablePropertyNames();
 
-  @Override
-  public int hashCode() {
-    return getBeanClass().hashCode();
-  }
+  /**
+   * writable property descriptors
+   * @return the writable property descriptors, or empty array if not found
+   */
+  Property[] getWritableProperties();
+
+  /**
+   * unreadable property names
+   * @return the unreadable property names, or empty array if not found
+   */
+  String[] getUnreadablePropertyNames();
+
+  /**
+   * unreadable property descriptors
+   * @return the unreadable property descriptors, or empty array if not found
+   */
+  Property[] getUnreadableProperties();
+
+  /**
+   * unwritable property names
+   * @return the unwritable property names, or empty array if not found
+   */
+  String[] getUnwritablePropertyNames();
+
+  /**
+   * unwritable property descriptors
+   * @return the unwritable property descriptors, or empty array if not found
+   */
+  Property[] getUnwritableProperties();
 }

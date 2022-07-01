@@ -44,10 +44,13 @@ public interface Suppliers {
   static <T> Supplier<T> lazy(Supplier<T> supplier) {
     return new Supplier<T>() {
       private T value;
-      private boolean isCached;
+      private volatile boolean isCached;
 
       @Override
       public T get() {
+        if (isCached) {
+          return value;
+        }
         synchronized (this) {
           if (!isCached) {
             value = supplier.get();
@@ -76,6 +79,9 @@ public interface Suppliers {
 
       @Override
       public T get() {
+        if (isCached) {
+          return value;
+        }
         synchronized (this) {
           if (!isCached) {
             value = supplier.get();
@@ -101,6 +107,9 @@ public interface Suppliers {
 
       @Override
       public T get() {
+        if (isCached) {
+          return value;
+        }
         synchronized (this) {
           if (!isCached) {
             value = supplier.get();
@@ -126,6 +135,10 @@ public interface Suppliers {
 
       @Override
       public T get() {
+        var v = value;
+        if (isCached && predicate.test(v)) {
+          return v;
+        }
         synchronized (this) {
           if (!isCached || !predicate.test(value)) {
             value = supplier.get();

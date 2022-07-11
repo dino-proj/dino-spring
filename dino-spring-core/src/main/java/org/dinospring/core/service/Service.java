@@ -305,6 +305,7 @@ public interface Service<T, K extends Serializable> extends ListServiceBase<T, K
   /**
    * 检查是否存在记录
    * @param id 主键ID
+   * @return 是否存在
    */
   default boolean exists(K id) {
     return repository().existsById(id);
@@ -313,6 +314,7 @@ public interface Service<T, K extends Serializable> extends ListServiceBase<T, K
   /**
    * 根据条件检查是否存在记录
    * @param search 查询条件
+   * @return 是否存在
    */
   default boolean exists(CustomQuery search) {
     var sql = repository().newSelect("t").column("t.id");

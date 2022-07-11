@@ -14,7 +14,7 @@
 
 package org.dinospring.core.modules.importandexport.handler;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author JL
@@ -26,5 +26,5 @@ public interface DataImportHandler<T> {
    * 导入的数据处理
    * @param dataList
    */
-  void importData(List<T> dataList);
+  void importData(Collection<T> dataList);
 }

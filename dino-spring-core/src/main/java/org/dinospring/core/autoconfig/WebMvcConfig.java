@@ -16,6 +16,7 @@ package org.dinospring.core.autoconfig;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.context.DinoContext;
 import org.dinospring.commons.sys.Tenant;
+import org.dinospring.commons.utils.TypeUtils;
 import org.dinospring.core.sys.tenant.TenantService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,19 +36,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.BufferedImageHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.http.server.PathContainer;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.util.ServletRequestPathUtils;
-import org.springframework.web.util.pattern.PathPattern;
-import org.springframework.web.util.pattern.PathPatternParser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -133,8 +132,7 @@ public class WebMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
 
   public static class TenantSupportInterceptor implements HandlerInterceptor {
 
-    private static final PathPattern TENANT_PATH_PATTERN = PathPatternParser.defaultInstance
-        .parse("/v\\d+/{tenant_id:[0-9A-Z]+}/**");
+    private static final String TENANT_VAR_NAME = "tenant_id";
     @Autowired
     private DinoContext dinoContext;
 
@@ -157,10 +155,10 @@ public class WebMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
         throws Exception {
-      PathContainer path = ServletRequestPathUtils.getParsedRequestPath(request).pathWithinApplication();
-      var m = TENANT_PATH_PATTERN.matchAndExtract(path);
-      if (Objects.nonNull(m)) {
-        var tenant = tenantService.getById(m.getUriVariables().get("tenant_id"));
+      Map<String, String> uriTemplateVars = TypeUtils.cast(request.getAttribute(
+          HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE));
+      if (Objects.nonNull(uriTemplateVars) && uriTemplateVars.containsKey(TENANT_VAR_NAME)) {
+        var tenant = tenantService.getById(uriTemplateVars.get(TENANT_VAR_NAME));
 
         dinoContext.currentTenant(tenantService.projection(Tenant.class, tenant));
       }

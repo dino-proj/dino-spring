@@ -18,6 +18,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.dinospring.auth.annotation.CheckPermission;
 import org.dinospring.commons.context.ContextHelper;
+import org.dinospring.commons.request.PageReq;
+import org.dinospring.commons.response.PageResponse;
 import org.dinospring.commons.response.Response;
 import org.dinospring.commons.utils.TypeUtils;
 import org.dinospring.core.annotion.param.ParamTenant;
@@ -60,6 +62,27 @@ public interface CategoryControllerBase<S extends CategoryServiceBase<N>, N exte
   default Response<List<N>> getCategoryTree(@PathVariable("tenant_id") String tenantId, @Nullable Long parent,
                                             @Nullable String keyword) {
     return Response.success(categoryService().findCategory(parent, keyword));
+  }
+
+
+  /**
+   * 分页获取分类树
+   * @param tenantId
+   * @param parent
+   * @param keyword
+   * @param pageReq
+   * @return
+   */
+  @Operation(summary = "分页获取分类树")
+  @ParamTenant
+  @Parameter(name = "parent")
+  @Parameter(name = "keyword")
+  @GetMapping("/tree/page")
+  @CheckPermission(":tree.page")
+  default PageResponse<N> getCategoryTreeByPage(@PathVariable("tenant_id") String tenantId, @Nullable Long parent,
+                                                @Nullable String keyword, PageReq pageReq) {
+    var pageable = pageReq.pageable();
+    return PageResponse.success(categoryService().findCategory(parent, keyword, pageable));
   }
 
 }

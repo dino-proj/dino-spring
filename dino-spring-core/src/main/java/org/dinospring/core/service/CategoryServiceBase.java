@@ -17,6 +17,8 @@
 package org.dinospring.core.service;
 
 import org.dinospring.core.modules.category.TreeNode;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -34,4 +36,14 @@ public interface CategoryServiceBase<N extends TreeNode> {
    * @return
    */
   List<N> findCategory(@Nullable Long parentId, @Nullable String keyword);
+
+
+  /**
+   * 分页获取分类树
+   * @param parentId
+   * @param keyword
+   * @param page
+   * @return
+   */
+  Page<N> findCategory(@Nullable Long parentId, @Nullable String keyword, Pageable page);
 }

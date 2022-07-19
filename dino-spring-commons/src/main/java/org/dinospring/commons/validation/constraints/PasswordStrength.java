@@ -34,9 +34,7 @@ import org.dinospring.commons.validation.validator.PasswordStrengthValidator;
 @Constraint(validatedBy = { PasswordStrengthValidator.class })
 public @interface PasswordStrength {
 
-  String message()
-
-  default "{org.dinospring.validation.PasswordStrength.message}";
+  String message() default "{org.dinospring.validation.PasswordStrength.message}";
 
   Class<?>[] groups() default {};
 

@@ -15,6 +15,10 @@
     <sonar.projectKey>dino-proj_dino-spring_AXxR_pifqZjUnsqzsQ5y</sonar.projectKey>
     <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
     <java.version>11</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
   </properties>
 
   <dependencies>

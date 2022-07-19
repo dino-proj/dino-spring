@@ -12,32 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.core.service;
+package org.dinospring.commons.function;
 
-import javax.annotation.Nonnull;
+import java.util.function.Function;
 
-import org.dinospring.commons.bean.BeanSafeCache;
-import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.utils.TypeUtils;
 
 /**
  *
  * @author tuuboo
- * @date 2022-05-31 19:38:06
+ * @date 2022-06-09 03:48:25
  */
 
-public interface ServiceBeanResolver<S extends ServiceBase<?, ?>> {
-
-  static final BeanSafeCache<Service<?, ?>> SERVICE_MAPPING_CACHE = new BeanSafeCache<>();
+public interface Functions {
+  static Function<Object, Object> IDENTITY_FUNCTION = t -> t;
 
   /**
-  * Service 服务实例
-  * @return
-  */
-  @Nonnull
-  default S service() {
-    var service = SERVICE_MAPPING_CACHE.getOrElse(this.getClass(),
-        cls -> ContextHelper.findBean(TypeUtils.getGenericParamClass(cls, ServiceBeanResolver.class, 0)));
-    return TypeUtils.cast(service);
+   * 创建一个Function，该Function将传入的参数原样返回
+   * @param <T>
+   * @return
+   */
+  static <T> Function<T, T> identity() {
+    return TypeUtils.cast(IDENTITY_FUNCTION);
   }
+
 }

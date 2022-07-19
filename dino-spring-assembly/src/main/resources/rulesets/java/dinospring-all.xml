@@ -24,7 +24,8 @@
     <exclude name="ClassNamingShouldBeCamelRule" />
   </rule>
   <rule ref="rulesets/java/ali-oop.xml"></rule>
-  <rule ref="rulesets/java/ali-orm.xml"></rule>
-  <rule ref="rulesets/java/ali-other.xml"></rule>
+  <rule ref="rulesets/java/ali-other.xml">
+    <exclude name="MethodTooLongRule" />
+  </rule>
   <rule ref="rulesets/java/ali-set.xml"></rule>
 </ruleset>

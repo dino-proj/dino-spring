@@ -39,6 +39,9 @@ public class PageResponse<T> extends Response<Collection<? extends T>> {
   @Schema(description = "数据总条数")
   private Long total;
 
+  @Schema(description = "本次请求返回数据条数")
+  private Integer count;
+
   @Schema(description = "本次查询页码：从0开始", example = "0")
   private Integer pn;
 
@@ -48,10 +51,12 @@ public class PageResponse<T> extends Response<Collection<? extends T>> {
   protected PageResponse(int code, String msg) {
     super(code, msg);
     this.total = 0L;
+    this.count = 0;
   }
 
   protected PageResponse(int pn, int pl) {
     this.total = 0L;
+    this.count = 0;
     this.pn = pn;
     this.pl = pl;
   }
@@ -67,6 +72,12 @@ public class PageResponse<T> extends Response<Collection<? extends T>> {
     this.setData(list);
     this.setTotal(total);
     return this;
+  }
+
+  @Override
+  public Response<Collection<? extends T>> setData(Collection<? extends T> list) {
+    this.count = list == null ? 0 : list.size();
+    return super.setData(list);
   }
 
   @Schema(description = "数据总页数")

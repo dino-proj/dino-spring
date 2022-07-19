@@ -118,7 +118,7 @@ public class BeanSafeCache<T> {
    * @param beanClass the target class to introspect
    * @return the resulting cached info<T> (never {@code null})
    */
-  public T getOrElse(Class<?> beanClass, Function<Class<?>, T> provider) {
+  public T getOrElse(Class<?> beanClass, Function<Class<?>, ? extends T> provider) {
     T results = get(beanClass);
     if (Objects.nonNull(results)) {
       return results;

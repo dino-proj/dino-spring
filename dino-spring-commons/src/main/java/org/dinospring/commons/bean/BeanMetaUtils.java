@@ -23,19 +23,17 @@ import lombok.experimental.UtilityClass;
  */
 
 @UtilityClass
-public class BeanInfoUtils {
+public class BeanMetaUtils {
 
-  private static final BeanSafeCache<BeanInfo> BEANINFO_CACHE = new BeanSafeCache<>();
-
-  private static final BeanSafeCache<BeanInfoWithJsonView> BEANINFO_JSONVIEW_CACHE = new BeanSafeCache<>();
+  private static final BeanSafeCache<BeanMeta> BEANINFO_CACHE = new BeanSafeCache<>();
 
   /**
    * the bean info of the bean class
    * @param beanClass
    * @return
    */
-  public static BeanInfo forClass(Class<?> beanClass) {
-    return BEANINFO_CACHE.getOrElse(beanClass, (bc) -> new BeanInfo(bc));
+  public static BeanMeta forClass(Class<?> beanClass) {
+    return BEANINFO_CACHE.getOrElse(beanClass, BeanMetaImpl::new);
   }
 
   /**
@@ -46,7 +44,8 @@ public class BeanInfoUtils {
    * @param activeView
    * @return
    */
-  public static BeanInfoWithJsonView forClassWithJsonView(Class<?> beanClass, Class<?> activeView) {
-    return BEANINFO_JSONVIEW_CACHE.getOrElse(beanClass, (bc) -> new BeanInfoWithJsonView(bc, activeView));
+  public static BeanMetaWithJsonView forClassWithJsonView(Class<?> beanClass, Class<?> activeView) {
+    var beanMeta = forClass(beanClass);
+    return new BeanMetaWithJsonView(beanMeta, activeView);
   }
 }

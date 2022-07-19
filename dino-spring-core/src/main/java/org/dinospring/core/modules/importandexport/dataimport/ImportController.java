@@ -15,7 +15,6 @@
 package org.dinospring.core.modules.importandexport.dataimport;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.dinospring.commons.response.Response;
 import org.dinospring.commons.utils.TypeUtils;
@@ -43,19 +42,24 @@ public interface ImportController<S extends DataImportHandler<T>, T> {
   S importHandler();
 
   /**
+   * 数据模型Class类
+   * @return
+   */
+  default Class<T> modelClass() {
+    return TypeUtils.getGenericParamClass(this, ImportController.class, 1);
+  }
+
+  /**
    * 文件导入
    * @param file 文件流
    * @return
    * @throws IOException
    */
-  @Operation(summary = "导入")
+  @Operation(summary = "数据导入")
   @ParamTenant
   @PostMapping(value = "import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   default Response<Boolean> dataImport(@RequestParam("file") MultipartFile file) throws IOException {
-    DataImport.doRead(file.getInputStream(), TypeUtils.getGenericParamClass(this, ImportController.class, 1),
-        e -> {
-          importHandler().importData((List<T>) e);
-        });
+    DataImport.doRead(file.getInputStream(), modelClass(), e -> importHandler().importData(e));
     return Response.success();
   }
 
@@ -66,9 +70,7 @@ public interface ImportController<S extends DataImportHandler<T>, T> {
    * @throws IOException
    */
   default Response<Boolean> dataImport(String pathName) throws IOException {
-    DataImport.doRead(pathName, TypeUtils.getGenericParamClass(this, DataImportHandler.class, 1), e -> {
-      importHandler().importData((List<T>) e);
-    });
+    DataImport.doRead(pathName, modelClass(), e -> importHandler().importData(e));
     return Response.success();
   }
 

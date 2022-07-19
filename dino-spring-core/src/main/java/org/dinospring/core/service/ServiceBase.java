@@ -14,30 +14,30 @@
 
 package org.dinospring.core.service;
 
-import javax.annotation.Nonnull;
+import java.io.Serializable;
 
-import org.dinospring.commons.bean.BeanSafeCache;
-import org.dinospring.commons.context.ContextHelper;
-import org.dinospring.commons.utils.TypeUtils;
+import org.dinospring.data.dao.CrudRepositoryBase;
 
 /**
  *
  * @author tuuboo
- * @date 2022-05-31 19:38:06
+ * @date 2022-06-11 20:52:35
  */
 
-public interface ServiceBeanResolver<S extends ServiceBase<?, ?>> {
-
-  static final BeanSafeCache<Service<?, ?>> SERVICE_MAPPING_CACHE = new BeanSafeCache<>();
+public interface ServiceBase<T, K extends Serializable> {
+  /**
+   * 获取对应 entity 的 BaseMapper
+   *
+   * @return BaseMapper
+   */
+  CrudRepositoryBase<T, K> repository();
 
   /**
-  * Service 服务实例
-  * @return
-  */
-  @Nonnull
-  default S service() {
-    var service = SERVICE_MAPPING_CACHE.getOrElse(this.getClass(),
-        cls -> ContextHelper.findBean(TypeUtils.getGenericParamClass(cls, ServiceBeanResolver.class, 0)));
-    return TypeUtils.cast(service);
+   * 获取 entity 的 class
+   *
+   * @return {@link Class<T>}
+   */
+  default Class<T> getEntityClass() {
+    return (Class<T>) repository().entityClass();
   }
 }

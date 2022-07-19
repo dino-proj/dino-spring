@@ -14,13 +14,10 @@
 
 package org.dinospring.core.controller.support;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.dinospring.data.sql.builder.SelectSqlBuilder;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
+import org.dinospring.data.sql.builder.SelectSqlBuilder;
 
 /**
  * @author JL
@@ -34,9 +31,8 @@ public class SearchFieldStatusQuery<M extends FieldEnum> extends StatusQuery {
 
   @Override
   public SelectSqlBuilder buildSql(SelectSqlBuilder sql) {
-    if (search != null) {
-      List<String> fields = search.getField().stream().map(file -> file.getField()).collect(Collectors.toList());
-      sql.someLike(fields.toArray(new String[fields.size()]), search.getKeyword());
+    if (search != null && StringUtils.isNotBlank(search.getKeyword())) {
+      sql.someLike(search.getField().stream().map(FieldEnum::getField).toArray(String[]::new), search.getKeyword());
     }
     return super.buildSql(sql);
   }

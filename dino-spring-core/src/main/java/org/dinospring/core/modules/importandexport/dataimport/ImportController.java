@@ -21,6 +21,7 @@ import org.dinospring.commons.response.Response;
 import org.dinospring.commons.utils.TypeUtils;
 import org.dinospring.core.annotion.param.ParamTenant;
 import org.dinospring.core.modules.importandexport.handler.DataImportHandler;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,7 +50,7 @@ public interface ImportController<S extends DataImportHandler<T>, T> {
    */
   @Operation(summary = "导入")
   @ParamTenant
-  @PostMapping("import")
+  @PostMapping(value = "import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   default Response<Boolean> dataImport(@RequestParam("file") MultipartFile file) throws IOException {
     DataImport.doRead(file.getInputStream(), TypeUtils.getGenericParamClass(this, ImportController.class, 1),
         e -> {

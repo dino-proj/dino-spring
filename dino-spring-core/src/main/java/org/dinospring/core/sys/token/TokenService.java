@@ -141,7 +141,7 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
     if (t.getUpdateAt().getTime() + t.getRefreshExpiresIn() * 1000 < System.currentTimeMillis()) {
       return Optional.empty();
     }
-    if (!t.getToken().equalsIgnoreCase(refreshToken)) {
+    if (!t.getRefreshToken().equalsIgnoreCase(refreshToken)) {
       return Optional.empty();
     }
 

@@ -14,6 +14,7 @@
 
 package org.dinospring.core.modules.openim;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.utils.AsmUtils;
 import org.dinospring.core.modules.openim.config.OpenimModuleProperties;
@@ -21,6 +22,8 @@ import org.dinospring.core.modules.openim.restapi.AccountCheck;
 import org.dinospring.core.modules.openim.restapi.AccountCheckReq;
 import org.dinospring.core.modules.openim.restapi.Group;
 import org.dinospring.core.modules.openim.restapi.GroupReq;
+import org.dinospring.core.modules.openim.restapi.InviteUserToGroupReq;
+import org.dinospring.core.modules.openim.restapi.InviteUserToGroupResp;
 import org.dinospring.core.modules.openim.restapi.MessageReq;
 import org.dinospring.core.modules.openim.restapi.MessageResp;
 import org.dinospring.core.modules.openim.restapi.MuteGroupMember;
@@ -37,7 +40,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * openim的restful接口实现
@@ -125,6 +129,15 @@ public class OpenimService {
    */
   public MuteGroupMember muteGroupMember(MuteGroupMemberReq muteGroupMemberReq) {
     return post(MuteGroupMemberReq.PATH, muteGroupMemberReq, MuteGroupMember.class);
+  }
+
+  /**
+   * 邀请用户进群
+   * @param inviteUserToGroupReq
+   * @return
+   */
+  public List<InviteUserToGroupResp> inviteUserToGroup(InviteUserToGroupReq inviteUserToGroupReq) {
+    return post(InviteUserToGroupReq.PATH, inviteUserToGroupReq, new ArrayList<InviteUserToGroupResp>().getClass());
   }
 
   /**

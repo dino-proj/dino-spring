@@ -31,7 +31,7 @@ import java.io.Serializable;
 @Table(name = "sys_wallet_bills", indexes = {
     @Index(name = "idx_accountId", columnList = "account_id", unique = false) })
 @TypeDef(name = "json", typeClass = JsonBinaryType.class)
-public abstract class WalletBillEntity extends TenantRowEntityBase<Long> {
+public class WalletBillEntity extends TenantRowEntityBase<Long> {
 
   @Schema(description = "账户ID")
   @Column(name = "account_id", nullable = false)

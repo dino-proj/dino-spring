@@ -40,6 +40,10 @@ public class WalletEntity extends TenantRowEntityBase<Long> implements Versioned
   @Column(name = "balance", nullable = false)
   private Long balance = 0L;
 
+  @Schema(description = "钱包支出", defaultValue = "0")
+  @Column(name = "disburse", nullable = false)
+  private Long disburse = 0L;
+
   @Schema(description = "锁定金额", defaultValue = "0")
   @Column(name = "lock_balance", nullable = false)
   private Long lockBalance = 0L;

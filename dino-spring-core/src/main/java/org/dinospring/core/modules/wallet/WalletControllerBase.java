@@ -36,7 +36,7 @@ public interface WalletControllerBase
    * @param tenantId
    * @return
    */
-  @Operation(summary = "获取账户信息")
+  @Operation(summary = "获取登录账户信息")
   @ParamTenant
   @GetMapping("/info")
   @CheckPermission(":wallet.info")
@@ -53,7 +53,7 @@ public interface WalletControllerBase
    * @param pageReq
    * @return
    */
-  @Operation(summary = "获取流水")
+  @Operation(summary = "获取登录账户流水")
   @ParamTenant
   @ParamPageable
   @GetMapping("/bills")

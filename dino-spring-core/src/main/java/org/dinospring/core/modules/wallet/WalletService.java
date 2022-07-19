@@ -1,7 +1,5 @@
 package org.dinospring.core.modules.wallet;
 
-import java.time.Duration;
-
 import org.dinospring.commons.exception.BusinessException;
 import org.dinospring.commons.promise.Promise;
 import org.dinospring.commons.response.Status;
@@ -16,6 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.util.Map;
+
 /**
  *
  * @author tuuboo
@@ -24,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WalletService
-    extends ServiceBase<WalletEntity, Long> {
+  extends ServiceBase<WalletEntity, Long> {
 
   private final Duration nap = Duration.ofMillis(100);
 
@@ -44,7 +45,8 @@ public class WalletService
       var e = newEntity();
       e.setOwnerId(ownerId);
       e.setType(walletType.getName());
-      return walletRepository.save(e);
+      e.setTenantId(tenantId);
+      return this.save(e);
     });
 
   }
@@ -71,13 +73,19 @@ public class WalletService
       var newBalance = account.getBalance() + change;
       Assert.isTrue(newBalance >= 0, Status.fail("账户余额不足"));
 
-      if (repository().updateByIdWithVersion(accountId, WalletEntity.Fields.balance,
-          newBalance,
-          account.getVersion())) {
+      Map<String, Object> map;
+      if (change < 0) {
+        map = Map.of(WalletEntity.Fields.balance, newBalance, WalletEntity.Fields.disburse, account.getDisburse() - change);
+      } else {
+        map = Map.of(WalletEntity.Fields.balance, newBalance);
+      }
+      if (repository().updateByIdWithVersion(accountId, map,
+        account.getVersion())) {
         bill.setIsLock(false);
         bill.setAccountId(accountId);
         bill.setAmount(change);
         bill.setBalance(newBalance);
+
         walletBillRepository.save(bill);
         return true;
       } else {
@@ -101,10 +109,10 @@ public class WalletService
       Assert.isTrue(newBalance >= 0L, Status.fail("账户余额不足"));
 
       if (repository().updateByIdWithVersion(accountId, WalletEntity.Fields.lockBalance,
-          account.getLockBalance() + amount,
-          WalletEntity.Fields.balance,
-          newBalance,
-          account.getVersion())) {
+        account.getLockBalance() + amount,
+        WalletEntity.Fields.balance,
+        newBalance,
+        account.getVersion())) {
         bill.setIsLock(true);
         bill.setAccountId(accountId);
         bill.setAmount(-1 * amount);

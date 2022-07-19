@@ -125,9 +125,12 @@ public abstract class ServiceBase<T, K extends Serializable> implements Service<
       }
       base.setUpdateAt(now);
 
-      User<Serializable> user = ContextHelper.currentUser();
-      if (user != null) {
-        ((EntityBase<?>) entity).setCreateBy(String.format("%s:%s", user.getId(), user.getUserType().getType()));
+      String createBy = ((EntityBase<?>) entity).getCreateBy();
+      if (StringUtils.isBlank(createBy)){
+        User<Serializable> user = ContextHelper.currentUser();
+        if (user != null) {
+          ((EntityBase<?>) entity).setCreateBy(String.format("%s:%s", user.getId(), user.getUserType().getType()));
+        }
       }
     }
 

@@ -408,6 +408,7 @@ public interface Service<T, K extends Serializable> {
   /**
    * 检查是否存在记录
    * @param id 主键ID
+   * @return
    */
   default boolean exists(K id) {
     return repository().existsById(id);
@@ -416,6 +417,7 @@ public interface Service<T, K extends Serializable> {
   /**
    * 根据条件检查是否存在记录
    * @param search 查询条件
+   * @return
    */
   default boolean exists(CustomQuery search) {
     var sql = repository().newSelect("t").column("t.id");

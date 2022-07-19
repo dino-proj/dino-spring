@@ -14,13 +14,13 @@
 
 package org.dinospring.commons.utils;
 
+import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -30,18 +30,17 @@ import java.util.function.Function;
  * 异步执行的任务
  * @author tuuboo
  */
-@Async
 @Component
+@Async
+@AllArgsConstructor
 public class AsyncWorker {
-
-  private ThreadPoolExecutor executor;
 
   /**
    * 无参数，无返回的异步调用
    * @param task 异步任务
    */
   public void exec(Runnable task) {
-    executor.execute(task);
+    task.run();
   }
 
   /**
@@ -50,7 +49,7 @@ public class AsyncWorker {
    */
   public <R> Future<R> exec(Callable<R> task) {
     var futureTask = new FutureTask<>(task);
-    executor.execute(futureTask);
+    futureTask.run();
     return futureTask;
   }
 
@@ -61,7 +60,7 @@ public class AsyncWorker {
    * @param param 传给异步任务的参数
    */
   public <T> void exec(Consumer<T> task, final T param) {
-    executor.execute(() -> task.accept(param));
+     task.accept(param);
   }
 
   /**
@@ -74,7 +73,7 @@ public class AsyncWorker {
    */
   public <T, R> Future<R> exec(Function<T, R> task, final T param) {
     var futureTask = new FutureTask<>(() -> task.apply(param));
-    executor.execute(futureTask);
+    futureTask.run();
     return futureTask;
   }
 
@@ -87,7 +86,7 @@ public class AsyncWorker {
    * @param paramSecond 第二个参数
    */
   public <T, U> void exec(BiConsumer<T, U> task, final T paramFirst, final U paramSecond) {
-    executor.execute(() -> task.accept(paramFirst, paramSecond));
+     task.accept(paramFirst, paramSecond);
   }
 
   /**
@@ -102,7 +101,7 @@ public class AsyncWorker {
    */
   public <T, U, R> Future<R> exec(BiFunction<T, U, R> task, final T paramFirst, final U paramSecond) {
     var futureTask = new FutureTask<>(() -> task.apply(paramFirst, paramSecond));
-    executor.execute(futureTask);
+    futureTask.run();
     return futureTask;
   }
 

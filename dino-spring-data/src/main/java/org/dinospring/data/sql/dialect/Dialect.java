@@ -70,6 +70,10 @@ public interface Dialect {
    */
   String quoteTableName(String name);
 
+  /**
+   * ofDefault
+   * @return
+   */
   static Dialect ofDefault() {
     return Default.INST_DEFAULT;
   }

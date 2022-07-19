@@ -82,7 +82,7 @@ public interface LoginByRefreshtoken<U extends User<K>, K extends Serializable>
   @Data
   public static class RefreshtokenLoginBody {
     @Schema(description = "用户类型", required = true)
-    @NotBlank(message = "用户类型不能为空")
+//    @NotBlank(message = "用户类型不能为空")
     private String userType;
 
     @Schema(description = "用户ID", required = true)

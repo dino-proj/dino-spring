@@ -159,8 +159,8 @@ public class OpenimService {
    * @param accountCheckReq
    * @return
    */
-  public AccountCheck accountCheck(AccountCheckReq accountCheckReq) {
-    return post(AccountCheckReq.PATH, accountCheckReq, AccountCheck.class);
+  public List<AccountCheck> accountCheck(AccountCheckReq accountCheckReq) {
+    return post(AccountCheckReq.PATH, accountCheckReq, new ArrayList<AccountCheck>().getClass());
   }
 
   protected String makeUrl(String path) {

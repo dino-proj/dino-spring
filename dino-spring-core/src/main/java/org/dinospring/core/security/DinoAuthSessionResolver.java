@@ -96,6 +96,7 @@ public class DinoAuthSessionResolver implements AuthSessionResolver<DinoAuthSess
 
     try {
       var princ = objectMapper.readValue(Base64.getUrlDecoder().decode(prinStr), TokenPrincaple.class);
+      log.info("req http:{}",request.getRequestURL());
       // 验证token是否有效
       Assert.isTrue(tokenService.checkLoginToken(princ, tokenStr), Status.CODE.FAIL_INVALID_AUTH_TOKEN);
 

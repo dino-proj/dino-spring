@@ -11,7 +11,7 @@ import java.util.List;
  */
 @Data
 public class AccountCheckReq extends Request {
-  public static final String PATH = "/manager/account_check";
+  public static final String PATH = "/user/account_check";
 
   /**
    * 需要check的用户userID数组，单次数量不超过100

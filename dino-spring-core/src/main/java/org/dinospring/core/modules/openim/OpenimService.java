@@ -15,6 +15,7 @@
 package org.dinospring.core.modules.openim;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.utils.AsmUtils;
 import org.dinospring.core.modules.openim.config.OpenimModuleProperties;
@@ -41,6 +42,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -160,7 +162,17 @@ public class OpenimService {
    * @return
    */
   public List<AccountCheck> accountCheck(AccountCheckReq accountCheckReq) {
-    return post(AccountCheckReq.PATH, accountCheckReq, new ArrayList<AccountCheck>().getClass());
+    List<AccountCheck> checkList = new ArrayList<>();
+    ArrayList<LinkedHashMap<String, String>> post = post(AccountCheckReq.PATH, accountCheckReq, new ArrayList<LinkedHashMap<String, String>>().getClass());
+    if (CollectionUtils.isNotEmpty(post)){
+      post.forEach(stringStringLinkedHashMap -> {
+        var accountCheck = new AccountCheck();
+        accountCheck.setAccountStatus(stringStringLinkedHashMap.get("accountStatus"));
+        accountCheck.setUserId(stringStringLinkedHashMap.get("userID"));
+        checkList.add(accountCheck);
+      });
+    }
+    return checkList;
   }
 
   protected String makeUrl(String path) {

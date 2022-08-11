@@ -14,17 +14,12 @@
 
 package org.dinospring.core.modules.oss;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.Function;
 
 import javax.activation.FileTypeMap;
 import javax.servlet.http.HttpServletRequest;
-
-import com.drew.imaging.ImageProcessingException;
-import com.drew.metadata.MetadataException;
 
 import org.apache.commons.io.FilenameUtils;
 import org.dinospring.commons.context.ContextHelper;
@@ -44,6 +39,7 @@ import org.dinospring.core.modules.oss.config.OssModuleProperties;
 import org.dinospring.core.sys.token.TokenService;
 import org.dinospring.core.utils.MultiMediaUtils;
 import org.dinospring.core.utils.MultiMediaUtils.MediaInfo;
+import org.dinospring.data.domain.IdService;
 import org.slf4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -89,6 +85,14 @@ public interface OssControllerBase {
    */
   default TokenService tokenService() {
     return ContextHelper.findBean(TokenService.class);
+  }
+
+  /**
+  * 获取uuid服务
+  * @return
+  */
+  default IdService idService() {
+    return ContextHelper.findBean(IdService.class);
   }
 
   /**
@@ -152,15 +156,13 @@ public interface OssControllerBase {
    * @param file
    * @return
    * @throws IOException
-   * @throws ImageProcessingException
-   * @throws MetadataException
    */
   @Operation(summary = "上传音频")
   @ParamTenant
   @Parameter(name = "service", required = false, description = "服务名字")
   @PostMapping(value = "/upload/AUDIO", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   default Response<AudioFileMeta> uploadAudio(@PathVariable("tenant_id") String tenantId, String service,
-      MultipartFile file) throws IOException, MetadataException, ImageProcessingException {
+      MultipartFile file) throws IOException {
 
     var meta = new AudioFileMeta();
 
@@ -184,15 +186,13 @@ public interface OssControllerBase {
    * @param file
    * @return
    * @throws IOException
-   * @throws ImageProcessingException
-   * @throws MetadataException
    */
   @Operation(summary = "上传视频")
   @ParamTenant
   @Parameter(name = "service", required = false, description = "服务名字")
   @PostMapping(value = "/upload/VIDEO", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   default Response<VideoFileMeta> uploadVideo(@PathVariable("tenant_id") String tenantId, String service,
-      MultipartFile file) throws IOException, MetadataException, ImageProcessingException {
+      MultipartFile file) throws IOException {
 
     var meta = new VideoFileMeta();
 
@@ -219,15 +219,13 @@ public interface OssControllerBase {
    * @param file
    * @return
    * @throws IOException
-   * @throws ImageProcessingException
-   * @throws MetadataException
    */
   @Operation(summary = "上传图片")
   @ParamTenant
   @Parameter(name = "service", required = false, description = "服务名字")
   @PostMapping(value = "/upload/IMAGE", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   default Response<ImageFileMeta> uploadImage(@PathVariable("tenant_id") String tenantId, String service,
-      MultipartFile file) throws IOException, MetadataException, ImageProcessingException {
+      MultipartFile file) throws IOException {
 
     var meta = new ImageFileMeta();
 
@@ -261,7 +259,7 @@ public interface OssControllerBase {
 
     meta.setSize(file.getSize());
 
-    var fileName = UUID.randomUUID().toString() + "." + FilenameUtils.getExtension(file.getOriginalFilename());
+    var fileName = idService().genUUID() + "." + FilenameUtils.getExtension(file.getOriginalFilename());
     var objectName = FilenameUtils.concat(tenantId, fileName);
 
     meta.setBucket(serviceId);

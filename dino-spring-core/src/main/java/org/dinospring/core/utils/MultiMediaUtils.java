@@ -67,14 +67,7 @@ public class MultiMediaUtils {
    */
   public static MediaInfo extractMediaInfo(MultipartFile file) {
 
-    try {
-      var fileInputStream = file.getInputStream();
-      if (!fileInputStream.markSupported()) {
-        fileInputStream = new BufferedInputStream(fileInputStream);
-      }
-      fileInputStream.mark(Integer.MAX_VALUE);
-
-      BufferedInputStream input = new BufferedInputStream(fileInputStream);
+    try (BufferedInputStream input = new BufferedInputStream(file.getInputStream())) {
       MediaInfo media;
       var fileType = FileTypeDetector.detectFileType(input);
       if (fileType.getMimeType() == null || fileType == FileType.Zip) {

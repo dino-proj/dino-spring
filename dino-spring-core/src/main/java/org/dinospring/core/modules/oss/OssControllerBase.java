@@ -259,19 +259,22 @@ public interface OssControllerBase {
 
     meta.setSize(file.getSize());
 
-    var fileName = idService().genUUID() + "." + FilenameUtils.getExtension(file.getOriginalFilename());
-    var objectName = FilenameUtils.concat(tenantId, fileName);
-
+    var objectName = new StringBuilder();
+    objectName.append(tenantId).append('/');
+    objectName.append(idService().genUUID());
+    objectName.append('.').append(FilenameUtils.getExtension(file.getOriginalFilename()));
+    var objectKey = objectName.toString();
+    
     meta.setBucket(serviceId);
-    meta.setPath(objectName);
+    meta.setPath(objectKey);
 
-    try {
+    try (var input = file.getInputStream()) {
       var contentType = media != null && media.getMime() != null ? media.getMime()
           : FileTypeMap.getDefaultFileTypeMap().getContentType(file.getOriginalFilename());
-      ossService().putObject(file.getInputStream(), "tmp", objectName, contentType);
+      ossService().putObject(input, "tmp", objectKey, contentType);
 
     } catch (IOException e) {
-      log().error("Error occured while upload file[{}]", fileName, e);
+      log().error("Error occured while upload file[{}]", objectKey, e);
       throw BusinessException.of(Status.CODE.FAIL_EXCEPTION);
     }
   }

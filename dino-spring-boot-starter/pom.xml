@@ -9,7 +9,7 @@
   </parent>
   <groupId>org.dinospring</groupId>
   <artifactId>dino-spring-boot-starter</artifactId>
-  <version>2.3.0.RELEASE</version>
+  <version>2.3.5.RELEASE</version>
   <packaging>pom</packaging>
 
   <properties>
@@ -17,7 +17,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>11</java.version>
 
-    <dino-spring.version>2.3.0.RELEASE</dino-spring.version>
+    <dino-spring.version>2.3.5.RELEASE</dino-spring.version>
 
     <!-- plugin -->
     <maven-pmd-plugin.version>3.16.0</maven-pmd-plugin.version>

@@ -40,6 +40,10 @@ deploy:
     - echo "=============== 开始部署 dino-spring-commons  ==============="
     - mvn clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
     - cd ..
+    - cd dino-spring-auth
+    - echo "=============== 开始部署 dino-spring-auth  ==============="
+    - mvn clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+    - cd ..
     - cd dino-spring-data
     - echo "=============== 开始部署 dino-spring-data  ==============="
     - mvn clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT

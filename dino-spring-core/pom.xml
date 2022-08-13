@@ -32,6 +32,11 @@
       <artifactId>dino-spring-data</artifactId>
       <version>${dino-spring.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.dinospring</groupId>
+      <artifactId>dino-spring-auth</artifactId>
+      <version>${dino-spring.version}</version>
+    </dependency>
 
     <!--spring boot-->
     <dependency>

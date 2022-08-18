@@ -123,7 +123,11 @@ RUN_JAVA ()
   echo "excute ->APP_JAVA_OPTS:"${APP_JAVA_OPTS}
   echo "excute ->CLASS:"${CLASS}
   echo "excute ->CLASSPATH:"${CLASSPATH}
-  nohup "$JAVA" -Dproc_$APP_NAME $APP_JAVA_OPTS $CLASS  > "$OUT_FILE" "$@" 2>&1 < /dev/null &
+  if [ "$IN_DOCKER" = "true" ]; then
+    "$JAVA" -Dproc_$APP_NAME $APP_JAVA_OPTS $CLASS  > "$OUT_FILE" "$@" 2>&1
+  else
+    nohup "$JAVA" -Dproc_$APP_NAME $APP_JAVA_OPTS $CLASS  > "$OUT_FILE" "$@" 2>&1 < /dev/null &
+  fi
 
 }
 

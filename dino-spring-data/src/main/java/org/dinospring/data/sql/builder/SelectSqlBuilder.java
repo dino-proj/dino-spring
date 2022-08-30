@@ -45,6 +45,8 @@ public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
 
   protected List<Object> havingParams = new ArrayList<>();
 
+  protected List<Object> joinParams = new ArrayList<>();
+
   private int limit = 0;
 
   private long offset = 0;
@@ -255,10 +257,15 @@ public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
    * @param table
    * @param alias
    * @param onExpr
+   * @param values 参数
    * @return
    */
-  public SelectSqlBuilder join(final String table, final String alias, final String onExpr) {
-    return join(String.format("%s AS %s ON %s", table, alias, onExpr));
+  public SelectSqlBuilder join(final String table, final String alias, final String onExpr, final Object... values) {
+    join(String.format("%s AS %s ON %s", table, alias, onExpr));
+    if (values != null) {
+      joinParams.addAll(Arrays.asList(values));
+    }
+    return this;
   }
 
   /**
@@ -296,10 +303,16 @@ public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
    * @param table
    * @param alias
    * @param onExpr
+   * @param values 参数
    * @return
    */
-  public SelectSqlBuilder leftJoin(final String table, final String alias, final String onExpr) {
-    return leftJoin(String.format("%s AS %s ON %s", table, alias, onExpr));
+  public SelectSqlBuilder leftJoin(final String table, final String alias, final String onExpr,
+      final Object... values) {
+    leftJoin(String.format("%s AS %s ON %s", table, alias, onExpr));
+    if (values != null) {
+      joinParams.addAll(Arrays.asList(values));
+    }
+    return this;
   }
 
   /**
@@ -337,10 +350,16 @@ public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
    * @param table
    * @param alias
    * @param onExpr
+   * @param values 参数
    * @return
    */
-  public SelectSqlBuilder rightJoin(final String table, final String alias, final String onExpr) {
-    return rightJoin(String.format("%s AS %s ON %s", table, alias, onExpr));
+  public SelectSqlBuilder rightJoin(final String table, final String alias, final String onExpr,
+      final Object... values) {
+    rightJoin(String.format("%s AS %s ON %s", table, alias, onExpr));
+    if (values != null) {
+      joinParams.addAll(Arrays.asList(values));
+    }
+    return this;
   }
 
   /**
@@ -469,8 +488,11 @@ public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
 
   @Override
   public Object[] getParams() {
-    Stream<Object[]> paramsArr = Stream.of(withSql == null ? EMPTY_PARAMS : withSql.getParams(),
-        whereParams.toArray(), havingParams.toArray());
+    Stream<Object[]> paramsArr = Stream.of(
+        withSql == null ? EMPTY_PARAMS : withSql.getParams(),
+        joinParams.toArray(),
+        whereParams.toArray(),
+        havingParams.toArray());
     paramsArr = Stream.concat(paramsArr, unions.stream().map(v -> v.expr.getParams()));
 
     return paramsArr.flatMap(Arrays::stream).toArray();

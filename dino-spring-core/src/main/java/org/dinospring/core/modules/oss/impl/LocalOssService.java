@@ -28,6 +28,11 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.collect.Multimap;
+import io.minio.CreateMultipartUploadResponse;
+import io.minio.ListPartsResponse;
+import io.minio.ObjectWriteResponse;
+import io.minio.messages.Part;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.io.FileUtils;
@@ -185,6 +190,26 @@ public class LocalOssService implements OssService {
 
   @Override
   public String getPresignedObjectUrl(String bucket, String objectName, Integer timeout, TimeUnit unit) {
+    return null;
+  }
+
+  @Override
+  public CreateMultipartUploadResponse createMultipartUploadAsync(String bucketName, String region, String objectName, Multimap<String, String> headers, Multimap<String, String> extraQueryParams) {
+    return null;
+  }
+
+  @Override
+  public ObjectWriteResponse completeMultipartUploadAsync(String bucketName, String region, String objectName, String uploadId, Part[] parts, Multimap<String, String> extraHeaders, Multimap<String, String> extraQueryParams) {
+    return null;
+  }
+
+  @Override
+  public ListPartsResponse listPartsAsync(String bucketName, String region, String objectName, Integer maxParts, Integer partNumberMarker, String uploadId, Multimap<String, String> extraHeaders, Multimap<String, String> extraQueryParams) {
+    return null;
+  }
+
+  @Override
+  public String createUploadUrlAsync(String bucketName, String objectName, Integer partNumber, String uploadId) {
     return null;
   }
 

@@ -14,17 +14,6 @@
 
 package org.dinospring.core.utils;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.UUID;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.drew.imaging.FileType;
 import com.drew.imaging.FileTypeDetector;
 import com.drew.imaging.ImageMetadataReader;
@@ -43,12 +32,21 @@ import com.drew.metadata.mp4.media.Mp4VideoDirectory;
 import com.drew.metadata.png.PngDirectory;
 import com.drew.metadata.wav.WavDirectory;
 import com.drew.metadata.webp.WebpDirectory;
-
 import lombok.Data;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 import ws.schild.jave.EncoderException;
 import ws.schild.jave.MultimediaObject;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.UUID;
 
 /**
  * 多媒体工具类、图片、视频、音频、文件等处理
@@ -65,14 +63,19 @@ public class MultiMediaUtils {
    * @param file
    * @return
    */
-  public static MediaInfo extractMediaInfo(MultipartFile file) {
+  public static MediaInfo extractMediaInfo(MultipartFile file) throws IOException {
+    var fileInputStream = file.getInputStream();
+    String fileContentType = file.getContentType();
+    String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
+    return extractMediaInfo(fileInputStream, fileContentType, fileExtension);
+  }
 
-    try (BufferedInputStream input = new BufferedInputStream(file.getInputStream())) {
+  public static MediaInfo extractMediaInfo(InputStream fileInputStream, String fileContentType, String fileExtension) {
+    try (BufferedInputStream input = new BufferedInputStream(fileInputStream)) {
       MediaInfo media;
       var fileType = FileTypeDetector.detectFileType(input);
       if (fileType.getMimeType() == null || fileType == FileType.Zip) {
-        String fileContentType = file.getContentType();
-        String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
+
         if (StringUtils.isBlank(fileContentType)) {
           return null;
         }
@@ -148,7 +151,7 @@ public class MultiMediaUtils {
           media.setResolution(calResolution(media.getWidth(), media.getHeight()));
         } else if (dir.hasTagName(Mp4Directory.TAG_DURATION)) {
           var timeScale = dir.hasTagName(Mp4Directory.TAG_TIME_SCALE) ? dir.getDouble(Mp4Directory.TAG_TIME_SCALE)
-              : 1000D;
+            : 1000D;
           media.setDuration(Math.round(dir.getLong(Mp4Directory.TAG_DURATION) / timeScale));
         }
       } else if (dir instanceof WavDirectory) {

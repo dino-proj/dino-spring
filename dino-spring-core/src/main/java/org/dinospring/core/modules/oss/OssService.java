@@ -14,6 +14,12 @@
 
 package org.dinospring.core.modules.oss;
 
+import com.google.common.collect.Multimap;
+import io.minio.CreateMultipartUploadResponse;
+import io.minio.ListPartsResponse;
+import io.minio.ObjectWriteResponse;
+import io.minio.messages.Part;
+
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
@@ -170,4 +176,52 @@ public interface OssService {
    * @return
    */
   String getPresignedObjectUrl(String bucket, String objectName, Integer timeout, TimeUnit unit);
+
+  /**
+   * 创建分片上传请求
+   *  @param bucketName       存储桶
+   * @param region           区域
+   * @param objectName       对象名
+   * @param headers          消息头
+   * @param extraQueryParams 额外查询参数
+   * @return
+   */
+  CreateMultipartUploadResponse createMultipartUploadAsync(String bucketName, String region, String objectName, Multimap<String, String> headers, Multimap<String, String> extraQueryParams);
+
+  /**
+   * 完成分片上传，执行合并文件
+   *  @param bucketName       存储桶
+   * @param region           区域
+   * @param objectName       对象名
+   * @param uploadId         上传ID
+   * @param parts            分片
+   * @param extraHeaders     额外消息头
+   * @param extraQueryParams 额外查询参数
+   * @return
+   */
+  ObjectWriteResponse completeMultipartUploadAsync(String bucketName, String region, String objectName, String uploadId, Part[] parts, Multimap<String, String> extraHeaders, Multimap<String, String> extraQueryParams);
+
+  /**
+   * 查询分片数据
+   *  @param bucketName       存储桶
+   * @param region           区域
+   * @param objectName       对象名
+   * @param maxParts         最大分片
+   * @param partNumberMarker  分片数量标记位置
+   * @param uploadId         上传ID
+   * @param extraHeaders     额外消息头
+   * @param extraQueryParams 额外查询参数
+   * @return
+   */
+  ListPartsResponse listPartsAsync(String bucketName, String region, String objectName, Integer maxParts, Integer partNumberMarker, String uploadId, Multimap<String, String> extraHeaders, Multimap<String, String> extraQueryParams);
+
+  /**
+   * 创建文件预上传地址
+   * @param bucketName 存储桶
+   * @param objectName 对象名
+   * @param partNumber 分片数量
+   * @param uploadId 上传ID
+   * @return
+   */
+  String createUploadUrlAsync(String bucketName, String objectName, Integer partNumber, String uploadId);
 }

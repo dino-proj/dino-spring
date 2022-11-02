@@ -14,14 +14,19 @@
 
 package org.dinospring.core.modules.oss.impl;
 
+import com.google.common.collect.Multimap;
 import io.minio.BucketExistsArgs;
 import io.minio.CopyObjectArgs;
 import io.minio.CopySource;
+import io.minio.CreateMultipartUploadResponse;
 import io.minio.GetObjectArgs;
 import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.ListObjectsArgs;
+import io.minio.ListPartsResponse;
 import io.minio.MakeBucketArgs;
+import io.minio.MinioAsyncClient;
 import io.minio.MinioClient;
+import io.minio.ObjectWriteResponse;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveBucketArgs;
 import io.minio.RemoveObjectArgs;
@@ -35,9 +40,11 @@ import io.minio.errors.ServerException;
 import io.minio.errors.XmlParserException;
 import io.minio.http.Method;
 import io.minio.messages.Item;
+import io.minio.messages.Part;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.dinospring.core.modules.oss.AsyncMinIoClient;
 import org.dinospring.core.modules.oss.BucketMeta;
 import org.dinospring.core.modules.oss.ObjectMeta;
 import org.dinospring.core.modules.oss.OssService;
@@ -51,6 +58,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -64,9 +72,14 @@ public class MinioOssService implements OssService {
 
   private MinioClient minioClient;
 
+  private AsyncMinIoClient asyncMinIoClient;
+
   public MinioOssService(@Nonnull MinioProperties properties) {
     minioClient = MinioClient.builder().endpoint(properties.getUri())
       .credentials(properties.getAccessKey(), properties.getSecretKey()).build();
+
+    asyncMinIoClient = new AsyncMinIoClient(MinioAsyncClient.builder().endpoint(properties.getUri())
+      .credentials(properties.getAccessKey(), properties.getSecretKey()).build());
   }
 
   @Override
@@ -273,6 +286,90 @@ public class MinioOssService implements OssService {
       e.printStackTrace();
     }
     return url;
+  }
+
+  /**
+   * 创建分片上传请求
+   *  @param bucketName       存储桶
+   * @param region           区域
+   * @param objectName       对象名
+   * @param headers          消息头
+   * @param extraQueryParams 额外查询参数
+   * @return
+   */
+  @Override
+  public CreateMultipartUploadResponse createMultipartUploadAsync(String bucketName, String region, String objectName, Multimap<String, String> headers, Multimap<String, String> extraQueryParams) {
+    CreateMultipartUploadResponse createMultipartUploadResponse = null;
+    try {
+      createMultipartUploadResponse = asyncMinIoClient.createMultipartUploadAsync(bucketName, region, objectName, headers, extraQueryParams).get();
+    } catch (InterruptedException | ExecutionException | InsufficientDataException | IOException | NoSuchAlgorithmException | XmlParserException | InvalidKeyException | InternalException e) {
+      e.printStackTrace();
+      Thread.currentThread().interrupt();
+    }
+    return createMultipartUploadResponse;
+  }
+
+  /**
+   * 完成分片上传，执行合并文件
+   *  @param bucketName       存储桶
+   * @param region           区域
+   * @param objectName       对象名
+   * @param uploadId         上传ID
+   * @param parts            分片
+   * @param extraHeaders     额外消息头
+   * @param extraQueryParams 额外查询参数
+   * @return
+   */
+  @Override
+  public ObjectWriteResponse completeMultipartUploadAsync(String bucketName, String region, String objectName, String uploadId, Part[] parts, Multimap<String, String> extraHeaders, Multimap<String, String> extraQueryParams) {
+    ObjectWriteResponse objectWriteResponse = null;
+    try {
+      objectWriteResponse = asyncMinIoClient.completeMultipartUploadAsync(bucketName, region, objectName, uploadId, parts, extraHeaders, extraQueryParams).get();
+    } catch (InterruptedException | ExecutionException | InsufficientDataException | InternalException | IOException | NoSuchAlgorithmException | XmlParserException | InvalidKeyException e) {
+      e.printStackTrace();
+      Thread.currentThread().interrupt();
+    }
+    return objectWriteResponse;
+  }
+
+  /**
+   * 查询分片数据
+   *  @param bucketName       存储桶
+   * @param region           区域
+   * @param objectName       对象名
+   * @param uploadId         上传ID
+   * @param extraHeaders     额外消息头
+   * @param extraQueryParams 额外查询参数
+   * @return
+   */
+  public ListPartsResponse listPartsAsync(String bucketName, String region, String objectName, Integer maxParts, Integer partNumberMarker, String uploadId, Multimap<String, String> extraHeaders, Multimap<String, String> extraQueryParams) {
+    ListPartsResponse listPartsResponse = null;
+    try {
+      listPartsResponse = asyncMinIoClient.listPartsAsync(bucketName, region, objectName, maxParts, partNumberMarker, uploadId, extraHeaders, extraQueryParams).get();
+    } catch (InsufficientDataException | InternalException | IOException | NoSuchAlgorithmException | XmlParserException | InvalidKeyException | ExecutionException | InterruptedException e) {
+      e.printStackTrace();
+      Thread.currentThread().interrupt();
+    }
+    return listPartsResponse;
+  }
+
+  /**
+   * 创建文件预上传地址
+   * @param bucketName 存储桶
+   * @param objectName 对象名
+   * @param partNumber 分片数量
+   * @param uploadId 上传ID
+   * @return
+   */
+  @Override
+  public String createUploadUrlAsync(String bucketName, String objectName, Integer partNumber, String uploadId) {
+    String uploadUrlAsync = null;
+    try {
+      uploadUrlAsync = asyncMinIoClient.createUploadUrlAsync(bucketName, objectName, partNumber, uploadId);
+    } catch (IOException | InvalidKeyException | InvalidResponseException | InsufficientDataException | NoSuchAlgorithmException | ServerException | InternalException | XmlParserException | ErrorResponseException e) {
+      e.printStackTrace();
+    }
+    return uploadUrlAsync;
   }
 
 }

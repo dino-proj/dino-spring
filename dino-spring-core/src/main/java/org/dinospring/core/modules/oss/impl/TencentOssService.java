@@ -14,6 +14,7 @@
 
 package org.dinospring.core.modules.oss.impl;
 
+import com.google.common.collect.Multimap;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.auth.BasicCOSCredentials;
@@ -31,6 +32,10 @@ import com.qcloud.cos.model.ListObjectsRequest;
 import com.qcloud.cos.model.ObjectMetadata;
 import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.region.Region;
+import io.minio.CreateMultipartUploadResponse;
+import io.minio.ListPartsResponse;
+import io.minio.ObjectWriteResponse;
+import io.minio.messages.Part;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.iterators.LazyIteratorChain;
 import org.apache.commons.io.IOUtils;
@@ -276,5 +281,25 @@ public class TencentOssService implements OssService {
     GeneratePresignedUrlRequest urlRequest = new GeneratePresignedUrlRequest(bucket, objectName, HttpMethodName.GET);
     //TODO:
     return cosClient.generatePresignedUrl(urlRequest).getPath();
+  }
+
+  @Override
+  public CreateMultipartUploadResponse createMultipartUploadAsync(String bucketName, String region, String objectName, Multimap<String, String> headers, Multimap<String, String> extraQueryParams) {
+    return null;
+  }
+
+  @Override
+  public ObjectWriteResponse completeMultipartUploadAsync(String bucketName, String region, String objectName, String uploadId, Part[] parts, Multimap<String, String> extraHeaders, Multimap<String, String> extraQueryParams) {
+    return null;
+  }
+
+  @Override
+  public ListPartsResponse listPartsAsync(String bucketName, String region, String objectName, Integer maxParts, Integer partNumberMarker, String uploadId, Multimap<String, String> extraHeaders, Multimap<String, String> extraQueryParams) {
+    return null;
+  }
+
+  @Override
+  public String createUploadUrlAsync(String bucketName, String objectName, Integer partNumber, String uploadId) {
+    return null;
   }
 }

@@ -13,7 +13,7 @@ jobs:
     env:
       MVN_OPT: -e
       BUILD_OPT: -Dmaven.test.skip=true
-      DEPLOY_OPT: '-DMVN_REPO_USER_NAME=${{ secrets.nexus_username }} -DMVN_REPO_USER_PASSWORD=${{ secrets.nexus_password }}
+      DEPLOY_OPT: '-DMVN_REPO_USER_NAME=${{ secrets.nexus_username }} -DMVN_REPO_USER_PASSWORD=${{ secrets.nexus_password }}'
 
     steps:
       - name: Check out Git repository

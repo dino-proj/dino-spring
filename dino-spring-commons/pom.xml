@@ -11,6 +11,9 @@
   <artifactId>dino-spring-commons</artifactId>
   <version>2.4.0.RELEASE</version>
   <name>dino-spring-commons</name>
+  <description>dino-spring通用功能模块</description>
+  <url>https://dinodev.cn/</url>
+
   <properties>
     <sonar.projectKey>dino-proj_dino-spring_AXxR_pifqZjUnsqzsQ5y</sonar.projectKey>
     <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
@@ -58,5 +61,39 @@
 
   </dependencies>
 
+  <licenses>
+    <license>
+      <name>Apache-2.0 License</name>
+      <url>https://opensource.org/licenses/Apache-2.0</url>
+    </license>
+  </licenses>
+
+  <scm>
+    <connection>scm:git:https://github.com/dino-proj/dino-spring.git</connection>
+    <developerConnection>scm:git:https://github.com/dino-proj/dino-spring.git</developerConnection>
+    <url>https://github.com/dino-proj/dino-spring</url>
+  </scm>
+
+  <developers>
+    <developer>
+      <name>tuuboo</name>
+      <email>tuuboo@gmail.com</email>
+    </developer>
+    <developer>
+      <name>Jack</name>
+      <email>liujiehaobang@163.com</email>
+    </developer>
+  </developers>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
 
 </project>

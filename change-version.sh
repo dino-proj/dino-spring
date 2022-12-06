@@ -39,7 +39,7 @@ fi
 OLD_VER=$1
 NEW_VER=$2
 
-for proj in "dino-dependencies-root" "dino-spring-assembly" "dino-spring-boot-starter" "dino-spring-cloud-starter" "dino-spring-commons" "dino-spring-auth" "dino-spring-data" "dino-spring-core"
+for proj in "dino-dependencies-root" "dino-spring-assembly" "dino-spring-boot-starter-parent" "dino-spring-cloud-starter-parent" "dino-spring-commons" "dino-spring-auth" "dino-spring-data" "dino-spring-core"
   do
     echo change "$proj" version to $NEW_VER
     cd "$CWD/$proj"

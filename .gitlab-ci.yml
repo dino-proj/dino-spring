@@ -28,12 +28,12 @@ deploy:
     - echo "=============== 开始部署 dino-spring-assembly  ==============="
     - mvn clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
     - cd ..
-    - cd dino-spring-boot-starter
-    - echo "=============== 开始部署 dino-spring-boot-starter  ==============="
+    - cd dino-spring-boot-starter-parent
+    - echo "=============== 开始部署 dino-spring-boot-starter-parent  ==============="
     - mvn clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
     - cd ..
-    - cd dino-spring-cloud-starter
-    - echo "=============== 开始部署 dino-spring-cloud-starter  ==============="
+    - cd dino-spring-cloud-starter-parent
+    - echo "=============== 开始部署 dino-spring-cloud-starter-parent  ==============="
     - mvn clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
     - cd ..
     - cd dino-spring-commons

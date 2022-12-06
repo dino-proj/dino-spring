@@ -11,6 +11,8 @@
   <artifactId>dino-spring-data</artifactId>
   <version>2.4.0.RELEASE</version>
   <name>dino-spring-data</name>
+  <description>dino-spring数据访问相关功能模块</description>
+  <url>https://dinodev.cn/</url>
 
   <properties>
     <java.version>11</java.version>
@@ -33,7 +35,7 @@
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-jpa</artifactId>
+      <artifactId>spring-boot-starter-data-jdbc</artifactId>
     </dependency>
 
     <dependency>
@@ -44,15 +46,6 @@
     <dependency>
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.vladmihalcea</groupId>
-      <artifactId>hibernate-types-52</artifactId>
     </dependency>
 
     <dependency>
@@ -74,5 +67,39 @@
 
   </dependencies>
 
+  <licenses>
+    <license>
+      <name>Apache-2.0 License</name>
+      <url>https://opensource.org/licenses/Apache-2.0</url>
+    </license>
+  </licenses>
+
+  <scm>
+    <connection>scm:git:https://github.com/dino-proj/dino-spring.git</connection>
+    <developerConnection>scm:git:https://github.com/dino-proj/dino-spring.git</developerConnection>
+    <url>https://github.com/dino-proj/dino-spring</url>
+  </scm>
+
+  <developers>
+    <developer>
+      <name>tuuboo</name>
+      <email>tuuboo@gmail.com</email>
+    </developer>
+    <developer>
+      <name>Jack</name>
+      <email>liujiehaobang@163.com</email>
+    </developer>
+  </developers>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
 
 </project>

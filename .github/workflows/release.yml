@@ -20,12 +20,13 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install Java and Maven
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
           java-version: 11
           server-id: ossrh
           server-username: ${{ secrets.nexus_username }}
           server-password: ${{ secrets.nexus_password }}
+          cache: 'maven'
 
       - run: echo deploy into ${MVN_REPO_USER_NAME}@${MVN_REPO_URL_RELEASES}
       - run: cd dino-dependencies-root

@@ -9,6 +9,12 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+
+    env:
+      MVN_OPT: -e
+      BUILD_OPT: -Dmaven.test.skip=true
+      DEPLOY_OPT: '-DMVN_REPO_USER_NAME=${{ secrets.nexus_username }} -DMVN_REPO_USER_PASSWORD=${{ secrets.nexus_password }}
+
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
@@ -17,11 +23,12 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
+          server-id: ossrh
+          server-username: ${{ secrets.nexus_username }}
+          server-password: ${{ secrets.nexus_password }}
 
-      - name: Release Maven package
-        uses: samuelmeuli/action-maven-publish@v1.4.0
-        with:
-          gpg_private_key: ${{ secrets.gpg_private_key }}
-          gpg_passphrase: ${{ secrets.gpg_passphrase }}
-          nexus_username: ${{ secrets.nexus_username }}
-          nexus_password: ${{ secrets.nexus_password }}
+      - run: echo deploy into ${MVN_REPO_USER_NAME}@${MVN_REPO_URL_RELEASES}
+      - run: cd dino-dependencies-root
+      - run: echo "=============== 开始部署 dino-dependencies-root  ==============="
+      - run: mvn clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+      - run: cd ..

@@ -32,3 +32,31 @@ jobs:
       - run: echo "=============== 开始部署 dino-dependencies-root  ==============="
       - run: mvn clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
       - run: cd ..
+      - run: cd dino-spring-assembly
+      - run: echo "=============== 开始部署 dino-spring-assembly  ==============="
+      - run: mvn clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+      - run: cd ..
+      - run: cd dino-spring-boot-starter-parent
+      - run: echo "=============== 开始部署 dino-spring-boot-starter-parent  ==============="
+      - run: mvn clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+      - run: cd ..
+      - run: cd dino-spring-cloud-starter-parent
+      - run: echo "=============== 开始部署 dino-spring-cloud-starter-parent  ==============="
+      - run: mvn clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+      - run: cd ..
+      - run: cd dino-spring-commons
+      - run: echo "=============== 开始部署 dino-spring-commons  ==============="
+      - run: mvn clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+      - run: cd ..
+      - run: cd dino-spring-auth
+      - run: echo "=============== 开始部署 dino-spring-auth  ==============="
+      - run: mvn clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+      - run: cd ..
+      - run: cd dino-spring-data
+      - run: echo "=============== 开始部署 dino-spring-data  ==============="
+      - run: mvn clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+      - run: cd ..
+      - run: cd dino-spring-core
+      - run: echo "=============== 开始部署 dino-spring-core  ==============="
+      - run: mvn clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+      - run: cd ..

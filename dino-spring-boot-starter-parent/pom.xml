@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.6.6</version>
+    <version>2.6.14</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
   <groupId>org.dinospring</groupId>
   <artifactId>dino-spring-boot-starter-parent</artifactId>
-  <version>2.4.0.RELEASE</version>
+  <version>2.4.0</version>
   <packaging>pom</packaging>
   <description>dino-spring项目boot starter parent</description>
   <url>https://dinodev.cn/</url>
@@ -19,7 +21,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>11</java.version>
 
-    <dino-spring.version>2.4.0.RELEASE</dino-spring.version>
+    <dino-spring.version>2.4.0</dino-spring.version>
 
     <!-- plugin -->
     <maven-pmd-plugin.version>3.16.0</maven-pmd-plugin.version>
@@ -278,10 +280,9 @@
           <artifactId>maven-source-plugin</artifactId>
           <executions>
             <execution>
-              <id>attach-sources</id>
-              <phase>verify</phase>
+              <phase>package</phase>
               <goals>
-                <goal>jar-no-fork</goal>
+                <goal>jar</goal>
               </goals>
             </execution>
           </executions>

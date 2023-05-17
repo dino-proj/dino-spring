@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class MessageReq extends Request {
+public class MessageReq extends OpenIMRequest {
 
   public static final String PATH = "/manager/send_msg";
 

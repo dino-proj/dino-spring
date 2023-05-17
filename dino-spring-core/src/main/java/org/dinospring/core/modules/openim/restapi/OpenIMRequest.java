@@ -26,7 +26,7 @@ import lombok.Getter;
  * @date 2022-04-12 20:30:32
  */
 
-public abstract class Request {
+public abstract class OpenIMRequest {
   private static final AtomicLong ID_GEN = new AtomicLong(System.currentTimeMillis());
 
   /**

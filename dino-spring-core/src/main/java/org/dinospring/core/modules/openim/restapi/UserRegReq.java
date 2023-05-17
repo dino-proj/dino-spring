@@ -15,6 +15,7 @@
 package org.dinospring.core.modules.openim.restapi;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -26,7 +27,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class UserRegReq extends Request {
+public class UserRegReq extends OpenIMRequest {
   public static final String PATH = "/auth/user_register";
 
   /**

@@ -26,7 +26,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class UserTokenReq extends Request {
+public class UserTokenReq extends OpenIMRequest {
   public static final String PATH = "/auth/user_token";
 
   /**

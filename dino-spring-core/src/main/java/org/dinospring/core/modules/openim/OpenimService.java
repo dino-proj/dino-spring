@@ -14,8 +14,11 @@
 
 package org.dinospring.core.modules.openim;
 
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.utils.AsmUtils;
 import org.dinospring.core.modules.openim.config.OpenimModuleProperties;
@@ -29,8 +32,8 @@ import org.dinospring.core.modules.openim.restapi.MessageReq;
 import org.dinospring.core.modules.openim.restapi.MessageResp;
 import org.dinospring.core.modules.openim.restapi.MuteGroupMember;
 import org.dinospring.core.modules.openim.restapi.MuteGroupMemberReq;
-import org.dinospring.core.modules.openim.restapi.Request;
-import org.dinospring.core.modules.openim.restapi.Response;
+import org.dinospring.core.modules.openim.restapi.OpenIMRequest;
+import org.dinospring.core.modules.openim.restapi.OpenIMResponse;
 import org.dinospring.core.modules.openim.restapi.UserRegReq;
 import org.dinospring.core.modules.openim.restapi.UserToken;
 import org.dinospring.core.modules.openim.restapi.UserTokenReq;
@@ -41,9 +44,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * openim的restful接口实现
@@ -139,7 +140,7 @@ public class OpenimService {
    * @return
    */
   public List<InviteUserToGroupResp> inviteUserToGroup(InviteUserToGroupReq inviteUserToGroupReq) {
-    return post(InviteUserToGroupReq.PATH, inviteUserToGroupReq, new ArrayList<InviteUserToGroupResp>().getClass());
+    return postForList(InviteUserToGroupReq.PATH, inviteUserToGroupReq, InviteUserToGroupResp.class);
   }
 
   /**
@@ -162,44 +163,43 @@ public class OpenimService {
    * @return
    */
   public List<AccountCheck> accountCheck(AccountCheckReq accountCheckReq) {
-    List<AccountCheck> checkList = new ArrayList<>();
-    ArrayList<LinkedHashMap<String, String>> post = post(AccountCheckReq.PATH, accountCheckReq,
-        new ArrayList<LinkedHashMap<String, String>>().getClass());
-    if (CollectionUtils.isNotEmpty(post)) {
-      post.forEach(stringStringLinkedHashMap -> {
-        var accountCheck = new AccountCheck();
-        accountCheck.setAccountStatus(stringStringLinkedHashMap.get("accountStatus"));
-        accountCheck.setUserId(stringStringLinkedHashMap.get("userID"));
-        checkList.add(accountCheck);
-      });
-    }
-    return checkList;
+    return postForList(AccountCheckReq.PATH, accountCheckReq, AccountCheck.class);
   }
 
   protected String makeUrl(String path) {
     return properties.getUri() + path;
   }
 
-  private <T> T post(String path, Request request, Class<T> respClass) {
+  private <T> T post(String path, OpenIMRequest request, Class<T> respClass) {
     try {
 
-      var newClassName = AsmUtils.className(Response.class, respClass);
-      Class<Response<T>> cls = AsmUtils.defineGenericClass(newClassName, Response.class, respClass);
+      var newClassName = AsmUtils.className(OpenIMResponse.class, respClass);
+      Class<OpenIMResponse<T>> cls = AsmUtils.defineGenericClass(newClassName, OpenIMResponse.class, respClass);
 
+      HttpHeaders httpHeaders = new HttpHeaders();
       if (request.isRequiredToken()) {
-        HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("token", getAdminToken());
-        HttpEntity<Request> httpEntity = new HttpEntity<>(request, httpHeaders);
-        var resp = restClient.postForObject(makeUrl(path), httpEntity, cls);
-        return resp.getData();
       }
 
-      var resp = restClient.postForObject(makeUrl(path), request, cls);
-      return resp.getData();
+      HttpEntity<OpenIMRequest> httpEntity = new HttpEntity<>(request, httpHeaders);
+
+      var resp = restClient.postForObject(makeUrl(path), httpEntity, cls);
+      if (Objects.nonNull(resp)) {
+        if (resp.getErrCode() == 0) {
+          return resp.getData();
+        } else {
+          throw new IOException(String.format("ErrCode=%s, ErrMsg=%s", resp.getErrCode(), resp.getErrMsg()));
+        }
+      } else {
+        throw new IOException("no Response");
+      }
     } catch (Exception e) {
       log.error("gen class Response<{}> error", respClass.getSimpleName(), e);
       throw new RuntimeException(e);
     }
   }
 
+  private <T> List<T> postForList(String path, OpenIMRequest request, Class<T> respClass) {
+    return (List<T>) post(path, request, new ArrayList<T>(1).getClass());
+  }
 }

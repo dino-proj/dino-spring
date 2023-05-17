@@ -25,7 +25,7 @@ import lombok.Data;
  */
 
 @Data
-public abstract class Response<T> {
+public abstract class OpenIMResponse<T> {
   /**
    * 返回码
    */

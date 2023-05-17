@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class MuteGroupMemberReq extends Request {
+public class MuteGroupMemberReq extends OpenIMRequest {
 
   public static final String PATH = "/group/mute_group_member";
 

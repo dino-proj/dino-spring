@@ -1,10 +1,11 @@
 package org.dinospring.core.modules.openim.restapi;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.util.List;
 
 /**
  * @Author: Jack Liu
@@ -12,7 +13,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GroupReq extends Request {
+public class GroupReq extends OpenIMRequest {
   public static final String PATH = "/group/create_group";
 
   /**

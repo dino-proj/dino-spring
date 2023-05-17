@@ -1,16 +1,19 @@
 package org.dinospring.core.modules.openim.restapi;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @Author: Jack Liu
  * @Date: 2022/4/20 16:50
  */
 @Data
-public class AccountCheckReq extends Request {
+@EqualsAndHashCode(callSuper = true)
+public class AccountCheckReq extends OpenIMRequest {
   public static final String PATH = "/user/account_check";
 
   /**
@@ -23,6 +26,5 @@ public class AccountCheckReq extends Request {
   public boolean isRequiredToken() {
     return true;
   }
-
 
 }

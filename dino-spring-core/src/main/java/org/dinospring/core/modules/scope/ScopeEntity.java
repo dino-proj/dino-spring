@@ -1,4 +1,4 @@
-// Copyright 2022 dinospring.cn
+// Copyright 2022 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,16 +15,11 @@
 package org.dinospring.core.modules.scope;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-
 import org.dinospring.data.domain.TenantRowEntityBase;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -44,11 +39,8 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @Entity
 @Table(name = "sys_scope", indexes = { @Index(name = "idx_rule_hash", columnList = "rule_hash") })
-@TypeDef(name = "json", typeClass = JsonBinaryType.class)
 public class ScopeEntity extends TenantRowEntityBase<Long> {
 
-  @Type(type = "json")
-  @Convert(disableConversion = true)
   @Schema(description = "订单信息")
   @Column(name = "scope_rule", nullable = true, columnDefinition = "jsonb")
   private ScopeRule scopeRule;

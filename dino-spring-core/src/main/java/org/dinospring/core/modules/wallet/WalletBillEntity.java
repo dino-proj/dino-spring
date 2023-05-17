@@ -1,21 +1,19 @@
 package org.dinospring.core.modules.wallet;
 
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.Table;
+
+import org.dinospring.data.domain.TenantRowEntityBase;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
-import org.dinospring.data.domain.TenantRowEntityBase;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
-import java.io.Serializable;
 
 /**
  *
@@ -30,7 +28,6 @@ import java.io.Serializable;
 @Entity
 @Table(name = "sys_wallet_bills", indexes = {
     @Index(name = "idx_accountId", columnList = "account_id", unique = false) })
-@TypeDef(name = "json", typeClass = JsonBinaryType.class)
 public class WalletBillEntity extends TenantRowEntityBase<Long> {
 
   @Schema(description = "账户ID")
@@ -57,8 +54,6 @@ public class WalletBillEntity extends TenantRowEntityBase<Long> {
   @Column(name = "order_type", nullable = true)
   private String orderType;
 
-  @Type(type = "json")
-  @Convert(disableConversion = true)
   @Schema(description = "订单信息")
   @Column(name = "[order]", nullable = true, columnDefinition = "jsonb")
   private Serializable order;

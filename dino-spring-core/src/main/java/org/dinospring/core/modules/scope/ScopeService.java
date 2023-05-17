@@ -1,4 +1,4 @@
-// Copyright 2022 dinospring.cn
+// Copyright 2022 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
 
 package org.dinospring.core.modules.scope;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.dinospring.core.modules.scope.ScopeRuleMatcher.HIT;
 import org.dinospring.core.service.impl.ServiceBase;
 import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -47,7 +47,7 @@ public class ScopeService extends ServiceBase<ScopeEntity, Long> {
       e.setScopeRule(rule);
       e.setRuleHash(hash);
       beforeSaveEntity(e);
-      return scopeRepository.saveAndFlush(e).getId();
+      return scopeRepository.save(e).getId();
     });
   }
 

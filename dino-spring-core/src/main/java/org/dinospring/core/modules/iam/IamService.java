@@ -1,4 +1,4 @@
-// Copyright 2022 dinospring.cn
+// Copyright 2022 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,6 +14,10 @@
 
 package org.dinospring.core.modules.iam;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.dinospring.data.sql.builder.SelectSqlBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +25,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * @author tuuboo
@@ -45,7 +45,9 @@ public class IamService {
     if (Objects.isNull(userType)) {
       return actionGroupRepository.findAll(ActionGroupVo.class);
     }
-    SelectSqlBuilder selectSqlBuilder = actionGroupRepository.newSelect().isNotNull("user_type").eq("user_type", userType);
+    SelectSqlBuilder selectSqlBuilder = actionGroupRepository.newSelect()
+        .isNotNull("user_type")
+        .eq("user_type", userType);
     return actionGroupRepository.queryList(selectSqlBuilder, ActionGroupVo.class);
   }
 
@@ -53,7 +55,7 @@ public class IamService {
     var roles = userRoleRepository.getUserRoles(tenantId, userType, userId);
     var roleEntities = roleRepository.findAllById(roles);
     return roleEntities.stream().map(RoleEntity::getPermissions).flatMap(List<String>::stream)
-      .collect(Collectors.toList());
+        .collect(Collectors.toList());
   }
 
   public List<String> getUserRoles(String tenantId, String userType, String userId) {
@@ -63,7 +65,7 @@ public class IamService {
   }
 
   public Page<RoleVo> listUserRoles(String tenantId, String userType, String userId,
-                                    Pageable pageable) {
+      Pageable pageable) {
     var roles = userRoleRepository.listUserRoles(tenantId, userType, userId, pageable);
     var roleIds = roles.getContent();
     if (CollectionUtils.isNotEmpty(roleIds)) {

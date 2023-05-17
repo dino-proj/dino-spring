@@ -1,5 +1,5 @@
 /*
- *  Copyright 2021 dinospring.cn
+ *  Copyright 2021 dinodev.cn
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ public class VisualScope implements Serializable {
 
   @Schema(description = "人员")
   private List<String> user;
-  @Schema(name = "user_type",description = "id:user_type")
+  @Schema(name = "user_type", description = "id:user_type")
   private List<String> userType;
   @Schema(description = "部门")
   private List<Long> dept;

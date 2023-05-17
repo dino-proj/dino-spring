@@ -1,4 +1,4 @@
-// Copyright 2022 dinospring.cn
+// Copyright 2022 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 
 import org.apache.commons.beanutils.MethodUtils;
 import org.dinospring.auth.annotation.CheckAuthz;
-import org.dinospring.auth.annotation.CheckLogin;
+import org.dinospring.auth.annotation.CheckLoginAs;
 import org.dinospring.auth.annotation.CheckPermission;
 import org.dinospring.auth.annotation.CheckResource;
 import org.dinospring.auth.annotation.CheckRole;
@@ -42,7 +42,7 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 public class AuthzAnnotationPointcutAdvisor extends StaticMethodMatcherPointcutAdvisor {
 
   protected static final List<Class<? extends Annotation>> AUTHZ_ANNOTATION_CLASSES = Arrays.asList(
-      CheckPermission.class, CheckRole.class, CheckLogin.class, CheckResource.class, CheckAuthz.class);
+      CheckPermission.class, CheckRole.class, CheckLoginAs.class, CheckResource.class, CheckAuthz.class);
 
   private MethodMatcher methodMatcher;
 

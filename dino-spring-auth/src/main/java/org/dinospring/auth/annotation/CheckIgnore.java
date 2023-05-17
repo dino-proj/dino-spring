@@ -1,4 +1,4 @@
-// Copyright 2022 dinospring.cn
+// Copyright 2022 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 忽略权限检查，对于标注了此注解的类或接口，不会进行权限检查，忽略{@link CheckPermission}、{@link CheckLogin}、{@link CheckRole}注解
+ * 忽略权限检查，对于标注了此注解的类或接口，不会进行权限检查，忽略{@link CheckPermission}、{@link CheckLoginAs}、{@link CheckRole}注解
  * @author tuuboo
  * @date 2022-04-11 21:51:33
  */

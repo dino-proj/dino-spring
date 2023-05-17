@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,6 +13,14 @@
 // limitations under the License.
 
 package org.dinospring.data.dao;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,20 +37,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.util.Assert;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
 /**
  *
  * @author tuuboo
  */
 
 @NoRepositoryBean
-public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
+public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
 
   /**
    * 数据库的Dialect
@@ -102,7 +103,7 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    */
   default <E> SelectSqlBuilder newSelect(Class<E> entity, String tableAlias) {
     return StringUtils.isEmpty(tableAlias) ? new SelectSqlBuilder(dialect(), this.tableName(entity))
-      : new SelectSqlBuilder(dialect(), this.tableName(entity), tableAlias);
+        : new SelectSqlBuilder(dialect(), this.tableName(entity), tableAlias);
   }
 
   /**
@@ -170,11 +171,22 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
 
   /**
    * 查出所有主键记录
-   * @param <C>
    * @param ids 主键集合
-   * @param cls 类型
    * @return
    */
+  default List<T> findAllById(Collection<K> ids) {
+    var sql = newSelect();
+    sql.in("id", ids);
+    return this.queryList(sql);
+  }
+
+  /**
+  * 查出所有主键记录
+  * @param <C>
+  * @param ids 主键集合
+  * @param cls 类型
+  * @return
+  */
   default <C> List<C> findAllById(Collection<K> ids, Class<C> cls) {
     var sql = newSelect();
     sql.in("id", ids);
@@ -326,7 +338,7 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    * @return
    */
   default <MK, MV> Map<MK, MV> queryForMap(SelectSqlBuilder sql, String keyColumn, Class<MK> keyClass,
-                                           Class<MV> valueClass) {
+      Class<MV> valueClass) {
     return queryForMap(sql.getSql(), keyColumn, keyClass, valueClass, sql.getParams());
   }
 
@@ -342,7 +354,7 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    * @return
    */
   <MK, MV> Map<MK, MV> queryForMap(SelectSqlBuilder sql, String keyColumn, Class<MK> keyClass, String valueColumn,
-                                   Class<MV> valueClass);
+      Class<MV> valueClass);
 
   /**
    * 将查询结果放到Map中
@@ -356,7 +368,7 @@ public interface JdbcSelectExecutor<T, K> extends JpaHelperExcutor<T, K> {
    * @return
    */
   <MK, MV> Map<MK, MV> queryForMap(String sql, String keyColumn, Class<MK> keyClass, Class<MV> valueClass,
-                                   Object... params);
+      Object... params);
 
   /**
    * 分页查询

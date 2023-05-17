@@ -1,4 +1,4 @@
-// Copyright 2022 dinospring.cn
+// Copyright 2022 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -96,7 +96,7 @@ public class DinoAuthSessionResolver implements AuthSessionResolver<DinoAuthSess
 
     try {
       var princ = objectMapper.readValue(Base64.getUrlDecoder().decode(prinStr), TokenPrincaple.class);
-      log.info("req http:{}",request.getRequestURL());
+      log.info("req http:{}", request.getRequestURL());
       // 验证token是否有效
       Assert.isTrue(tokenService.checkLoginToken(princ, tokenStr), Status.CODE.FAIL_INVALID_AUTH_TOKEN);
 

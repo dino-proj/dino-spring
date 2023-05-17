@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.context.ContextHelper;
@@ -100,11 +101,6 @@ public abstract class ServiceBase<T, K extends Serializable> implements Service<
     return projMap;
   }
 
-  @Override
-  public Class<T> getEntityClass() {
-    return repository().entityClass();
-  }
-
   /**
    * 创建一个新的Entity
    */
@@ -126,7 +122,7 @@ public abstract class ServiceBase<T, K extends Serializable> implements Service<
       base.setUpdateAt(now);
 
       String createBy = ((EntityBase<?>) entity).getCreateBy();
-      if (StringUtils.isBlank(createBy)){
+      if (StringUtils.isBlank(createBy)) {
         User<Serializable> user = ContextHelper.currentUser();
         if (user != null) {
           ((EntityBase<?>) entity).setCreateBy(String.format("%s:%s", user.getId(), user.getUserType().getType()));
@@ -154,6 +150,7 @@ public abstract class ServiceBase<T, K extends Serializable> implements Service<
     }
   }
 
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public <S extends T> S save(S entity) {
     if (entity == null) {
@@ -178,11 +175,12 @@ public abstract class ServiceBase<T, K extends Serializable> implements Service<
     var saveCount = new AtomicInteger(0);
     BatchUtils.executeBatch(entityList, batchSize, b -> {
       beforeSaveEntities(b);
-      saveCount.addAndGet(repository().saveAll(b).size());
+      saveCount.addAndGet(IterableUtils.size(repository().saveAll(b)));
     });
     return saveCount.get() == entityList.size();
   }
 
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public <S extends T> S updateById(S entity) {
     beforeUpdateEntity(entity);

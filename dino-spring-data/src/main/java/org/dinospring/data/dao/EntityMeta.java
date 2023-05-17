@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ public class EntityMeta {
   private final Lazy<String> quotedTableName;
 
   private EntityMeta(Dialect dialect, Class<?> domainClass, TenantLevel tenantLevel, String tableName,
-                     boolean logicalDelete, boolean versioned) {
+      boolean logicalDelete, boolean versioned) {
     this.dialect = dialect;
     this.domainClass = domainClass;
     this.tenantLevel = tenantLevel;
@@ -119,7 +119,7 @@ public class EntityMeta {
 
   public static EntityMeta of(Dialect dialect, Class<?> cls) {
     var cachedMeta = ENTITY_META_CACHE.get(cls);
-    if(Objects.nonNull(cachedMeta)){
+    if (Objects.nonNull(cachedMeta)) {
       return cachedMeta;
     }
 

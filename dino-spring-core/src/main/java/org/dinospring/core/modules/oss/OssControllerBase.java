@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -264,7 +264,7 @@ public interface OssControllerBase {
     objectName.append(idService().genUUID());
     objectName.append('.').append(FilenameUtils.getExtension(file.getOriginalFilename()));
     var objectKey = objectName.toString();
-    
+
     meta.setBucket(serviceId);
     meta.setPath(objectKey);
 

@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,26 +16,18 @@ package org.dinospring.data.dao;
 
 import java.util.Map;
 
-import javax.persistence.EntityManager;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import org.dinospring.data.sql.builder.DeleteSqlBuilder;
 import org.dinospring.data.sql.builder.UpdateSqlBuilder;
-import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jdbc.repository.query.Modifying;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
  *
  * @author tuuboo
  */
 
-public interface JpaHelperExcutor<T, K> {
-
-  /**
-   * EntityManager
-   * @return
-   */
-  EntityManager entityManager();
+public interface JdbcHelperExcutor<T, K> {
 
   /**
    * entityClass

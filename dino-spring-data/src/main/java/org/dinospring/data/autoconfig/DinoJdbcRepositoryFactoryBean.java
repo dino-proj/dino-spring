@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,11 +14,13 @@
 
 package org.dinospring.data.autoconfig;
 
+import java.io.Serializable;
+
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
+import org.springframework.data.jdbc.repository.support.JdbcRepositoryFactoryBean;
 import org.springframework.data.repository.Repository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -29,12 +31,12 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
-public class CustomJpaRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
-    extends JpaRepositoryFactoryBean<T, S, ID> {
+public class DinoJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable>
+    extends JdbcRepositoryFactoryBean<T, S, ID> {
   @Autowired
   BeanFactory beanFactory;
 
-  public CustomJpaRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
+  public DinoJdbcRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
     super(repositoryInterface);
     this.addRepositoryFactoryCustomizer(repositoryFactory -> {
       repositoryFactory.setBeanFactory(beanFactory);
@@ -43,7 +45,7 @@ public class CustomJpaRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
 
             @Override
             public Object invoke(MethodInvocation invocation) throws Throwable {
-              log.debug("jpa method invoc: {}", invocation);
+              log.debug("repository method invoc: {}", invocation);
               repositoryInformation.isQueryMethod(invocation.getMethod());
               return invocation.proceed();
             }

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2021 dinospring.cn
+ *  Copyright 2021 dinodev.cn
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,12 +20,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-
 import org.dinospring.commons.VisualScope;
 import org.dinospring.data.domain.TenantRowEntityBase;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -42,23 +38,19 @@ import lombok.experimental.FieldNameConstants;
 @FieldNameConstants
 @Entity
 @Table(name = "sys_frame_layout")
-@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 public class LayoutEntity extends TenantRowEntityBase<Long> {
   @Schema(description = "布局标题")
   private String title;
 
   @Schema(description = "布局的可见范围")
   @Column(name = "access_scope", columnDefinition = "jsonb")
-  @Type(type = "jsonb")
   private VisualScope accessScope;
 
   @Schema(name = "exclude_scope", description = "布局的排除可见范围")
   @Column(name = "exclude_scope", columnDefinition = "jsonb")
-  @Type(type = "jsonb")
   private VisualScope excludeScope;
 
   @Schema(description = "布局配置")
   @Column(name = "config", columnDefinition = "jsonb")
-  @Type(type = "jsonb")
   private LayoutConfig config;
 }

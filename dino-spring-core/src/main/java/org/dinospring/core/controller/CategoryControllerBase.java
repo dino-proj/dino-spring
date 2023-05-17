@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -60,10 +60,9 @@ public interface CategoryControllerBase<S extends CategoryServiceBase<N>, N exte
   @GetMapping("/tree")
   @CheckPermission(":tree")
   default Response<List<N>> getCategoryTree(@PathVariable("tenant_id") String tenantId, @Nullable Long parent,
-                                            @Nullable String keyword) {
+      @Nullable String keyword) {
     return Response.success(categoryService().findCategory(parent, keyword));
   }
-
 
   /**
    * 分页获取分类树
@@ -80,7 +79,7 @@ public interface CategoryControllerBase<S extends CategoryServiceBase<N>, N exte
   @GetMapping("/tree/page")
   @CheckPermission(":tree.page")
   default PageResponse<N> getCategoryTreeByPage(@PathVariable("tenant_id") String tenantId, @Nullable Long parent,
-                                                @Nullable String keyword, PageReq pageReq) {
+      @Nullable String keyword, PageReq pageReq) {
     var pageable = pageReq.pageable();
     return PageResponse.success(categoryService().findCategory(parent, keyword, pageable));
   }

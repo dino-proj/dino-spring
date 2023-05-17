@@ -1,4 +1,4 @@
-// Copyright 2022 dinospring.cn
+// Copyright 2022 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ public class V2_2__DinoSpringCore extends BaseJavaMigration {
   @Override
   public void migrate(Context context) throws Exception {
     log.info("exec migration: V2_2__DinoSpringCore.migrate");
-    actionGroupRepository.saveAllAndFlush(actionGroups());
+    actionGroupRepository.saveAll(actionGroups());
   }
 
   private List<ActionGroupEntity> actionGroups() {

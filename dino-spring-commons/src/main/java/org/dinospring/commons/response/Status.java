@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
 // limitations under the License.
 
 package org.dinospring.commons.response;
+
+import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
@@ -136,12 +138,12 @@ public interface Status {
     }
 
     @Override
-    public Status withMsg(String msg) {
+    public Status withMsg(@Nonnull String msg) {
       return Status.fail(this.iCode, msg);
     }
 
     @Override
-    public Status withMsg(String msg, Object... args) {
+    public Status withMsg(@Nonnull String msg, Object... args) {
       return Status.fail(this.iCode, msg, args);
     }
   }
@@ -163,7 +165,7 @@ public interface Status {
    * @param msg 消息信息
    * @return
    */
-  Status withMsg(String msg);
+  Status withMsg(@Nonnull String msg);
 
   /**
    * 替换消息信息
@@ -171,7 +173,7 @@ public interface Status {
    * @param args 消息模板的参数
    * @return
    */
-  Status withMsg(String msg, Object... args);
+  Status withMsg(@Nonnull String msg, Object... args);
 
   /**
    * 生成成功Status
@@ -207,7 +209,9 @@ public interface Status {
    * @return
    */
   static Status fail(@Nonnull String msg, Object... args) {
-    return fail(CODE.ERROR.getCode(), MessageFormatter.arrayFormat(msg, args).getMessage());
+    var formatedMsg = MessageFormatter.arrayFormat(msg, args).getMessage();
+    Objects.requireNonNull(formatedMsg);
+    return fail(CODE.ERROR.getCode(), formatedMsg);
   }
 
   /**
@@ -249,7 +253,9 @@ public interface Status {
    * @return
    */
   static Status invalidParam(@Nonnull String msg, Object... args) {
-    return fail(CODE.FAIL_INVALID_PARAM.getCode(), MessageFormatter.arrayFormat(msg, args).getMessage());
+    var formatedMsg = MessageFormatter.arrayFormat(msg, args).getMessage();
+    Objects.requireNonNull(formatedMsg);
+    return fail(CODE.FAIL_INVALID_PARAM.getCode(), formatedMsg);
   }
 
 }
@@ -271,12 +277,12 @@ class DefaultStatus implements Status {
   }
 
   @Override
-  public Status withMsg(String msg) {
+  public Status withMsg(@Nonnull String msg) {
     return Status.fail(this.code, msg);
   }
 
   @Override
-  public Status withMsg(String msg, Object... args) {
+  public Status withMsg(@Nonnull String msg, Object... args) {
     return Status.fail(this.code, msg, args);
   }
 

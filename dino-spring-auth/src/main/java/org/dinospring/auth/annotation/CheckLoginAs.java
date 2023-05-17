@@ -1,4 +1,4 @@
-// Copyright 2022 dinospring.cn
+// Copyright 2022 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,8 +33,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD, ElementType.TYPE, ElementType.ANNOTATION_TYPE })
 @Documented
-@Repeatable(CheckLogin.List.class)
-public @interface CheckLogin {
+@Repeatable(CheckLoginAs.List.class)
+public @interface CheckLoginAs {
 
   /**
    * 用户类型，默认为任意用户，多个用户类型之间为或关系
@@ -46,6 +46,6 @@ public @interface CheckLogin {
   @Target({ ElementType.METHOD, ElementType.TYPE, ElementType.ANNOTATION_TYPE })
   @Documented
   public @interface List {
-    CheckLogin[] value();
+    CheckLoginAs[] value();
   }
 }

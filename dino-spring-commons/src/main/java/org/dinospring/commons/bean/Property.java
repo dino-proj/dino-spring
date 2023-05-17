@@ -1,4 +1,4 @@
-// Copyright 2022 dinospring.cn
+// Copyright 2022 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -165,7 +165,7 @@ public final class Property {
    * @return true if the property is readable or writable in given view
    */
   public boolean isVisiableInJsonView(@Nullable Class<?> activeView) {
-    if (Objects.isNull(activeView)) {
+    if (Objects.isNull(activeView) || Objects.isNull(annotations)) {
       return true;
     }
     for (Annotation annotation : annotations) {
@@ -267,7 +267,7 @@ public final class Property {
   // Internal helpers
 
   private String resolveName() {
-    if (this.readMethod != null) {
+    if (Objects.nonNull(this.readMethod)) {
       int index = this.readMethod.getName().indexOf("get");
       if (index != -1) {
         index += 3;
@@ -281,7 +281,7 @@ public final class Property {
         }
       }
       return StringUtils.uncapitalize(this.readMethod.getName().substring(index));
-    } else if (this.writeMethod != null) {
+    } else if (Objects.nonNull(this.writeMethod)) {
       int index = this.writeMethod.getName().indexOf("set");
       if (index == -1) {
         throw new IllegalArgumentException("Not a setter method");

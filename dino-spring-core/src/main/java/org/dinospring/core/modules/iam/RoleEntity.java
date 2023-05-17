@@ -1,4 +1,4 @@
-// Copyright 2022 dinospring.cn
+// Copyright 2022 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,22 +14,20 @@
 
 package org.dinospring.core.modules.iam;
 
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import org.dinospring.data.domain.TenantRowEntityBase;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
-import org.dinospring.data.domain.TenantRowEntityBase;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.util.List;
 
 /**
  * 角色实体
@@ -44,7 +42,6 @@ import java.util.List;
 @FieldNameConstants
 @Entity
 @Table(name = "iam_role")
-@TypeDef(name = "json", typeClass = JsonBinaryType.class)
 public class RoleEntity extends TenantRowEntityBase<Long> {
 
   @Schema(description = "角色编码", required = true, maxLength = 64)
@@ -59,20 +56,14 @@ public class RoleEntity extends TenantRowEntityBase<Long> {
   @Column(name = "remark", length = 255)
   private String remark;
 
-  @Type(type = "json")
-  @Convert(disableConversion = true)
   @Schema(description = "角色操作权限", required = false)
   @Column(name = "permissions", columnDefinition = "jsonb")
   private List<String> permissions;
 
-  @Type(type = "json")
-  @Convert(disableConversion = true)
   @Schema(description = "角色数据权限", required = false)
   @Column(name = "data_permissions", columnDefinition = "jsonb")
   private List<String> dataPermissions;
 
-  @Type(type = "json")
-  @Convert(disableConversion = true)
   @Schema(description = "角色菜单权限", required = false)
   @Column(name = "menu_permissions", columnDefinition = "jsonb")
   private List<String> menuPermissions;

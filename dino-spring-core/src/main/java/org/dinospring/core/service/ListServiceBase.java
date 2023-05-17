@@ -1,4 +1,4 @@
-// Copyright 2022 dinospring.cn
+// Copyright 2022 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.dinospring.data.domain.LimitOffsetPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +37,14 @@ public interface ListServiceBase<T, K extends Serializable> extends ServiceBase<
    * @return
    */
   default List<T> list() {
+    return IterableUtils.toList(repository().findAll());
+  }
+
+  /**
+   * 查询所有，并返回Iterable迭代器
+   * @return
+   */
+  default Iterable<T> listIterable() {
     return repository().findAll();
   }
 
@@ -65,7 +74,7 @@ public interface ListServiceBase<T, K extends Serializable> extends ServiceBase<
    * @return
    */
   default List<T> listByIds(Collection<K> idList) {
-    return repository().findAllById(idList);
+    return IterableUtils.toList(repository().findAllById(idList));
   }
 
   /**

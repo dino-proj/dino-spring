@@ -1,4 +1,4 @@
-// Copyright 2022 dinospring.cn
+// Copyright 2022 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public abstract class Request {
    * 请求的时候是否需要token
    * @return
    */
-  public boolean isRequiredToken(){
-   return false;
+  public boolean isRequiredToken() {
+    return false;
   }
 }

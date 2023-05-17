@@ -1,4 +1,4 @@
-// Copyright 2022 dinospring.cn
+// Copyright 2022 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.function.Function;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -51,13 +52,13 @@ public class ScrollResponse<T> extends Response<Collection<? extends T>> {
     this.hasMore = null;
   }
 
-  protected ScrollResponse(@Nonnull Collection<? extends T> list, @Nonnull String nextCursor, boolean hasMore) {
+  protected ScrollResponse(Collection<? extends T> list, @Nullable String nextCursor, boolean hasMore) {
     this.cursor = nextCursor;
     this.hasMore = hasMore;
     this.setData(list);
   }
 
-  public ScrollResponse<T> set(Collection<? extends T> list, @Nonnull String nextCursor, boolean hasMore) {
+  public ScrollResponse<T> set(Collection<? extends T> list, @Nullable String nextCursor, boolean hasMore) {
     this.setData(list);
     this.cursor = nextCursor;
     this.hasMore = hasMore;
@@ -70,13 +71,13 @@ public class ScrollResponse<T> extends Response<Collection<? extends T>> {
     return super.setData(list);
   }
 
-  public static <T> ScrollResponse<T> success(@Nonnull Collection<? extends T> list, @Nonnull String nextCursor,
+  public static <T> ScrollResponse<T> success(@Nonnull Collection<? extends T> list, @Nullable String nextCursor,
       boolean hasMore) {
     return new ScrollResponse<>(list, nextCursor, hasMore);
   }
 
-  public static <T, S> ScrollResponse<T> success(Collection<S> list,
-      Function<Collection<S>, Collection<? extends T>> converter, @Nonnull String nextCursor,
+  public static <T, S> ScrollResponse<T> success(@Nonnull Collection<S> list,
+      @Nonnull Function<Collection<S>, Collection<? extends T>> converter, @Nullable String nextCursor,
       boolean hasMore) {
     return new ScrollResponse<>(converter.apply(list), nextCursor, hasMore);
   }

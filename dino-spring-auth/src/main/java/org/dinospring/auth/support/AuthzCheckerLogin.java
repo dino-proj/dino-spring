@@ -1,4 +1,4 @@
-// Copyright 2022 dinospring.cn
+// Copyright 2022 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.dinospring.auth.annotation.CheckLogin;
+import org.dinospring.auth.annotation.CheckLoginAs;
 import org.dinospring.auth.session.AuthSession;
 
 /**
@@ -33,15 +33,15 @@ import org.dinospring.auth.session.AuthSession;
  * @date 2022-04-09 15:26:48
  */
 
-public class AuthzCheckerLogin extends AbstractAuthzChecker<CheckLogin, List<String[]>> {
+public class AuthzCheckerLogin extends AbstractAuthzChecker<CheckLoginAs, List<String[]>> {
 
   public AuthzCheckerLogin() {
-    super(CheckLogin.class, true);
+    super(CheckLoginAs.class, true);
   }
 
   @Override
-  protected List<String[]> getMethodInvocationMeta(MethodInvocation mi, Collection<CheckLogin> annosInClass,
-      Collection<CheckLogin> annosInMethod) {
+  protected List<String[]> getMethodInvocationMeta(MethodInvocation mi, Collection<CheckLoginAs> annosInClass,
+      Collection<CheckLoginAs> annosInMethod) {
     var all = Stream.concat(annosInClass.stream(), annosInMethod.stream())
         .map(t -> dealUserTypes(t.value())).filter(Objects::nonNull)
         .collect(Collectors.toList());

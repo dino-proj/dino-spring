@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,15 +15,10 @@
 package org.dinospring.core.modules.framework;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-
 import org.dinospring.data.domain.TenantRowEntityBase;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -43,7 +38,6 @@ import lombok.experimental.FieldNameConstants;
 @FieldNameConstants
 @Entity
 @Table(name = "sys_frame_page")
-@TypeDef(name = "json", typeClass = JsonBinaryType.class)
 public class PageEntity extends TenantRowEntityBase<Long> {
 
   @Schema(title = "页面标题")
@@ -56,8 +50,6 @@ public class PageEntity extends TenantRowEntityBase<Long> {
 
   @Schema(title = "页面的配置属性", type = "json")
   @Column(name = "config", columnDefinition = "jsonb")
-  @Type(type = "json")
-  @Convert(disableConversion = true)
   private PageConfig config;
 
 }

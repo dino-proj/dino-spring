@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -117,7 +117,7 @@ public class PostgreJsonbReadingConverter implements GenericConverter {
     }
 
     var cls = targetType.getResolvableType().getRawClass();
-    if(cls == null){
+    if (cls == null) {
       cls = targetType.getType();
     }
     return objectMapper.readerFor(cls).readValue(source.getValue());

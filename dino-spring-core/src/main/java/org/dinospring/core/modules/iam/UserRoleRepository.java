@@ -1,4 +1,4 @@
-// Copyright 2022 dinospring.cn
+// Copyright 2022 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,18 +14,18 @@
 
 package org.dinospring.core.modules.iam;
 
-import org.dinospring.core.entity.Code;
-import org.dinospring.data.dao.CrudRepositoryBase;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.dinospring.core.entity.Code;
+import org.dinospring.data.dao.CrudRepositoryBase;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jdbc.repository.query.Modifying;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -58,16 +58,16 @@ public interface UserRoleRepository extends CrudRepositoryBase<UserRoleEntity, L
     var restRoles = roleIds.stream().filter(roleId -> !existRoles.containsKey(roleId)).collect(Collectors.toList());
     if (!restRoles.isEmpty()) {
       var entities = restRoles.stream()
-        .map(roleId -> UserRoleEntity.builder()
-          .tenantId(tenantId)
-          .userType(userType)
-          .userId(userId)
-          .roleId(roleId)
-          .createAt(new Date())
-          .status(Code.STATUS.OK.getName())
-          .updateAt(new Date())
-          .build())
-        .collect(Collectors.toList());
+          .map(roleId -> UserRoleEntity.builder()
+              .tenantId(tenantId)
+              .userType(userType)
+              .userId(userId)
+              .roleId(roleId)
+              .createAt(new Date())
+              .status(Code.STATUS.OK.getName())
+              .updateAt(new Date())
+              .build())
+          .collect(Collectors.toList());
       this.saveAll(entities);
     }
 

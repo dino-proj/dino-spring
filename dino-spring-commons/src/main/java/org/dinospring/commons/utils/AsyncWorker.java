@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ public class AsyncWorker {
    * @param param 传给异步任务的参数
    */
   public <T> void exec(Consumer<T> task, final T param) {
-     task.accept(param);
+    task.accept(param);
   }
 
   /**
@@ -86,7 +86,7 @@ public class AsyncWorker {
    * @param paramSecond 第二个参数
    */
   public <T, U> void exec(BiConsumer<T, U> task, final T paramFirst, final U paramSecond) {
-     task.accept(paramFirst, paramSecond);
+    task.accept(paramFirst, paramSecond);
   }
 
   /**

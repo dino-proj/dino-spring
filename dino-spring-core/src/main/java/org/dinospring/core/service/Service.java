@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.dinospring.data.domain.LogicalDelete;
-import org.springframework.data.domain.Example;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -278,16 +277,6 @@ public interface Service<T, K extends Serializable> extends ListServiceBase<T, K
   */
   default long countOk() {
     return repository().countOk();
-  }
-
-  /**
-   * 根据 Example，查询总记录数
-   *
-   * @param example 样例
-   * @return
-   */
-  default <S extends T> long count(Example<S> example) {
-    return repository().count(example);
   }
 
   /**

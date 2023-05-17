@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,13 +16,12 @@ package org.dinospring.data.dao;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jdbc.repository.query.Modifying;
+import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.NoRepositoryBean;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +31,17 @@ import org.springframework.transaction.annotation.Transactional;
  */
 
 @NoRepositoryBean
-public interface CrudRepositoryBase<T, K> extends JpaRepository<T, K>, JdbcSelectExecutor<T, K> {
+public interface CrudRepositoryBase<T, K> extends JdbcSelectExecutor<T, K>, PagingAndSortingRepository<T, K> {
+
+  /**
+   * 根据id，查询元素
+   * @param id
+   * @return entity or null
+   */
+  default T getById(K id) {
+    return findById(id).orElse(null);
+  }
+
   /**
    * 对查询结果进行处理，自动注入TenantId
    * @param entity

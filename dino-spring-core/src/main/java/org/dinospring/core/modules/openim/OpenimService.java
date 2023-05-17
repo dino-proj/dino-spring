@@ -1,4 +1,4 @@
-// Copyright 2022 dinospring.cn
+// Copyright 2022 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -163,8 +163,9 @@ public class OpenimService {
    */
   public List<AccountCheck> accountCheck(AccountCheckReq accountCheckReq) {
     List<AccountCheck> checkList = new ArrayList<>();
-    ArrayList<LinkedHashMap<String, String>> post = post(AccountCheckReq.PATH, accountCheckReq, new ArrayList<LinkedHashMap<String, String>>().getClass());
-    if (CollectionUtils.isNotEmpty(post)){
+    ArrayList<LinkedHashMap<String, String>> post = post(AccountCheckReq.PATH, accountCheckReq,
+        new ArrayList<LinkedHashMap<String, String>>().getClass());
+    if (CollectionUtils.isNotEmpty(post)) {
       post.forEach(stringStringLinkedHashMap -> {
         var accountCheck = new AccountCheck();
         accountCheck.setAccountStatus(stringStringLinkedHashMap.get("accountStatus"));

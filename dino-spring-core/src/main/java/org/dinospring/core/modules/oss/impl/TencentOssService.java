@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -116,7 +116,7 @@ public class TencentOssService implements OssService {
       return buckets.stream().map(b -> BucketMeta.of(b.getName(), b.getCreationDate())).collect(Collectors.toList());
     } catch (
 
-      CosClientException clientException) {
+    CosClientException clientException) {
       throw new IOException("Error occured while list buckets", clientException);
     }
   }
@@ -152,9 +152,9 @@ public class TencentOssService implements OssService {
         try {
           var objectListing = cosClient.listObjects(listObjectsRequest);
           var dirs = objectListing.getCommonPrefixes().stream().map(p -> ObjectMeta.ofDir(p, null))
-            .collect(Collectors.toList());
+              .collect(Collectors.toList());
           var files = objectListing.getObjectSummaries().stream()
-            .map(p -> ObjectMeta.ofFile(p.getKey(), p.getSize(), p.getLastModified())).collect(Collectors.toList());
+              .map(p -> ObjectMeta.ofFile(p.getKey(), p.getSize(), p.getLastModified())).collect(Collectors.toList());
 
           // for next
           listObjectsRequest.setMarker(objectListing.getNextMarker());
@@ -247,14 +247,14 @@ public class TencentOssService implements OssService {
 
   @Override
   public void moveObject(String srcBucket, String srcObjectName, String destBucket, String destObjectName)
-    throws IOException {
+      throws IOException {
     copyObject(srcBucket, srcObjectName, destBucket, destObjectName);
     deleteObject(srcBucket, srcObjectName);
   }
 
   @Override
   public void copyObject(String srcBucket, String srcObjectName, String destBucket, String destObjectName)
-    throws IOException {
+      throws IOException {
     try {
       cosClient.copyObject(srcBucket, srcObjectName, destBucket, destObjectName);
     } catch (CosServiceException cse) {

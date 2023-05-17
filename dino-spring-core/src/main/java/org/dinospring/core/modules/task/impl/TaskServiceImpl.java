@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,7 +14,12 @@
 
 package org.dinospring.core.modules.task.impl;
 
-import lombok.RequiredArgsConstructor;
+import java.time.Duration;
+import java.util.function.Function;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.dinospring.commons.utils.AsyncWorker;
 import org.dinospring.commons.utils.TaskObserver;
 import org.dinospring.core.entity.Code;
@@ -27,12 +32,9 @@ import org.dinospring.data.dao.CrudRepositoryBase;
 import org.dinospring.data.domain.IdService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.transaction.Transactional;
-import java.time.Duration;
-import java.util.function.Function;
+import lombok.RequiredArgsConstructor;
 
 /**
  *
@@ -63,15 +65,15 @@ public class TaskServiceImpl extends ServiceBase<TaskEntity, String> implements 
 
   @Override
   public TaskVo runTask(@Nonnull String name, @Nullable Duration timeout,
-                        @Nonnull Function<TaskObserver, Boolean> task) {
+      @Nonnull Function<TaskObserver, Boolean> task) {
     var taskEntity = TaskEntity.builder()
-      .id(idService.genUUID())
-      .taskName(name)
-      .taskProgress(0)
-      .taskTimeout(timeout == null ? -1L : timeout.toMillis())
-      .status(Code.TASK.INIT.getName())
-      .build();
-    taskEntity=this.save(taskEntity);
+        .id(idService.genUUID())
+        .taskName(name)
+        .taskProgress(0)
+        .taskTimeout(timeout == null ? -1L : timeout.toMillis())
+        .status(Code.TASK.INIT.getName())
+        .build();
+    taskEntity = this.save(taskEntity);
 
     var taskObserver = new TaskObserverImpl(taskEntity.getId(), timeout);
 
@@ -125,7 +127,7 @@ public class TaskServiceImpl extends ServiceBase<TaskEntity, String> implements 
     }
 
     @Override
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public void updateStatus(TaskStatus status) {
       switch (status) {
         case INIT:

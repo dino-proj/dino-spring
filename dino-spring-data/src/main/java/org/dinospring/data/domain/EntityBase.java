@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,12 +19,11 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -51,9 +50,8 @@ public abstract class EntityBase<K extends Serializable> implements Serializable
    * 默认主键字段id，类型为Long型自增，转json时转换为String
    */
   @Id
-  @GeneratedValue(generator = "myIdGenerator")
-  @GenericGenerator(name = "myIdGenerator", strategy = "org.dinospring.data.domain.IdGenerator")
   @Schema(description = "ID")
+  @GeneratedValue
   @Column(name = "id", unique = true)
   private K id;
 

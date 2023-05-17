@@ -1,4 +1,4 @@
-// Copyright 2022 dinospring.cn
+// Copyright 2022 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,15 +22,12 @@ import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import org.dinospring.data.domain.TenantRowEntityBase;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 
 /**
  *
@@ -47,7 +44,6 @@ import org.hibernate.annotations.TypeDef;
     @Index(name = "idx_iam_resource_tenant_id", columnList = "tenant_id"),
     @Index(name = "idx_iam_resource_code", columnList = "code")
 })
-@TypeDef(name = "json", typeClass = JsonBinaryType.class)
 public class PermissionEntity extends TenantRowEntityBase<Long> {
   @Column(name = "code", length = 64, nullable = false, unique = true)
   private String code;
@@ -58,7 +54,6 @@ public class PermissionEntity extends TenantRowEntityBase<Long> {
   @Column(name = "remark", length = 255)
   private String remark;
 
-  @Type(type = "json")
   @Convert(disableConversion = true)
   @Column(name = "actions", columnDefinition = "jsonb")
   private List<Action> actions;

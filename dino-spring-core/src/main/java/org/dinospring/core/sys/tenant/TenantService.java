@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -60,7 +60,6 @@ public interface TenantService extends Service<TenantEntity, String> {
   default <T> T findTenantByDomain(String domain, Class<T> cls) {
     return projection(cls, tenantRepository().getByDomain(domain));
   }
-
 
   /**
    * 根据code查询租户信息

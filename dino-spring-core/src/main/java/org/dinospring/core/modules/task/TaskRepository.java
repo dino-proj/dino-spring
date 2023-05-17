@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,12 +13,11 @@
 // limitations under the License.
 package org.dinospring.core.modules.task;
 
-import javax.transaction.Transactional;
-
 import org.dinospring.data.dao.CrudRepositoryBase;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jdbc.repository.query.Modifying;
+import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author tuuboo
@@ -32,7 +31,7 @@ public interface TaskRepository extends CrudRepositoryBase<TaskEntity, String> {
    * @param msg
    */
   @Modifying
-  @Transactional(rollbackOn = Exception.class)
+  @Transactional(rollbackFor = Exception.class)
   @Query("UPDATE TaskEntity e SET e.taskMsg=:msg WHERE e.id=:id")
   void updateTaskMsg(String id, String msg);
 
@@ -42,7 +41,7 @@ public interface TaskRepository extends CrudRepositoryBase<TaskEntity, String> {
    * @param progress
    */
   @Modifying
-  @Transactional(rollbackOn = Exception.class)
+  @Transactional(rollbackFor = Exception.class)
   @Query("UPDATE TaskEntity e SET e.taskProgress=:progress WHERE e.id=:id")
   void updateTaskProgress(String id, int progress);
 }

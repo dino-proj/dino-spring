@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,8 +27,8 @@ import java.util.List;
  * @author tuuboo
  * @author JL
  */
-public abstract class CategoryService<E extends CategoryEntityBase,N extends TreeNode> extends ServiceBase<E, Long> implements CategoryServiceBase<N> {
-
+public abstract class CategoryService<E extends CategoryEntityBase, N extends TreeNode> extends ServiceBase<E, Long>
+    implements CategoryServiceBase<N> {
 
   @Override
   public List<N> findCategory(@Nullable Long parentId, @Nullable String keyword) {

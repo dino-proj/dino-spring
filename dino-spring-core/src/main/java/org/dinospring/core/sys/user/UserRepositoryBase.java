@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ import java.util.Optional;
 
 import org.dinospring.commons.sys.UserType;
 import org.dinospring.data.dao.CrudRepositoryBase;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jdbc.repository.query.Modifying;
+import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +42,6 @@ public interface UserRepositoryBase<T extends UserEntityBase<K>, K extends Seria
    */
   @Query("FROM #{#entityName} e WHERE e.mobile=:mobile and e.tenantId=:tenantId and e.userType=:userType")
   Optional<T> findUserByMobile(String tenantId, String mobile, UserType userType);
-
 
   /**
    * 根据手机号查询用户

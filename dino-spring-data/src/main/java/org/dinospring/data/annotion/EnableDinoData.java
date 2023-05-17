@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,12 +21,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.dinospring.data.autoconfig.CustomJpaRepositoryFactoryBean;
 import org.dinospring.data.autoconfig.DinoDataAutoConfiguration;
-import org.dinospring.data.dao.impl.JdbcSelectExecutorImpl;
+import org.dinospring.data.autoconfig.DinoDataJdbcConfiguration;
+import org.dinospring.data.autoconfig.DinoJdbcRepositoryFactoryBean;
+import org.dinospring.data.dao.impl.DinoJdbcRepositoryBase;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.AliasFor;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 
 /**
  *
@@ -37,12 +38,12 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@EnableJpaRepositories(basePackages = "org.dinospring", repositoryFactoryBeanClass = CustomJpaRepositoryFactoryBean.class, repositoryBaseClass = JdbcSelectExecutorImpl.class)
-@Import(DinoDataAutoConfiguration.class)
+@EnableJdbcRepositories(basePackages = "org.dinospring", repositoryFactoryBeanClass = DinoJdbcRepositoryFactoryBean.class, repositoryBaseClass = DinoJdbcRepositoryBase.class)
+@Import({ DinoDataAutoConfiguration.class, DinoDataJdbcConfiguration.class })
 public @interface EnableDinoData {
   /**
    * Base packages to scan for annotated components. please include "org.dinospring"
    */
-  @AliasFor(annotation = EnableJpaRepositories.class, attribute = "basePackages")
+  @AliasFor(annotation = EnableJdbcRepositories.class, attribute = "basePackages")
   String[] basePackages() default { "org.dinospring" };
 }

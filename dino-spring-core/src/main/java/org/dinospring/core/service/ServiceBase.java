@@ -1,4 +1,4 @@
-// Copyright 2022 dinospring.cn
+// Copyright 2022 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -38,6 +38,6 @@ public interface ServiceBase<T, K extends Serializable> {
    * @return {@link Class<T>}
    */
   default Class<T> getEntityClass() {
-    return (Class<T>) repository().entityClass();
+    return repository().entityClass();
   }
 }

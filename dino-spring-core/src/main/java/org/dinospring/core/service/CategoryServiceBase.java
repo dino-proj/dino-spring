@@ -1,5 +1,5 @@
 /*
- *  Copyright 2021 dinospring.cn
+ *  Copyright 2021 dinodev.cn
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -36,7 +36,6 @@ public interface CategoryServiceBase<N extends TreeNode> {
    * @return
    */
   List<N> findCategory(@Nullable Long parentId, @Nullable String keyword);
-
 
   /**
    * 分页获取分类树

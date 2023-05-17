@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -139,7 +139,7 @@ public interface OssService {
    * @throws IOException
    */
   void moveObject(@Nonnull String srcBucket, @Nonnull String srcObjectName, @Nonnull String destBucket,
-                  @Nonnull String destObjectName) throws IOException;
+      @Nonnull String destObjectName) throws IOException;
 
   /**
    * 将对象Copy到指定位置，并保留原对象
@@ -150,7 +150,7 @@ public interface OssService {
    * @throws IOException
    */
   void copyObject(@Nonnull String srcBucket, @Nonnull String srcObjectName, @Nonnull String destBucket,
-                  @Nonnull String destObjectName) throws IOException;
+      @Nonnull String destObjectName) throws IOException;
 
   /**
    * 获取链接
@@ -159,7 +159,6 @@ public interface OssService {
    * @return
    */
   String getPresignedObjectUrl(String bucket, String objectName);
-
 
   /**
    * 获取链接

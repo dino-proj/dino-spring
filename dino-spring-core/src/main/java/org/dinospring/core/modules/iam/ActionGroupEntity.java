@@ -1,4 +1,4 @@
-// Copyright 2022 dinospring.cn
+// Copyright 2022 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,15 +21,9 @@ import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-
 import org.dinospring.data.domain.EntityBase;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -45,7 +39,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @Entity
 @Table(name = "iam_action_group")
-@TypeDef(name = "json", typeClass = JsonBinaryType.class)
 public class ActionGroupEntity extends EntityBase<Long> {
 
   @Schema(name = "user_type", description = "用户类型，null表示适用所有用户", required = false, maxLength = 64)
@@ -60,7 +53,6 @@ public class ActionGroupEntity extends EntityBase<Long> {
   @Column(length = 128)
   private String remark;
 
-  @Type(type = "json")
   @Convert(disableConversion = true)
   @Schema(description = "包含的权限")
   @Column(columnDefinition = "jsonb")

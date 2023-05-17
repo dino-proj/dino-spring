@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,12 +17,8 @@ package org.dinospring.core.sys.config;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
-import com.vladmihalcea.hibernate.type.json.JsonType;
-
 import org.dinospring.commons.Scope;
 import org.dinospring.data.domain.TenantRowEntityBase;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -40,7 +36,6 @@ import lombok.experimental.FieldNameConstants;
 @Accessors(chain = true)
 @FieldNameConstants
 @MappedSuperclass
-@TypeDef(name = "json", typeClass = JsonType.class)
 public class Configuration extends TenantRowEntityBase<Long> {
 
   @Column(name = "scope", nullable = false)
@@ -52,7 +47,6 @@ public class Configuration extends TenantRowEntityBase<Long> {
   @Column(name = "conf_key", nullable = false, length = 1024)
   private String key;
 
-  @Type(type = "json")
   @Column(name = "conf_value", columnDefinition = "json NOT NULL")
   @Schema(implementation = Object.class, type = "json", description = "可以是原始类型，比如数字、字符串、布尔等，也可以是数组、json对象")
   private Object value;

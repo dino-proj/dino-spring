@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,7 +32,8 @@ import javax.validation.constraints.Size;
  * @author JL
  */
 
-public interface CategoryController<S extends CategoryService<E, N>, E extends CategoryEntityBase, VO extends CategoryVo, SRC extends CategorySearch, REQ extends CategoryController.CategoryReq, N extends TreeNode> extends CrudControllerBase<S, E, VO, SRC, REQ, Long>, CategoryControllerBase<S, N> {
+public interface CategoryController<S extends CategoryService<E, N>, E extends CategoryEntityBase, VO extends CategoryVo, SRC extends CategorySearch, REQ extends CategoryController.CategoryReq, N extends TreeNode>
+    extends CrudControllerBase<S, E, VO, SRC, REQ, Long>, CategoryControllerBase<S, N> {
 
   /**
    * 服务实例

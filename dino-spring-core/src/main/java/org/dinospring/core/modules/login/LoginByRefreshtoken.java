@@ -1,4 +1,4 @@
-// Copyright 2022 dinospring.cn
+// Copyright 2022 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -82,7 +82,7 @@ public interface LoginByRefreshtoken<U extends User<K>, K extends Serializable>
   @Data
   public static class RefreshtokenLoginBody {
     @Schema(description = "用户类型", required = true)
-//    @NotBlank(message = "用户类型不能为空")
+    //    @NotBlank(message = "用户类型不能为空")
     private String userType;
 
     @Schema(description = "用户ID", required = true)

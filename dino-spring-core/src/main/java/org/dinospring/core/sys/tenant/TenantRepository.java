@@ -1,4 +1,4 @@
-// Copyright 2021 dinospring.cn
+// Copyright 2021 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 
 import org.dinospring.data.dao.CrudRepositoryBase;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jdbc.repository.query.Query;
 
 /**
  *
@@ -35,7 +35,6 @@ public interface TenantRepository extends CrudRepositoryBase<TenantEntity, Strin
    */
   @Query("FROM #{#entityName} e WHERE e.customDomain = :domain")
   Optional<TenantEntity> getByDomain(@Nonnull String domain);
-
 
   /**
    * 通过code获取租户信息

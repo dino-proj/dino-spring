@@ -1,4 +1,4 @@
-// Copyright 2022 dinospring.cn
+// Copyright 2022 dinodev.cn
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -62,7 +62,8 @@ public interface IamControllerBase<UK extends Serializable> {
   @ParamTenant
   @GetMapping("/action/groups")
   @CheckPermission("sys.iam:grant")
-  default Response<List<ActionGroupVo>> listActionGroups(@Schema(name = "user_type", description = "用户类型") @RequestParam(name = "user_type", required = false) String userType) {
+  default Response<List<ActionGroupVo>> listActionGroups(
+      @Schema(name = "user_type", description = "用户类型") @RequestParam(name = "user_type", required = false) String userType) {
 
     return Response.success(iamService().getAllActionGroups(userType));
   }
@@ -83,7 +84,7 @@ public interface IamControllerBase<UK extends Serializable> {
   @Parameter(name = "uid", description = "用户ID", required = true)
   @CheckPermission("sys.iam:grant")
   default PageResponse<RoleVo> listUserRoles(@PathVariable("tenant_id") String tenantId, String utype, UK uid,
-                                             PageReq page) {
+      PageReq page) {
     Page<RoleVo> userRoles = iamService().listUserRoles(tenantId, utype, uid.toString(), page.pageable());
     return PageResponse.success(userRoles);
   }
@@ -103,7 +104,7 @@ public interface IamControllerBase<UK extends Serializable> {
   @PostMapping("/user/grant")
   @CheckPermission("sys.iam:grant")
   default Response<Long> grantRoles(@PathVariable("tenant_id") String tenantId, String utype, UK uid,
-                                    @RequestBody PostBody<List<Long>> req) {
+      @RequestBody PostBody<List<Long>> req) {
     var result = iamService().grantRoles(tenantId, utype, uid.toString(), req.getBody());
     return Response.success(result);
   }
@@ -123,7 +124,7 @@ public interface IamControllerBase<UK extends Serializable> {
   @PostMapping("/user/revoke")
   @CheckPermission("sys.iam:grant")
   default Response<Long> revokeRoles(@PathVariable("tenant_id") String tenantId, String utype, UK uid,
-                                     @RequestBody PostBody<List<Long>> req) {
+      @RequestBody PostBody<List<Long>> req) {
     var result = iamService().revokeRoles(tenantId, utype, utype, req.getBody());
     return Response.success(result);
   }

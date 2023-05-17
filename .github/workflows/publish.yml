@@ -1,4 +1,4 @@
-name: Release
+name: Publish
 
 # Run workflow on commits to the `master` branch
 on:

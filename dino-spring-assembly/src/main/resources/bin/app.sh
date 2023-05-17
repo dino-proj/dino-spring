@@ -23,6 +23,14 @@
 #   IDENT_STRING   A string representing this instance of hadoop. $USER by default
 ##
 
+
+# use POSIX interface, symlink is followed automatically
+BIN_PATH="${BASH_SOURCE-$0}"
+BIN_DIR="$(dirname "${BIN_PATH}")"
+APP_DIR="$(cd "${BIN_DIR}/.."; pwd)"
+
+echo "APP_DIR:"$APP_DIR
+
 usage="Usage: app.sh (start|stop) <app-name> <args...>"
 
 # if no args specified, show usage
@@ -30,13 +38,6 @@ if [ $# -le 1 ]; then
   echo $usage
   exit 1
 fi
-
-bin=`dirname "${BASH_SOURCE-$0}"`
-bin=`cd "$bin"; pwd`
-common_bin=$(cd -P -- "$(dirname -- "$this")" && pwd -P)
-APP_DIR=$(cd -P -- "$common_bin"/.. && pwd -P)
-echo "APP_DIR:"$APP_DIR
-
 
 START_STOP=$1
 APP_NAME=$2
@@ -53,13 +54,13 @@ if [[ -z $JAVA_HOME ]]; then
   # On OSX use java_home (or /Library for older versions)
   if [ "Darwin" == "$(uname -s)" ]; then
     if [ -x /usr/libexec/java_home ]; then
-      AVA_HOME=($(/usr/libexec/java_home))
+      JAVA_HOME=($(/usr/libexec/java_home))
     else
       export JAVA_HOME=(/Library/Java/Home)
     fi
   fi
 
-  # Bail if we did not detect it
+  # Fail if we did not detect $JAVA_HOME
   if [[ -z $JAVA_HOME ]]; then
     echo "Error: JAVA_HOME is not set and could not be found." 1>&2
     exit 1
@@ -131,8 +132,41 @@ RUN_JAVA ()
 
 }
 
+KILL_PROC ()
+{
+  process_id=$1
+  max_attempts=$2
+
+  # Sleep interval (in seconds)
+  sleep_interval=10
+
+  # Initialize counter
+  attempt=1
+
+  # Loop to check process status
+  while [[ $attempt -le $max_attempts ]]; do
+    # Check if process exists
+    if ! kill -0 "$process_id" >/dev/null 2>&1; then
+      echo "$APP_NAME has terminated."
+      break
+    fi
+
+    echo "Attempt [$attempt]: $APP_NAME is still running, waiting for ${sleep_interval} seconds..."
+    sleep "$sleep_interval"
+
+    # Increment the counter
+    attempt=$((attempt + 1))
+  done
+
+  # Forcefully terminate the process if it exceeds the maximum attempts
+  if [[ $attempt -gt $max_attempts ]]; then
+    echo "$APP_NAME did not stop gracefully. Forcibly terminating the process."
+    kill -9 "$process_id"
+  fi
+}
+
 PID_FILE=$PID_DIR/$IDENT_STRING-$APP_NAME.pid
-APP_STOP_TIMEOUT=${APP_STOP_TIMEOUT:-10}
+APP_STOP_TIMEOUT=${APP_STOP_TIMEOUT:-600}
 
 case $START_STOP in
 
@@ -167,14 +201,8 @@ case $START_STOP in
       TARGET_PID=`cat $PID_FILE`
       if kill -0 $TARGET_PID > /dev/null 2>&1; then
         echo "stopping $APP_NAME"
-        kill $TARGET_PID
-        sleep $APP_STOP_TIMEOUT
-        if kill -0 $TARGET_PID > /dev/null 2>&1; then
-          echo "$APP_NAME did not stop gracefully after $APP_STOP_TIMEOUT seconds: killing with kill -9"
-          kill -9 $TARGET_PID
-        else
-          echo "$APP_NAME stoped"
-        fi
+        LOOPS=$(echo "scale=0; ($APP_STOP_TIMEOUT + 9) / 10" | bc)
+        KILL_PROC $TARGET_PID $LOOPS
       else
         echo "no $APP_NAME to stop"
       fi

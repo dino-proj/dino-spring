@@ -14,12 +14,9 @@
 # limitations under the License.
 
 
-echo $0
-bin=`which $0`
-echo $bin
-#bin=`dirname ${bin}`
-bin=`cd "$bin" > /dev/null; pwd`
-echo $bin
-APP_DIR=$(cd -P -- $bin/.. && pwd -P)
+# use POSIX interface, symlink is followed automatically
+BIN_PATH="${BASH_SOURCE-$0}"
+BIN_DIR="$(dirname "${BIN_PATH}")"
+APP_DIR="$(cd "${BIN_DIR}/.."; pwd)"
 
 sh $APP_DIR/bin/app.sh stop @app.name@

@@ -15,7 +15,6 @@
 package org.dinospring.core.modules.iam;
 
 import org.dinospring.data.dao.CrudRepositoryBase;
-import org.springframework.stereotype.Repository;
 
 /**
  *
@@ -23,7 +22,6 @@ import org.springframework.stereotype.Repository;
  * @date 2022-05-04 22:41:25
  */
 
-@Repository
 public interface RoleRepository extends CrudRepositoryBase<RoleEntity, Long> {
 
 }

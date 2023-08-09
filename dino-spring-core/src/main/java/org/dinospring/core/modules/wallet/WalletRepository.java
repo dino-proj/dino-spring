@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
-import org.springframework.stereotype.Repository;
 
 /**
  *
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Repository;
  * @date 2022-03-09 02:22:33
  */
 
-@Repository
 public interface WalletRepository
     extends CrudRepositoryBase<WalletEntity, Long> {
 

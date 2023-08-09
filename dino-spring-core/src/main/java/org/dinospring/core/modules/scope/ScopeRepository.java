@@ -18,7 +18,6 @@ import java.util.Optional;
 
 import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.data.jdbc.repository.query.Query;
-import org.springframework.stereotype.Repository;
 
 /**
  *
@@ -26,7 +25,6 @@ import org.springframework.stereotype.Repository;
  * @date 2022-03-30 17:14:41
  */
 
-@Repository
 public interface ScopeRepository extends CrudRepositoryBase<ScopeEntity, Long> {
 
   /**

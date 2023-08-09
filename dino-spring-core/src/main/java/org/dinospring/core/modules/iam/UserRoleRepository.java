@@ -24,7 +24,6 @@ import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jdbc.repository.query.Modifying;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -33,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
  * @date 2022-05-06 08:30:43
  */
 
-@Repository
 public interface UserRoleRepository extends CrudRepositoryBase<UserRoleEntity, Long> {
 
   /**

@@ -15,14 +15,12 @@
 package org.dinospring.core.sys.audit;
 
 import org.dinospring.data.dao.CrudRepositoryBase;
-import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author Cody LU
  */
 
-@Repository
 public interface AuditLogRepository extends CrudRepositoryBase<AuditLogEntity, Long> {
 
 }

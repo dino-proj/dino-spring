@@ -16,13 +16,11 @@ package org.dinospring.core.modules.task;
 import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Cody LU
  */
-@Repository
 public interface TaskRepository extends CrudRepositoryBase<TaskEntity, String> {
 
   /**

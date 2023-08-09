@@ -25,7 +25,7 @@ import org.springframework.context.ApplicationContext;
 
 /**
  * {@link #DinoContext} 的ThreadLocal版本的实现
- * @author tuuboo
+ * @author Cody LU
  */
 public class DinoContextThreadLocalImpl implements DinoContext {
   private static final InheritableThreadLocalMap RESOURCES = new InheritableThreadLocalMap();

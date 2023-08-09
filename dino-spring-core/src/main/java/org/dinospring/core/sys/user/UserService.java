@@ -23,7 +23,7 @@ import org.dinospring.commons.sys.UserType;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 public interface UserService<T extends User<K>, K extends Serializable> {

@@ -18,7 +18,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * 基于Row的Tenant实体接口，
- * @author tuuboo
+ * @author Cody LU
  */
 public interface TenantRowEntity {
 

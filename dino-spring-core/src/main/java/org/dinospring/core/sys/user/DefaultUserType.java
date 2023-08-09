@@ -22,7 +22,7 @@ import org.dinospring.commons.sys.UserType;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 public enum DefaultUserType implements UserType {

@@ -31,7 +31,7 @@ import io.minio.MinioClient;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 @Configuration

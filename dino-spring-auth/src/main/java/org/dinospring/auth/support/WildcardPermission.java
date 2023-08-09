@@ -28,7 +28,7 @@ import org.dinospring.auth.Permission;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-07 03:02:53
  */
 public class WildcardPermission implements Permission, Serializable {

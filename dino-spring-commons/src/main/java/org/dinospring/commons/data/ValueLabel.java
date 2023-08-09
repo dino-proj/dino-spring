@@ -33,7 +33,7 @@ import java.io.Serializable;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * @author tuuboo
+ * @author Cody LU
  */
 
 public interface ValueLabel<V extends Serializable> {

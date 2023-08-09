@@ -18,8 +18,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.function.Function;
 
-import javax.activation.FileTypeMap;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.activation.FileTypeMap;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FilenameUtils;
 import org.dinospring.commons.context.ContextHelper;
@@ -53,7 +53,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 public interface OssControllerBase {

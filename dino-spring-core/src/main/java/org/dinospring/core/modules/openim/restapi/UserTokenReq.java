@@ -21,7 +21,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * openim的获取用户token请求
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-12 20:14:42
  */
 @Data

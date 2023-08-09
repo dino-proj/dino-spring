@@ -29,7 +29,7 @@ import org.dinospring.auth.session.AuthSession;
 
 /**
  * 用户登录身份验证器
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-09 15:26:48
  */
 

@@ -23,7 +23,7 @@ import lombok.AllArgsConstructor;
 
 /**
  * scope 接口，用于定义scope范围
- * @author tuuboo
+ * @author Cody LU
  */
 public interface Scope extends Serializable {
 

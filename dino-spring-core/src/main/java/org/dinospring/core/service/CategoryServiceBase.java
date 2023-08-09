@@ -16,12 +16,13 @@
 
 package org.dinospring.core.service;
 
+import java.util.List;
+
 import org.dinospring.core.modules.category.TreeNode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import javax.annotation.Nullable;
-import java.util.List;
+import jakarta.annotation.Nullable;
 
 /**
  * @author JL

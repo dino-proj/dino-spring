@@ -1,7 +1,7 @@
 package org.dinospring.core.modules.wallet;
 
 /**
- * @author tuuboo
+ * @author Cody LU
  */
 public interface WalletType {
 

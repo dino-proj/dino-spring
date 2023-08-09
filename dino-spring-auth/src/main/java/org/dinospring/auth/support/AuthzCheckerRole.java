@@ -33,7 +33,7 @@ import org.dinospring.commons.function.Predicates;
 
 /**
  * 角色权限校验器
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-09 17:48:24
  */
 

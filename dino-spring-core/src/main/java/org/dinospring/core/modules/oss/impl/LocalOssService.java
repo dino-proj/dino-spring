@@ -21,12 +21,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.IteratorUtils;
@@ -41,7 +42,7 @@ import org.dinospring.core.modules.oss.config.LocalOssProperties;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  * @author JL
  */
 
@@ -110,15 +111,25 @@ public class LocalOssService implements OssService {
   @Override
   public void putObject(InputStream stream, String bucket, String objectName) throws IOException {
     var file = FileUtils.getFile(basePath.toFile(), bucket, objectName);
-    file.createNewFile();
-    IOUtils.copy(stream, new FileOutputStream(file, false));
+
+    if (!file.createNewFile()) {
+      throw new FileAlreadyExistsException(bucket + ": " + objectName);
+    }
+    try (var out = new FileOutputStream(file, false)) {
+      IOUtils.copy(stream, out);
+    }
   }
 
   @Override
   public void putObject(InputStream stream, String bucket, String objectName, String contentType) throws IOException {
     var file = FileUtils.getFile(basePath.toFile(), bucket, objectName);
-    file.createNewFile();
-    IOUtils.copy(stream, new FileOutputStream(file, false));
+
+    if (!file.createNewFile()) {
+      throw new FileAlreadyExistsException(bucket + ": " + objectName);
+    }
+    try (var out = new FileOutputStream(file, false)) {
+      IOUtils.copy(stream, out);
+    }
   }
 
   @Override
@@ -136,14 +147,16 @@ public class LocalOssService implements OssService {
     if (!file.exists()) {
       throw new FileNotFoundException(bucket + ": " + objectName);
     }
-    return IOUtils.copy(new FileInputStream(file), out);
+    try (var in = new FileInputStream(file)) {
+      return IOUtils.copy(in, out);
+    }
   }
 
   @Override
   public void deleteObject(String bucket, String objectName) throws IOException {
-    var file = FileUtils.getFile(basePath.toFile(), bucket, objectName);
-    if (file.exists()) {
-      file.delete();
+    var objPath = basePath.resolve(bucket).resolve(objectName);
+    if (Files.isRegularFile(objPath)) {
+      Files.deleteIfExists(objPath);
     }
 
   }

@@ -19,7 +19,7 @@ import lombok.Getter;
 
 /**
  * 权限-操作 类型定义
- * @author tuuboo
+ * @author Cody LU
  */
 @Getter
 @AllArgsConstructor

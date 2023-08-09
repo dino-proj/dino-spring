@@ -16,10 +16,6 @@ package org.dinospring.core.autoconfig;
 
 import java.io.IOException;
 
-import javax.annotation.PostConstruct;
-
-import com.fasterxml.jackson.annotation.JsonTypeName;
-
 import org.dinospring.commons.json.AnnotionedJsonTypeIdResolver;
 import org.dinospring.core.modules.framework.annotion.PageTemplate;
 import org.dinospring.core.security.DinoAuthAutoConfig;
@@ -35,11 +31,14 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 @Slf4j

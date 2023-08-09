@@ -16,16 +16,16 @@ package org.dinospring.commons.validation.validator;
 
 import java.util.Arrays;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.validation.constraints.PasswordStrength;
 
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+
 /**
  * 密码强度校验器
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-01 01:03:58
  */
 

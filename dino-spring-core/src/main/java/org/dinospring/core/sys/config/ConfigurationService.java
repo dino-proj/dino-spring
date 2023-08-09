@@ -17,7 +17,7 @@ package org.dinospring.core.sys.config;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.Scope;
@@ -26,7 +26,7 @@ import org.dinospring.core.service.impl.ServiceBase;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 public abstract class ConfigurationService<T extends Configuration> extends ServiceBase<T, Long> {

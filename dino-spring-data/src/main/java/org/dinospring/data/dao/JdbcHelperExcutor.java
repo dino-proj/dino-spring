@@ -20,11 +20,9 @@ import org.dinospring.data.sql.builder.DeleteSqlBuilder;
 import org.dinospring.data.sql.builder.UpdateSqlBuilder;
 import org.springframework.data.jdbc.repository.query.Modifying;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 public interface JdbcHelperExcutor<T, K> {
@@ -62,24 +60,6 @@ public interface JdbcHelperExcutor<T, K> {
    * @return
    */
   <C> String tableName(Class<C> entityClass);
-
-  /**
-   * 将对象转为Json
-   * @param obj
-   * @return
-   * @throws JsonProcessingException
-   */
-  String toJson(Object obj) throws JsonProcessingException;
-
-  /**
-   * 从Json中反序列化对象
-   * @param <C>
-   * @param json
-   * @param cls
-   * @return
-   * @throws JsonProcessingException
-   */
-  <C> C fromJson(String json, Class<C> cls) throws JsonProcessingException;
 
   /**
    * 更新指定列
@@ -130,6 +110,7 @@ public interface JdbcHelperExcutor<T, K> {
    * @param version
    * @return
    */
+  @Modifying
   default boolean updateByIdWithVersion(K id, String column1, Object value1, String column2, Object value2,
       Number version) {
     return updateByIdWithVersion(id, Map.of(column1, value1, column2, value2), version);

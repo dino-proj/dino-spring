@@ -29,7 +29,7 @@ import org.dinospring.auth.AuthzChecker;
  * <p> 标注在类上，则此类的所有方法都需通过验证才能访问</p>
  * <p> 标注在注解上，则该注解所有方法或类的所有方法，需要通过验证才能访问</p>
  *
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-07 00:42:04
  */
 

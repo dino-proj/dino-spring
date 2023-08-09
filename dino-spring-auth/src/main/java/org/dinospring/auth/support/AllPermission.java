@@ -18,7 +18,7 @@ import org.dinospring.auth.Permission;
 
 /**
  * 所有权限，总是有权限访问
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-07 03:26:06
  */
 

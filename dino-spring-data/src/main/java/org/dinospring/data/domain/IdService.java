@@ -18,7 +18,7 @@ import java.util.Base64;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  * @author JL
  */
 

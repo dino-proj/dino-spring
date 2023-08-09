@@ -14,8 +14,10 @@
 
 package org.dinospring.data.dao;
 
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.utils.NamingUtils;
 import org.dinospring.data.domain.EntityBase;
@@ -29,14 +31,13 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.util.Lazy;
 import org.springframework.util.Assert;
 
-import javax.persistence.Table;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import jakarta.persistence.Table;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 @Slf4j

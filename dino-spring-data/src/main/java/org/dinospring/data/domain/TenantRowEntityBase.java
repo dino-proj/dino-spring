@@ -16,10 +16,9 @@ package org.dinospring.data.domain;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -28,7 +27,7 @@ import lombok.experimental.SuperBuilder;
 
 /**
  * 基于Row的Tenant实体基类，
- * @author tuuboo
+ * @author Cody LU
  */
 
 @Data

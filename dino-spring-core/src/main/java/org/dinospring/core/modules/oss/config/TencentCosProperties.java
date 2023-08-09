@@ -14,8 +14,8 @@
 
 package org.dinospring.core.modules.oss.config;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 @Data

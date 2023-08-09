@@ -1,15 +1,24 @@
+// Copyright 2023 dinospring.cn.
+// SPDX-License-Identifier: Apache-2.0
+
 package org.dinospring.data.autoconfig;
 
 import java.util.Collections;
 
-import javax.persistence.Table;
-
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.mapping.model.SimpleTypeHolder;
 
-public class MySimpleTypeHolder extends SimpleTypeHolder {
+import jakarta.persistence.Table;
 
-  public MySimpleTypeHolder(SimpleTypeHolder source) {
+/**
+ *
+ * @author Cody Lu
+ * @date 2023-05-18 00:23:48
+ */
+
+public class DinoSimpleTypeHolder extends SimpleTypeHolder {
+
+  public DinoSimpleTypeHolder(SimpleTypeHolder source) {
     super(Collections.emptySet(), source);
   }
 

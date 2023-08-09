@@ -2,8 +2,6 @@ package org.dinospring.data.dao.mapping;
 
 import java.util.Optional;
 
-import javax.persistence.Table;
-
 import org.springframework.data.mapping.model.BasicPersistentEntity;
 import org.springframework.data.relational.core.mapping.NamingStrategy;
 import org.springframework.data.relational.core.mapping.RelationalPersistentEntity;
@@ -12,6 +10,8 @@ import org.springframework.data.relational.core.sql.SqlIdentifier;
 import org.springframework.data.util.Lazy;
 import org.springframework.data.util.TypeInformation;
 import org.springframework.util.StringUtils;
+
+import jakarta.persistence.Table;
 
 public class RelationalPersistentEntityImpl<T> extends BasicPersistentEntity<T, RelationalPersistentProperty>
     implements RelationalPersistentEntity<T> {

@@ -20,11 +20,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.dinospring.auth.DinoAuth;
 import org.dinospring.auth.exception.NotLoginException;
@@ -33,12 +28,16 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.pattern.PathPattern;
 import org.springframework.web.util.pattern.PathPatternParser;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * 缺省的会话打开过滤器，用于在每次请求时打开Auth会话
  *
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-11 17:38:45
  */
 

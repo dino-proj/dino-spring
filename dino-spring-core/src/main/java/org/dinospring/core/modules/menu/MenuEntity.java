@@ -15,7 +15,7 @@ package org.dinospring.core.modules.menu;
 
 /**
  * 菜单实体
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-11 17:41:04
  */
 

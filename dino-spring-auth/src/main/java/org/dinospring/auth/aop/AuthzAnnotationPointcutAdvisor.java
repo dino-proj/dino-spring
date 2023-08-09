@@ -35,7 +35,7 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 
 /**
  * 基于注解的权限检查的切面，将检查权限的注解转换为检查权限的切点
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-07 21:26:39
  */
 
@@ -44,7 +44,7 @@ public class AuthzAnnotationPointcutAdvisor extends StaticMethodMatcherPointcutA
   protected static final List<Class<? extends Annotation>> AUTHZ_ANNOTATION_CLASSES = Arrays.asList(
       CheckPermission.class, CheckRole.class, CheckLoginAs.class, CheckResource.class, CheckAuthz.class);
 
-  private MethodMatcher methodMatcher;
+  private transient MethodMatcher methodMatcher;
 
   public AuthzAnnotationPointcutAdvisor() {
     this.setAdvice(new AuthzMethodInterceptor());

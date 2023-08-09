@@ -21,7 +21,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * 用户注册请求
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-13 03:23:10
  */
 

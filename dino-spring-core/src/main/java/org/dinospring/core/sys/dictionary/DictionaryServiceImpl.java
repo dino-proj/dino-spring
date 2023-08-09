@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 @Service("dictionaryService")

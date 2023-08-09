@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * openim的restful接口实现
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-13 03:19:03
  */
 

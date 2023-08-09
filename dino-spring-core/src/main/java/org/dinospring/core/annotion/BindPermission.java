@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  * 1. 自动将此注解code值作为前缀添加至Mapping方法上的Shiro注解的value中
  * 2. 注解自动入库，自动更新
  *
- * @author tuuboo
+ * @author Cody LU
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.METHOD })

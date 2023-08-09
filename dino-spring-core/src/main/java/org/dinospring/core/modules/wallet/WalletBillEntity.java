@@ -2,14 +2,13 @@ package org.dinospring.core.modules.wallet;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
-
 import org.dinospring.data.domain.TenantRowEntityBase;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -17,7 +16,7 @@ import lombok.experimental.FieldNameConstants;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-03-01 01:40:42
  */
 

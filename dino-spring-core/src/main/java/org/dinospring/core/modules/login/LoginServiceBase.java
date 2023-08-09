@@ -37,7 +37,7 @@ import org.dinospring.core.sys.user.UserService;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 public abstract interface LoginServiceBase<U extends User<K>, K extends Serializable> {

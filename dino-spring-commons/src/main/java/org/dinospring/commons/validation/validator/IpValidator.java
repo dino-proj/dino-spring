@@ -16,15 +16,15 @@ package org.dinospring.commons.validation.validator;
 
 import java.util.regex.Pattern;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.validation.constraints.Ip;
 
 /**
  * 检查IP格式
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-06 19:36:05
  */
 

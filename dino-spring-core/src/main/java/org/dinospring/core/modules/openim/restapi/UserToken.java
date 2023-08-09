@@ -21,7 +21,7 @@ import lombok.Data;
 
 /**
  * 用户token信息
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-13 04:15:34
  */
 

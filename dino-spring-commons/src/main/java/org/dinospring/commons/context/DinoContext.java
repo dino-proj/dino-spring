@@ -21,7 +21,7 @@ import org.dinospring.commons.sys.User;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 public interface DinoContext {
   /**

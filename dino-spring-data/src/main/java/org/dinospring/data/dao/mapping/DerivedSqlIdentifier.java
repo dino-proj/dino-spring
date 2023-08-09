@@ -1,3 +1,6 @@
+// Copyright 2023 dinodev.cn.
+// SPDX-License-Identifier: Apache-2.0
+
 package org.dinospring.data.dao.mapping;
 
 import java.util.Collections;
@@ -7,6 +10,12 @@ import java.util.function.UnaryOperator;
 import org.springframework.data.relational.core.sql.IdentifierProcessing;
 import org.springframework.data.relational.core.sql.SqlIdentifier;
 import org.springframework.util.Assert;
+
+/**
+ *
+ * @author Cody Lu
+ * @date 2023-05-17 22:08:33
+ */
 
 public class DerivedSqlIdentifier implements SqlIdentifier {
 

@@ -19,12 +19,14 @@ import org.dinospring.data.sql.builder.SelectSqlBuilder;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author JL
  * @Date: 2021/11/1
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class CreateTimePeriodStatusQuery extends StatusQuery {
 
   @Schema(name = "create_period", description = "创建时间范围查询")

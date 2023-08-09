@@ -19,14 +19,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
-
 import org.dinospring.commons.validation.validator.ChinaMobileValidator;
+
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 
 /**
  * 手机号格式检查，对字符串进行手机号格式验证
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-01 00:14:44
  */
 

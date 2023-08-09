@@ -16,14 +16,14 @@ package org.dinospring.core.sys.tenant;
 
 import java.util.Optional;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.data.jdbc.repository.query.Query;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 public interface TenantRepository extends CrudRepositoryBase<TenantEntity, String> {

@@ -15,16 +15,16 @@
 package org.dinospring.core.modules.task;
 
 import java.time.Duration;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import org.dinospring.commons.utils.TaskObserver;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 public interface TaskService {
@@ -36,7 +36,7 @@ public interface TaskService {
    * @param task 任务执行主体
    * @return
    */
-  TaskVo runTask(@Nonnull String name, @Nullable Duration timeout, @Nonnull Function<TaskObserver, Boolean> task);
+  TaskVo runTask(@Nonnull String name, @Nullable Duration timeout, @Nonnull Predicate<TaskObserver> task);
 
   /**
    * 获取任务信息

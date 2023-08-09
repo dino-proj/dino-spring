@@ -16,6 +16,8 @@ package org.dinospring.core.controller.support;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.data.sql.builder.SelectSqlBuilder;
 
@@ -24,6 +26,7 @@ import org.dinospring.data.sql.builder.SelectSqlBuilder;
  * @Date: 2021/11/1
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class SearchFieldStatusQuery<M extends FieldEnum> extends StatusQuery {
 
   @Schema(name = "search", description = "数据库字段搜索")

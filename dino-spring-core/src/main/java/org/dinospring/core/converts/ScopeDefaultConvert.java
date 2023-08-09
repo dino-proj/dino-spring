@@ -14,13 +14,13 @@
 
 package org.dinospring.core.converts;
 
-import javax.persistence.AttributeConverter;
-
 import org.dinospring.commons.Scope;
+
+import jakarta.persistence.AttributeConverter;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 public class ScopeDefaultConvert implements AttributeConverter<Scope, String> {

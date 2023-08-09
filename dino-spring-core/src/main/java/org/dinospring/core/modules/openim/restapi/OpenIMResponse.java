@@ -20,7 +20,7 @@ import lombok.Data;
 
 /**
  * openim的restful接口返回结果
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-12 20:14:42
  */
 

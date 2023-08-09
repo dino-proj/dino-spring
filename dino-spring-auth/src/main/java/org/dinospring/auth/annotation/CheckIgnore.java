@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
 
 /**
  * 忽略权限检查，对于标注了此注解的类或接口，不会进行权限检查，忽略{@link CheckPermission}、{@link CheckLoginAs}、{@link CheckRole}注解
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-11 21:51:33
  */
 

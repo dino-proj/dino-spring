@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 public interface SmsService {

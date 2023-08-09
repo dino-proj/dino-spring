@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * 绑定字典注解
- * @author tuuboo
+ * @author Cody LU
  */
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)

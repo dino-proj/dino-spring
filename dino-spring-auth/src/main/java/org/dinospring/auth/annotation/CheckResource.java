@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
 
 /**
  * 权限所对应的资源的名称
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-06 23:32:36
  */
 

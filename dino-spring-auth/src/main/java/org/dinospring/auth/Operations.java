@@ -16,7 +16,7 @@ package org.dinospring.auth;
 
 /**
  * 内置资源操作类型
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-07 01:26:30
  */
 

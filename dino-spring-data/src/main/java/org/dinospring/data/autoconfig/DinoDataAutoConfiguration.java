@@ -17,8 +17,6 @@ package org.dinospring.data.autoconfig;
 import java.sql.DatabaseMetaData;
 import java.util.Locale;
 
-import javax.annotation.PostConstruct;
-
 import org.dinospring.commons.autoconfig.DinoCommonsAutoConfiguration;
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.json.JsonDiscriminatorModule;
@@ -56,11 +54,12 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 @Slf4j

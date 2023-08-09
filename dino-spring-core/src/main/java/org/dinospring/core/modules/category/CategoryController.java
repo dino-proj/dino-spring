@@ -21,14 +21,14 @@ import org.dinospring.commons.utils.TypeUtils;
 import org.dinospring.core.controller.CategoryControllerBase;
 import org.dinospring.core.controller.CrudControllerBase;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  * @author JL
  */
 

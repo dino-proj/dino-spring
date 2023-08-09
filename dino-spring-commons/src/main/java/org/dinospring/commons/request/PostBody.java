@@ -14,14 +14,13 @@
 
 package org.dinospring.commons.request;
 
-import javax.validation.Valid;
-
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import lombok.Data;
 
 /**
  * Post请求包装
- * @author tuuboo
+ * @author Cody LU
  */
 
 @Data

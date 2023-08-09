@@ -18,21 +18,20 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Objects;
 
-import javax.persistence.AttributeConverter;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.commons.lang3.StringUtils;
 import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.persistence.AttributeConverter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 @Slf4j

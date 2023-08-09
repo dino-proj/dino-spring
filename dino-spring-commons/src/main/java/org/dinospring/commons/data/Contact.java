@@ -16,16 +16,15 @@ package org.dinospring.commons.data;
 
 import java.io.Serializable;
 
-import javax.persistence.Embeddable;
-
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 @Data
 @AllArgsConstructor

@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 
 /**
  * restApi响应
- * @author tuuboo
+ * @author Cody LU
  */
 
 @ApiResponse(description = "restApi响应", content = @Content(mediaType = "application/json"))

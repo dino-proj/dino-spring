@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import org.dinospring.commons.Scope;
 import org.dinospring.data.dao.CrudRepositoryBase;
@@ -28,7 +28,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 @NoRepositoryBean
@@ -54,7 +54,7 @@ public interface ConfigurationRepository<T extends Configuration> extends CrudRe
    */
   default Optional<T> queryOnePropertyByKeyInScope(String tenantId, String key, @Nonnull final Scope... scopes) {
     var props = queryPropertiesByKeyInScope(tenantId, key, scopes);
-    return props.stream().reduce((l, r) -> this.prorityProperty(l, r));
+    return props.stream().reduce(this::prorityProperty);
   }
 
   /**
@@ -81,7 +81,7 @@ public interface ConfigurationRepository<T extends Configuration> extends CrudRe
     return props.stream().collect(Collectors.groupingBy(p -> p.getKey().substring(start)))//
         .entrySet().stream().collect(Collectors.toMap(//
             Map.Entry::getKey, //
-            e -> e.getValue().stream().reduce((l, r) -> this.prorityProperty(l, r)).get()));
+            e -> e.getValue().stream().reduce(this::prorityProperty).get()));
   }
 
   /**

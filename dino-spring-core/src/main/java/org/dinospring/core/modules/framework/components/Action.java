@@ -18,7 +18,7 @@ import org.dinospring.commons.json.annotation.JsonDiscriminator;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 @JsonDiscriminator

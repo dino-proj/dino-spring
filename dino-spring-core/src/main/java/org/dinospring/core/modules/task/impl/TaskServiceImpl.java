@@ -15,10 +15,10 @@
 package org.dinospring.core.modules.task.impl;
 
 import java.time.Duration;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import org.dinospring.commons.utils.AsyncWorker;
 import org.dinospring.commons.utils.TaskObserver;
@@ -38,7 +38,7 @@ import lombok.RequiredArgsConstructor;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 @Service
@@ -65,7 +65,7 @@ public class TaskServiceImpl extends ServiceBase<TaskEntity, String> implements 
 
   @Override
   public TaskVo runTask(@Nonnull String name, @Nullable Duration timeout,
-      @Nonnull Function<TaskObserver, Boolean> task) {
+      @Nonnull Predicate<TaskObserver> task) {
     var taskEntity = TaskEntity.builder()
         .id(idService.genUUID())
         .taskName(name)
@@ -80,13 +80,13 @@ public class TaskServiceImpl extends ServiceBase<TaskEntity, String> implements 
     asyncWorker.exec(() -> {
       taskObserver.updateStatus(TaskObserver.TaskStatus.RUNNING);
       try {
-        boolean ret = task.apply(taskObserver);
+        boolean ret = task.test(taskObserver);
         if (ret) {
           taskObserver.updateStatus(TaskObserver.TaskStatus.SUCCEED);
         } else {
           taskObserver.updateStatus(TaskObserver.TaskStatus.FAILD);
         }
-      } catch (Throwable e) {
+      } catch (RuntimeException e) {
         taskObserver.setMsg(e.getMessage());
         taskObserver.updateStatus(TaskObserver.TaskStatus.FAILD);
       }

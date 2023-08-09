@@ -16,8 +16,8 @@ package org.dinospring.core.modules.login;
 
 import java.io.Serializable;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import org.dinospring.commons.request.PostBody;
 import org.dinospring.commons.response.Response;
@@ -25,7 +25,6 @@ import org.dinospring.commons.response.Status;
 import org.dinospring.commons.sys.Tenant;
 import org.dinospring.commons.sys.User;
 import org.dinospring.commons.utils.Assert;
-import org.dinospring.commons.utils.ValidateUtil;
 import org.dinospring.core.annotion.param.ParamTenant;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,11 +32,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import lombok.Data;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 public interface LoginByUserName<U extends User<K>, K extends Serializable>
@@ -75,13 +75,15 @@ public interface LoginByUserName<U extends User<K>, K extends Serializable>
 
   @Data
   public static class UserNameLoginBody {
-    @Schema(description = "用户名", required = true)
+    @Schema(description = "用户名", requiredMode = RequiredMode.REQUIRED)
     @Size(min = 4)
+    @NotBlank
     private String username;
 
     @NotBlank
-    @Schema(description = "登录密码", required = true)
+    @Schema(description = "登录密码", requiredMode = RequiredMode.REQUIRED)
     @Size(min = 6)
+    @NotBlank
     private String password;
   }
 }

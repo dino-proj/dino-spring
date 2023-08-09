@@ -18,15 +18,15 @@ import lombok.Data;
 import org.dinospring.core.controller.CrudControllerBase;
 import org.dinospring.core.modules.iam.RoleControllerBase.RoleReq;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import java.util.List;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-05-04 23:43:44
  */
 public interface RoleControllerBase

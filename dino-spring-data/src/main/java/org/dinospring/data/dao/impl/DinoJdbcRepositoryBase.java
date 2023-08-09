@@ -39,6 +39,7 @@ import org.dinospring.data.sql.dialect.Dialect;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.jdbc.core.JdbcAggregateOperations;
+import org.springframework.data.jdbc.core.convert.JdbcConverter;
 import org.springframework.data.jdbc.repository.support.SimpleJdbcRepository;
 import org.springframework.data.relational.core.mapping.RelationalPersistentEntity;
 import org.springframework.data.util.CastUtils;
@@ -51,14 +52,11 @@ import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.JdbcUtils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 @Slf4j
@@ -74,17 +72,14 @@ public class DinoJdbcRepositoryBase<T, K> extends SimpleJdbcRepository<T, K> imp
   private Dialect dialect;
 
   @Nonnull
-  private ObjectMapper objectMapper;
-
-  @Nonnull
   private ConversionService conversionService;
 
-  public DinoJdbcRepositoryBase(JdbcAggregateOperations entityOperations, RelationalPersistentEntity<T> entity) {
-    super(entityOperations, entity);
+  public DinoJdbcRepositoryBase(JdbcAggregateOperations entityOperations, RelationalPersistentEntity<T> entity,
+      JdbcConverter converter) {
+    super(entityOperations, entity, converter);
     this.entity = entity;
 
     this.jdbcTemplate = ContextHelper.findBean(JdbcTemplate.class);
-    this.objectMapper = ContextHelper.findBean(ObjectMapper.class);
     this.dialect = ContextHelper.findBean(Dialect.class);
     this.conversionService = ContextHelper.findBean("dataConversionService", ConversionService.class);
     this.entityInfo = EntityMeta.of(dialect, entityClass());
@@ -244,16 +239,6 @@ public class DinoJdbcRepositoryBase<T, K> extends SimpleJdbcRepository<T, K> imp
     }
 
     return null;
-  }
-
-  @Override
-  public String toJson(Object obj) throws JsonProcessingException {
-    return objectMapper.writeValueAsString(obj);
-  }
-
-  @Override
-  public <C> C fromJson(String json, Class<C> cls) throws JsonProcessingException {
-    return objectMapper.readValue(json, cls);
   }
 
   @Override

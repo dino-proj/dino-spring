@@ -31,7 +31,7 @@ import org.dinospring.auth.support.AuthzCheckerRole;
 
 /**
  * 权限检查拦截器
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-09 19:30:52
  */
 

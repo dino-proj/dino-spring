@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * @author tuuboo
+ * @author Cody LU
  */
 @Repository
 public interface TaskRepository extends CrudRepositoryBase<TaskEntity, String> {

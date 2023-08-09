@@ -14,14 +14,14 @@
 
 package org.dinospring.auth.session;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * <p>AuthSession Resolver From {@link HttpServletRequest}</P>
  * <p>配合{@link DefaultAuthSessionOpenFilter}使用</p>
  *
  *
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-09 21:50:24
  */
 

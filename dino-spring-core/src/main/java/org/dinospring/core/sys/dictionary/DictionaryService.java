@@ -24,7 +24,7 @@ import org.dinospring.core.sys.dictionary.DictionaryEntity.DictItem;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 public interface DictionaryService extends Service<DictionaryEntity, Long> {

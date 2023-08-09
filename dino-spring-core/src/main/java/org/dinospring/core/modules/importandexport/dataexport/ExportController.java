@@ -16,7 +16,7 @@ package org.dinospring.core.modules.importandexport.dataexport;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.dinospring.commons.response.Response;
 import org.dinospring.commons.utils.TypeUtils;

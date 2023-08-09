@@ -18,7 +18,7 @@ import lombok.experimental.UtilityClass;
 
 /**
  * 为 @JsonView 定义的便捷工具类
- * @author tuuboo
+ * @author Cody LU
  */
 @UtilityClass
 public class PropertyView {

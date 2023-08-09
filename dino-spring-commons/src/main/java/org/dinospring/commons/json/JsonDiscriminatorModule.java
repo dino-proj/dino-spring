@@ -34,7 +34,7 @@ import org.dinospring.commons.json.annotation.JsonDiscriminator;
 
 /**
  * 实现对JsonDiscriminator注解的支持模块
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-23 21:35:21
  */
 

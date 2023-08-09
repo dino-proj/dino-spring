@@ -19,7 +19,7 @@ import org.dinospring.core.modules.framework.Component;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 @JsonDiscriminator

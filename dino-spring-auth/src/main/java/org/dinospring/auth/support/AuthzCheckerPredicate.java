@@ -26,7 +26,7 @@ import org.dinospring.auth.session.AuthSession;
 /**
  * 权限检查适配器，转换为{@link Predicate}
  *
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-07 02:40:17
  */
 

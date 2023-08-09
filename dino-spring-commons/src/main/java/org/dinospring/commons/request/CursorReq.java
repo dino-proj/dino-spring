@@ -14,20 +14,19 @@
 
 package org.dinospring.commons.request;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.Min;
-
 import org.springdoc.api.annotations.ParameterObject;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
  * 滑动请求信息
- * @author tuuboo
+ * @author Cody LU
  */
 
 @Data

@@ -14,10 +14,10 @@
 
 package org.dinospring.core.modules.scope;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 import org.dinospring.data.domain.TenantRowEntityBase;
 
@@ -29,7 +29,7 @@ import lombok.experimental.SuperBuilder;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-03-31 16:50:16
  */
 

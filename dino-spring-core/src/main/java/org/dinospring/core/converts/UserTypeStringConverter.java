@@ -16,9 +16,6 @@ package org.dinospring.core.converts;
 
 import java.util.Set;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
-
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.sys.UserType;
 import org.dinospring.core.sys.user.UserServiceProvider;
@@ -27,9 +24,12 @@ import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.data.util.CastUtils;
 import org.springframework.stereotype.Component;
 
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
+
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 @Component
 @Converter(autoApply = true)

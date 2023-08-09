@@ -34,7 +34,7 @@ import org.springframework.core.annotation.AliasFor;
  * 将<pre> @PageTemplate </pre>注解中的name作为ID，这按照如下方式添加：
  *  <pre> AnnotionedJsonTypeIdResolver.addAnnotion(PageTemplate.class, PageTemplate::name, "com.botbrain");</pre>
  *
- * @author tuuboo
+ * @author Cody LU
  */
 @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.TYPE, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)

@@ -16,10 +16,10 @@ package org.dinospring.core.modules.iam;
 
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 import org.dinospring.data.domain.EntityBase;
 
@@ -30,7 +30,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
- * @author tuuboo
+ * @author Cody LU
  */
 
 @Data
@@ -41,7 +41,7 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "iam_action_group")
 public class ActionGroupEntity extends EntityBase<Long> {
 
-  @Schema(name = "user_type", description = "用户类型，null表示适用所有用户", required = false, maxLength = 64)
+  @Schema(name = "user_type", description = "用户类型，null表示适用所有用户", maxLength = 64)
   @Column(name = "user_type", nullable = true, length = 64)
   private String userType;
 

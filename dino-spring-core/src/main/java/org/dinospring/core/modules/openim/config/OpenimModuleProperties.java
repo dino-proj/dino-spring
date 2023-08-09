@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * openim的配置
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-13 03:11:08
  */
 

@@ -16,20 +16,20 @@ package org.dinospring.core.converts;
 
 import java.sql.SQLException;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.dinospring.core.modules.framework.PageConfig;
 import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
+
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 @Component

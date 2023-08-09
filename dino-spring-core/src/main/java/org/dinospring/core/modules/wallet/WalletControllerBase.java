@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import io.swagger.v3.oas.annotations.Operation;
 
 /**
- * @author tuuboo
+ * @author Cody LU
  */
 public interface WalletControllerBase
     extends ControllerBase<WalletService, WalletEntity, WalletVo, Long> {

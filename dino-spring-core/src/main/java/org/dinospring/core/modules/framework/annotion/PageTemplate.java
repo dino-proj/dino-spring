@@ -24,7 +24,7 @@ import org.dinospring.core.modules.framework.PageType;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 @Target(ElementType.TYPE)

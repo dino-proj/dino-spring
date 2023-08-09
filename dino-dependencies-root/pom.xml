@@ -5,17 +5,17 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.dino</groupId>
   <artifactId>dino-dependencies-root</artifactId>
-  <version>2.4.0</version>
+  <version>3.0.0</version>
   <packaging>pom</packaging>
-  <description>dino-springy依赖管理</description>
+  <description>dino-spring依赖管理</description>
   <url>https://dinodev.cn/</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <java.version>11</java.version>
+    <java.version>17</java.version>
 
-    <dino-spring.version>2.4.0.RELEASE</dino-spring.version>
+    <dino-spring.version>3.0.0</dino-spring.version>
 
     <!-- managedDep common tools -->
     <commons-lang3.version>3.12.0</commons-lang3.version>
@@ -53,7 +53,7 @@
     <httpclient.version>4.5.13</httpclient.version>
 
     <!-- managedDep servlet-api -->
-    <servlet-api.version>4.0.1</servlet-api.version>
+    <servlet-api.version>6.0.0</servlet-api.version>
 
     <!-- managedDep weixin sdk -->
     <weixin-java.version>4.1.0</weixin-java.version>
@@ -65,7 +65,7 @@
     <image4j.version>0.7</image4j.version>
 
     <!-- managedDep crypto -->
-    <bcrypt.version>1.71</bcrypt.version>
+    <bcrypt.version>1.76</bcrypt.version>
 
     <!-- test -->
     <junit.version>5.7.0</junit.version>
@@ -352,8 +352,8 @@
 
       <!-- servlet-api -->
       <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>javax.servlet-api</artifactId>
+        <groupId>jakarta.servlet</groupId>
+        <artifactId>jakarta.servlet-api</artifactId>
         <version>${servlet-api.version}</version>
         <scope>provided</scope>
       </dependency>
@@ -453,13 +453,6 @@
       <version>${gson.version}</version>
     </dependency>
 
-    <!-- servlet-api -->
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>${servlet-api.version}</version>
-      <scope>provided</scope>
-    </dependency>
     <!--lombok依赖-->
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -505,7 +498,7 @@
 
   <developers>
     <developer>
-      <name>tuuboo</name>
+      <name>Cody Lu</name>
       <email>tuuboo@gmail.com</email>
     </developer>
     <developer>

@@ -1,11 +1,10 @@
 package org.dinospring.data.domain;
 
-import javax.persistence.Column;
-
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 
 /**
- * @author tuuboo
+ * @author Cody LU
  */
 public interface Versioned {
 

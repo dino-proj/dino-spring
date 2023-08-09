@@ -14,18 +14,18 @@
 
 package org.dinospring.core.exception;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 /**
  * 将filter的异常重新抛出，让其被全局异常处理器捕获
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-05-06 19:46:56
  */
 @Controller

@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * 响应状态码及msg
- * @author tuuboo
+ * @author Cody LU
  */
 
 public interface Status {

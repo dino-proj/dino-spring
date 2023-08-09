@@ -16,7 +16,7 @@ package org.dinospring.core.modules.oss.impl;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 public class AliOssService {

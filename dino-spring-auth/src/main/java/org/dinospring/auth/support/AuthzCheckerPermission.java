@@ -38,7 +38,7 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 
 /**
  * 用户权限校验器
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-09 15:27:04
  */
 

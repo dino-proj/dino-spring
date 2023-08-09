@@ -19,12 +19,12 @@ import org.dinospring.core.entity.Code;
 import org.dinospring.core.service.CategoryServiceBase;
 import org.dinospring.core.service.impl.ServiceBase;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  * @author JL
  */
 public abstract class CategoryService<E extends CategoryEntityBase, N extends TreeNode> extends ServiceBase<E, Long>

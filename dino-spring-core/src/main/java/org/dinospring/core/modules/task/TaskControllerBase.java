@@ -14,7 +14,7 @@
 
 package org.dinospring.core.modules.task;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.response.Response;
@@ -28,7 +28,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 public interface TaskControllerBase {

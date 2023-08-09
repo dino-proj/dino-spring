@@ -14,22 +14,23 @@
 
 package org.dinospring.core.sys.tenant;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 
 import org.dinospring.commons.data.ImageFileMeta;
 import org.dinospring.data.domain.EntityBase;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldNameConstants;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 @Data
@@ -64,7 +65,7 @@ public class TenantEntity extends EntityBase<String> {
   @Column(name = "secret_key", length = 256)
   String secretKey;
 
-  @Schema(description = "租户编码", required = true, maxLength = 64)
+  @Schema(description = "租户编码", requiredMode = RequiredMode.REQUIRED, maxLength = 64)
   @Column(name = "code", length = 64, nullable = false)
   private String code;
 }

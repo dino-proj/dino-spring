@@ -14,15 +14,15 @@
 
 package org.dinospring.commons.validation.validator;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.validation.constraints.IdCard;
 
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+
 /**
  * 检查身份证号格式
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-06 19:32:13
  */
 

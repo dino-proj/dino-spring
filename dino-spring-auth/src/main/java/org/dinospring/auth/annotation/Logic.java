@@ -16,7 +16,7 @@ package org.dinospring.auth.annotation;
 
 /**
  * 逻辑模式
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-06 22:39:21
  */
 

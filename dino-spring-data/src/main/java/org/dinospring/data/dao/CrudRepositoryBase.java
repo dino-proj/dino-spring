@@ -14,12 +14,14 @@
 
 package org.dinospring.data.dao;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
+import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -27,11 +29,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 @NoRepositoryBean
-public interface CrudRepositoryBase<T, K> extends JdbcSelectExecutor<T, K>, PagingAndSortingRepository<T, K> {
+public interface CrudRepositoryBase<T, K extends Serializable>
+    extends ListCrudRepository<T, K>, JdbcSelectExecutor<T, K>, PagingAndSortingRepository<T, K> {
 
   /**
    * 根据id，查询元素

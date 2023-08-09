@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
@@ -58,7 +58,7 @@ import io.minio.messages.Item;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  * @author JL
  */
 

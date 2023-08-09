@@ -53,7 +53,7 @@ import ws.schild.jave.MultimediaObject;
 /**
  * 多媒体工具类、图片、视频、音频、文件等处理
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 @UtilityClass

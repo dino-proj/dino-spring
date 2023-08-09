@@ -20,7 +20,7 @@ import org.dinospring.auth.Permission;
 
 /**
  * 用户认证信息提供者
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-09 22:22:42
  */
 

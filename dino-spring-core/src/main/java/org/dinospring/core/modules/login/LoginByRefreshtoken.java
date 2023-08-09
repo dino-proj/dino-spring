@@ -16,7 +16,7 @@ package org.dinospring.core.modules.login;
 
 import java.io.Serializable;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import org.dinospring.commons.request.PostBody;
 import org.dinospring.commons.response.Response;
@@ -34,11 +34,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import lombok.Data;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-06-02 16:45:11
  */
 
@@ -81,15 +82,15 @@ public interface LoginByRefreshtoken<U extends User<K>, K extends Serializable>
 
   @Data
   public static class RefreshtokenLoginBody {
-    @Schema(description = "用户类型", required = true)
-    //    @NotBlank(message = "用户类型不能为空")
+    @Schema(description = "用户类型", requiredMode = RequiredMode.REQUIRED)
+    @NotBlank(message = "用户类型不能为空")
     private String userType;
 
-    @Schema(description = "用户ID", required = true)
+    @Schema(description = "用户ID", requiredMode = RequiredMode.REQUIRED)
     @NotBlank(message = "用户ID不能为空")
     private String userId;
 
-    @Schema(description = "Refresh Token", required = true)
+    @Schema(description = "Refresh Token", requiredMode = RequiredMode.REQUIRED)
     @NotBlank(message = "Refresh Token不能为空")
     private String refreshToken;
   }

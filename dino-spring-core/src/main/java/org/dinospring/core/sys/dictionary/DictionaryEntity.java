@@ -17,15 +17,15 @@ package org.dinospring.core.sys.dictionary;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Index;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import org.dinospring.commons.Orderable;
 import org.dinospring.data.domain.TenantRowEntityBase;
@@ -38,7 +38,7 @@ import lombok.experimental.FieldNameConstants;
 
 /**
  * 数据字典实体
- * @author tuuboo
+ * @author Cody LU
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

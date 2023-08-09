@@ -16,7 +16,7 @@ package org.dinospring.core.modules.framework;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
+import jakarta.persistence.Column;
 
 import org.dinospring.commons.Scope;
 
@@ -25,7 +25,7 @@ import lombok.Data;
 
 /**
  * 页面布局
- * @author tuuboo
+ * @author Cody LU
  */
 
 @Data

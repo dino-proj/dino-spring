@@ -16,11 +16,11 @@ package org.dinospring.core.modules.iam;
 
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 import org.dinospring.data.domain.TenantRowEntityBase;
 
@@ -31,7 +31,7 @@ import lombok.experimental.SuperBuilder;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-12 13:10:43
  */
 

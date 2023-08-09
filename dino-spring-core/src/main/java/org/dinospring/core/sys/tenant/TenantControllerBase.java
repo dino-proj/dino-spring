@@ -13,13 +13,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author tuuboo
+ * @author Cody LU
  */
 public interface TenantControllerBase extends ControllerBase<TenantService, TenantEntity, TenantVo, String> {
 
@@ -42,7 +42,6 @@ public interface TenantControllerBase extends ControllerBase<TenantService, Tena
   default Class<TenantVo> voClass() {
     return TenantVo.class;
   }
-
 
   /**
    * Entity类的Class
@@ -100,7 +99,7 @@ public interface TenantControllerBase extends ControllerBase<TenantService, Tena
     var ossService = ContextHelper.findBean(OssService.class);
 
     var image = ImageIO
-      .read(ossService.getObject(tenant.getIconFileMeta().getBucket(), tenant.getIconFileMeta().getPath()));
+        .read(ossService.getObject(tenant.getIconFileMeta().getBucket(), tenant.getIconFileMeta().getPath()));
     MultiMediaUtils.writeIcoImage(image, response.getOutputStream(), 32);
 
   }

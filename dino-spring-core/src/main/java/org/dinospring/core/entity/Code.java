@@ -18,7 +18,7 @@ import java.util.Arrays;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 public interface Code {

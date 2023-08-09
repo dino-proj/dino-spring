@@ -14,16 +14,15 @@
 
 package org.dinospring.commons.data;
 
-import javax.persistence.Embeddable;
-
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Embeddable;
 import lombok.Data;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 @Data

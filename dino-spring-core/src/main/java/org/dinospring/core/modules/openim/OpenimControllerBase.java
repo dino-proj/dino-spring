@@ -22,7 +22,7 @@ import io.swagger.v3.oas.annotations.Operation;
 
 /**
  * OpenIm模块的基础控制器
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-13 03:09:25
  */
 

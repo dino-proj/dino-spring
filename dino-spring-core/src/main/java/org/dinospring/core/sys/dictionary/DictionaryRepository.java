@@ -22,7 +22,7 @@ import org.springframework.data.jdbc.repository.query.Query;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 public interface DictionaryRepository extends CrudRepositoryBase<DictionaryEntity, Long> {

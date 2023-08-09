@@ -14,15 +14,15 @@
 
 package org.dinospring.commons.validation.validator;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.validation.constraints.Mobile;
 
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+
 /**
  * 检查手机号格式
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-01 00:09:34
  */
 

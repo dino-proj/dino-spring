@@ -28,7 +28,7 @@ import com.google.gson.internal.bind.TypeAdapters;
 
 /**
  * Gson和Jackson的转换
- * @author tuuboo
+ * @author Cody LU
  */
 public class JacksonCustomerModule extends SimpleModule {
   public JacksonCustomerModule() {

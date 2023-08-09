@@ -17,24 +17,23 @@ package org.dinospring.core.sys.user;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.MappedSuperclass;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.dinospring.commons.sys.UserType;
 import org.dinospring.data.domain.EntityBase;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldNameConstants;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 @Data
@@ -76,23 +75,7 @@ public abstract class UserEntityBase<K extends Serializable> extends EntityBase<
   @Column(name = "secret_key", nullable = false, length = 64)
   String secretKey;
 
-  @Schema(description = "用户微信服务号公众号OpenId")
-  @Column(name = "wx_mp_openid", length = 64)
-  String wxMpOpenid;
-
-  @Schema(description = "用户的微信小程序OpenId")
-  @Column(name = "wx_minapp_openid", length = 64)
-  String wxMinappOpenid;
-
-  @Schema(description = "用户的企业微信的userID，参见 {@link https://work.weixin.qq.com/api/doc/90001/90144/92423}")
-  @Column(name = "wework_userid", length = 64)
-  String weworkUserid;
-
-  @Schema(description = "用户的企业微信的openID)，参见 {@link https://work.weixin.qq.com/api/doc/90001/90144/92423}")
-  @Column(name = "wework_openid", length = 64)
-  String weworkOpenid;
-
-  @Schema(description = "用户的微信小程序OpenId")
+  @Schema(description = "用户最后登录时间")
   @Column(name = "last_login_at", nullable = true)
   Date lastLoginAt;
 }

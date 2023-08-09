@@ -19,14 +19,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
-
 import org.dinospring.commons.validation.validator.PasswordStrengthValidator;
+
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 
 /**
  * 密码强度
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-01 01:32:46
  */
 @Retention(RetentionPolicy.RUNTIME)

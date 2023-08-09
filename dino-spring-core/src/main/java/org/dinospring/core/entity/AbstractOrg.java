@@ -14,19 +14,18 @@
 
 package org.dinospring.core.entity;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-
 import org.dinospring.data.domain.EntityBase;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldNameConstants;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 @Data

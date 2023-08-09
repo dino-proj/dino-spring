@@ -14,14 +14,15 @@
 
 package org.dinospring.core.modules.iam;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 import org.dinospring.data.domain.TenantRowEntityBase;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,7 +32,7 @@ import lombok.experimental.SuperBuilder;
 
 /**
  * 用户和角色映射关系
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-01 08:05:31
  */
 
@@ -46,15 +47,15 @@ import lombok.experimental.SuperBuilder;
     "role_id" }))
 public class UserRoleEntity extends TenantRowEntityBase<Long> {
 
-  @Schema(description = "用户类型", required = true, maxLength = 64)
+  @Schema(description = "用户类型", requiredMode = RequiredMode.REQUIRED, maxLength = 64)
   @Column(name = "user_type", length = 64, nullable = false)
   private String userType;
 
-  @Schema(description = "用户ID", required = true, maxLength = 64)
+  @Schema(description = "用户ID", requiredMode = RequiredMode.REQUIRED, maxLength = 64)
   @Column(name = "user_id", length = 64, nullable = false)
   private String userId;
 
-  @Schema(description = "角色ID", required = true)
+  @Schema(description = "角色ID", requiredMode = RequiredMode.REQUIRED)
   @Column(name = "role_id", nullable = false)
   private Long roleId;
 }

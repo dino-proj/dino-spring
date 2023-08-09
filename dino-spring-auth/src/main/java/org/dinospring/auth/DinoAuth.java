@@ -22,7 +22,7 @@ import lombok.experimental.UtilityClass;
 
 /**
  * 权限相关的工具类
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-08 17:32:22
  */
 @UtilityClass

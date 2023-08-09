@@ -14,8 +14,8 @@
 
 package org.dinospring.core.modules.category;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 
 import org.dinospring.data.domain.EntityBase;
 
@@ -27,7 +27,7 @@ import lombok.experimental.FieldNameConstants;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 @Data

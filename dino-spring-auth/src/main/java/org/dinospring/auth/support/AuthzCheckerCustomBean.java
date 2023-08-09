@@ -34,7 +34,7 @@ import org.springframework.beans.factory.BeanFactory;
 
 /**
  * 自定义Bean权限校验器
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-09 19:28:01
  */
 

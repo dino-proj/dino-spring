@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
 
 /**
  * 操作日志注解
- * @author tuuboo
+ * @author Cody LU
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD })

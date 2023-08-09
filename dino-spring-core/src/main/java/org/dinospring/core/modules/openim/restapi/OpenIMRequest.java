@@ -22,7 +22,7 @@ import lombok.Getter;
 
 /**
  * openim restful api请求基类
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-12 20:30:32
  */
 

@@ -31,7 +31,7 @@ import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 @Target(ElementType.TYPE)

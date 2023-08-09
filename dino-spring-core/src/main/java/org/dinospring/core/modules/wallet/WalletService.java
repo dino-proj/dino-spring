@@ -19,13 +19,13 @@ import java.util.Map;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-03-07 17:55:44
  */
 
 @Service
 public class WalletService
-  extends ServiceBase<WalletEntity, Long> {
+    extends ServiceBase<WalletEntity, Long> {
 
   private final Duration nap = Duration.ofMillis(100);
 
@@ -75,12 +75,13 @@ public class WalletService
 
       Map<String, Object> map;
       if (change < 0) {
-        map = Map.of(WalletEntity.Fields.balance, newBalance, WalletEntity.Fields.disburse, account.getDisburse() - change);
+        map = Map.of(WalletEntity.Fields.balance, newBalance, WalletEntity.Fields.disburse,
+            account.getDisburse() - change);
       } else {
         map = Map.of(WalletEntity.Fields.balance, newBalance);
       }
       if (repository().updateByIdWithVersion(accountId, map,
-        account.getVersion())) {
+          account.getVersion())) {
         bill.setIsLock(false);
         bill.setAccountId(accountId);
         bill.setAmount(change);
@@ -109,10 +110,10 @@ public class WalletService
       Assert.isTrue(newBalance >= 0L, Status.fail("账户余额不足"));
 
       if (repository().updateByIdWithVersion(accountId, WalletEntity.Fields.lockBalance,
-        account.getLockBalance() + amount,
-        WalletEntity.Fields.balance,
-        newBalance,
-        account.getVersion())) {
+          account.getLockBalance() + amount,
+          WalletEntity.Fields.balance,
+          newBalance,
+          account.getVersion())) {
         bill.setIsLock(true);
         bill.setAccountId(accountId);
         bill.setAmount(-1 * amount);

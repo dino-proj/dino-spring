@@ -63,7 +63,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-05-05 02:32:26
  */
 
@@ -73,7 +73,7 @@ import lombok.extern.slf4j.Slf4j;
 @EnableConfigurationProperties(FlywayProperties.class)
 @EnableAutoConfiguration(exclude = { FlywayAutoConfiguration.class })
 @Slf4j
-public class FlaywayConfiguration implements ApplicationListener<ApplicationReadyEvent> {
+public class DinoFlaywayConfiguration implements ApplicationListener<ApplicationReadyEvent> {
 
   @Override
   public void onApplicationEvent(ApplicationReadyEvent event) {
@@ -278,9 +278,6 @@ public class FlaywayConfiguration implements ApplicationListener<ApplicationRead
     map.from(properties.getOutputQueryResults())
         .to(configuration::outputQueryResults);
     // No method reference for compatibility with Flyway 6.x
-    map.from(properties.getSqlServerKerberosLoginFile())
-        .to(configuration::sqlServerKerberosLoginFile);
-    // No method reference for compatibility with Flyway 6.x
     map.from(properties.getSkipExecutingMigrations())
         .to(configuration::skipExecutingMigrations);
     // No method reference for compatibility with Flyway < 7.8
@@ -291,9 +288,6 @@ public class FlaywayConfiguration implements ApplicationListener<ApplicationRead
     // No method reference for compatibility with Flyway version < 7.9
     map.from(properties.getDetectEncoding())
         .to(configuration::detectEncoding);
-    // No method reference for compatibility with Flyway version < 8.0
-    map.from(properties.getBaselineMigrationPrefix())
-        .to(configuration::baselineMigrationPrefix);
   }
 
   private void configureCallbacks(FluentConfiguration configuration, List<Callback> callbacks) {

@@ -20,7 +20,7 @@ import org.dinospring.auth.Permission;
 
 /**
  * 登录会话接口
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-07 02:16:22
  */
 

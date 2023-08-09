@@ -18,14 +18,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
-
 import org.dinospring.commons.validation.validator.XssValidator;
+
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 
 /**
  * Xss检查，对字符串进行Xss检查
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-03-31 23:42:45
  */
 

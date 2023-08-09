@@ -14,7 +14,7 @@
 
 package org.dinospring.core.modules.oss;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  * @author JL
  */
 

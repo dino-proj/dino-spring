@@ -30,7 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-04-17 20:11:02
  */
 public class DinoAuthInfoProvider implements AuthInfoProvider<User<?>> {

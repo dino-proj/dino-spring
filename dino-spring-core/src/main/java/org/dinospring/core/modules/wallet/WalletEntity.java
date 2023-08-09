@@ -8,14 +8,14 @@ import lombok.experimental.FieldNameConstants;
 import org.dinospring.data.domain.TenantRowEntityBase;
 import org.dinospring.data.domain.Versioned;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-03-01 20:54:29
  */
 
@@ -25,7 +25,7 @@ import javax.persistence.Table;
 @FieldNameConstants
 @Entity
 @Table(name = "sys_wallet", indexes = {
-  @Index(name = "uniq_ownerId_type", columnList = "owner_id,type", unique = true)})
+    @Index(name = "uniq_ownerId_type", columnList = "owner_id,type", unique = true) })
 public class WalletEntity extends TenantRowEntityBase<Long> implements Versioned {
 
   @Schema(description = "钱包Owner Id")

@@ -18,8 +18,8 @@ import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.ArrayUtils;
@@ -31,6 +31,7 @@ import org.dinospring.commons.response.Status;
 import org.dinospring.commons.sys.Tenant;
 import org.dinospring.commons.sys.User;
 import org.dinospring.commons.utils.Assert;
+import org.dinospring.commons.validation.constraints.Mobile;
 import org.dinospring.core.annotion.param.ParamJsonBody;
 import org.dinospring.core.annotion.param.ParamTenant;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,11 +42,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import lombok.Data;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 public interface LoginByMobile<U extends User<K>, K extends Serializable>
@@ -88,12 +90,14 @@ public interface LoginByMobile<U extends User<K>, K extends Serializable>
 
   @Data
   public static class MobileLoginBody {
-    @Schema(description = "用户手机号", required = true)
+    @Schema(description = "用户手机号", requiredMode = RequiredMode.REQUIRED)
     @Size(min = 13)
+    @NotBlank
+    @Mobile
     private String mobile;
 
     @NotBlank
-    @Schema(description = "手机验证码", required = true)
+    @Schema(description = "手机验证码", requiredMode = RequiredMode.REQUIRED)
     private String captcha;
   }
 

@@ -24,7 +24,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @author tuuboo
+ * @author Cody LU
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

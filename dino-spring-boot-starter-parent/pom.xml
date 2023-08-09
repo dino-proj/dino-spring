@@ -6,12 +6,11 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.6.14</version>
-    <relativePath /> <!-- lookup parent from repository -->
+    <version>3.1.2</version>
   </parent>
   <groupId>org.dinospring</groupId>
   <artifactId>dino-spring-boot-starter-parent</artifactId>
-  <version>2.4.0</version>
+  <version>3.0.0</version>
   <packaging>pom</packaging>
   <description>dino-spring项目boot starter parent</description>
   <url>https://dinodev.cn/</url>
@@ -19,17 +18,17 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <java.version>11</java.version>
+    <java.version>17</java.version>
 
-    <dino-spring.version>2.4.0</dino-spring.version>
+    <dino-spring.version>3.0.0</dino-spring.version>
 
     <!-- plugin -->
     <maven-pmd-plugin.version>3.16.0</maven-pmd-plugin.version>
     <p3c-pmd.version>2.1.1</p3c-pmd.version>
 
     <!-- open api-->
-    <springdoc.version>1.6.13</springdoc.version>
-    <swagger.version>2.2.7</swagger.version>
+    <springdoc.version>1.7.0</springdoc.version>
+    <swagger.version>2.2.15</swagger.version>
   </properties>
 
   <dependencyManagement>
@@ -166,8 +165,8 @@
     </dependency>
     <!-- servlet-api -->
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
       <scope>provided</scope>
     </dependency>
     <!--lombok依赖-->
@@ -212,33 +211,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <repositories>
-    <repository>
-      <id>botbrain-repo</id>
-      <name>Botbrain Repository</name>
-      <url>http://mvn.botzhiyu.com/nexus/content/groups/public/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-  <pluginRepositories>
-    <pluginRepository>
-      <id>botbrain-plug-repo</id>
-      <name>Botbrain pluginRepository</name>
-      <url>http://mvn.botzhiyu.com/nexus/content/groups/public/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
 
   <build>
     <finalName>${project.artifactId}</finalName>

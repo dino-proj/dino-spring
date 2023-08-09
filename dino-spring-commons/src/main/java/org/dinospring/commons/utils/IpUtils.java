@@ -14,15 +14,14 @@
 
 package org.dinospring.commons.utils;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.StringUtils;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-03-07 21:58:04
  */
 

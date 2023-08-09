@@ -22,7 +22,7 @@ import java.io.Serializable;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 public interface Component extends Serializable {

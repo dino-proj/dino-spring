@@ -17,7 +17,7 @@ package org.dinospring.core.controller;
 import java.io.Serializable;
 import java.util.Collection;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import org.dinospring.auth.Operations;
 import org.dinospring.auth.annotation.CheckPermission;
@@ -43,7 +43,7 @@ import io.swagger.v3.oas.annotations.Operation;
 
 /**
  *
- * @author tuuboo
+ * @author Cody LU
  * @date 2022-06-11 21:04:00
  */
 

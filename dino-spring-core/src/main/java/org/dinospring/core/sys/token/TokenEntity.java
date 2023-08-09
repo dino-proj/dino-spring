@@ -14,13 +14,12 @@
 
 package org.dinospring.core.sys.token;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 import org.dinospring.data.domain.TenantRowEntityBase;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldNameConstants;
@@ -28,7 +27,7 @@ import lombok.experimental.FieldNameConstants;
 /**
  * Token 信息
  *
- * @author tuuboo
+ * @author Cody LU
  */
 
 @Data

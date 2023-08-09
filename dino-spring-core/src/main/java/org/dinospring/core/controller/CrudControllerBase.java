@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -61,7 +61,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
  * @param REQ add和update的post body类型
  * @param K entity的主键类型
  *
- * @author tuuboo
+ * @author Cody LU
  * @author JL
  */
 

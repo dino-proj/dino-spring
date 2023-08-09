@@ -19,10 +19,10 @@ CWD=`cd "$bin"; pwd`
 
 function usage(){
   echo "USAGE:"
-  echo "change-version <old version> <new version>"
+  echo "change-version <new version>"
   echo ""
   echo "example:"
-  echo "change-version 1.1.0 1.1.1"
+  echo "change-version 1.1.1"
 }
 
 function isMac(){
@@ -30,26 +30,30 @@ function isMac(){
   return $a =~ "Darwin"
 }
 
-if [ $# -ne 2 ];
+if [ $# -ne 1 ];
 then
     usage
     exit
 fi
 
-OLD_VER=$1
-NEW_VER=$2
+NEW_VER=$1
 
-for proj in "dino-dependencies-root" "dino-spring-assembly" "dino-spring-boot-starter-parent" "dino-spring-cloud-starter-parent" "dino-spring-commons" "dino-spring-auth" "dino-spring-data" "dino-spring-core"
+for proj in "dino-dependencies-root" "dino-spring-assembly" "dino-spring-boot-starter-parent"
   do
     echo change "$proj" version to $NEW_VER
     cd "$CWD/$proj"
-    if [ isMac ];then
-      sed -i "" "s/<version>${OLD_VER}.RELEASE<\\/version>/<version>${NEW_VER}.RELEASE<\\/version>/g" pom.xml
-      sed -i "" "s/<dino-spring.version>${OLD_VER}.RELEASE<\\/dino-spring.version>/<dino-spring.version>${NEW_VER}.RELEASE<\\/dino-spring.version>/g" pom.xml
-    else
-      sed -i "s/<version>${OLD_VER}.RELEASE<\\/version>/<version>${NEW_VER}.RELEASE<\\/version>/g" pom.xml
-      sed -i "s/<dino-spring.version>${OLD_VER}.RELEASE<\\/dino-spring.version>/<dino-spring.version>${NEW_VER}.RELEASE<\\/dino-spring.version>/g" pom.xml
-    fi
+    mvn install -DskipTests
+    mvn versions:set -DnewVersion=${NEW_VER} -DgenerateBackupPoms=false
+    mvn versions:set-property -DnewVersion=${NEW_VER} -Dproperty=dino-spring.version -DgenerateBackupPoms=false
+    mvn install -DskipTests
+  done
+
+for proj in "dino-spring-cloud-starter-parent" "dino-spring-commons" "dino-spring-auth" "dino-spring-data" "dino-spring-core"
+  do
+    echo change "$proj" version to $NEW_VER
+    cd "$CWD/$proj"
+    mvn versions:set -DnewVersion=${NEW_VER} -DgenerateBackupPoms=false
+    mvn versions:update-parent -DparentVersion=${NEW_VER} -DgenerateBackupPoms=false
   done
 
 echo "done!"

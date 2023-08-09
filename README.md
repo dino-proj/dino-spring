@@ -17,8 +17,50 @@
 
 - 非必要不定义接口：非必要情况下，不采用Interface-Implement方式，因为大部分功能模块没有先定义接口，再定义实现的必要，无需浪费开发时间
 
+## 💡 版本说明
+- **Java:** >=17
+- **Spring Boot:** 3.1.2
+- **Spring Cloud:** 2022.0.3
+
 ## ✨ 内置模块
 
+## 🚀 快速开始
+
+[详细开发文档](https://dinodev.cn/dino-spring/)https://dinodev.cn/dino-spring/
+
+java spring项目maven pom.xml配置如下：
+```xml
+<project>
+  <parent>
+    <groupId>org.dinospring</groupId>
+    <artifactId>dino-spring-boot-starter-parent</artifactId>
+    <version>3.0.0</version>
+  </parent>
+  <groupId>your group id</groupId>
+  <artifactId>your artifact id</artifactId>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.dinospring</groupId>
+      <artifactId>dino-spring-core</artifactId>
+      <version>${dino-spring.version}</version>
+    </dependency>
+  <dependencies>
+</project>
+```
 ## 💡 License
 
 dino-spring is an open source software licensed as [Apache-2.0](./LICENSE).
+
+## 🫶 Citation
+If you find our work useful for your research, please consider citing the paper:
+
+```bibtex
+@misc{dino-spring,
+  author = {Cody Lu},
+  title = {dino-spring},
+  year = {2023},
+  publisher = {GitHub},
+  journal = {GitHub Repository},
+  howpublished = {\url{https://github.com/dino-proj/dino-spring}}
+}

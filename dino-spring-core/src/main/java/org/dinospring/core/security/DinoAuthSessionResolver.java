@@ -24,10 +24,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 
-import jakarta.servlet.http.HttpServletRequest;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.auth.Permission;
 import org.dinospring.auth.session.AuthInfoProvider;
@@ -46,6 +42,9 @@ import org.dinospring.core.sys.token.TokenService;
 import org.dinospring.core.sys.user.UserServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,7 +58,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DinoAuthSessionResolver implements AuthSessionResolver<DinoAuthSession> {
 
   @Autowired
-  TokenService tokenService;
+  private TokenService tokenService;
 
   @Autowired
   private TenantService tenantService;

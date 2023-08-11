@@ -56,7 +56,7 @@
       </style>
 
       <div class="container"><div class="hi">👋</div>
-        <div class="hero-title">免费的后端<br/><span class="accent">快速开发框架</span><br/>基于Spring Boot V3</div>
+        <div class="hero-title">开源免费的<br/><span class="accent">后端快速开发框架</span><br/>基于Spring Boot 3</div>
         <div class="hi">👋</div>
       </div>
     </div>

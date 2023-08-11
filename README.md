@@ -1,4 +1,4 @@
-# 🚀 Dino-spring Framework
+# 🦖 Dino-spring Framework
 <div align="center">
 <a href="https://dinodev.cn"><img src="./.assert/logo.png" width="76" height="76" alt="icon"/></a>
 
@@ -13,9 +13,13 @@
 
 ## 🎯 开发主张
 
-- 模块化结构：按照模块划分而非按照Java Class类型划分，同一个功能下的Entity、VO、Service、Repository位于同一目录结构下。
+- **目标：** 提高10倍开发速度；降低10倍Bug量；避免复制粘贴。
 
-- 非必要不定义接口：非必要情况下，不采用Interface-Implement方式，因为大部分功能模块没有先定义接口，再定义实现的必要，无需浪费开发时间
+- **模块化结构：** 按照模块划分而非按照Java Class类型划分，同一个功能下的Entity、VO、Service、Repository位于同一目录结构下。
+
+- **非必要不定义接口：** 非必要情况下，不采用Interface-Implement方式，因为大部分业务功能没有定义接口的必要，无需浪费开发时间。
+
+- **开发不写文档：** 开发不应该再写文档，rest接口文档应在代码中完成，无需再写接口文档，前后端应尽量避免沟通，一切以rest接口文档为准。如果rest接口不够详尽明确，后端应修改代码，完善接口描述。
 
 ## 💡 版本说明
 - **Java JDK:** >=17
@@ -25,6 +29,13 @@
 
 ## ✨ 内置模块
 
+### 🦖 dino-spring-common
+
+### 🦖 dino-spring-data
+
+### 🦖 dino-spring-auth
+
+### 🦖 dino-spring-core
 ## 🚀 快速开始
 
 [详细开发文档](https://dinodev.cn/dino-spring/)https://dinodev.cn/dino-spring/
@@ -49,7 +60,7 @@ java spring项目maven pom.xml配置如下：
   <dependencies>
 </project>
 ```
-## 💡 License
+## 📄 License
 
 dino-spring is an open source software licensed as [Apache-2.0](./LICENSE).
 
@@ -57,9 +68,9 @@ dino-spring is an open source software licensed as [Apache-2.0](./LICENSE).
 If you find our work useful for your research, please consider citing the paper:
 
 ```bibtex
-@misc{dino-spring,
+@misc{Dino-spring,
   author = {Cody Lu},
-  title = {dino-spring},
+  title = {Dino-spring},
   year = {2023},
   publisher = {GitHub},
   journal = {GitHub Repository},

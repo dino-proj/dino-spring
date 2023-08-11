@@ -14,16 +14,15 @@
 
 package org.dinospring.core.sys.tenant;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
-
 import org.dinospring.commons.data.ImageFileMeta;
 import org.dinospring.data.domain.EntityBase;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldNameConstants;
@@ -57,7 +56,7 @@ public class TenantEntity extends EntityBase<String> {
   @Column(name = "icon_file_meta", columnDefinition = "jsonb")
   private ImageFileMeta iconFileMeta;
 
-  @Schema(description = "租户自定义域名，如果用户配置了域名，则用其自己的域名")
+  @Schema(description = "租户自定义访问域名")
   @Column(name = "custom_domain", length = 128, nullable = true, unique = true)
   String customDomain;
 

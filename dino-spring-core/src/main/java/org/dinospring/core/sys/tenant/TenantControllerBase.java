@@ -1,7 +1,9 @@
 package org.dinospring.core.sys.tenant;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.response.Response;
 import org.dinospring.commons.response.Status;
@@ -13,10 +15,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.annotation.Nonnull;
-import javax.imageio.ImageIO;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * @author Cody LU
@@ -82,6 +84,19 @@ public interface TenantControllerBase extends ControllerBase<TenantService, Tena
   }
 
   /**
+   * 根据code查询Tenant
+   * @param code
+   * @return
+   */
+  @Operation(summary = "根据code查询Tenant")
+  @Parameter(name = "code", description = "Tenant Code")
+  @GetMapping("/byCode")
+  default Response<TenantVo> getByCode(@RequestParam String code) {
+    Assert.hasText(code, Status.CODE.FAIL_INVALID_PARAM.withMsg("code 不能为空"));
+    return Response.success(service().findTenantByCode(code, TenantVo.class));
+  }
+
+  /**
    * 根据域名查询favorit.ico
    * @param domain
    * @param response
@@ -104,16 +119,4 @@ public interface TenantControllerBase extends ControllerBase<TenantService, Tena
 
   }
 
-  /**
-   * 根据code查询Tenant
-   * @param code
-   * @return
-   */
-  @Operation(summary = "根据code查询Tenant")
-  @Parameter(name = "code", description = "Tenant Code")
-  @GetMapping("/byCode")
-  default Response<TenantVo> getByCode(@RequestParam String code) {
-    Assert.hasText(code, Status.CODE.FAIL_INVALID_PARAM.withMsg("code 不能为空"));
-    return Response.success(service().findTenantByCode(code, TenantVo.class));
-  }
 }

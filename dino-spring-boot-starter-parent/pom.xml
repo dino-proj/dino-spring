@@ -25,6 +25,8 @@
     <!-- plugin -->
     <maven-pmd-plugin.version>3.16.0</maven-pmd-plugin.version>
     <p3c-pmd.version>2.1.1</p3c-pmd.version>
+    <mapstruct.version>1.5.5.Final</mapstruct.version>
+    <lombok.version>1.18.28</lombok.version>
 
     <!-- open api-->
     <springdoc.version>1.7.0</springdoc.version>
@@ -174,6 +176,13 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <scope>provided</scope>
+    </dependency>
+
+    <!--mapstruct依赖-->
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+      <version>${mapstruct.version}</version>
     </dependency>
 
     <!--校验组件-->
@@ -327,6 +336,11 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
             <path>
               <groupId>org.mapstruct</groupId>
               <artifactId>mapstruct-processor</artifactId>

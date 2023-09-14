@@ -20,7 +20,6 @@ import java.util.function.Function;
 
 import org.dinospring.core.annotion.BindDict.DictFilds;
 import org.dinospring.core.service.Service;
-import org.dinospring.core.sys.dictionary.DictionaryEntity.DictItem;
 
 /**
  *
@@ -35,7 +34,7 @@ public interface DictionaryService extends Service<DictionaryEntity, Long> {
    * @param field 要获取的字典字段名
    * @return
    */
-  List<DictItem> getKeyValueList(String key);
+  List<DictItemEntity> getKeyValueList(String key);
 
   /**
   * 添加字典定义及其子项
@@ -52,10 +51,10 @@ public interface DictionaryService extends Service<DictionaryEntity, Long> {
    * @param voList vo的列表
    * @param key 字典的key
    * @param field 字典中要绑定的值
-   * @param dictItemNamePropertyOfVO vo中字典name值的属性名
+   * @param dictItemCodePropertyOfVO vo中字典code值的属性名
    * @param voPropertyName vo中接收值的属性名
    */
-  <V> void bindItemProperty(List<V> voList, String key, DictFilds field, String dictItemNamePropertyOfVO,
+  <V> void bindItemProperty(List<V> voList, String key, DictFilds field, String dictItemCodePropertyOfVO,
       String voPropertyName);
 
   /**

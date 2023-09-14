@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.core.sys.dictionary;
+package org.dinospring.core.sys.dictionary.impl;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -20,7 +20,11 @@ import java.util.function.Function;
 
 import org.dinospring.core.annotion.BindDict.DictFilds;
 import org.dinospring.core.service.impl.ServiceBase;
-import org.dinospring.core.sys.dictionary.DictionaryEntity.DictItem;
+import org.dinospring.core.sys.dictionary.DictItemEntity;
+import org.dinospring.core.sys.dictionary.DictionaryEntity;
+import org.dinospring.core.sys.dictionary.DictionaryRepository;
+import org.dinospring.core.sys.dictionary.DictionaryService;
+import org.dinospring.core.sys.dictionary.DictionaryVO;
 import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +47,7 @@ public class DictionaryServiceImpl extends ServiceBase<DictionaryEntity, Long> i
   }
 
   @Override
-  public List<DictItem> getKeyValueList(String key) {
+  public List<DictItemEntity> getKeyValueList(String key) {
     return dictionaryRepository.listDictItems(key);
   }
 
@@ -77,7 +81,15 @@ public class DictionaryServiceImpl extends ServiceBase<DictionaryEntity, Long> i
 
   @Override
   public boolean deleteDictAndChildren(Long id) {
-    return removeById(id);
+    var dict = getById(id);
+    // 如果不为null，则删除其子项和自身
+    if (dict != null) {
+      // 删除子项
+      dictionaryRepository.deleteDictItems(dict.getKey());
+      // 删除自身
+      return removeById(id);
+    }
+    return false;
   }
 
 }

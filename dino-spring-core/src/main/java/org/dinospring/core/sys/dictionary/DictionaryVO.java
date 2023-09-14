@@ -14,13 +14,13 @@
 
 package org.dinospring.core.sys.dictionary;
 
+import java.util.List;
+
+import org.dinospring.core.vo.VoImplBase;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.dinospring.commons.Orderable;
-import org.dinospring.core.vo.VoImplBase;
-
-import java.util.List;
 
 /**
  *
@@ -46,22 +46,4 @@ public class DictionaryVO extends VoImplBase<Long> {
   @Schema(description = "是否可编辑")
   private Boolean editable;
 
-  @Data
-  public static class DictItemVO implements Orderable {
-
-    @Schema(description = "字典键值", maxLength = 50)
-    private String key;
-
-    @Schema(description = "数据字典项的键值（编码）", maxLength = 100)
-    private String itemKey;
-
-    @Schema(description = "数据字典项的显示名称", maxLength = 100)
-    private String itemName;
-
-    @Schema(description = "数据字典项的图标", maxLength = 100)
-    private String itemIcon;
-
-    @Schema(description = "排序号")
-    private Integer orderNum;
-  }
 }

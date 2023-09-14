@@ -34,7 +34,6 @@ public interface AsmUtils {
    * @param className 类名
    * @param superClass 父类
    * @param parameterClass 第一个泛型参数的实参类型
-   * @param classLoader 类加载器
    * @return
    * @throws Exception
    */

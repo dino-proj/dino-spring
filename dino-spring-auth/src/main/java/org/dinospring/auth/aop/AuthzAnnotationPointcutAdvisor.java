@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-import org.apache.commons.beanutils.MethodUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.dinospring.auth.annotation.CheckAuthz;
 import org.dinospring.auth.annotation.CheckLoginAs;
 import org.dinospring.auth.annotation.CheckPermission;

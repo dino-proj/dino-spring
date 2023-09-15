@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.1.2</version>
+    <version>3.1.3</version>
   </parent>
   <groupId>org.dinospring</groupId>
   <artifactId>dino-spring-boot-starter-parent</artifactId>
@@ -23,7 +23,7 @@
     <dino-spring.version>3.0.0</dino-spring.version>
 
     <!-- plugin -->
-    <maven-pmd-plugin.version>3.16.0</maven-pmd-plugin.version>
+    <maven-pmd-plugin.version>3.21.0</maven-pmd-plugin.version>
     <p3c-pmd.version>2.1.1</p3c-pmd.version>
     <mapstruct.version>1.5.5.Final</mapstruct.version>
     <lombok.version>1.18.28</lombok.version>
@@ -152,10 +152,6 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-math3</artifactId>
     </dependency>
-    <dependency>
-      <groupId>commons-beanutils</groupId>
-      <artifactId>commons-beanutils</artifactId>
-    </dependency>
 
     <dependency>
       <groupId>com.google.guava</groupId>
@@ -165,6 +161,7 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
+
     <!-- servlet-api -->
     <dependency>
       <groupId>jakarta.servlet</groupId>

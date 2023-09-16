@@ -14,12 +14,12 @@
 
 package org.dinospring.core.modules.framework;
 
+import java.util.List;
+
 import org.dinospring.core.modules.framework.template.Template;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-
-import java.util.List;
 
 /**
  *
@@ -41,5 +41,5 @@ public class Page<T extends PageConfig> {
   private T properties;
 
   @Schema(description = "被哪些布局引用")
-  private List<Layout> layouts;
+  private List<Layout<? extends LayoutConfig>> layouts;
 }

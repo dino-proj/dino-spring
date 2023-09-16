@@ -14,13 +14,10 @@
 
 package org.dinospring.core.modules.framework;
 
-import java.io.Serializable;
-
-import jakarta.persistence.Column;
-
 import org.dinospring.commons.Scope;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import lombok.Data;
 
 /**
@@ -29,7 +26,7 @@ import lombok.Data;
  */
 
 @Data
-public class Layout<T extends Serializable> {
+public class Layout<T extends LayoutConfig> {
 
   @Schema(description = "布局Id")
   private Long id;

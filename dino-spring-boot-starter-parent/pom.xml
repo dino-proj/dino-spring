@@ -24,6 +24,7 @@
 
     <!-- plugin -->
     <maven-pmd-plugin.version>3.21.0</maven-pmd-plugin.version>
+    <maven-nexus-staging-plugin.version>1.6.13</maven-nexus-staging-plugin.version>
     <p3c-pmd.version>2.1.1</p3c-pmd.version>
     <mapstruct.version>1.5.5.Final</mapstruct.version>
     <lombok.version>1.18.28</lombok.version>
@@ -281,7 +282,7 @@
           <artifactId>maven-pmd-plugin</artifactId>
           <version>${maven-pmd-plugin.version}</version>
           <configuration>
-            <targetJdk>11</targetJdk>
+            <targetJdk>${java.version}</targetJdk>
             <rulesets>
               <ruleset>rulesets/java/dinospring-all.xml</ruleset>
             </rulesets>
@@ -314,6 +315,7 @@
     </pluginManagement>
 
     <plugins>
+      <!-- 代码检查 -->
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
         <executions>
@@ -445,6 +447,60 @@
         </dependency>
       </dependencies>
     </profile>
+
+    <!-- FOR ossrh-->
+    <profile>
+      <id>ossrh</id>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <version>${maven-nexus-staging-plugin.version}</version>
+            <extensions>true</extensions>
+            <configuration>
+              <serverId>ossrh</serverId>
+              <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+              <autoReleaseAfterClose>true</autoReleaseAfterClose>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+                <configuration>
+                  <!-- Prevent gpg from using pinentry programs -->
+                  <gpgArguments>
+                    <arg>--pinentry-mode</arg>
+                    <arg>loopback</arg>
+                  </gpgArguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
   </profiles>
 
   <licenses>

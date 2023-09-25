@@ -1,6 +1,6 @@
 # 🦖 Dino-spring Framework
 <div align="center">
-<a href="https://dinodev.cn"><img src="./.assert/logo.png" width="76" height="76" alt="icon"/></a>
+<a href="https://dinodev.cn"><img src="./.assert/logo.svg" width="76" height="60" alt="icon"/></a>
 
 <div><img src="./.assert/intro.svg" width="600px" /></div>
 

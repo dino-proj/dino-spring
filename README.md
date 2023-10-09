@@ -1,15 +1,14 @@
-# 🦖 Dino-spring Framework
 <div align="center">
-<a href="https://dinodev.cn"><img src="./.assert/logo.svg" width="76" height="60" alt="icon"/></a>
-
-<div><img src="./.assert/intro.svg" width="600px" /></div>
-
-<hr height="1" style="height: 1px; border-width: 0px 0 0 0 !important;"/>
-
-用于快速构建前后端分离应用，支持微服务，多租户，模块化设计.
+  <div><img src="./.assert/intro.svg" style="max-height:300px"  /></div>
 </div>
 
----
+## 🦖 Dino Spring Framework
+
+Spring Boot是非常优秀的Java后端开发框架，其解决了很多重复开发的问题，能做到对各种常用组件的自动配置。其解决了基础依赖问题。
+
+然而，在很多项目开发中，存在大量功能代码复用问题，Dino Spring希望从这个层面解决问题，提升业务功能的开发速度和开发质量。
+
+Dino Spring用于快速构建前后端分离应用，支持微服务，多租户，模块化设计.
 
 ## 🎯 开发主张
 

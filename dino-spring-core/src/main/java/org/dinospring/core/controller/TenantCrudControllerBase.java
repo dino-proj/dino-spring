@@ -1,16 +1,5 @@
-// Copyright 2021 dinodev.cn
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright 2023 dinosdev.cn.
+// SPDX-License-Identifier: Apache-2.0
 
 package org.dinospring.core.controller;
 
@@ -21,12 +10,15 @@ import java.util.stream.Collectors;
 
 import org.dinospring.auth.Operations;
 import org.dinospring.auth.annotation.CheckPermission;
+import org.dinospring.auth.annotation.Logic;
 import org.dinospring.commons.property.PropertyView;
 import org.dinospring.commons.request.PostBody;
 import org.dinospring.commons.response.Response;
 import org.dinospring.commons.response.Status;
+import org.dinospring.commons.sys.Tenant;
 import org.dinospring.commons.utils.Assert;
 import org.dinospring.commons.utils.ProjectionUtils;
+import org.dinospring.core.annotion.param.ParamTenant;
 import org.dinospring.core.service.CustomQuery;
 import org.dinospring.core.service.Service;
 import org.dinospring.core.vo.VoBase;
@@ -57,81 +49,89 @@ import jakarta.annotation.Nonnull;
  * @author JL
  */
 
-public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBase<K>, VO extends VoBase<K>, SRC extends CustomQuery, REQ, K extends Serializable>
-    extends ListControllerBase<S, E, VO, K, SRC> {
+public interface TenantCrudControllerBase<S extends Service<E, K>, E extends EntityBase<K>, VO extends VoBase<K>, SRC extends CustomQuery, REQ, K extends Serializable>
+    extends TenantListControllerBase<S, E, VO, K, SRC> {
 
   /**
    * 对VO对象进行返回前的处理
+   * @param tenant 租户
    * @param vo
    * @return
    */
-  default VO processVo(@Nonnull VO vo) {
+  default VO processVo(@Nonnull Tenant tenant, @Nonnull VO vo) {
     return vo;
   }
 
   /**
    * 对VoList里的VO对象进行返回前的处理
+   * @param tenant 租户
    * @param voList
    * @return
    */
   @Override
-  default List<VO> processVoList(@Nonnull Collection<VO> voList) {
-    return voList.stream().map(this::processVo).collect(Collectors.toList());
+  default List<VO> processVoList(@Nonnull Tenant tenant, @Nonnull Collection<VO> voList) {
+    return voList.stream().map(t -> this.processVo(tenant, t)).collect(Collectors.toList());
   }
 
   /**
    * 对查询请求对象进行预处理
+   * @param tenant 租户
    * @param req 请求对象
    * @param id Entity的ID，只有当更新时id才不为null，当是添加时id为null
    * @return
    */
-  default REQ processReq(PostBody<REQ> req, K id) {
+  default REQ processReq(@Nonnull Tenant tenant, PostBody<REQ> req, K id) {
     return req.getBody();
   }
 
   /**
    * 根据ID查询详情
+   * @param tenant 租户
    * @param id Entity的ID
    * @return
    */
   @Operation(summary = "根据ID查询")
+  @ParamTenant
   @Parameter(in = ParameterIn.QUERY, name = "id", required = true)
   @GetMapping("id")
   @JsonView(PropertyView.Detail.class)
   @CheckPermission(Operations.READ)
-  default Response<VO> getById(@RequestParam K id) {
+  default Response<VO> getById(Tenant tenant, @RequestParam K id) {
 
-    return Response.success(this.processVo(this.service().getById(id, this.voClass())));
+    return Response.success(this.processVo(tenant, this.service().getById(id, this.voClass())));
   }
 
   /**
    * 新增Entity
+   * @param tenant 租户
    * @param req 对象字段
    * @return
    */
   @Operation(summary = "添加")
+  @ParamTenant
   @PostMapping("add")
   @Transactional(rollbackFor = Exception.class)
   @JsonView(PropertyView.Detail.class)
   @CheckPermission(Operations.CREATE)
-  default Response<VO> add(
+  default Response<VO> add(Tenant tenant,
       @RequestBody @Validated(PropertyView.Insert.class) @JsonView(PropertyView.Insert.class) PostBody<REQ> req) {
 
-    var body = this.processReq(req, null);
+    var body = this.processReq(tenant, req, null);
 
     Assert.notNull(body, Status.CODE.FAIL_INVALID_PARAM);
 
-    VO vo = this.add(body);
+    VO vo = this.add(tenant, body);
 
-    return Response.success(this.processVo(vo));
+    return Response.success(this.processVo(tenant, vo));
   }
 
   /**
    * 添加
+   * @param tenant 租户
    * @param req
    * @return
    */
-  default VO add(REQ req) {
+  default VO add(Tenant tenant, REQ req) {
     E item = this.service().projection(this.entityClass(), req);
 
     item = this.service().save(item);
@@ -146,28 +146,30 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
    * @return
    */
   @Operation(summary = "更新")
+  @ParamTenant
   @PostMapping("update")
   @Transactional(rollbackFor = Exception.class)
   @JsonView(PropertyView.Detail.class)
   @CheckPermission(Operations.UPDATE)
-  default Response<VO> update(@RequestParam K id,
+  default Response<VO> update(Tenant tenant, @RequestParam K id,
       @RequestBody @Validated(PropertyView.Update.class) @JsonView(PropertyView.Update.class) PostBody<REQ> req) {
 
-    var body = this.processReq(req, id);
+    var body = this.processReq(tenant, req, id);
 
     Assert.notNull(body, Status.CODE.FAIL_INVALID_PARAM);
 
-    VO vo = this.update(body, id);
-    return Response.success(this.processVo(vo));
+    VO vo = this.update(tenant, body, id);
+    return Response.success(this.processVo(tenant, vo));
   }
 
   /**
    * 修改
-   * @param req
-   * @param id
+   * @param tenant 租户
+   * @param req 请求对象
+   * @param id Entity的ID
    * @return
    */
-  default VO update(REQ req, K id) {
+  default VO update(Tenant tenant, REQ req, K id) {
     E item = this.service().getById(id);
     Assert.notNull(item, Status.CODE.FAIL_NOT_FOUND);
 
@@ -180,28 +182,42 @@ public interface CrudControllerBase<S extends Service<E, K>, E extends EntityBas
 
   /**
    * 删除Entity对象
+   * @param tenant 租户
    * @param ids 要删除的Entity对象的ID
    * @return
    */
   @Operation(summary = "删除")
+  @ParamTenant
   @GetMapping("delete")
   @CheckPermission(Operations.DELETE)
-  default Response<Boolean> dels(@RequestParam List<K> ids) {
-    this.service().removeByIds(ids);
+  default Response<Boolean> dels(Tenant tenant, @RequestParam List<K> ids) {
+    this.delete(tenant, ids);
     return Response.success(true);
   }
 
   /**
+   * 删除Entity对象
+   * @param tenant 租户
+   * @param ids 要删除的Entity对象的ID
+   * @return
+   */
+  default void delete(Tenant tenant, List<K> ids) {
+    this.service().removeByIds(ids);
+  }
+
+  /**
    * 状态设置
+   * @param tenant 租户
    * @param ids 要设置状态的Entity对象的ID
    * @param status 要设置的状态
    * @return
    */
   @Operation(summary = "状态设置")
+  @ParamTenant
   @GetMapping("status")
   @Transactional(rollbackFor = Exception.class)
-  @CheckPermission(Operations.EXECUTE)
-  default Response<Boolean> status(@RequestParam List<K> ids, @RequestParam String status) {
+  @CheckPermission(value = { Operations.EXECUTE, Operations.UPDATE }, logic = Logic.ANY)
+  default Response<Boolean> status(Tenant tenant, @RequestParam List<K> ids, @RequestParam String status) {
     this.service().updateStatusByIds(ids, status);
     return Response.success(true);
   }

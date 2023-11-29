@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.auth.Permission;
+
+import jakarta.annotation.Nonnull;
 
 /**
  *
@@ -42,11 +42,11 @@ public class WildcardPermission implements Permission, Serializable {
   private List<Set<String>> parts;
 
   public WildcardPermission() {
-    this.parts = new ArrayList<Set<String>>();
+    this.parts = new ArrayList<>();
   }
 
   public WildcardPermission(@Nonnull String permPattern) {
-    setParts(permPattern);
+    this.setParts(permPattern);
   }
 
   protected void setParts(String permPattern) {
@@ -55,7 +55,7 @@ public class WildcardPermission implements Permission, Serializable {
     for (var part : partStr) {
       var subPartStr = StringUtils.split(part, SUBPART_DIVIDER_TOKEN);
       var subParts = Set.of(subPartStr);
-      parts.add(subParts);
+      this.parts.add(subParts);
     }
   }
 
@@ -74,10 +74,10 @@ public class WildcardPermission implements Permission, Serializable {
     for (Set<String> otherPart : otherParts) {
       // If this permission has less parts than the other permission, everything after the number of parts contained
       // in this permission is automatically implied, so return true
-      if (getParts().size() - 1 < i) {
+      if (this.getParts().size() - 1 < i) {
         return true;
       } else {
-        Set<String> part = getParts().get(i);
+        Set<String> part = this.getParts().get(i);
         if (!part.contains(WILDCARD_TOKEN) && !part.containsAll(otherPart)) {
           return false;
         }
@@ -86,8 +86,8 @@ public class WildcardPermission implements Permission, Serializable {
     }
 
     // If this permission has more parts than the other parts, only imply it if all of the other parts are wildcards
-    for (; i < getParts().size(); i++) {
-      Set<String> part = getParts().get(i);
+    for (; i < this.getParts().size(); i++) {
+      Set<String> part = this.getParts().get(i);
       if (!part.contains(WILDCARD_TOKEN)) {
         return false;
       }
@@ -99,7 +99,7 @@ public class WildcardPermission implements Permission, Serializable {
   @Override
   public String toString() {
     StringBuilder buffer = new StringBuilder();
-    for (Set<String> part : parts) {
+    for (Set<String> part : this.parts) {
       if (buffer.length() > 0) {
         buffer.append(PART_DIVIDER_TOKEN);
       }
@@ -116,16 +116,15 @@ public class WildcardPermission implements Permission, Serializable {
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof WildcardPermission) {
-      WildcardPermission wp = (WildcardPermission) o;
-      return parts.equals(wp.parts);
+    if (o instanceof WildcardPermission wp) {
+      return this.parts.equals(wp.parts);
     }
     return false;
   }
 
   @Override
   public int hashCode() {
-    return parts.hashCode();
+    return this.parts.hashCode();
   }
 
   /**

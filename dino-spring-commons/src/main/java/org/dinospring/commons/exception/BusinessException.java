@@ -14,11 +14,10 @@
 
 package org.dinospring.commons.exception;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.dinospring.commons.response.Status;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

@@ -19,9 +19,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +26,8 @@ import org.dinospring.commons.exception.BusinessException;
 import org.dinospring.commons.response.Status;
 import org.slf4j.helpers.MessageFormatter;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import lombok.experimental.UtilityClass;
 
 /**

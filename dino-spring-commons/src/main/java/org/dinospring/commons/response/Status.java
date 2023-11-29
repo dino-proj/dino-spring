@@ -16,12 +16,11 @@ package org.dinospring.commons.response;
 
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
-
 import org.slf4j.helpers.MessageFormatter;
 import org.springframework.util.Assert;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -134,7 +133,7 @@ public interface Status {
 
     @Override
     public String getMsg() {
-      return msg;
+      return this.msg;
     }
 
     @Override
@@ -268,12 +267,12 @@ class DefaultStatus implements Status {
 
   @Override
   public int getCode() {
-    return code;
+    return this.code;
   }
 
   @Override
   public String getMsg() {
-    return msg;
+    return this.msg;
   }
 
   @Override

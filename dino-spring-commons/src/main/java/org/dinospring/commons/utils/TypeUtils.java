@@ -19,11 +19,10 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
-
 import org.springframework.core.ResolvableType;
 import org.springframework.util.ClassUtils;
 
+import jakarta.annotation.Nonnull;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -109,8 +108,7 @@ public class TypeUtils {
   @SuppressWarnings("unchecked")
   public static <T> Class<T> getGenericSuperclassParamClass(Object inst, Class<?> interfaceClass, int paramIndex) {
     Type type = inst.getClass().getGenericSuperclass();
-    if (type instanceof ParameterizedType) {
-      var tp = (ParameterizedType) type;
+    if (type instanceof ParameterizedType tp) {
       if (tp.getRawType().equals(interfaceClass)) {
         var t = tp.getActualTypeArguments()[paramIndex];
         if (t instanceof ParameterizedType) {

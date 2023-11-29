@@ -22,13 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import javax.annotation.Nonnull;
-
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import com.fasterxml.jackson.databind.DatabindContext;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.jsontype.impl.TypeIdResolverBase;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.io.Resource;
@@ -37,6 +30,12 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
 import org.springframework.core.type.classreading.MetadataReaderFactory;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.databind.DatabindContext;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.jsontype.impl.TypeIdResolverBase;
+
+import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -67,23 +66,20 @@ public class AnnotionedJsonTypeIdResolver extends TypeIdResolverBase {
       var reader = readerfactory.getMetadataReader(resource);
       var clazzMeta = reader.getClassMetadata();
       //扫描到的class
-      if (clazzMeta.isAbstract() || clazzMeta.isAnnotation() || clazzMeta.isInterface() || !clazzMeta.isIndependent()) {
-        continue;
-      }
-      if (!reader.getAnnotationMetadata().getAnnotations().isDirectlyPresent(annoClass)) {
+      if (clazzMeta.isAbstract() || clazzMeta.isAnnotation() || clazzMeta.isInterface() || !clazzMeta.isIndependent()
+          || !reader.getAnnotationMetadata().getAnnotations().isDirectlyPresent(annoClass)) {
         continue;
       }
       String classname = clazzMeta.getClassName();
       try {
         Class<?> clazz = Class.forName(classname);
-        if (clazz.isMemberClass() || clazz.isSynthetic()) {
-          continue;
-        }
+        if (!(clazz.isMemberClass() || clazz.isSynthetic())) {
 
-        var anno = AnnotationUtils.findAnnotation(clazz, annoClass);
-        //判断是否有指定注解
-        if (anno != null) {
-          ANNOS_CACHE.put(clazz, idExtractor.apply(anno));
+          var anno = AnnotationUtils.findAnnotation(clazz, annoClass);
+          //判断是否有指定注解
+          if (anno != null) {
+            ANNOS_CACHE.put(clazz, idExtractor.apply(anno));
+          }
         }
       } catch (ClassNotFoundException | NoClassDefFoundError | ExceptionInInitializerError e) {
         log.error("class:{} not found", classname);
@@ -95,32 +91,32 @@ public class AnnotionedJsonTypeIdResolver extends TypeIdResolverBase {
   public void init(JavaType bt) {
     ANNOS_CACHE.entrySet().forEach(e -> {
       if (bt.isTypeOrSuperTypeOf(e.getKey())) {
-        typeToId.put(e.getKey(), e.getValue());
-        if (idToType.containsKey(e.getValue())) {
+        this.typeToId.put(e.getKey(), e.getValue());
+        if (this.idToType.containsKey(e.getValue())) {
           throw new IllegalStateException(
-              "duplicate id:" + e.getValue() + " for " + e.getKey() + " AND " + idToType.get(e.getValue()));
+              "duplicate id:" + e.getValue() + " for " + e.getKey() + " AND " + this.idToType.get(e.getValue()));
         }
-        idToType.put(e.getValue(), e.getKey());
+        this.idToType.put(e.getValue(), e.getKey());
       }
     });
   }
 
   @Override
   public String idFromValue(Object value) {
-    return typeToId.get(value.getClass());
+    return this.typeToId.get(value.getClass());
   }
 
   @Override
   public String idFromValueAndType(Object value, Class<?> suggestedType) {
-    return idFromValue(value);
+    return this.idFromValue(value);
   }
 
   @Override
   public JavaType typeFromId(DatabindContext context, String id) throws IOException {
-    if (!idToType.containsKey(id)) {
+    if (!this.idToType.containsKey(id)) {
       throw new IllegalStateException("no class found for key:" + id);
     }
-    return context.constructType(idToType.get(id));
+    return context.constructType(this.idToType.get(id));
   }
 
   @Override

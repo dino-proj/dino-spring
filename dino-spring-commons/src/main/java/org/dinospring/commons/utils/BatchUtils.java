@@ -20,8 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
 
-import javax.annotation.CheckForSigned;
-
 import lombok.experimental.UtilityClass;
 
 /**
@@ -39,7 +37,7 @@ public class BatchUtils {
    * @param batchSize
    * @param consumer
    */
-  public static <E> void executeBatch(Iterable<E> list, @CheckForSigned int batchSize,
+  public static <E> void executeBatch(Iterable<E> list, int batchSize,
       Consumer<Collection<E>> consumer) {
     if (batchSize <= 0) {
       throw new IllegalArgumentException("batchSize must not be less than one");

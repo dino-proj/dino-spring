@@ -22,8 +22,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.annotation.Nullable;
-
 import org.dinospring.commons.json.JsonViewUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ResolvableType;
@@ -34,6 +32,8 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonView;
+
+import jakarta.annotation.Nullable;
 
 /**
  *
@@ -73,9 +73,9 @@ public final class Property {
     this.objectType = objectType;
     this.readMethod = readMethod;
     this.writeMethod = writeMethod;
-    this.methodParameter = resolveMethodParameter();
-    this.name = (name != null ? name : resolveName());
-    this.field = resolveField();
+    this.methodParameter = this.resolveMethodParameter();
+    this.name = (name != null ? name : this.resolveName());
+    this.field = this.resolveField();
   }
 
   /**
@@ -108,9 +108,9 @@ public final class Property {
    */
   public ResolvableType getResolvableType() {
     if (this.methodParameter != null) {
-      return ResolvableType.forMethodParameter(methodParameter);
+      return ResolvableType.forMethodParameter(this.methodParameter);
     } else if (this.field != null) {
-      return ResolvableType.forField(field);
+      return ResolvableType.forField(this.field);
     } else {
       throw new IllegalStateException("No method or field found for property: " + this.name);
     }
@@ -165,10 +165,10 @@ public final class Property {
    * @return true if the property is readable or writable in given view
    */
   public boolean isVisiableInJsonView(@Nullable Class<?> activeView) {
-    if (Objects.isNull(activeView) || Objects.isNull(annotations)) {
+    if (Objects.isNull(activeView) || Objects.isNull(this.annotations)) {
       return true;
     }
-    for (Annotation annotation : annotations) {
+    for (Annotation annotation : this.annotations) {
       if (annotation.getClass().equals(JsonView.class)) {
         JsonView jsonView = (JsonView) annotation;
         if (!JsonViewUtils.isInView(activeView, jsonView.value())) {
@@ -192,7 +192,7 @@ public final class Property {
       return true;
     }
 
-    var jsonView = getReadAnnotation(JsonView.class);
+    var jsonView = this.getReadAnnotation(JsonView.class);
     if (Objects.nonNull(jsonView) && !JsonViewUtils.isInView(activeView, jsonView.value())) {
       return false;
     }
@@ -212,7 +212,7 @@ public final class Property {
       return true;
     }
 
-    var jsonView = getWriteAnnotation(JsonView.class);
+    var jsonView = this.getWriteAnnotation(JsonView.class);
     if (Objects.nonNull(jsonView) && !JsonViewUtils.isInView(activeView, jsonView.value())) {
       return false;
     }
@@ -233,7 +233,7 @@ public final class Property {
    */
   public Annotation[] getAnnotations() {
     if (this.annotations == null) {
-      this.annotations = resolveAnnotations();
+      this.annotations = this.resolveAnnotations();
     }
     return this.annotations;
   }
@@ -244,9 +244,9 @@ public final class Property {
    * @return the property Annotation on getter method or field
    */
   public <A extends Annotation> A getReadAnnotation(Class<A> annotationType) {
-    var annon = AnnotationUtils.getAnnotation(readMethod, annotationType);
-    if (Objects.isNull(annon) && Objects.nonNull(field)) {
-      annon = AnnotationUtils.getAnnotation(field, annotationType);
+    var annon = AnnotationUtils.getAnnotation(this.readMethod, annotationType);
+    if (Objects.isNull(annon) && Objects.nonNull(this.field)) {
+      annon = AnnotationUtils.getAnnotation(this.field, annotationType);
     }
     return annon;
   }
@@ -257,9 +257,9 @@ public final class Property {
    * @return the property Annotation on setter method or field
    */
   public <A extends Annotation> A getWriteAnnotation(Class<A> annotationType) {
-    var annon = AnnotationUtils.getAnnotation(writeMethod, annotationType);
-    if (Objects.isNull(annon) && Objects.nonNull(field)) {
-      annon = AnnotationUtils.getAnnotation(field, annotationType);
+    var annon = AnnotationUtils.getAnnotation(this.writeMethod, annotationType);
+    if (Objects.isNull(annon) && Objects.nonNull(this.field)) {
+      annon = AnnotationUtils.getAnnotation(this.field, annotationType);
     }
     return annon;
   }
@@ -294,8 +294,8 @@ public final class Property {
   }
 
   private MethodParameter resolveMethodParameter() {
-    MethodParameter read = resolveReadMethodParameter();
-    MethodParameter write = resolveWriteMethodParameter();
+    MethodParameter read = this.resolveReadMethodParameter();
+    MethodParameter write = this.resolveWriteMethodParameter();
     if (write == null) {
       if (read == null) {
         throw new IllegalStateException("Property is neither readable nor writeable");
@@ -314,27 +314,27 @@ public final class Property {
 
   @Nullable
   private MethodParameter resolveReadMethodParameter() {
-    if (getReadMethod() == null) {
+    if (this.getReadMethod() == null) {
       return null;
     }
-    return new MethodParameter(getReadMethod(), -1).withContainingClass(getObjectType());
+    return new MethodParameter(this.getReadMethod(), -1).withContainingClass(this.getObjectType());
   }
 
   @Nullable
   private MethodParameter resolveWriteMethodParameter() {
-    if (getWriteMethod() == null) {
+    if (this.getWriteMethod() == null) {
       return null;
     }
-    return new MethodParameter(getWriteMethod(), 0).withContainingClass(getObjectType());
+    return new MethodParameter(this.getWriteMethod(), 0).withContainingClass(this.getObjectType());
   }
 
   private Annotation[] resolveAnnotations() {
     Annotation[] annotations = annotationCache.get(this);
     if (annotations == null) {
       Map<Class<? extends Annotation>, Annotation> annotationMap = new LinkedHashMap<>();
-      addAnnotationsToMap(annotationMap, getReadMethod());
-      addAnnotationsToMap(annotationMap, getWriteMethod());
-      addAnnotationsToMap(annotationMap, getField());
+      this.addAnnotationsToMap(annotationMap, this.getReadMethod());
+      this.addAnnotationsToMap(annotationMap, this.getWriteMethod());
+      this.addAnnotationsToMap(annotationMap, this.getField());
       annotations = annotationMap.values().toArray(new Annotation[0]);
       annotationCache.put(this, annotations);
     }
@@ -353,10 +353,10 @@ public final class Property {
 
   @Nullable
   private Class<?> declaringClass() {
-    if (getReadMethod() != null) {
-      return getReadMethod().getDeclaringClass();
-    } else if (getWriteMethod() != null) {
-      return getWriteMethod().getDeclaringClass();
+    if (this.getReadMethod() != null) {
+      return this.getReadMethod().getDeclaringClass();
+    } else if (this.getWriteMethod() != null) {
+      return this.getWriteMethod().getDeclaringClass();
     } else {
       return null;
     }
@@ -364,12 +364,12 @@ public final class Property {
 
   @Nullable
   private Field resolveField() {
-    String name = getName();
+    String name = this.getName();
     if (!StringUtils.hasLength(name)) {
       return null;
     }
     Field field = null;
-    Class<?> declaringClass = declaringClass();
+    Class<?> declaringClass = this.declaringClass();
     if (declaringClass != null) {
       field = ReflectionUtils.findField(declaringClass, name);
       if (field == null) {
@@ -388,10 +388,9 @@ public final class Property {
     if (this == other) {
       return true;
     }
-    if (!(other instanceof Property)) {
+    if (!(other instanceof Property otherProperty)) {
       return false;
     }
-    Property otherProperty = (Property) other;
     return (ObjectUtils.nullSafeEquals(this.objectType, otherProperty.objectType) &&
         ObjectUtils.nullSafeEquals(this.name, otherProperty.name) &&
         ObjectUtils.nullSafeEquals(this.readMethod, otherProperty.readMethod) &&

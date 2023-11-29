@@ -14,18 +14,11 @@
 
 package org.dinospring.data.dao.impl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.utils.TypeUtils;
@@ -37,7 +30,6 @@ import org.dinospring.data.sql.builder.SelectSqlBuilder;
 import org.dinospring.data.sql.builder.UpdateSqlBuilder;
 import org.dinospring.data.sql.dialect.Dialect;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.dao.DataAccessException;
 import org.springframework.data.jdbc.core.JdbcAggregateOperations;
 import org.springframework.data.jdbc.core.convert.JdbcConverter;
 import org.springframework.data.jdbc.repository.support.SimpleJdbcRepository;
@@ -52,6 +44,8 @@ import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.JdbcUtils;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -82,7 +76,7 @@ public class DinoJdbcRepositoryBase<T, K> extends SimpleJdbcRepository<T, K> imp
     this.jdbcTemplate = ContextHelper.findBean(JdbcTemplate.class);
     this.dialect = ContextHelper.findBean(Dialect.class);
     this.conversionService = ContextHelper.findBean("dataConversionService", ConversionService.class);
-    this.entityInfo = EntityMeta.of(dialect, entityClass());
+    this.entityInfo = EntityMeta.of(this.dialect, this.entityClass());
 
   }
 
@@ -109,12 +103,12 @@ public class DinoJdbcRepositoryBase<T, K> extends SimpleJdbcRepository<T, K> imp
 
   @Override
   public Dialect dialect() {
-    return dialect;
+    return this.dialect;
   }
 
   @Override
   public <C> String tableName(Class<C> cls) {
-    var meta = EntityMeta.of(dialect, cls);
+    var meta = EntityMeta.of(this.dialect, cls);
     return meta.getQuotedTableName();
   }
 
@@ -124,9 +118,9 @@ public class DinoJdbcRepositoryBase<T, K> extends SimpleJdbcRepository<T, K> imp
       log.debug("query for: {},\nSQL:{},\nPARAMs:", clazz, sql, params);
     }
     if (TypeUtils.isPrimitiveOrString(clazz)) {
-      return jdbcTemplate.queryForList(sql, clazz, params);
+      return this.jdbcTemplate.queryForList(sql, clazz, params);
     } else {
-      return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(clazz, conversionService), params);
+      return this.jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(clazz, this.conversionService), params);
     }
   }
 
@@ -141,22 +135,18 @@ public class DinoJdbcRepositoryBase<T, K> extends SimpleJdbcRepository<T, K> imp
     var isPrimitiveForValueColumn = TypeUtils.isPrimitiveOrString(valueClass);
 
     Map<MK, MV> result = new HashMap<>(20);
-    jdbcTemplate.query(sql.getSql(), new RowCallbackHandler() {
+    this.jdbcTemplate.query(sql.getSql(), (RowCallbackHandler) rs -> {
 
-      @Override
-      public void processRow(ResultSet rs) throws SQLException {
-
-        MK key = CastUtils
-            .cast(Objects.requireNonNull(JdbcUtils.getResultSetValue(rs, rs.findColumn(keyColumn), keyClass)));
-        if (isPrimitiveForValueColumn) {
-          MV value = CastUtils
-              .cast(Objects.requireNonNull(JdbcUtils.getResultSetValue(rs, rs.findColumn(valueColumn), valueClass)));
-          result.put(key, value);
-        } else {
-          Object resultSetValue = JdbcUtils.getResultSetValue(rs, rs.findColumn(valueColumn));
-          MV convert = conversionService.convert(resultSetValue, valueClass);
-          result.put(key, convert);
-        }
+      MK key = CastUtils
+          .cast(Objects.requireNonNull(JdbcUtils.getResultSetValue(rs, rs.findColumn(keyColumn), keyClass)));
+      if (isPrimitiveForValueColumn) {
+        MV value = CastUtils
+            .cast(Objects.requireNonNull(JdbcUtils.getResultSetValue(rs, rs.findColumn(valueColumn), valueClass)));
+        result.put(key, value);
+      } else {
+        Object resultSetValue = JdbcUtils.getResultSetValue(rs, rs.findColumn(valueColumn));
+        MV convert = DinoJdbcRepositoryBase.this.conversionService.convert(resultSetValue, valueClass);
+        result.put(key, convert);
       }
     }, sql.getParams());
     return result;
@@ -172,33 +162,28 @@ public class DinoJdbcRepositoryBase<T, K> extends SimpleJdbcRepository<T, K> imp
 
     boolean isPrimitiveValue = TypeUtils.isPrimitiveOrString(valueClass);
     BeanPropertyRowMapper<MV> mapper = isPrimitiveValue ? null
-        : BeanPropertyRowMapper.newInstance(valueClass, conversionService);
+        : BeanPropertyRowMapper.newInstance(valueClass, this.conversionService);
 
-    return jdbcTemplate.query(sql, new ResultSetExtractor<Map<MK, MV>>() {
-
-      @Override
-      public Map<MK, MV> extractData(ResultSet rs) throws SQLException, DataAccessException {
-        Map<MK, MV> result = new HashMap<>(20);
-        if (isPrimitiveValue) {
-          org.springframework.util.Assert.isTrue(rs.getMetaData().getColumnCount() == 2,
-              "resulset column count must be 2,as valueClass is primitive class");
-        }
-
-        var keyIndex = rs.findColumn(keyColumn);
-        int rowNum = 0;
-        while (rs.next()) {
-          MK key = CastUtils.cast(JdbcUtils.getResultSetValue(rs, keyIndex, keyClass));
-          if (isPrimitiveValue) {
-            MV value = CastUtils.cast(JdbcUtils.getResultSetValue(rs, 3 - keyIndex, valueClass));
-            result.put(key, value);
-          } else {
-            MV value = mapper.mapRow(rs, rowNum++);
-            result.put(key, value);
-          }
-        }
-        return result;
+    return this.jdbcTemplate.query(sql, (ResultSetExtractor<Map<MK, MV>>) rs -> {
+      Map<MK, MV> result = new HashMap<>(20);
+      if (isPrimitiveValue) {
+        org.springframework.util.Assert.isTrue(rs.getMetaData().getColumnCount() == 2,
+            "resulset column count must be 2,as valueClass is primitive class");
       }
 
+      var keyIndex = rs.findColumn(keyColumn);
+      int rowNum = 0;
+      while (rs.next()) {
+        MK key = CastUtils.cast(JdbcUtils.getResultSetValue(rs, keyIndex, keyClass));
+        if (isPrimitiveValue) {
+          MV value = CastUtils.cast(JdbcUtils.getResultSetValue(rs, 3 - keyIndex, valueClass));
+          result.put(key, value);
+        } else {
+          MV value = mapper.mapRow(rs, rowNum++);
+          result.put(key, value);
+        }
+      }
+      return result;
     }, params);
 
   }
@@ -207,15 +192,10 @@ public class DinoJdbcRepositoryBase<T, K> extends SimpleJdbcRepository<T, K> imp
   public K save(String sql, Object... params) {
     GeneratedKeyHolder keys = new GeneratedKeyHolder();
     var argSetter = new ArgumentPreparedStatementSetter(params);
-    jdbcTemplate.update(new PreparedStatementCreator() {
-
-      @Override
-      public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-        var ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-        argSetter.setValues(ps);
-        return ps;
-      }
-
+    this.jdbcTemplate.update((PreparedStatementCreator) con -> {
+      var ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+      argSetter.setValues(ps);
+      return ps;
     }, keys);
 
     var idAttr = this.entity.getIdProperty();
@@ -244,40 +224,40 @@ public class DinoJdbcRepositoryBase<T, K> extends SimpleJdbcRepository<T, K> imp
   @Override
   public boolean updateById(K id, Map<String, Object> columnValue) {
 
-    var sql = new UpdateSqlBuilder(tableName());
+    var sql = new UpdateSqlBuilder(this.tableName());
     sql.eq("id", id);
     for (var kv : columnValue.entrySet()) {
-      var colProp = entity.getPersistentProperty(kv.getKey());
+      var colProp = this.entity.getPersistentProperty(kv.getKey());
       var colName = Objects.isNull(colProp) ? kv.getKey() : colProp.getColumnName().getReference();
       sql.set(colName, kv.getValue());
     }
-    return jdbcTemplate.update(sql.getSql(), sql.getParams()) == 1;
+    return this.jdbcTemplate.update(sql.getSql(), sql.getParams()) == 1;
   }
 
   @Override
   public boolean updateByIdWithVersion(K id, Map<String, Object> columnValue, Number version) {
-    org.springframework.util.Assert.isTrue(entityInfo.isVersioned(),
-        entityInfo.getDomainClass() + " must implements " + Versioned.class);
-    var sql = new UpdateSqlBuilder(tableName());
+    org.springframework.util.Assert.isTrue(this.entityInfo.isVersioned(),
+        this.entityInfo.getDomainClass() + " must implements " + Versioned.class);
+    var sql = new UpdateSqlBuilder(this.tableName());
     sql.eq("id", id);
     sql.eq("version", version);
     for (var kv : columnValue.entrySet()) {
-      var colProp = entity.getPersistentProperty(kv.getKey());
+      var colProp = this.entity.getPersistentProperty(kv.getKey());
       var colName = Objects.isNull(colProp) ? kv.getKey() : colProp.getColumnName().getReference();
       sql.set(colName, kv.getValue());
     }
     sql.set("version = version+1");
-    return jdbcTemplate.update(sql.getSql(), sql.getParams()) == 1;
+    return this.jdbcTemplate.update(sql.getSql(), sql.getParams()) == 1;
   }
 
   @Override
   public long update(UpdateSqlBuilder updateSqlBuilder) {
-    return jdbcTemplate.update(updateSqlBuilder.getSql(), updateSqlBuilder.getParams());
+    return this.jdbcTemplate.update(updateSqlBuilder.getSql(), updateSqlBuilder.getParams());
   }
 
   @Override
   public long delete(DeleteSqlBuilder deleteSqlBuilder) {
-    return jdbcTemplate.update(deleteSqlBuilder.getSql(), deleteSqlBuilder.getParams());
+    return this.jdbcTemplate.update(deleteSqlBuilder.getSql(), deleteSqlBuilder.getParams());
   }
 
 }

@@ -19,9 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.context.ContextHelper;
@@ -36,6 +33,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.util.Assert;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  *
@@ -56,8 +56,8 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @return
    */
   default SelectSqlBuilder newSelect() {
-    var select = new SelectSqlBuilder(dialect(), this.tableName());
-    if (entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
+    var select = new SelectSqlBuilder(this.dialect(), this.tableName());
+    if (this.entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
       select.eq("tenant_id", ContextHelper.currentTenantId());
     }
     return select;
@@ -68,7 +68,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @return
    */
   default SelectSqlBuilder newSelectWithoutTenant() {
-    return new SelectSqlBuilder(dialect(), this.tableName());
+    return new SelectSqlBuilder(this.dialect(), this.tableName());
   }
 
   /**
@@ -78,8 +78,8 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    */
   default SelectSqlBuilder newSelect(String tableAlias) {
     Assert.hasText(tableAlias, "tableAlias is empty");
-    var select = new SelectSqlBuilder(dialect(), this.tableName(), tableAlias);
-    if (entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
+    var select = new SelectSqlBuilder(this.dialect(), this.tableName(), tableAlias);
+    if (this.entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
       select.eq(String.format("%s.%s", tableAlias, "tenant_id"), ContextHelper.currentTenantId());
     }
     return select;
@@ -92,7 +92,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    */
   default SelectSqlBuilder newSelectWithoutTenant(String tableAlias) {
     Assert.hasText(tableAlias, "tableAlias is empty");
-    return new SelectSqlBuilder(dialect(), this.tableName(), tableAlias);
+    return new SelectSqlBuilder(this.dialect(), this.tableName(), tableAlias);
   }
 
   /**
@@ -102,8 +102,8 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @return
    */
   default <E> SelectSqlBuilder newSelect(Class<E> entity, String tableAlias) {
-    return StringUtils.isEmpty(tableAlias) ? new SelectSqlBuilder(dialect(), this.tableName(entity))
-        : new SelectSqlBuilder(dialect(), this.tableName(entity), tableAlias);
+    return StringUtils.isEmpty(tableAlias) ? new SelectSqlBuilder(this.dialect(), this.tableName(entity))
+        : new SelectSqlBuilder(this.dialect(), this.tableName(entity), tableAlias);
   }
 
   /**
@@ -112,7 +112,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    */
   default DeleteSqlBuilder newDelete() {
     var delete = new DeleteSqlBuilder(this.tableName());
-    if (entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
+    if (this.entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
       delete.eq("tenant_id", ContextHelper.currentTenantId());
     }
     return delete;
@@ -126,7 +126,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
   default DeleteSqlBuilder newDelete(String tableAlias) {
     Assert.hasText(tableAlias, "tableAlias is empty");
     var delete = new DeleteSqlBuilder(this.tableName(), tableAlias);
-    if (entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
+    if (this.entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
       delete.eq(String.format("%s.%s", tableAlias, "tenant_id"), ContextHelper.currentTenantId());
     }
     return delete;
@@ -138,7 +138,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    */
   default UpdateSqlBuilder newUpdate() {
     var update = new UpdateSqlBuilder(this.tableName());
-    if (entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
+    if (this.entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
       update.eq("tenant_id", ContextHelper.currentTenantId());
     }
     return update;
@@ -151,7 +151,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    */
   default UpdateSqlBuilder newUpdate(String alias) {
     var update = new UpdateSqlBuilder(this.tableName(), alias);
-    if (entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
+    if (this.entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
       update.eq(String.format("%s.%s", alias, "tenant_id"), ContextHelper.currentTenantId());
     }
     return update;
@@ -163,7 +163,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    */
   default InsertSqlBuilder newInsert() {
     var insert = new InsertSqlBuilder(this.tableName());
-    if (entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
+    if (this.entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
       insert.set("tenant_id", ContextHelper.currentTenantId());
     }
     return insert;
@@ -175,7 +175,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @return
    */
   default List<T> findAllById(Collection<K> ids) {
-    var sql = newSelect();
+    var sql = this.newSelect();
     sql.in("id", ids);
     return this.queryList(sql);
   }
@@ -188,7 +188,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
   * @return
   */
   default <C> List<C> findAllById(Collection<K> ids, Class<C> cls) {
-    var sql = newSelect();
+    var sql = this.newSelect();
     sql.in("id", ids);
     return this.queryList(sql, cls);
   }
@@ -200,7 +200,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @return
    */
   default <C> List<C> findAll(Class<C> cls) {
-    var sql = newSelect();
+    var sql = this.newSelect();
     return this.queryList(sql, cls);
   }
 
@@ -210,7 +210,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @return
    */
   default List<T> queryList(SelectSqlBuilder sql) {
-    return queryList(sql, entityClass());
+    return this.queryList(sql, this.entityClass());
   }
 
   /**
@@ -220,7 +220,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @return
    */
   default List<T> queryList(SelectSqlBuilder sql, Sort sort) {
-    return queryList(sql, entityClass(), sort);
+    return this.queryList(sql, this.entityClass(), sort);
   }
 
   /**
@@ -231,7 +231,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @return
    */
   default <P> List<P> queryList(SelectSqlBuilder sql, Class<P> clazz) {
-    return queryList(sql.getSql(), clazz, sql.getParams());
+    return this.queryList(sql.getSql(), clazz, sql.getParams());
   }
 
   /**
@@ -246,7 +246,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
     if (!Objects.isNull(sort) && sort.isSorted()) {
       sort.forEach(o -> sql.orderBy(o.getProperty(), o.isAscending()));
     }
-    return queryList(sql.getSql(), clazz, sql.getParams());
+    return this.queryList(sql.getSql(), clazz, sql.getParams());
   }
 
   /**
@@ -265,7 +265,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @return null如果查不到
    */
   default T getOne(SelectSqlBuilder sql) {
-    List<T> rs = queryList(sql);
+    List<T> rs = this.queryList(sql);
     if (CollectionUtils.isNotEmpty(rs)) {
       return rs.get(0);
     } else {
@@ -281,7 +281,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @return null如果查不到
    */
   default <P> P getOne(SelectSqlBuilder sql, Class<P> clazz) {
-    List<P> rs = queryList(sql, clazz);
+    List<P> rs = this.queryList(sql, clazz);
     if (CollectionUtils.isNotEmpty(rs)) {
       return rs.get(0);
     } else {
@@ -298,7 +298,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @return null如果查不到
    */
   default <P> P getOne(String sql, Class<P> clazz, Object... params) {
-    List<P> rs = queryList(sql, clazz, params);
+    List<P> rs = this.queryList(sql, clazz, params);
     if (CollectionUtils.isNotEmpty(rs)) {
       return rs.get(0);
     } else {
@@ -312,7 +312,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @return
    */
   default long count(SelectSqlBuilder sql) {
-    Long l = getOne(sql, Long.class);
+    Long l = this.getOne(sql, Long.class);
     return l == null ? 0L : l.longValue();
   }
 
@@ -323,7 +323,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @return
    */
   default long count(String sql, Object... params) {
-    Long l = getOne(sql, Long.class, params);
+    Long l = this.getOne(sql, Long.class, params);
     return l == null ? 0L : l.longValue();
   }
 
@@ -339,7 +339,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    */
   default <MK, MV> Map<MK, MV> queryForMap(SelectSqlBuilder sql, String keyColumn, Class<MK> keyClass,
       Class<MV> valueClass) {
-    return queryForMap(sql.getSql(), keyColumn, keyClass, valueClass, sql.getParams());
+    return this.queryForMap(sql.getSql(), keyColumn, keyClass, valueClass, sql.getParams());
   }
 
   /**
@@ -377,7 +377,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @return
    */
   default Page<T> queryPage(SelectSqlBuilder sql, Pageable pageable) {
-    return queryPage(sql, pageable, entityClass());
+    return this.queryPage(sql, pageable, this.entityClass());
   }
 
   /**
@@ -395,10 +395,10 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
       sort.forEach(o -> sql.orderBy(o.getProperty(), o.isAscending()));
     }
     if (pageable.isUnpaged()) {
-      return new PageImpl<>(queryList(sql, clazz));
+      return new PageImpl<>(this.queryList(sql, clazz));
     } else {
       sql.limit(pageable.getPageSize(), pageable.getOffset());
-      return new PageImpl<>(queryList(sql, clazz), pageable, count(sql.getCountSql(), sql.getParams()));
+      return new PageImpl<>(this.queryList(sql, clazz), pageable, this.count(sql.getCountSql(), sql.getParams()));
     }
   }
 
@@ -410,7 +410,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @return
    */
   default Page<T> queryPage(SelectSqlBuilder sql, SelectSqlBuilder countSql, Pageable pageable) {
-    return queryPage(sql, countSql, pageable, entityClass());
+    return this.queryPage(sql, countSql, pageable, this.entityClass());
   }
 
   /**
@@ -429,10 +429,10 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
       sort.forEach(o -> sql.orderBy(o.getProperty(), o.isAscending()));
     }
     if (pageable.isUnpaged()) {
-      return new PageImpl<>(queryList(sql, clazz));
+      return new PageImpl<>(this.queryList(sql, clazz));
     } else {
       sql.limit(pageable.getPageSize(), pageable.getOffset());
-      return new PageImpl<>(queryList(sql, clazz), pageable, count(countSql));
+      return new PageImpl<>(this.queryList(sql, clazz), pageable, this.count(countSql));
     }
   }
 

@@ -21,11 +21,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
-
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ConcurrentReferenceHashMap;
 
+import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -68,7 +67,7 @@ public class BeanSafeCache<T> {
    */
   public void acceptClassLoader(@Nullable ClassLoader classLoader) {
     if (classLoader != null) {
-      acceptedClassLoaders.add(classLoader);
+      this.acceptedClassLoaders.add(classLoader);
     }
   }
 
@@ -79,9 +78,11 @@ public class BeanSafeCache<T> {
    * @param classLoader the ClassLoader to clear the cache for
    */
   public void clearClassLoader(@Nullable ClassLoader classLoader) {
-    acceptedClassLoaders.removeIf(registeredLoader -> isUnderneathClassLoader(registeredLoader, classLoader));
-    strongClassCache.keySet().removeIf(beanClass -> isUnderneathClassLoader(beanClass.getClassLoader(), classLoader));
-    softClassCache.keySet().removeIf(beanClass -> isUnderneathClassLoader(beanClass.getClassLoader(), classLoader));
+    this.acceptedClassLoaders.removeIf(registeredLoader -> this.isUnderneathClassLoader(registeredLoader, classLoader));
+    this.strongClassCache.keySet()
+        .removeIf(beanClass -> this.isUnderneathClassLoader(beanClass.getClassLoader(), classLoader));
+    this.softClassCache.keySet()
+        .removeIf(beanClass -> this.isUnderneathClassLoader(beanClass.getClassLoader(), classLoader));
   }
 
   /**
@@ -92,8 +93,8 @@ public class BeanSafeCache<T> {
    * @see #acceptClassLoader
    */
   public boolean isClassLoaderAccepted(ClassLoader classLoader) {
-    for (ClassLoader acceptedLoader : acceptedClassLoaders) {
-      if (isUnderneathClassLoader(classLoader, acceptedLoader)) {
+    for (ClassLoader acceptedLoader : this.acceptedClassLoaders) {
+      if (this.isUnderneathClassLoader(classLoader, acceptedLoader)) {
         return true;
       }
     }
@@ -106,11 +107,11 @@ public class BeanSafeCache<T> {
    * @return the resulting cached info<T> (never {@code null})
    */
   public T get(Class<?> beanClass) {
-    T results = strongClassCache.get(beanClass);
+    T results = this.strongClassCache.get(beanClass);
     if (Objects.nonNull(results)) {
       return results;
     }
-    return softClassCache.get(beanClass);
+    return this.softClassCache.get(beanClass);
   }
 
   /**
@@ -119,14 +120,14 @@ public class BeanSafeCache<T> {
    * @return the resulting cached info<T> (never {@code null})
    */
   public T getOrElse(Class<?> beanClass, Function<Class<?>, ? extends T> provider) {
-    T results = get(beanClass);
+    T results = this.get(beanClass);
     if (Objects.nonNull(results)) {
       return results;
     }
 
     results = provider.apply(beanClass);
     if (Objects.nonNull(results)) {
-      put(beanClass, results);
+      this.put(beanClass, results);
     }
     return results;
   }
@@ -141,13 +142,13 @@ public class BeanSafeCache<T> {
     ConcurrentMap<Class<?>, T> classCacheToUse;
 
     if (ClassUtils.isCacheSafe(beanClass, BeanSafeCache.class.getClassLoader()) ||
-        isClassLoaderAccepted(beanClass.getClassLoader())) {
-      classCacheToUse = strongClassCache;
+        this.isClassLoaderAccepted(beanClass.getClassLoader())) {
+      classCacheToUse = this.strongClassCache;
     } else {
       if (log.isDebugEnabled()) {
         log.debug("Not strongly caching class [{}] because it is not cache-safe", beanClass.getName());
       }
-      classCacheToUse = softClassCache;
+      classCacheToUse = this.softClassCache;
     }
 
     return classCacheToUse.put(beanClass, info);
@@ -159,13 +160,13 @@ public class BeanSafeCache<T> {
    * @return the previous value associated with key, or null if there was no mapping for key.
    */
   public T remove(Class<?> beanClass) {
-    var results = strongClassCache.remove(beanClass);
+    var results = this.strongClassCache.remove(beanClass);
 
     if (Objects.nonNull(results)) {
       return results;
     }
 
-    return softClassCache.remove(beanClass);
+    return this.softClassCache.remove(beanClass);
   }
 
   /**

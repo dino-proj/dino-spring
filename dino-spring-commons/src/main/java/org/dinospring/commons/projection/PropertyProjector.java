@@ -24,14 +24,14 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.dinospring.commons.bean.BeanMetaUtils;
 import org.dinospring.commons.function.Functions;
 import org.dinospring.commons.json.JsonViewUtils;
 import org.dinospring.commons.utils.TypeUtils;
 import org.springframework.core.convert.ConversionService;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  *
@@ -67,7 +67,7 @@ public class PropertyProjector<S, T> {
 
   @Nullable
   public ConversionService getConversionService() {
-    return conversionService;
+    return this.conversionService;
   }
 
   public void setConversionService(@Nullable ConversionService conversionService) {
@@ -77,24 +77,24 @@ public class PropertyProjector<S, T> {
   private List<PropertyCopier> copiers = new ArrayList<>(4);
 
   public T copy(S source) {
-    T target = TypeUtils.newInstance(targetClass);
-    return copy(source, target);
+    T target = TypeUtils.newInstance(this.targetClass);
+    return this.copy(source, target);
   }
 
   public T copy(S source, Class<?> activeView) {
-    T target = TypeUtils.newInstance(targetClass);
-    return copy(source, target, activeView);
+    T target = TypeUtils.newInstance(this.targetClass);
+    return this.copy(source, target, activeView);
   }
 
   public T copy(S source, T target) {
-    for (PropertyCopier copier : copiers) {
+    for (PropertyCopier copier : this.copiers) {
       copier.copy(source, target);
     }
     return target;
   }
 
   public T copy(S source, T target, Class<?> activeView) {
-    for (PropertyCopier copier : copiers) {
+    for (PropertyCopier copier : this.copiers) {
       if (copier.canCopy(activeView)) {
         copier.copy(source, target);
       }
@@ -104,20 +104,20 @@ public class PropertyProjector<S, T> {
 
   public T copy(S source, Function<S, T> targetSupplier) {
     T target = targetSupplier.apply(source);
-    return copy(source, target);
+    return this.copy(source, target);
   }
 
   public T copy(S source, Function<S, T> targetSupplier, Class<?> activeView) {
     T target = targetSupplier.apply(source);
-    return copy(source, target, activeView);
+    return this.copy(source, target, activeView);
   }
 
   public PropertyProjector<S, T> add(Method sourceGetter, Method targetSetter) {
-    return add(sourceGetter, targetSetter, Functions.identity());
+    return this.add(sourceGetter, targetSetter, Functions.identity());
   }
 
   public PropertyProjector<S, T> add(Method sourceGetter, Method targetSetter, Function<?, ?> converter) {
-    copiers.add(new PropertyCopier(t -> {
+    this.copiers.add(new PropertyCopier(t -> {
       try {
         return sourceGetter.invoke(t);
       } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
@@ -136,86 +136,87 @@ public class PropertyProjector<S, T> {
   }
 
   public <V> PropertyProjector<S, T> add(Method sourceGetter, BiConsumer<T, V> setter) {
-    return add(makeGetter(sourceGetter), setter, Functions.identity(), JsonViewUtils.findViews(sourceGetter));
+    return this.add(this.makeGetter(sourceGetter), setter, Functions.identity(), JsonViewUtils.findViews(sourceGetter));
   }
 
   public PropertyProjector<S, T> add(String sourcePropertyName, String targetPropertyName) {
-    var getter = BeanMetaUtils.forClass(sourceClass).getProperty(sourcePropertyName);
+    var getter = BeanMetaUtils.forClass(this.sourceClass).getProperty(sourcePropertyName);
     if (Objects.isNull(getter)) {
       throw new IllegalArgumentException("source property not found: " + sourcePropertyName);
     }
-    var setter = BeanMetaUtils.forClass(targetClass).getProperty(targetPropertyName);
+    var setter = BeanMetaUtils.forClass(this.targetClass).getProperty(targetPropertyName);
     if (Objects.isNull(setter)) {
       throw new IllegalArgumentException("target property not found: " + targetPropertyName);
     }
-    return add(getter.getReadMethod(), setter.getWriteMethod());
+    return this.add(getter.getReadMethod(), setter.getWriteMethod());
   }
 
   public PropertyProjector<S, T> add(String sourcePropertyName, String targetPropertyName, Function<?, ?> converter) {
-    var getter = BeanMetaUtils.forClass(sourceClass).getProperty(sourcePropertyName);
+    var getter = BeanMetaUtils.forClass(this.sourceClass).getProperty(sourcePropertyName);
     if (Objects.isNull(getter)) {
       throw new IllegalArgumentException("source property not found: " + sourcePropertyName);
     }
-    var setter = BeanMetaUtils.forClass(targetClass).getProperty(targetPropertyName);
+    var setter = BeanMetaUtils.forClass(this.targetClass).getProperty(targetPropertyName);
     if (Objects.isNull(setter)) {
       throw new IllegalArgumentException("target property not found: " + targetPropertyName);
     }
-    return add(getter.getReadMethod(), setter.getWriteMethod(), converter);
+    return this.add(getter.getReadMethod(), setter.getWriteMethod(), converter);
   }
 
   public PropertyProjector<S, T> add(PropertyDescriptor getter, String targetPropertyName,
       Function<?, ?> converter) {
-    var setter = BeanMetaUtils.forClass(targetClass).getProperty(targetPropertyName);
+    var setter = BeanMetaUtils.forClass(this.targetClass).getProperty(targetPropertyName);
     if (Objects.isNull(setter)) {
       throw new IllegalArgumentException("target property not found: " + targetPropertyName);
     }
-    return add(getter.getReadMethod(), setter.getWriteMethod(), converter);
+    return this.add(getter.getReadMethod(), setter.getWriteMethod(), converter);
   }
 
   public PropertyProjector<S, T> add(PropertyDescriptor getter, PropertyDescriptor setter,
       Supplier<Function<?, ?>> converter) {
-    return add(getter.getReadMethod(), setter.getWriteMethod(), converter.get());
+    return this.add(getter.getReadMethod(), setter.getWriteMethod(), converter.get());
   }
 
   public PropertyProjector<S, T> add(PropertyDescriptor getter, PropertyDescriptor setter) {
-    return add(getter.getReadMethod(), setter.getWriteMethod());
+    return this.add(getter.getReadMethod(), setter.getWriteMethod());
   }
 
   public <V> PropertyProjector<S, T> add(String sourcePropertyName, BiConsumer<T, V> setter) {
-    var getter = BeanMetaUtils.forClass(sourceClass).getProperty(sourcePropertyName);
+    var getter = BeanMetaUtils.forClass(this.sourceClass).getProperty(sourcePropertyName);
     if (Objects.isNull(getter)) {
       throw new IllegalArgumentException("source property not found: " + sourcePropertyName);
     }
-    return add(getter.getReadMethod(), setter);
+    return this.add(getter.getReadMethod(), setter);
   }
 
   public <V> PropertyProjector<S, T> add(String sourcePropertyName, BiConsumer<T, V> setter,
       Function<V, V> converter) {
-    var getter = BeanMetaUtils.forClass(sourceClass).getProperty(sourcePropertyName);
+    var getter = BeanMetaUtils.forClass(this.sourceClass).getProperty(sourcePropertyName);
     if (Objects.isNull(getter)) {
       throw new IllegalArgumentException("source property not found: " + sourcePropertyName);
     }
-    return add(makeGetter(getter.getReadMethod()), setter, converter, JsonViewUtils.findViews(getter.getReadMethod()));
+    return this.add(this.makeGetter(getter.getReadMethod()), setter, converter,
+        JsonViewUtils.findViews(getter.getReadMethod()));
   }
 
   public <V> PropertyProjector<S, T> add(Function<S, V> getter, BiConsumer<T, V> setter) {
-    copiers.add(new PropertyCopier(getter, setter));
+    this.copiers.add(new PropertyCopier(getter, setter));
     return this;
   }
 
   public <V> PropertyProjector<S, T> add(Function<S, V> getter, BiConsumer<T, V> setter, Class<?>... views) {
-    copiers.add(new PropertyCopier(getter, setter, views));
+    this.copiers.add(new PropertyCopier(getter, setter, views));
     return this;
   }
 
   public <V> PropertyProjector<S, T> add(Function<S, V> getter, BiConsumer<T, V> setter, Class<?>[] getterViews,
       Class<?>[] setterViews) {
-    copiers.add(new PropertyCopier(getter, setter, getterViews, setterViews));
+    this.copiers.add(new PropertyCopier(getter, setter, getterViews, setterViews));
     return this;
   }
 
   public <V> PropertyProjector<S, T> add(Function<S, V> getter, BiConsumer<T, V> setter, Function<V, V> converter) {
-    return add(getter, (t, u) -> {
+    return this.add(getter, (t, u) -> {
       setter.accept(t, converter.apply(TypeUtils.cast(u)));
     });
   }
@@ -223,9 +224,9 @@ public class PropertyProjector<S, T> {
   public <V> PropertyProjector<S, T> add(Function<S, V> getter, BiConsumer<T, V> setter, Function<V, V> converter,
       Class<?>... views) {
     if (Objects.isNull(converter)) {
-      return add(getter, setter, views);
+      return this.add(getter, setter, views);
     }
-    return add(getter, (t, u) -> {
+    return this.add(getter, (t, u) -> {
       setter.accept(t, converter.apply(TypeUtils.cast(u)));
     }, views);
   }
@@ -273,17 +274,18 @@ public class PropertyProjector<S, T> {
     }
 
     public void copy(S source, T target) {
-      setter.accept(target, TypeUtils.cast(getter.apply(source)));
+      this.setter.accept(target, TypeUtils.cast(this.getter.apply(source)));
     }
 
     public boolean canCopy(Class<?> activeView) {
       if (Objects.isNull(activeView)) {
         return true;
       }
-      if (Objects.nonNull(views)) {
-        return JsonViewUtils.isInView(activeView, views);
+      if (Objects.nonNull(this.views)) {
+        return JsonViewUtils.isInView(activeView, this.views);
       }
-      return JsonViewUtils.isInView(activeView, getterViews) && JsonViewUtils.isInView(activeView, setterViews);
+      return JsonViewUtils.isInView(activeView, this.getterViews)
+          && JsonViewUtils.isInView(activeView, this.setterViews);
     }
   }
 

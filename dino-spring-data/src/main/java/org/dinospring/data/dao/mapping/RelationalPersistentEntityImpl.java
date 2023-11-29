@@ -1,3 +1,6 @@
+// Copyright 2023 dinosdev.cn.
+// SPDX-License-Identifier: Apache-2.0
+
 package org.dinospring.data.dao.mapping;
 
 import java.util.Optional;
@@ -13,11 +16,17 @@ import org.springframework.util.StringUtils;
 
 import jakarta.persistence.Table;
 
+/**
+ * Default implementation of {@link RelationalPersistentEntity}.
+ * @author Cody Lu
+ * @date 2023-11-30 02:29:58
+ */
+
 public class RelationalPersistentEntityImpl<T> extends BasicPersistentEntity<T, RelationalPersistentProperty>
     implements RelationalPersistentEntity<T> {
 
   private final NamingStrategy namingStrategy;
-  private final Lazy<Optional<SqlIdentifier>> tableName;
+  private final Lazy<Optional<SqlIdentifier>> tableNameLazy;
   private boolean forceQuote = true;
 
   /**
@@ -30,8 +39,8 @@ public class RelationalPersistentEntityImpl<T> extends BasicPersistentEntity<T, 
     super(information);
 
     this.namingStrategy = namingStrategy;
-    this.tableName = Lazy.of(() -> Optional.ofNullable( //
-        findAnnotation(Table.class)) //
+    this.tableNameLazy = Lazy.of(() -> Optional.ofNullable( //
+        this.findAnnotation(Table.class)) //
         .map(Table::name) //
         .filter(StringUtils::hasText) //
         .map(this::createSqlIdentifier) //
@@ -39,52 +48,40 @@ public class RelationalPersistentEntityImpl<T> extends BasicPersistentEntity<T, 
   }
 
   private SqlIdentifier createSqlIdentifier(String name) {
-    return isForceQuote() ? SqlIdentifier.quoted(name) : SqlIdentifier.unquoted(name);
+    return this.isForceQuote() ? SqlIdentifier.quoted(name) : SqlIdentifier.unquoted(name);
   }
 
   private SqlIdentifier createDerivedSqlIdentifier(String name) {
-    return new DerivedSqlIdentifier(name, isForceQuote());
+    return new DerivedSqlIdentifier(name, this.isForceQuote());
   }
 
   public boolean isForceQuote() {
-    return forceQuote;
+    return this.forceQuote;
   }
 
   public void setForceQuote(boolean forceQuote) {
     this.forceQuote = forceQuote;
   }
 
-  /*
-  * (non-Javadoc)
-  * @see org.springframework.data.relational.mapping.model.RelationalPersistentEntity#getTableName()
-  */
   @Override
   public SqlIdentifier getTableName() {
-    return tableName.get().orElseGet(() -> {
+    return this.tableNameLazy.get().orElseGet(() -> {
 
-      String schema = namingStrategy.getSchema();
-      SqlIdentifier tableName = createDerivedSqlIdentifier(namingStrategy.getTableName(getType()));
+      String schema = this.namingStrategy.getSchema();
+      SqlIdentifier tableName = this.createDerivedSqlIdentifier(this.namingStrategy.getTableName(this.getType()));
 
-      return StringUtils.hasText(schema) ? SqlIdentifier.from(createDerivedSqlIdentifier(schema), tableName)
+      return StringUtils.hasText(schema) ? SqlIdentifier.from(this.createDerivedSqlIdentifier(schema), tableName)
           : tableName;
     });
   }
 
-  /*
-  * (non-Javadoc)
-  * @see org.springframework.data.relational.core.mapping.model.RelationalPersistentEntity#getIdColumn()
-  */
   @Override
   public SqlIdentifier getIdColumn() {
-    return getRequiredIdProperty().getColumnName();
+    return this.getRequiredIdProperty().getColumnName();
   }
 
-  /*
-  * (non-Javadoc)
-  * @see java.lang.Object#toString()
-  */
   @Override
   public String toString() {
-    return String.format("RelationalPersistentEntityImpl<%s>", getType());
+    return String.format("RelationalPersistentEntityImpl<%s>", this.getType());
   }
 }

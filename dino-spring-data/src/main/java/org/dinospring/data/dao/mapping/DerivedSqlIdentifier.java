@@ -29,52 +29,32 @@ public class DerivedSqlIdentifier implements SqlIdentifier {
     this.quoted = quoted;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.springframework.data.relational.domain.SqlIdentifier#iterator()
-   */
   @Override
   public Iterator<SqlIdentifier> iterator() {
     return Collections.<SqlIdentifier>singleton(this).iterator();
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.springframework.data.relational.domain.SqlIdentifier#transform(java.util.function.UnaryOperator)
-   */
   @Override
   public SqlIdentifier transform(UnaryOperator<String> transformationFunction) {
 
     Assert.notNull(transformationFunction, "Transformation function must not be null");
 
-    return new DerivedSqlIdentifier(transformationFunction.apply(name), quoted);
+    return new DerivedSqlIdentifier(transformationFunction.apply(this.name), this.quoted);
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.springframework.data.relational.domain.SqlIdentifier#toSql(org.springframework.data.relational.domain.IdentifierProcessing)
-   */
   @Override
   public String toSql(IdentifierProcessing processing) {
 
-    String normalized = processing.standardizeLetterCase(name);
+    String normalized = processing.standardizeLetterCase(this.name);
 
-    return quoted ? processing.quote(normalized) : normalized;
+    return this.quoted ? processing.quote(normalized) : normalized;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.springframework.data.relational.domain.SqlIdentifier#getReference(org.springframework.data.relational.domain.IdentifierProcessing)
-   */
   @Override
   public String getReference(IdentifierProcessing processing) {
     return this.name;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object o) {
 
@@ -83,27 +63,19 @@ public class DerivedSqlIdentifier implements SqlIdentifier {
     }
 
     if (o instanceof SqlIdentifier) {
-      return toString().equals(o.toString());
+      return this.toString().equals(o.toString());
     }
 
     return false;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
-    return toString().hashCode();
+    return this.toString().hashCode();
   }
 
-  /*
-   * (non-Javadoc)
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
-    return quoted ? toSql(IdentifierProcessing.ANSI) : this.name;
+    return this.quoted ? this.toSql(IdentifierProcessing.ANSI) : this.name;
   }
 }

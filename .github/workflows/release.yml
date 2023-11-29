@@ -4,7 +4,7 @@ name: Publish package to the Maven Central Repository
 on:
   push:
     tags:
-      - 'RELEASE-**'
+      - "RELEASE-**"
 
 jobs:
   publish:
@@ -12,32 +12,29 @@ jobs:
 
     env:
       MVN_OPT: -e
-      BUILD_OPT: '-Dmaven.test.skip=true -Possrh'
-      DEPLOY_OPT: '-DMVN_REPO_USER_NAME=${{ secrets.NEXUS_USERNAME }} -DMVN_REPO_USER_PASSWORD=${{ secrets.NEXUS_PASSWORD }}'
+      BUILD_OPT: "-Dmaven.test.skip=true -Possrh"
+      DEPLOY_OPT: "-DMVN_REPO_USER_NAME=${{ secrets.NEXUS_USERNAME }} -DMVN_REPO_USER_PASSWORD=${{ secrets.NEXUS_PASSWORD }}"
+
+      MAVEN_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+      MAVEN_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Java and Maven
         uses: actions/setup-java@v3
         with:
           java-version: 17
-          distribution: 'temurin'
+          distribution: "temurin"
           server-id: ossrh
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_PASSWORD
-          cache: 'maven'
-      - name: Install gpg secret key
-        uses: crazy-max/ghaction-import-gpg@v6
-        with:
+          server-username: $MAVEN_USERNAME
+          server-password: $MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.NEXUS_GPG_SECRET_KEY }}
-          passphrase: ${{ secrets.NEXUS_GPG_SECRET_KEY_PASSWORD }}
+          gpg-passphrase: ${{ secrets.NEXUS_GPG_SECRET_KEY_PASSWORD }}
+          cache: "maven"
 
       - name: Publish package
-        env:
-          MAVEN_USERNAME: ${{ secrets.NEXUS_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
         run: |
           echo deploy into ${MVN_REPO_USER_NAME}@${MVN_REPO_URL_RELEASES}
           cd dino-dependencies-root

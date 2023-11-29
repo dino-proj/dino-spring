@@ -141,6 +141,7 @@ public interface TenantCrudControllerBase<S extends Service<E, K>, E extends Ent
 
   /**
    * 更新Entity对象
+   * @param tenant 租户
    * @param id 要更新Entity的ID
    * @param req 对象字段
    * @return

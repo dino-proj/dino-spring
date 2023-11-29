@@ -17,9 +17,7 @@ package org.dinospring.data.autoconfig;
 import java.io.Serializable;
 
 import org.aopalliance.intercept.MethodInterceptor;
-import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jdbc.repository.support.JdbcRepositoryFactoryBean;
 import org.springframework.data.repository.Repository;
 
@@ -33,23 +31,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DinoJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable>
     extends JdbcRepositoryFactoryBean<T, S, ID> {
-  @Autowired
-  BeanFactory beanFactory;
+  final BeanFactory beanFactory;
 
-  public DinoJdbcRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
+  public DinoJdbcRepositoryFactoryBean(Class<? extends T> repositoryInterface, BeanFactory beanFactory) {
     super(repositoryInterface);
+    this.beanFactory = beanFactory;
     this.addRepositoryFactoryCustomizer(repositoryFactory -> {
       repositoryFactory.setBeanFactory(beanFactory);
       repositoryFactory.addRepositoryProxyPostProcessor(
-          (factory, repositoryInformation) -> factory.addAdvice(new MethodInterceptor() {
-
-            @Override
-            public Object invoke(MethodInvocation invocation) throws Throwable {
-              log.debug("repository method invoc: {}", invocation);
-              repositoryInformation.isQueryMethod(invocation.getMethod());
-              return invocation.proceed();
-            }
-
+          (factory, repositoryInformation) -> factory.addAdvice((MethodInterceptor) invocation -> {
+            log.debug("repository method invoc: {}", invocation);
+            repositoryInformation.isQueryMethod(invocation.getMethod());
+            return invocation.proceed();
           }));
     });
   }

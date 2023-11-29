@@ -26,7 +26,6 @@
     <commons-compress.version>1.24.0</commons-compress.version>
     <commons-math3.version>3.6.1</commons-math3.version>
     <commons-csv.version>1.10.0</commons-csv.version>
-    <guava.version>32.1.2-jre</guava.version>
     <lombok.version>1.18.28</lombok.version>
     <easyexcel.version>3.3.2</easyexcel.version>
     <flying-saucer.version>9.2.2</flying-saucer.version>
@@ -120,12 +119,6 @@
         <version>${commons-csv.version}</version>
       </dependency>
 
-
-      <dependency>
-        <groupId>com.google.guava</groupId>
-        <artifactId>guava</artifactId>
-        <version>${guava.version}</version>
-      </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
@@ -433,11 +426,6 @@
       <version>${commons-math3.version}</version>
     </dependency>
 
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>${guava.version}</version>
-    </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>

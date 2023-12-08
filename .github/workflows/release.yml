@@ -2,9 +2,8 @@ name: Publish package to the Maven Central Repository
 
 # Run workflow on commits to the `master` branch
 on:
-  push:
-    tags:
-      - "RELEASE-**"
+  release:
+    types: [created]
 
 jobs:
   publish:

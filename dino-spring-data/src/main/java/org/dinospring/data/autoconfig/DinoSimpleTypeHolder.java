@@ -25,10 +25,10 @@ public class DinoSimpleTypeHolder extends SimpleTypeHolder {
   @Override
   public boolean isSimpleType(Class<?> type) {
     var isSimple = super.isSimpleType(type);
-    if (!isSimple) {
+    if (isSimple) {
       return AnnotationUtils.findAnnotation(type, Table.class) == null;
     } else {
-      return true;
+      return false;
     }
   }
 }

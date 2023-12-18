@@ -19,9 +19,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.commons.lang3.StringUtils;
 import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +26,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.GenericConverter;
+import org.springframework.data.convert.ReadingConverter;
 import org.springframework.data.util.CastUtils;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,6 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @ConditionalOnClass(PGobject.class)
 @Slf4j
+@ReadingConverter
 public class PostgreJsonbReadingConverter implements GenericConverter {
 
   @Autowired

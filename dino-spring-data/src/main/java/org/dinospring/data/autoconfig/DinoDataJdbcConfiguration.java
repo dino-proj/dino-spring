@@ -14,8 +14,12 @@
 
 package org.dinospring.data.autoconfig;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.dinospring.data.converts.PostgreJsonbReadingConverter;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jdbc.core.convert.JdbcCustomConversions;
 import org.springframework.data.jdbc.core.mapping.JdbcMappingContext;
@@ -33,13 +37,28 @@ import org.springframework.data.relational.core.mapping.NamingStrategy;
 @Configuration(proxyBeanMethods = false)
 public class DinoDataJdbcConfiguration extends AbstractJdbcConfiguration {
 
+  private ApplicationContext applicationContext;
+
   @Override
   public JdbcMappingContext jdbcMappingContext(Optional<NamingStrategy> namingStrategy,
       JdbcCustomConversions customConversions, RelationalManagedTypes jdbcManagedTypes) {
     var mappingContext = new DinoJdbcMappingContext(namingStrategy.orElse(DefaultNamingStrategy.INSTANCE));
     mappingContext.setSimpleTypeHolder(new DinoSimpleTypeHolder(customConversions.getSimpleTypeHolder()));
+    mappingContext.setManagedTypes(jdbcManagedTypes);
 
     return mappingContext;
+  }
+
+  @Override
+  protected List<?> userConverters() {
+    var genericConverters = applicationContext.getBeansOfType(PostgreJsonbReadingConverter.class);
+    return genericConverters.values().stream().toList();
+  }
+
+  @Override
+  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    this.applicationContext = applicationContext;
+    super.setApplicationContext(applicationContext);
   }
 
 }

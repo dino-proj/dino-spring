@@ -29,6 +29,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.GenericConverter;
+import org.springframework.data.convert.WritingConverter;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @ConditionalOnClass(PGobject.class)
 @Slf4j
+@WritingConverter
 public class PostgreJsonbWritingConverter implements GenericConverter {
 
   @Autowired
@@ -51,10 +53,9 @@ public class PostgreJsonbWritingConverter implements GenericConverter {
     return Set.of(new ConvertiblePair(Collection.class, PGobject.class), //
         new ConvertiblePair(Map.class, PGobject.class), //
         new ConvertiblePair(Object[].class, PGobject.class), //
-        new ConvertiblePair(Object.class, PGobject.class), //
-        new ConvertiblePair(String.class, PGobject.class), //
-        new ConvertiblePair(Boolean.class, PGobject.class), //
-        new ConvertiblePair(Number.class, PGobject.class)//
+        new ConvertiblePair(String[].class, PGobject.class), //
+        new ConvertiblePair(Boolean[].class, PGobject.class), //
+        new ConvertiblePair(Number[].class, PGobject.class)//
     );
   }
 

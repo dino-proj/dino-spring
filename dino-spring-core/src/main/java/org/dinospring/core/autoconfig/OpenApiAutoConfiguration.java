@@ -20,7 +20,7 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.utils.NamingUtils;
-import org.springdoc.core.customizers.OpenApiCustomiser;
+import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -41,7 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
-@Profile("!prod")
+ @Profile("!prod")
 public class OpenApiAutoConfiguration {
 
   @Value("${spring.application.name}")
@@ -53,8 +53,9 @@ public class OpenApiAutoConfiguration {
   @Value("${spring.application.description}")
   private String apiDescription;
 
+
   @Bean
-  public OpenApiCustomiser openApiCustomiser(ObjectProvider<Info> infoProvider, ObjectProvider<Contact> contactProvider,
+  public OpenApiCustomizer openApiCustomiser(ObjectProvider<Info> infoProvider, ObjectProvider<Contact> contactProvider,
       ObjectProvider<License> licenseProvider, ObjectProvider<Server> serverProvider) {
     log.info("--->> api-doc: add info, contact:{}, license:{}", contactProvider.getIfAvailable(),
         licenseProvider.getIfAvailable());

@@ -30,8 +30,8 @@
     <lombok.version>1.18.28</lombok.version>
 
     <!-- open api-->
-    <springdoc.version>1.7.0</springdoc.version>
-    <swagger.version>2.2.15</swagger.version>
+    <springdoc.version>2.3.0</springdoc.version>
+    <swagger.version>2.2.19</swagger.version>
   </properties>
 
   <dependencyManagement>
@@ -66,30 +66,20 @@
       <!-- openAPI-->
       <dependency>
         <groupId>org.springdoc</groupId>
-        <artifactId>springdoc-openapi-common</artifactId>
+        <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
         <version>${springdoc.version}</version>
       </dependency>
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-common</artifactId>
+        <version>${springdoc.version}</version>
+    </dependency>
       <dependency>
-        <groupId>org.springdoc</groupId>
-        <artifactId>springdoc-openapi-webmvc-core</artifactId>
-        <version>${springdoc.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springdoc</groupId>
-        <artifactId>springdoc-openapi-data-rest</artifactId>
-        <version>${springdoc.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springdoc</groupId>
-        <artifactId>springdoc-openapi-ui</artifactId>
-        <version>${springdoc.version}</version>
-      </dependency>
+    <groupId>io.swagger.core.v3</groupId>
+    <artifactId>swagger-annotations-jakarta</artifactId>
+    <version>${swagger.version}</version>
+</dependency>
 
-      <dependency>
-        <groupId>io.swagger.core.v3</groupId>
-        <artifactId>swagger-annotations</artifactId>
-        <version>${swagger.version}</version>
-      </dependency>
 
       <!-- tools-weixin-java-sdk starter-->
       <dependency>

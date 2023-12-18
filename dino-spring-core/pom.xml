@@ -145,11 +145,7 @@
         <!-- springdoc-->
         <dependency>
           <groupId>org.springdoc</groupId>
-          <artifactId>springdoc-openapi-data-rest</artifactId>
-        </dependency>
-        <dependency>
-          <groupId>org.springdoc</groupId>
-          <artifactId>springdoc-openapi-ui</artifactId>
+          <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
         </dependency>
       </dependencies>
     </profile>
@@ -159,11 +155,7 @@
         <!-- springdoc-->
         <dependency>
           <groupId>org.springdoc</groupId>
-          <artifactId>springdoc-openapi-data-rest</artifactId>
-        </dependency>
-        <dependency>
-          <groupId>org.springdoc</groupId>
-          <artifactId>springdoc-openapi-ui</artifactId>
+          <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
         </dependency>
       </dependencies>
     </profile>

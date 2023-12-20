@@ -26,7 +26,7 @@ import org.dinospring.auth.session.AuthSession;
 import org.dinospring.auth.session.AuthSessionResolver;
 import org.dinospring.auth.session.DefaultAuthSessionOpenFilter;
 import org.dinospring.core.security.config.SecurityProperties;
-import org.springdoc.core.customizers.OpenApiCustomiser;
+import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DinoAuthAutoConfig {
 
   @Bean
-  public OpenApiCustomiser openApiAuthCustomiser(SecurityProperties securityProperties) {
+  OpenApiCustomizer openApiAuthCustomiser(SecurityProperties securityProperties) {
     log.info("--->> api-doc: add securitySchema['dino-auth'] with auth header:{}",
         securityProperties.getAuthHeaderName());
     return openApi -> {
@@ -70,7 +70,7 @@ public class DinoAuthAutoConfig {
   }
 
   @Bean
-  public OperationCustomizer operationCustomizerAddSecurity() {
+  OperationCustomizer operationCustomizerAddSecurity() {
     log.info("--->> api-doc: add 'dino-auth' security to operations");
     var sec = new SecurityRequirement().addList("dino-auth");
     return (operation, method) -> {
@@ -80,12 +80,12 @@ public class DinoAuthAutoConfig {
   }
 
   @Bean
-  public Supplier<AuthSession> sessionSupplier() {
+  Supplier<AuthSession> sessionSupplier() {
     return DinoAuth::getAuthSession;
   }
 
   @Bean
-  public AuthzAnnotationPointcutAdvisor authzMethodPointcutAdvisor(SecurityProperties securityProperties,
+  AuthzAnnotationPointcutAdvisor authzMethodPointcutAdvisor(SecurityProperties securityProperties,
       Supplier<AuthSession> sessionSupplier) {
 
     return new AuthzAnnotationPointcutAdvisor(sessionSupplier);
@@ -93,19 +93,19 @@ public class DinoAuthAutoConfig {
 
   @ConditionalOnMissingBean(AuthInfoProvider.class)
   @Bean
-  public DinoAuthInfoProvider authInfoProvider() {
+  DinoAuthInfoProvider authInfoProvider() {
     return new DinoAuthInfoProvider();
   }
 
   @ConditionalOnMissingBean(AuthSessionResolver.class)
   @Bean
-  public DinoAuthSessionResolver authSessionHttpResolver(SecurityProperties securityProperties) {
+  DinoAuthSessionResolver authSessionHttpResolver(SecurityProperties securityProperties) {
     return new DinoAuthSessionResolver(securityProperties.getAuthHeaderName());
   }
 
   @ConditionalOnMissingBean(DefaultAuthSessionOpenFilter.class)
   @Bean
-  public DefaultAuthSessionOpenFilter authSessionOpenFilter(SecurityProperties securityProperties,
+  DefaultAuthSessionOpenFilter authSessionOpenFilter(SecurityProperties securityProperties,
       @Autowired ObjectProvider<AuthSessionResolver<?>> sessionResolverProvider) {
     var filter = new DefaultAuthSessionOpenFilter(sessionResolverProvider.orderedStream().collect(Collectors.toList()));
     // 添加白名单，在白名单里的请求不会打开session

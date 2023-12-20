@@ -17,6 +17,7 @@ package org.dinospring.commons.data;
 import java.io.Serializable;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Nullable;
 import lombok.Data;
 
 /**
@@ -34,9 +35,14 @@ public class Option<V extends Serializable> implements ValueLabel<V> {
   private String label;
 
   @Schema(description = "选项的图标")
+  @Nullable
   private String icon;
 
   @Schema(description = "选项的样式")
+  @Nullable
   private String style;
 
+  @Schema(description = "选项的描述")
+  @Nullable
+  private String desc;
 }

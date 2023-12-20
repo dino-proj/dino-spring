@@ -27,5 +27,7 @@ public enum FileTypes {
   //视频
   VIDEO,
   //音频
-  AUDIO;
+  AUDIO,
+  //文档
+  DOCUMENT;
 }

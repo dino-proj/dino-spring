@@ -1,30 +1,12 @@
-// Copyright 2021 dinodev.cn
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright 2023 dinosdev.cn.
+// SPDX-License-Identifier: Apache-2.0
 
 package org.dinospring.data.autoconfig;
-
-import java.sql.DatabaseMetaData;
-import java.util.Locale;
 
 import org.dinospring.commons.autoconfig.DinoCommonsAutoConfiguration;
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.json.JsonDiscriminatorModule;
 import org.dinospring.data.converts.JacksonCustomerModule;
-import org.dinospring.data.sql.dialect.Dialect;
-import org.dinospring.data.sql.dialect.MysqlDialect;
-import org.dinospring.data.sql.dialect.PostgreSQLDialect;
-import org.dinospring.data.sql.dialect.SnakeNamingConversition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
@@ -38,11 +20,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.core.convert.support.DefaultConversionService;
-import org.springframework.data.jdbc.repository.config.JdbcRepositoryConfigExtension;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
-import org.springframework.jdbc.core.ConnectionCallback;
-import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.util.Assert;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -74,31 +53,7 @@ public class DinoDataAutoConfiguration {
 
   @PostConstruct
   public void check() {
-    Assert.notNull(contextHelper, "contextHelper should init before DinoDataAutoConfiguration");
-  }
-
-  @Bean
-  @ConditionalOnMissingBean
-  public Dialect dialect(JdbcOperations jdbcOperations) {
-
-    return jdbcOperations.execute((ConnectionCallback<Dialect>) conn -> {
-      DatabaseMetaData metaData = conn.getMetaData();
-      Dialect dialect = Dialect.ofDefault();
-
-      String name = metaData.getDatabaseProductName().toLowerCase(Locale.ENGLISH);
-
-      if (name.contains("mysql") || name.contains("mariadb")) {
-        dialect = new MysqlDialect(metaData, new SnakeNamingConversition());
-      }
-      if (name.contains("postgresql")) {
-        dialect = new PostgreSQLDialect(metaData, new SnakeNamingConversition());
-      }
-
-      log.warn("Couldn't determine DB Dialect for {}", name);
-
-      log.info("--->> database: setup dialect:{}", dialect.getClass().getSimpleName());
-      return dialect;
-    });
+    Assert.notNull(this.contextHelper, "contextHelper should init before DinoDataAutoConfiguration");
   }
 
   @Bean({ "jacksonObjectMapper", "objectMapper" })

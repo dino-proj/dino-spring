@@ -2,32 +2,22 @@ package org.dinospring.data.autoconfig;
 
 import java.lang.annotation.Annotation;
 
-import org.springframework.boot.autoconfigure.data.AbstractRepositoryConfigurationSourceSupport;
-import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
+import org.dinospring.data.annotion.EnableDinoDataJdbc;
+import org.springframework.data.repository.config.RepositoryBeanDefinitionRegistrarSupport;
 import org.springframework.data.repository.config.RepositoryConfigurationExtension;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DinoJdbcRepositoriesRegistrar extends AbstractRepositoryConfigurationSourceSupport {
+public class DinoJdbcRepositoriesRegistrar extends RepositoryBeanDefinitionRegistrarSupport {
 
-	@Override
-	protected Class<? extends Annotation> getAnnotation() {
-		return EnableJdbcRepositories.class;
-	}
+  @Override
+  protected Class<? extends Annotation> getAnnotation() {
+    return EnableDinoDataJdbc.class;
+  }
 
-	@Override
-	protected Class<?> getConfiguration() {
-		return EnableJdbcRepositoriesConfiguration.class;
-	}
-
-	@Override
-	protected RepositoryConfigurationExtension getRepositoryConfigurationExtension() {
-		return new DinoJdbcRepositoryConfigExtension();
-	}
-
-	@EnableJdbcRepositories
-	private static class EnableJdbcRepositoriesConfiguration {
-
-	}
+  @Override
+  protected RepositoryConfigurationExtension getExtension() {
+    return new DinoJdbcRepositoryConfigExtension();
+  }
 
 }

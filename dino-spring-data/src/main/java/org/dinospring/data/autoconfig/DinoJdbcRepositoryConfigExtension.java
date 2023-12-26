@@ -9,9 +9,14 @@ import org.springframework.data.jdbc.repository.config.JdbcRepositoryConfigExten
 
 public class DinoJdbcRepositoryConfigExtension extends JdbcRepositoryConfigExtension {
 
-    @Override
-    protected Collection<Class<? extends Annotation>> getIdentifyingAnnotations() {
-        return List.of(jakarta.persistence.Table.class, org.springframework.data.relational.core.mapping.Table.class);
-    }
+  @Override
+  public String getModuleName() {
+    return "DinoJdbc";
+  }
+
+  @Override
+  protected Collection<Class<? extends Annotation>> getIdentifyingAnnotations() {
+    return List.of(jakarta.persistence.Table.class, org.springframework.data.relational.core.mapping.Table.class);
+  }
 
 }

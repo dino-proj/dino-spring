@@ -11,8 +11,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.dinospring.data.converts.PostgreJsonbReadingConverter;
-import org.dinospring.data.converts.PostgreJsonbWritingConverter;
 import org.dinospring.data.sql.dialect.Dialect;
 import org.dinospring.data.sql.dialect.MysqlDialect;
 import org.dinospring.data.sql.dialect.PostgreSQLDialect;
@@ -22,10 +20,11 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.convert.ReadingConverter;
+import org.springframework.data.convert.WritingConverter;
 import org.springframework.data.jdbc.core.convert.JdbcCustomConversions;
 import org.springframework.data.jdbc.core.mapping.JdbcMappingContext;
 import org.springframework.data.jdbc.repository.config.AbstractJdbcConfiguration;
-import org.springframework.data.jdbc.repository.config.DialectResolver;
 import org.springframework.data.relational.RelationalManagedTypes;
 import org.springframework.data.relational.core.mapping.DefaultNamingStrategy;
 import org.springframework.data.relational.core.mapping.NamingStrategy;
@@ -82,16 +81,14 @@ public class DinoDataJdbcConfiguration extends AbstractJdbcConfiguration {
     return mappingContext;
   }
 
-  private final JdbcOperations operations;
-
-  public DinoDataJdbcConfiguration(JdbcOperations operations) {
-    this.operations = operations;
-  }
-
   @Override
   protected List<?> userConverters() {
-    var genericConverters = this.applicationContext.getBeansOfType(PostgreJsonbReadingConverter.class);
-    return genericConverters.values().stream().toList();
+    var readingConverters = this.applicationContext.getBeansWithAnnotation(ReadingConverter.class);
+    var writingConverters = this.applicationContext.getBeansWithAnnotation(WritingConverter.class);
+
+    var converts = new ArrayList<>(readingConverters.values().stream().toList());
+    converts.addAll(writingConverters.values().stream().toList());
+    return converts;
   }
 
   @Override
@@ -118,17 +115,4 @@ public class DinoDataJdbcConfiguration extends AbstractJdbcConfiguration {
     super.setApplicationContext(applicationContext);
   }
 
-  @Override
-  public JdbcCustomConversions jdbcCustomConversions() {
-    // 获取当前数据库方言
-    var dialect = DialectResolver.getDialect(this.operations);
-    // 获取默认转换器
-    List<Object> defaultConverters = new ArrayList<>(dialect.getConverters());
-    defaultConverters.addAll(JdbcCustomConversions.storeConverters());
-    defaultConverters
-        .addAll(this.applicationContext.getBeansOfType(PostgreJsonbWritingConverter.class).values().stream().toList());
-
-    // 创建并返回包含默认转换器和自定义转换器的JdbcCustomConversions
-    return new JdbcCustomConversions(defaultConverters);
-  }
 }

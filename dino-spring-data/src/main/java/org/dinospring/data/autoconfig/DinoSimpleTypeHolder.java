@@ -3,7 +3,8 @@
 
 package org.dinospring.data.autoconfig;
 
-import java.util.Collections;
+import java.io.Serializable;
+import java.util.Set;
 
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.mapping.model.SimpleTypeHolder;
@@ -19,7 +20,7 @@ import jakarta.persistence.Table;
 public class DinoSimpleTypeHolder extends SimpleTypeHolder {
 
   public DinoSimpleTypeHolder(SimpleTypeHolder source) {
-    super(Collections.emptySet(), source);
+    super(Set.of(Serializable.class), source);
   }
 
   @Override

@@ -32,6 +32,7 @@
     <!-- open api-->
     <springdoc.version>2.3.0</springdoc.version>
     <swagger.version>2.2.19</swagger.version>
+    <weixin-java.version>4.5.9.B</weixin-java.version>
   </properties>
 
   <dependencyManagement>

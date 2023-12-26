@@ -54,7 +54,7 @@
     <servlet-api.version>6.0.0</servlet-api.version>
 
     <!-- managedDep weixin sdk -->
-    <weixin-java.version>4.5.0</weixin-java.version>
+    <weixin-java.version>4.5.9.B</weixin-java.version>
 
     <!-- managedDep multimedia -->
     <metadata-extractor.version>2.18.0</metadata-extractor.version>

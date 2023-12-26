@@ -51,34 +51,22 @@
         <version>${druid.version}</version>
       </dependency>
 
-      <!-- orm  -->
-      <dependency>
-        <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-core</artifactId>
-        <version>${hibernate.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.vladmihalcea</groupId>
-        <artifactId>hibernate-types-52</artifactId>
-        <version>${hibernate-types.version}</version>
-      </dependency>
-
       <!-- openAPI-->
       <dependency>
         <groupId>org.springdoc</groupId>
         <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
         <version>${springdoc.version}</version>
       </dependency>
-    <dependency>
-      <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-starter-common</artifactId>
-        <version>${springdoc.version}</version>
-    </dependency>
       <dependency>
-    <groupId>io.swagger.core.v3</groupId>
-    <artifactId>swagger-annotations-jakarta</artifactId>
-    <version>${swagger.version}</version>
-</dependency>
+        <groupId>org.springdoc</groupId>
+        <artifactId>springdoc-openapi-starter-common</artifactId>
+        <version>${springdoc.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.swagger.core.v3</groupId>
+        <artifactId>swagger-annotations-jakarta</artifactId>
+        <version>${swagger.version}</version>
+      </dependency>
 
 
       <!-- tools-weixin-java-sdk starter-->

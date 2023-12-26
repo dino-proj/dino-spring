@@ -23,6 +23,7 @@ import java.lang.annotation.Target;
 
 import org.dinospring.data.autoconfig.DinoDataAutoConfiguration;
 import org.dinospring.data.autoconfig.DinoDataJdbcConfiguration;
+import org.dinospring.data.autoconfig.DinoJdbcRepositoriesRegistrar;
 import org.dinospring.data.autoconfig.DinoJdbcRepositoryFactoryBean;
 import org.dinospring.data.dao.impl.DinoJdbcRepositoryBase;
 import org.springframework.context.annotation.Import;
@@ -39,10 +40,11 @@ import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 @Documented
 @Inherited
 @EnableJdbcRepositories(basePackages = "org.dinospring", repositoryFactoryBeanClass = DinoJdbcRepositoryFactoryBean.class, repositoryBaseClass = DinoJdbcRepositoryBase.class)
-@Import({ DinoDataAutoConfiguration.class, DinoDataJdbcConfiguration.class })
+@Import({ DinoDataAutoConfiguration.class, DinoDataJdbcConfiguration.class, DinoJdbcRepositoriesRegistrar.class })
 public @interface EnableDinoData {
   /**
-   * Base packages to scan for annotated components. please include "org.dinospring"
+   * Base packages to scan for annotated components. please include
+   * "org.dinospring"
    */
   @AliasFor(annotation = EnableJdbcRepositories.class, attribute = "basePackages")
   String[] basePackages() default { "org.dinospring" };

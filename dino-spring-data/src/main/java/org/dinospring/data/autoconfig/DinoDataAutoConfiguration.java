@@ -38,6 +38,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.core.convert.support.DefaultConversionService;
+import org.springframework.data.jdbc.repository.config.JdbcRepositoryConfigExtension;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 import org.springframework.jdbc.core.ConnectionCallback;
@@ -149,4 +150,5 @@ public class DinoDataAutoConfiguration {
     }
     return dataConversionService;
   }
+
 }

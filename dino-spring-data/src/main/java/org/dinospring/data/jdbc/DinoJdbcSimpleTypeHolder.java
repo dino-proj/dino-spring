@@ -1,7 +1,7 @@
 // Copyright 2023 dinospring.cn.
 // SPDX-License-Identifier: Apache-2.0
 
-package org.dinospring.data.autoconfig;
+package org.dinospring.data.jdbc;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -17,9 +17,9 @@ import jakarta.persistence.Table;
  * @date 2023-05-18 00:23:48
  */
 
-public class DinoSimpleTypeHolder extends SimpleTypeHolder {
+public class DinoJdbcSimpleTypeHolder extends SimpleTypeHolder {
 
-  public DinoSimpleTypeHolder(SimpleTypeHolder source) {
+  public DinoJdbcSimpleTypeHolder(SimpleTypeHolder source) {
     super(Set.of(Serializable.class), source);
   }
 

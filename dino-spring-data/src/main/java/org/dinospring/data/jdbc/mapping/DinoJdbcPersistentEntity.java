@@ -1,7 +1,7 @@
 // Copyright 2023 dinosdev.cn.
 // SPDX-License-Identifier: Apache-2.0
 
-package org.dinospring.data.dao.mapping;
+package org.dinospring.data.jdbc.mapping;
 
 import java.util.Optional;
 
@@ -18,11 +18,12 @@ import jakarta.persistence.Table;
 
 /**
  * Default implementation of {@link RelationalPersistentEntity}.
+ * support jakarta persistence annotation, such as @Table
  * @author Cody Lu
  * @date 2023-11-30 02:29:58
  */
 
-public class RelationalPersistentEntityImpl<T> extends BasicPersistentEntity<T, RelationalPersistentProperty>
+public class DinoJdbcPersistentEntity<T> extends BasicPersistentEntity<T, RelationalPersistentProperty>
     implements RelationalPersistentEntity<T> {
 
   private final NamingStrategy namingStrategy;
@@ -30,11 +31,11 @@ public class RelationalPersistentEntityImpl<T> extends BasicPersistentEntity<T, 
   private boolean forceQuote = true;
 
   /**
-  * Creates a new {@link RelationalPersistentEntityImpl} for the given {@link TypeInformation}.
+  * Creates a new {@link DinoJdbcPersistentEntity} for the given {@link TypeInformation}.
   *
   * @param information must not be {@literal null}.
   */
-  public RelationalPersistentEntityImpl(TypeInformation<T> information, NamingStrategy namingStrategy) {
+  public DinoJdbcPersistentEntity(TypeInformation<T> information, NamingStrategy namingStrategy) {
 
     super(information);
 

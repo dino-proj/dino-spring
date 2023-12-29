@@ -1,9 +1,10 @@
 // Copyright 2023 dinodev.cn.
 // SPDX-License-Identifier: Apache-2.0
 
-package org.dinospring.data.autoconfig;
+package org.dinospring.data.jdbc;
 
-import org.dinospring.data.dao.mapping.RelationalPersistentEntityImpl;
+import org.dinospring.data.jdbc.mapping.DinoJdbcPersistentEntity;
+import org.dinospring.data.jdbc.mapping.DinoJdbcPersistentProperty;
 import org.springframework.data.jdbc.core.mapping.JdbcMappingContext;
 import org.springframework.data.mapping.PreferredConstructor;
 import org.springframework.data.mapping.model.Property;
@@ -14,8 +15,6 @@ import org.springframework.data.relational.core.mapping.RelationalPersistentProp
 import org.springframework.data.util.TypeInformation;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-
-import jakarta.persistence.Table;
 
 /**
  *
@@ -32,9 +31,9 @@ public class DinoJdbcMappingContext extends JdbcMappingContext {
 
   @Override
   protected <T> RelationalPersistentEntity<T> createPersistentEntity(TypeInformation<T> typeInformation) {
-    RelationalPersistentEntityImpl<T> entity = new RelationalPersistentEntityImpl<>(typeInformation,
+    DinoJdbcPersistentEntity<T> entity = new DinoJdbcPersistentEntity<>(typeInformation,
         this.getNamingStrategy());
-    entity.setForceQuote(isForceQuote());
+    entity.setForceQuote(this.isForceQuote());
     PreferredConstructor<T, RelationalPersistentProperty> constructor = entity.getPersistenceConstructor();
 
     if (constructor == null) {
@@ -51,12 +50,16 @@ public class DinoJdbcMappingContext extends JdbcMappingContext {
   @Override
   protected RelationalPersistentProperty createPersistentProperty(Property property,
       RelationalPersistentEntity<?> owner, SimpleTypeHolder simpleTypeHolder) {
-    return super.createPersistentProperty(property, owner, simpleTypeHolder);
+    var persistentProperty = new DinoJdbcPersistentProperty(property, owner, simpleTypeHolder,
+        this.getNamingStrategy());
+    persistentProperty.setForceQuote(this.isForceQuote());
+    return persistentProperty;
   }
 
   @Override
   protected boolean shouldCreatePersistentEntityFor(TypeInformation<?> type) {
     return super.shouldCreatePersistentEntityFor(type)//
-        && type.getType().getAnnotation(Table.class) != null;
+        && (type.getType().isAnnotationPresent(jakarta.persistence.Table.class) ||
+            type.getType().isAnnotationPresent(org.springframework.data.relational.core.mapping.Table.class));
   }
 }

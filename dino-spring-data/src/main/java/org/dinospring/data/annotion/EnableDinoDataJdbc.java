@@ -12,9 +12,9 @@ import java.lang.annotation.Target;
 
 import org.dinospring.data.autoconfig.DinoDataAutoConfiguration;
 import org.dinospring.data.autoconfig.DinoDataJdbcConfiguration;
-import org.dinospring.data.autoconfig.DinoJdbcRepositoriesRegistrar;
-import org.dinospring.data.autoconfig.DinoJdbcRepositoryFactoryBean;
 import org.dinospring.data.dao.impl.DinoJdbcRepositoryBase;
+import org.dinospring.data.jdbc.DinoJdbcRepositoriesRegistrar;
+import org.dinospring.data.jdbc.DinoJdbcRepositoryFactoryBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Import;

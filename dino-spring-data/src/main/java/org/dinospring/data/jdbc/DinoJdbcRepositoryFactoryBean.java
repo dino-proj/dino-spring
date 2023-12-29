@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.dinospring.data.autoconfig;
+package org.dinospring.data.jdbc;
 
 import java.io.Serializable;
 

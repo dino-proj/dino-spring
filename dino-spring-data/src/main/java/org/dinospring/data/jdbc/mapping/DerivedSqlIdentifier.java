@@ -1,7 +1,7 @@
 // Copyright 2023 dinodev.cn.
 // SPDX-License-Identifier: Apache-2.0
 
-package org.dinospring.data.dao.mapping;
+package org.dinospring.data.jdbc.mapping;
 
 import java.util.Collections;
 import java.util.Iterator;

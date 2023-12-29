@@ -11,6 +11,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.dinospring.data.jdbc.DinoJdbcMappingContext;
+import org.dinospring.data.jdbc.DinoJdbcSimpleTypeHolder;
 import org.dinospring.data.sql.dialect.Dialect;
 import org.dinospring.data.sql.dialect.MysqlDialect;
 import org.dinospring.data.sql.dialect.PostgreSQLDialect;
@@ -75,7 +77,7 @@ public class DinoDataJdbcConfiguration extends AbstractJdbcConfiguration {
   public JdbcMappingContext jdbcMappingContext(Optional<NamingStrategy> namingStrategy,
       JdbcCustomConversions customConversions, RelationalManagedTypes jdbcManagedTypes) {
     var mappingContext = new DinoJdbcMappingContext(namingStrategy.orElse(DefaultNamingStrategy.INSTANCE));
-    mappingContext.setSimpleTypeHolder(new DinoSimpleTypeHolder(customConversions.getSimpleTypeHolder()));
+    mappingContext.setSimpleTypeHolder(new DinoJdbcSimpleTypeHolder(customConversions.getSimpleTypeHolder()));
     mappingContext.setManagedTypes(jdbcManagedTypes);
 
     return mappingContext;

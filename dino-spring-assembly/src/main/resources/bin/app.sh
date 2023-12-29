@@ -1,27 +1,6 @@
 #!/usr/bin/env bash
-# Copyright 2021 dinodev.cn
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-# Runs a CONTENT APP_NAME as a daemon.
-# Environment Variables
-#
-#   CONTENT_CONF_DIR  Alternate conf dir. Default is ${HADOOP_PREFIX}/conf.
-#   APP_LOG_DIR   Where log files are stored.  PWD by default.
-#   CONTENT_MASTER    host:path where hadoop code should be rsync'd from
-#   PID_DIR   The pid files are stored. /tmp by default.
-#   IDENT_STRING   A string representing this instance of hadoop. $USER by default
-##
+# Copyright 2023 dinosdev.cn.
+# SPDX-License-Identifier: Apache-2.0
 
 
 # use POSIX interface, symlink is followed automatically
@@ -43,8 +22,6 @@ START_STOP=$1
 APP_NAME=$2
 shift 2
 
-
-JAVA_HOME=${JAVA11_HOME:-${JAVA_HOME}}
 MALLOC_ARENA_MAX=1
 
 PID_DIR=${PID_DIR:"/tmp"}
@@ -124,6 +101,9 @@ RUN_JAVA ()
   echo "excute ->APP_JAVA_OPTS:"${APP_JAVA_OPTS}
   echo "excute ->CLASS:"${CLASS}
   echo "excute ->CLASSPATH:"${CLASSPATH}
+  echo "excute ->PID:"${PID}
+  echo "excute ->LOG_DIR:"${APP_LOG_DIR}
+
   if [ "$IN_DOCKER" = "true" ]; then
     "$JAVA" -Dproc_$APP_NAME $APP_JAVA_OPTS $CLASS  > "$OUT_FILE" "$@" 2>&1
   else

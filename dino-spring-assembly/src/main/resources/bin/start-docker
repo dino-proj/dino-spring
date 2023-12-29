@@ -8,28 +8,53 @@ BIN_PATH="${BASH_SOURCE-$0}"
 BIN_DIR="$(dirname "${BIN_PATH}")"
 APP_DIR="$(cd "${BIN_DIR}/.."; pwd)"
 
-usage="Usage: start-docker -h|--help|[docker options]"
+usage="Usage: start-docker [-h|--help] --log.dir=<LOG_DIR> [docker options]"
 
 # print usage
 ARG_1=$1
-if [ "$ARG_1" = "-h" || "$ARG_1" = "--help"]; then
+if [[ "$ARG_1" = "-h" || "$ARG_1" = "--help" ]]; then
   echo $usage
   exit 1
 fi
 
-DOCKER_IMAGE_NAME="dinospring/jdk:@java.version@"
+# 从参数中获取--log.dir=<> 参数，如果没有则报错
+LOG_DIR=`echo $@ | grep -oP -- '--log.dir=\K[^ ]+'`
+
+if [[ -z $LOG_DIR ]]; then
+  echo "--log.dir is not set"
+  echo $usage
+  exit 1
+fi
+
+# 移除--log.dir=<> 参数
+set -- "${@/--log.dir=$LOG_DIR/}"
+
+ACTIVE_PROFILE="@spring.profiles.active@"
+
+DOCKER_IMAGE_NAME="dinospring/jdk:@maven.compiler.target@"
 
 if [[ -z $SERVER_PORT ]]; then
-  export SERVER_PORT=`bash "${APP_DIR}/bin/ysh" -f "${APP_DIR}/conf/application.yml" -Q "server.port"`
+  export SERVER_PORT=`bash "${APP_DIR}/bin/ysh" -f "${APP_DIR}/conf/application-${ACTIVE_PROFILE}.yml" -Q "server.port"`
+
+  if [[ -z $SERVER_PORT ]]; then
+    export SERVER_PORT=`bash "${APP_DIR}/bin/ysh" -f "${APP_DIR}/conf/application.yml" -Q "server.port"`
+  fi
 fi
 
 if [[ -z $SERVER_PORT ]]; then
   echo "server.port is not set in application.yml"
   exit 1
 fi
-docker run -it --restart always \
+
+echo "SERVER_PORT:"$SERVER_PORT
+echo "DOCKER_IMAGE_NAME:"$DOCKER_IMAGE_NAME
+echo "LOG_DIR:"$LOG_DIR
+
+docker run -d --restart always \
   -p $SERVER_PORT:$SERVER_PORT/tcp \
   --name="@app.name@" \
   -v "${APP_DIR}:/app" \
+  -v "${LOG_DIR}:/logs" \
+  --pull=always \
   $@ \
   $DOCKER_IMAGE_NAME

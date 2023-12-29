@@ -24,16 +24,16 @@ shift 2
 
 MALLOC_ARENA_MAX=1
 
-PID_DIR=${PID_DIR:"/tmp"}
+PID_DIR=${PID_DIR:-"/tmp"}
 
 # Attempt to set JAVA_HOME if it is not set
 if [[ -z $JAVA_HOME ]]; then
   # On OSX use java_home (or /Library for older versions)
   if [ "Darwin" == "$(uname -s)" ]; then
     if [ -x /usr/libexec/java_home ]; then
-      JAVA_HOME=($(/usr/libexec/java_home))
+      JAVA_HOME=$(/usr/libexec/java_home)
     else
-      export JAVA_HOME=(/Library/Java/Home)
+      export JAVA_HOME="/Library/Java/Home"
     fi
   fi
 
@@ -105,6 +105,7 @@ RUN_JAVA ()
   echo "excute ->LOG_DIR:"${APP_LOG_DIR}
 
   if [ "$IN_DOCKER" = "true" ]; then
+    echo "run in docker"
     "$JAVA" -Dproc_$APP_NAME $APP_JAVA_OPTS $CLASS  > "$OUT_FILE" "$@" 2>&1
   else
     nohup "$JAVA" -Dproc_$APP_NAME $APP_JAVA_OPTS $CLASS  > "$OUT_FILE" "$@" 2>&1 < /dev/null &

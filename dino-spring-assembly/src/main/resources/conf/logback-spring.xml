@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2023 dinosdev.cn.
+ SPDX-License-Identifier: Apache-2.0
+-->
+
+<configuration debug="false" scan="false">
+
+  <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+
+  <!-- "CONSOLE" log output -->
+  <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+      <charset>${CONSOLE_LOG_CHARSET}</charset>
+    </encoder>
+  </appender>
+
+  <!-- "FILE" log for all output -->
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_FILE}.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.log</fileNamePattern>
+      <maxHistory>30</maxHistory>
+    </rollingPolicy>
+    <encoder>
+      <pattern>${FILE_LOG_PATTERN}</pattern>
+      <charset>${FILE_LOG_CHARSET}</charset>
+    </encoder>
+  </appender>
+
+  <!-- "ERROR" log for error output -->
+  <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>error.${LOG_FILE}.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>error.${LOG_FILE}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <maxFileSize>50MB</maxFileSize>
+      <maxHistory>30</maxHistory>
+    </rollingPolicy>
+    <encoder>
+      <pattern>${FILE_LOG_PATTERN}</pattern>
+      <charset>${FILE_LOG_CHARSET}</charset>
+    </encoder>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>ERROR</level>
+    </filter>
+  </appender>
+
+  <!-- for prod -->
+  <springProfile name="prod">
+    <root level="INFO">
+      <appender-ref ref="FILE" />
+      <appender-ref ref="ERROR" />
+    </root>
+  </springProfile>
+
+  <!-- for prod -->
+  <springProfile name="!prod">
+    <root level="DEBUG">
+      <appender-ref ref="FILE" />
+      <appender-ref ref="ERROR" />
+    </root>
+  </springProfile>
+
+</configuration>

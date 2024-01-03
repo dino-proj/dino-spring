@@ -23,9 +23,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.commons.codec.digest.HmacAlgorithms;
 import org.apache.commons.codec.digest.HmacUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -36,12 +33,17 @@ import org.dinospring.core.security.config.SecurityProperties;
 import org.dinospring.core.service.impl.ServiceBase;
 import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * Token相关的服务
+ *
  * @author Cody LU
  */
 
@@ -66,13 +68,21 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
     return tokenRepository;
   }
 
+  private final JdbcAggregateTemplate jdbcAggregateTemplate;
+
+  public TokenService(JdbcAggregateTemplate jdbcAggregateTemplate) {
+    this.jdbcAggregateTemplate = jdbcAggregateTemplate;
+  }
+
   /**
    * 生成登录Token
+   *
    * @param princ 用户信息
    * @return
    */
   public Token genLoginToken(TokenPrincaple princ, String secretKey) {
-    var token = new TokenEntity();
+    Optional<TokenEntity> dbOptional = repository().findById(generateTokenId(princ));
+    TokenEntity token = new TokenEntity();
     long time = System.currentTimeMillis();
     token.setToken(generateToken(princ, secretKey, time));
     token.setRefreshToken(generateRefreshToken(princ, secretKey, time));
@@ -84,7 +94,14 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
     token.setUserId(princ.getUserId());
     token.setUserType(princ.getUserType());
     token.setUpdateAt(new Date(time));
-    this.save(token);
+
+    if (!dbOptional.isEmpty()) {
+      this.save(token);
+    } else {
+      this.beforeSaveEntity(token);
+      jdbcAggregateTemplate.insert(token);
+    }
+
     var t = this.projection(Token.class, token);
     try {
       t.setPrinc(Base64.getUrlEncoder().encodeToString(objectMapper.writeValueAsBytes(princ)));
@@ -97,6 +114,7 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
 
   /**
    * 清除 token refresh token
+   *
    * @param princ
    */
   public void clearLoginToken(TokenPrincaple princ) {
@@ -105,18 +123,19 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
 
   /**
    * 校验登录Token
+   *
    * @param princ
    * @param token
    * @return
    */
   public boolean checkLoginToken(TokenPrincaple princ, String token) {
     var tokenEntity = tokenRepository.findById(generateTokenId(princ));
-    //不存在
+    // 不存在
     if (tokenEntity.isEmpty()) {
       return false;
     }
     var t = tokenEntity.get();
-    //已过期
+    // 已过期
     if (t.getUpdateAt().getTime() + t.getExpiresIn() * 1000 < System.currentTimeMillis()) {
       return Boolean.FALSE;
     }
@@ -125,6 +144,7 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
 
   /**
    * 刷新Token
+   *
    * @param princ
    * @param secretKey
    * @param refreshToken
@@ -132,12 +152,12 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
    */
   public Optional<Token> refreshLoginToken(TokenPrincaple princ, String secretKey, String refreshToken) {
     var tokenEntity = tokenRepository.findById(generateTokenId(princ));
-    //不存在
+    // 不存在
     if (tokenEntity.isEmpty()) {
       return Optional.empty();
     }
     var t = tokenEntity.get();
-    //已过期
+    // 已过期
     if (t.getUpdateAt().getTime() + t.getRefreshExpiresIn() * 1000 < System.currentTimeMillis()) {
       return Optional.empty();
     }
@@ -152,7 +172,7 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
   public String generateTokenId(TokenPrincaple princ) {
     var idBuilder = new StringBuilder();
     idBuilder.append(princ.getTenantId()).append('_').append(princ.getUserId()).append('@').append(princ.getUserType());
-    //允许多设备登录，则增加设备ID作为Token ID的一部分。
+    // 允许多设备登录，则增加设备ID作为Token ID的一部分。
     if (loginModuleProperties.getToken().isAllowMutiDeviceLogin()) {
       idBuilder.append('_').append(princ.getGuid()).append('@').append(princ.getPlt());
     } else {
@@ -161,16 +181,17 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
     if (log.isDebugEnabled()) {
       log.debug("token ID before md5() {}", idBuilder.toString());
     }
-    //计算MD5
+    // 计算MD5
     return new HmacUtils(HmacAlgorithms.HMAC_MD5, "dinospring")
         .hmacHex(idBuilder.toString().getBytes(StandardCharsets.UTF_8));
   }
 
   /**
    * 生成登录Token
-   * @param princ 用户信息
+   *
+   * @param princ     用户信息
    * @param secretKey 秘钥
-   * @param authAt 时间戳
+   * @param authAt    时间戳
    * @return
    */
   private String generateToken(TokenPrincaple princ, String secretKey, long authAt) {
@@ -181,6 +202,7 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
 
   /**
    * 生成refresh token
+   *
    * @param princ
    * @param secretKey
    * @param authAt
@@ -193,6 +215,7 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
 
   /**
    * 计算Token信息
+   *
    * @param princ
    * @param secretKey
    * @param authAt
@@ -223,9 +246,10 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
 
   /**
    * 用租户的秘钥验证参数签名
-   * @param tenant 租户
+   *
+   * @param tenant     租户
    * @param siginToken 待验证的签名
-   * @param params 签名的参数
+   * @param params     签名的参数
    * @param signTimeMS 签名的时间
    * @return
    */
@@ -236,10 +260,11 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
 
   /**
    * 用用户自己的秘钥验证签名
-   * @param <K> 用户的ID类型
-   * @param user 用户
+   *
+   * @param <K>        用户的ID类型
+   * @param user       用户
    * @param siginToken 待验证的签名
-   * @param params 签名的参数
+   * @param params     签名的参数
    * @param signTimeMS 签名的时间
    * @return
    */

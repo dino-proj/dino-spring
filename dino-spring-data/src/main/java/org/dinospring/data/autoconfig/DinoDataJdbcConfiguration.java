@@ -13,20 +13,25 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.data.jdbc.DinoJdbcMappingContext;
 import org.dinospring.data.jdbc.DinoJdbcSimpleTypeHolder;
+import org.dinospring.data.jdbc.mapping.DinoJdbcCustomConversions;
 import org.dinospring.data.sql.dialect.Dialect;
 import org.dinospring.data.sql.dialect.MysqlDialect;
 import org.dinospring.data.sql.dialect.PostgreSQLDialect;
 import org.dinospring.data.sql.dialect.SnakeNamingConversition;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.convert.CustomConversions;
 import org.springframework.data.convert.ReadingConverter;
 import org.springframework.data.convert.WritingConverter;
 import org.springframework.data.jdbc.core.convert.JdbcCustomConversions;
 import org.springframework.data.jdbc.core.mapping.JdbcMappingContext;
+import org.springframework.data.jdbc.core.mapping.JdbcSimpleTypes;
 import org.springframework.data.jdbc.repository.config.AbstractJdbcConfiguration;
+import org.springframework.data.mapping.model.SimpleTypeHolder;
 import org.springframework.data.relational.RelationalManagedTypes;
 import org.springframework.data.relational.core.mapping.DefaultNamingStrategy;
 import org.springframework.data.relational.core.mapping.NamingStrategy;
@@ -79,7 +84,6 @@ public class DinoDataJdbcConfiguration extends AbstractJdbcConfiguration {
     var mappingContext = new DinoJdbcMappingContext(namingStrategy.orElse(DefaultNamingStrategy.INSTANCE));
     mappingContext.setSimpleTypeHolder(new DinoJdbcSimpleTypeHolder(customConversions.getSimpleTypeHolder()));
     mappingContext.setManagedTypes(jdbcManagedTypes);
-
     return mappingContext;
   }
 
@@ -91,6 +95,35 @@ public class DinoDataJdbcConfiguration extends AbstractJdbcConfiguration {
     var converts = new ArrayList<>(readingConverters.values().stream().toList());
     converts.addAll(writingConverters.values().stream().toList());
     return converts;
+  }
+
+  @Bean
+  public JdbcCustomConversions jdbcCustomConversions() {
+
+    try {
+
+      var dialect = this.applicationContext.getBean(org.springframework.data.relational.core.dialect.Dialect.class);
+      SimpleTypeHolder simpleTypeHolder = dialect.simpleTypes().isEmpty() ? JdbcSimpleTypes.HOLDER
+          : new SimpleTypeHolder(dialect.simpleTypes(), JdbcSimpleTypes.HOLDER);
+
+      return new DinoJdbcCustomConversions(
+          CustomConversions.StoreConversions.of(simpleTypeHolder, this.storeConverters(dialect)),
+          this.userConverters());
+
+    } catch (NoSuchBeanDefinitionException exception) {
+
+      log.warn("No dialect found; CustomConversions will be configured without dialect specific conversions");
+
+      return new JdbcCustomConversions();
+    }
+  }
+
+  private List<Object> storeConverters(org.springframework.data.relational.core.dialect.Dialect dialect) {
+
+    List<Object> converters = new ArrayList<>();
+    converters.addAll(dialect.getConverters());
+    converters.addAll(JdbcCustomConversions.storeConverters());
+    return converters;
   }
 
   @Override

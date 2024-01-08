@@ -14,8 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.core.convert.converter.GenericConverter;
+import org.springframework.core.convert.converter.ConditionalGenericConverter;
 import org.springframework.data.convert.WritingConverter;
+import org.springframework.data.mapping.model.SimpleTypeHolder;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -32,21 +33,29 @@ import lombok.extern.slf4j.Slf4j;
 @ConditionalOnClass(PGobject.class)
 @Slf4j
 @WritingConverter
-public class PostgreJsonbWritingConverter implements GenericConverter {
+public class PostgreJsonbWritingConverter implements ConditionalGenericConverter {
 
   @Autowired
   private ObjectMapper objectMapper;
 
+  private SimpleTypeHolder simpleTypeHolder = SimpleTypeHolder.DEFAULT;
+
   @Override
   public Set<ConvertiblePair> getConvertibleTypes() {
     return Set.of(new ConvertiblePair(Collection.class, PGobject.class), //
+        new ConvertiblePair(Set.class, PGobject.class), //
         new ConvertiblePair(Map.class, PGobject.class), //
-        new ConvertiblePair(Object.class, PGobject.class), //
+        new ConvertiblePair(Jsonb.class, PGobject.class), //
         new ConvertiblePair(Object[].class, PGobject.class), //
         new ConvertiblePair(String[].class, PGobject.class), //
         new ConvertiblePair(Boolean[].class, PGobject.class), //
         new ConvertiblePair(Number[].class, PGobject.class)//
     );
+  }
+
+  @Override
+  public boolean matches(TypeDescriptor sourceType, TypeDescriptor targetType) {
+    return !this.simpleTypeHolder.isSimpleType(sourceType.getType());
   }
 
   @Override

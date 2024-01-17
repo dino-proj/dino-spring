@@ -28,7 +28,7 @@ public @interface CheckResource {
    * @return
    */
   @AliasFor("name")
-  String value();
+  String value() default "";
 
   /**
    * 资源的名称

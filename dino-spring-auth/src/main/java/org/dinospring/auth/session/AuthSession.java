@@ -14,9 +14,12 @@
 
 package org.dinospring.auth.session;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 
 import org.dinospring.auth.Permission;
+import org.dinospring.auth.support.WildcardPermission;
 
 /**
  * 登录会话接口
@@ -68,5 +71,121 @@ public interface AuthSession {
    * @return 用户权限列表
    */
   Collection<Permission> getSubjectPermissions();
+
+  /**
+   * 用户是否有某种权限
+   * @return true:有权限，false:无权限
+   */
+  default boolean hasPermission(String permission) {
+    return this.hasPermission(WildcardPermission.of(permission));
+  }
+
+  /**
+  * 用户是否有某种权限
+  * @return true:有权限，false:无权限
+  */
+  default boolean hasPermission(Permission permission) {
+    var userPerms = this.getSubjectPermissions();
+    if (Objects.isNull(userPerms)) {
+      return false;
+    }
+    return userPerms.stream().anyMatch(t -> t.implies(permission));
+  }
+
+  /**
+  * 用户是否有其中一种权限
+  * @return true:有权限，false:无权限
+  */
+  default boolean hasAnyPermission(String... permissions) {
+    return this.hasAnyPermission(Arrays.stream(permissions).map(WildcardPermission::of).toArray(Permission[]::new));
+  }
+
+  /**
+  * 用户是否有其中一种权限
+  * @return true:有权限，false:无权限
+  */
+  default boolean hasAnyPermission(Permission... permissions) {
+    var userPerms = this.getSubjectPermissions();
+    if (Objects.isNull(userPerms)) {
+      return false;
+    }
+    for (var permission : permissions) {
+      if (userPerms.stream().anyMatch(t -> t.implies(permission))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * 用户是否有所有权限
+   * @return true:有权限，false:无权限
+   */
+  default boolean hasAllPermission(String... permissions) {
+    return this.hasAllPermission(Arrays.stream(permissions).map(WildcardPermission::of).toArray(Permission[]::new));
+  }
+
+  /**
+  * 用户是否有所有权限
+  * @return true:有权限，false:无权限
+  */
+  default boolean hasAllPermission(Permission... permissions) {
+    var userPerms = this.getSubjectPermissions();
+    if (Objects.isNull(userPerms)) {
+      return false;
+    }
+    for (var permission : permissions) {
+      if (!userPerms.stream().anyMatch(t -> t.implies(permission))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * 用户是否有某种角色
+   * @return true:有角色，false:无角色
+   */
+  default boolean hasRole(String role) {
+    var userRoles = this.getSubjectRoles();
+    if (Objects.isNull(userRoles)) {
+      return false;
+    }
+    return userRoles.contains(role);
+  }
+
+  /**
+   * 用户是否有其中一种角色
+   * @return true:有角色，false:无角色
+   */
+  default boolean hasAnyRole(String... roles) {
+    var userRoles = this.getSubjectRoles();
+    if (Objects.isNull(userRoles)) {
+      return false;
+    }
+    for (String role : roles) {
+      if (userRoles.contains(role)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * 用户是否有所有角色
+   * @return true:有角色，false:无角色
+   */
+  default boolean hasAllRole(String... roles) {
+    var userRoles = this.getSubjectRoles();
+    if (Objects.isNull(userRoles)) {
+      return false;
+    }
+    for (String role : roles) {
+      if (!userRoles.contains(role)) {
+        return false;
+      }
+    }
+    return true;
+  }
 
 }

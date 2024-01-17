@@ -17,6 +17,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.auth.Permission;
+import org.dinospring.auth.annotation.CheckIgnore;
 import org.dinospring.auth.annotation.CheckPermission;
 import org.dinospring.auth.annotation.CheckResource;
 import org.dinospring.auth.annotation.Logic;
@@ -35,7 +36,7 @@ import lombok.Data;
 public class AuthzCheckerPermission extends AbstractAuthzChecker<CheckPermission, List<Predicate<AuthSession>>> {
 
   public AuthzCheckerPermission() {
-    super(CheckPermission.class, true);
+    super(CheckPermission.class, CheckIgnore.Type.PERMISSION);
   }
 
   @Override
@@ -196,7 +197,7 @@ public class AuthzCheckerPermission extends AbstractAuthzChecker<CheckPermission
 
     public static ResourceConfig of(CheckResource resourceAnno) {
       var config = new ResourceConfig();
-      if (!Objects.isNull(resourceAnno)) {
+      if (Objects.nonNull(resourceAnno)) {
         config.setResourceName(resourceAnno.name());
         config.setExclueRoles(resourceAnno.exclueRoles());
         config.setExclueSubjectTypes(resourceAnno.exclueSubjectTypes());

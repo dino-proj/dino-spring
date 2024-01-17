@@ -1,16 +1,5 @@
-// Copyright 2022 dinodev.cn
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright 2024 dinosdev.cn.
+// SPDX-License-Identifier: Apache-2.0
 
 package org.dinospring.auth.support;
 
@@ -34,7 +23,7 @@ import org.springframework.beans.factory.BeanFactory;
 
 /**
  * 自定义Bean权限校验器
- * @author Cody LU
+ * @author Cody Lu
  * @date 2022-04-09 19:28:01
  */
 
@@ -43,7 +32,7 @@ public class AuthzCheckerCustomBean extends AbstractAuthzChecker<CheckAuthz, Lis
   private final BeanFactory beanFactory;
 
   public AuthzCheckerCustomBean(BeanFactory beanFactory) {
-    super(CheckAuthz.class, false);
+    super(CheckAuthz.class);
     this.beanFactory = beanFactory;
   }
 
@@ -63,8 +52,8 @@ public class AuthzCheckerCustomBean extends AbstractAuthzChecker<CheckAuthz, Lis
     for (var predicate : predicates) {
       var logic = predicate.getRight();
       var beans = predicate.getLeft();
-      var result = logic == Logic.ALL ? isAllPermmited(session, mi, beans)
-          : isAnyPermmited(session, mi, beans);
+      var result = logic == Logic.ALL ? this.isAllPermmited(session, mi, beans)
+          : this.isAnyPermmited(session, mi, beans);
       if (!result) {
         return false;
       }
@@ -96,21 +85,21 @@ public class AuthzCheckerCustomBean extends AbstractAuthzChecker<CheckAuthz, Lis
     var beans = Arrays.asList(anno.value()).stream().filter(StringUtils::isNotBlank)
         .collect(Collectors.toList());
     var beanClass = anno.beanClass();
-    return Pair.of(getBeans(beanClass, beans), anno.logic());
+    return Pair.of(this.getBeans(beanClass, beans), anno.logic());
   }
 
   private AuthzChecker[] getBeans(Class<? extends AuthzChecker>[] beanClass, List<String> beanName) {
     var beans = new ArrayList<AuthzChecker>();
     for (var clazz : beanClass) {
       try {
-        distinctAdd(beans, beanFactory.getBean(clazz));
+        distinctAdd(beans, this.beanFactory.getBean(clazz));
       } catch (BeansException e) {
         distinctAdd(beans, BeanUtils.instantiateClass(clazz));
       }
 
     }
     for (var name : beanName) {
-      distinctAdd(beans, beanFactory.getBean(name, AuthzChecker.class));
+      distinctAdd(beans, this.beanFactory.getBean(name, AuthzChecker.class));
     }
 
     return beans.toArray(new AuthzChecker[beans.size()]);

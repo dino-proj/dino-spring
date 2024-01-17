@@ -7,6 +7,8 @@
 <configuration debug="false" scan="false">
 
   <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+  <property name="LOG_FILE" value="${logging.file}" />
+
 
   <!-- "CONSOLE" log output -->
   <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
@@ -31,9 +33,9 @@
 
   <!-- "ERROR" log for error output -->
   <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>error.${LOG_FILE}.log</file>
+    <file>${LOG_FILE}.error.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-      <fileNamePattern>error.${LOG_FILE}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <fileNamePattern>${LOG_FILE}.error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
       <maxFileSize>50MB</maxFileSize>
       <maxHistory>30</maxHistory>
     </rollingPolicy>

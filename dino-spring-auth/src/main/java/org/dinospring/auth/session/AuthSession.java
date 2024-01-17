@@ -74,6 +74,7 @@ public interface AuthSession {
 
   /**
    * 用户是否有某种权限
+   * @param permission 权限字符串
    * @return true:有权限，false:无权限
    */
   default boolean hasPermission(String permission) {
@@ -81,9 +82,10 @@ public interface AuthSession {
   }
 
   /**
-  * 用户是否有某种权限
-  * @return true:有权限，false:无权限
-  */
+   * 用户是否有某种权限
+   * @param permission 权限对象
+   * @return true:有权限，false:无权限
+   */
   default boolean hasPermission(Permission permission) {
     var userPerms = this.getSubjectPermissions();
     if (Objects.isNull(userPerms)) {
@@ -93,17 +95,19 @@ public interface AuthSession {
   }
 
   /**
-  * 用户是否有其中一种权限
-  * @return true:有权限，false:无权限
-  */
+   * 用户是否有其中一种权限
+   * @param permissions 权限字符串
+   * @return true:有权限，false:无权限
+   */
   default boolean hasAnyPermission(String... permissions) {
     return this.hasAnyPermission(Arrays.stream(permissions).map(WildcardPermission::of).toArray(Permission[]::new));
   }
 
   /**
-  * 用户是否有其中一种权限
-  * @return true:有权限，false:无权限
-  */
+   * 用户是否有其中一种权限
+   * @param permissions 权限对象
+   * @return true:有权限，false:无权限
+   */
   default boolean hasAnyPermission(Permission... permissions) {
     var userPerms = this.getSubjectPermissions();
     if (Objects.isNull(userPerms)) {
@@ -119,6 +123,7 @@ public interface AuthSession {
 
   /**
    * 用户是否有所有权限
+   * @param permissions 权限字符串
    * @return true:有权限，false:无权限
    */
   default boolean hasAllPermission(String... permissions) {
@@ -126,9 +131,10 @@ public interface AuthSession {
   }
 
   /**
-  * 用户是否有所有权限
-  * @return true:有权限，false:无权限
-  */
+   * 用户是否有所有权限
+   * @param permissions 权限对象
+   * @return true:有权限，false:无权限
+   */
   default boolean hasAllPermission(Permission... permissions) {
     var userPerms = this.getSubjectPermissions();
     if (Objects.isNull(userPerms)) {
@@ -144,6 +150,7 @@ public interface AuthSession {
 
   /**
    * 用户是否有某种角色
+   * @param role 角色字符串
    * @return true:有角色，false:无角色
    */
   default boolean hasRole(String role) {
@@ -156,6 +163,7 @@ public interface AuthSession {
 
   /**
    * 用户是否有其中一种角色
+   * @param roles 角色字符串
    * @return true:有角色，false:无角色
    */
   default boolean hasAnyRole(String... roles) {
@@ -173,6 +181,7 @@ public interface AuthSession {
 
   /**
    * 用户是否有所有角色
+   * @param roles 角色字符串
    * @return true:有角色，false:无角色
    */
   default boolean hasAllRole(String... roles) {

@@ -1,16 +1,5 @@
-// Copyright 2022 dinodev.cn
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright 2024 dinosdev.cn.
+// SPDX-License-Identifier: Apache-2.0
 
 package org.dinospring.auth.support;
 
@@ -26,6 +15,7 @@ import java.util.stream.Stream;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.StringUtils;
+import org.dinospring.auth.annotation.CheckIgnore;
 import org.dinospring.auth.annotation.CheckRole;
 import org.dinospring.auth.annotation.Logic;
 import org.dinospring.auth.session.AuthSession;
@@ -33,14 +23,14 @@ import org.dinospring.commons.function.Predicates;
 
 /**
  * 角色权限校验器
- * @author Cody LU
+ * @author Cody Lu
  * @date 2022-04-09 17:48:24
  */
 
 public class AuthzCheckerRole extends AbstractAuthzChecker<CheckRole, List<Predicate<AuthSession>>> {
 
   public AuthzCheckerRole() {
-    super(CheckRole.class, true);
+    super(CheckRole.class, CheckIgnore.Type.ROLE);
   }
 
   @Override
@@ -49,7 +39,7 @@ public class AuthzCheckerRole extends AbstractAuthzChecker<CheckRole, List<Predi
       Collection<CheckRole> annosInMethod) {
 
     return Stream.concat(annosInClass.stream(), annosInMethod.stream())
-        .map(t -> makeAnnoPredicate(t)).collect(
+        .map(this::makeAnnoPredicate).collect(
             Collectors.toList());
   }
 
@@ -74,7 +64,7 @@ public class AuthzCheckerRole extends AbstractAuthzChecker<CheckRole, List<Predi
     if (predicates.size() == 1) {
       return new RoleAnnoPredicate(predicates.get(0), roleAnno.subjectType());
     }
-    if (roleAnno.logic().equals(Logic.ALL)) {
+    if (Logic.ALL.equals(roleAnno.logic())) {
       return new RoleAnnoPredicate(Predicates.and(predicates), roleAnno.subjectType());
     } else {
       return new RoleAnnoPredicate(Predicates.or(predicates), roleAnno.subjectType());
@@ -115,13 +105,13 @@ public class AuthzCheckerRole extends AbstractAuthzChecker<CheckRole, List<Predi
     public boolean test(AuthSession session) {
       //check user type
       var userType = session.getSubjectType();
-      if (Objects.isNull(userType) && !userTypes.isEmpty()) {
+      if (Objects.isNull(userType) && !this.userTypes.isEmpty()) {
         return false;
       }
-      if (Objects.nonNull(userType) && !userTypes.contains(userType)) {
+      if (Objects.nonNull(userType) && !this.userTypes.contains(userType)) {
         return false;
       }
-      return rolePredicate.test(session.getSubjectRoles());
+      return this.rolePredicate.test(session.getSubjectRoles());
     }
   }
 }

@@ -1,16 +1,5 @@
-// Copyright 2022 dinodev.cn
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright 2024 dinosdev.cn.
+// SPDX-License-Identifier: Apache-2.0
 
 package org.dinospring.core.security;
 
@@ -50,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  * @date 2022-04-10 18:56:55
  */
 
@@ -84,7 +73,7 @@ public class DinoAuthSessionResolver implements AuthSessionResolver<DinoAuthSess
 
   @Override
   public DinoAuthSession resolveSession(HttpServletRequest request) {
-    String authzHeader = request.getHeader(getAuthHeader());
+    String authzHeader = request.getHeader(this.getAuthHeader());
 
     if (StringUtils.isBlank(authzHeader)) {
       return null;
@@ -94,26 +83,26 @@ public class DinoAuthSessionResolver implements AuthSessionResolver<DinoAuthSess
     var tokenStr = Token.extractToken(authzHeader);
 
     try {
-      var princ = objectMapper.readValue(Base64.getUrlDecoder().decode(prinStr), TokenPrincaple.class);
+      var princ = this.objectMapper.readValue(Base64.getUrlDecoder().decode(prinStr), TokenPrincaple.class);
       log.info("req http:{}", request.getRequestURL());
       // 验证token是否有效
-      Assert.isTrue(tokenService.checkLoginToken(princ, tokenStr), Status.CODE.FAIL_INVALID_AUTH_TOKEN);
+      Assert.isTrue(this.tokenService.checkLoginToken(princ, tokenStr), Status.CODE.FAIL_INVALID_AUTH_TOKEN);
 
       // 获取用户Service
-      var userType = userServiceProvider.resolveUserType(princ.getUserType());
+      var userType = this.userServiceProvider.resolveUserType(princ.getUserType());
       Assert.notNull(userType, "user type not found");
-      var userService = userServiceProvider.resolveUserService(userType);
+      var userService = this.userServiceProvider.resolveUserService(userType);
       // 获取用户信息
       var user = userService.getUserById(userType, princ.getUserId()).orElse(null);
       Assert.notNull(user, Status.CODE.FAIL_USER_NOT_EXIST);
 
-      context.currentUser(user);
+      this.context.currentUser(user);
 
-      var urlTenant = context.currentTenant();
+      var urlTenant = this.context.currentTenant();
 
       if (StringUtils.isNotBlank(princ.getTenantId())) {
         // 检查租户是否存在
-        var tenant = tenantService.findTenantById(princ.getTenantId());
+        var tenant = this.tenantService.findTenantById(princ.getTenantId());
         Assert.state(tenant != null, "tenant[id={}] not found", princ.getTenantId());
         // 检查当前租户是否跟URL中的租户一致
         if (userType.isTenantUser() && Objects.nonNull(urlTenant)) {
@@ -122,8 +111,8 @@ public class DinoAuthSessionResolver implements AuthSessionResolver<DinoAuthSess
         }
       }
       // 用tokenId作为sessionId
-      var sessionId = tokenService.generateTokenId(princ);
-      return new DinoAuthSession(sessionId, user, authzInfoProvider);
+      var sessionId = this.tokenService.generateTokenId(princ);
+      return new DinoAuthSession(sessionId, user, this.authzInfoProvider);
     } catch (IOException e) {
       log.error("error occured while create AuthSession from[{}]", prinStr, e);
       return null;
@@ -133,7 +122,7 @@ public class DinoAuthSessionResolver implements AuthSessionResolver<DinoAuthSess
   @Override
   public void closeSession(HttpServletRequest request, Object session) {
     // 将当前登录用户清空
-    context.currentUser(null);
+    this.context.currentUser(null);
   }
 
   public static class DinoAuthSession implements AuthSession {
@@ -166,44 +155,44 @@ public class DinoAuthSessionResolver implements AuthSessionResolver<DinoAuthSess
 
     @Override
     public String getSessionId() {
-      return sessionId;
+      return this.sessionId;
     }
 
     @Override
     public boolean isLogin() {
-      return Objects.nonNull(user);
+      return Objects.nonNull(this.user);
     }
 
     @Override
     public boolean isLoginAs(String subjectType) {
-      return isLogin() && user.getUserType().getType().equals(subjectType);
+      return this.isLogin() && this.user.getUserType().getType().equals(subjectType);
     }
 
     @Override
     public String getSubjectId() {
-      return Objects.isNull(user) ? null : user.getId().toString();
+      return Objects.isNull(this.user) ? null : this.user.getId().toString();
     }
 
     @Override
     public String getSubjectType() {
-      if (isLogin()) {
-        return user.getUserType().getType();
+      if (this.isLogin()) {
+        return this.user.getUserType().getType();
       }
       return null;
     }
 
     @Override
     public Collection<String> getSubjectRoles() {
-      if (isLogin()) {
-        return roles.get();
+      if (this.isLogin()) {
+        return this.roles.get();
       }
       return Collections.emptyList();
     }
 
     @Override
     public Collection<Permission> getSubjectPermissions() {
-      if (isLogin()) {
-        return permissions.get();
+      if (this.isLogin()) {
+        return this.permissions.get();
       }
       return Collections.emptyList();
     }

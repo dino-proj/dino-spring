@@ -27,7 +27,7 @@ MALLOC_ARENA_MAX=1
 PID_DIR=${PID_DIR:-"/tmp"}
 
 # Attempt to set JAVA_HOME if it is not set
-if [[ -z $JAVA_HOME ]]; then
+if [ -z $JAVA_HOME ]; then
   # On OSX use java_home (or /Library for older versions)
   if [ "Darwin" == "$(uname -s)" ]; then
     if [ -x /usr/libexec/java_home ]; then
@@ -46,7 +46,7 @@ fi
 echo "JAVA_HOME:"$JAVA_HOME
 JAVA=$JAVA_HOME/bin/java
 
-IDENT_STRING="$USER"
+IDENT_STRING="${USER:-$(whoami)}"
 echo "IDENT_STRING:"${IDENT_STRING}
 
 # get log directory
@@ -107,8 +107,12 @@ RUN_JAVA ()
   if [ "$IN_DOCKER" = "true" ]; then
     echo "run in docker"
     "$JAVA" -Dproc_$APP_NAME $APP_JAVA_OPTS $CLASS  > "$OUT_FILE" "$@" 2>&1
+    # write the pid to pid_file
+    echo $! > $PID_FILE
   else
     nohup "$JAVA" -Dproc_$APP_NAME $APP_JAVA_OPTS $CLASS  > "$OUT_FILE" "$@" 2>&1 < /dev/null &
+    # write the pid to pid_file
+    echo $! > $PID_FILE
   fi
 
 }
@@ -166,14 +170,10 @@ case $START_STOP in
     echo "starting $APP_NAME"
     cd "$APP_DIR"
     RUN_JAVA "${LOG_FILE_PRE}.out" "$@"
-    echo $! > $PID_FILE
-    sleep 1
-    head "${LOG_FILE_PRE}.out"
 
-    sleep 3;
-    if ! ps -p $! > /dev/null ; then
-      exit 1
-    fi
+    sleep 3
+    tail -f "${LOG_FILE_PRE}.out"
+
     ;;
 
   (stop)

@@ -1,16 +1,5 @@
-// Copyright 2022 dinodev.cn
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright 2024 dinosdev.cn.
+// SPDX-License-Identifier: Apache-2.0
 
 package org.dinospring.auth.support;
 
@@ -19,7 +8,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -36,9 +24,11 @@ import org.dinospring.auth.session.AuthSession;
 import org.dinospring.commons.function.Predicates;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 
+import lombok.Data;
+
 /**
  * 用户权限校验器
- * @author Cody LU
+ * @author Cody Lu
  * @date 2022-04-09 15:27:04
  */
 
@@ -51,12 +41,12 @@ public class AuthzCheckerPermission extends AbstractAuthzChecker<CheckPermission
   @Override
   protected List<Predicate<AuthSession>> getMethodInvocationMeta(MethodInvocation mi,
       Collection<CheckPermission> annosInClass, Collection<CheckPermission> annosInMethod) {
-    var resource = AnnotatedElementUtils.getMergedAnnotation(mi.getThis().getClass(), CheckResource.class);
+    var resourceAnno = AnnotatedElementUtils.getMergedAnnotation(mi.getThis().getClass(), CheckResource.class);
 
-    var resourceName = Optional.ofNullable(resource).map(t -> t.value()).orElse(null);
+    var resourceConfig = ResourceConfig.of(resourceAnno);
 
     return Stream.concat(annosInClass.stream(), annosInMethod.stream())
-        .map(t -> makeAnnoPredicate(t, resourceName)).collect(
+        .map(t -> this.makeAnnoPredicate(t, resourceConfig)).collect(
             Collectors.toList());
 
   }
@@ -72,21 +62,28 @@ public class AuthzCheckerPermission extends AbstractAuthzChecker<CheckPermission
     return true;
   }
 
-  private Predicate<AuthSession> makeAnnoPredicate(CheckPermission permissionAnno, String resourceName) {
+  private Predicate<AuthSession> makeAnnoPredicate(CheckPermission permissionAnno, ResourceConfig resourceConfig) {
     var rules = Arrays.asList(permissionAnno.value()).stream().filter(StringUtils::isNotBlank)
         .collect(Collectors.toList());
     if (rules.isEmpty()) {
       throw new IllegalArgumentException("@CheckPermission.value must have at least one rule");
     }
-    var predicates = rules.stream().map(t -> makePermissionPredicate(t, resourceName)).collect(Collectors.toList());
+    var predicates = rules.stream().map(t -> makePermissionPredicate(t, resourceConfig.getResourceName()))
+        .collect(Collectors.toList());
 
+    var subjectTypes = permissionAnno.subjectType().length > 0 ? permissionAnno.subjectType()
+        : resourceConfig.getSubjectTypes();
+    var exclueSubjectTypes = permissionAnno.exclueSubjectTypes().length > 0 ? permissionAnno.exclueSubjectTypes()
+        : resourceConfig.getExclueSubjectTypes();
+    var exclueRoles = permissionAnno.exclueRoles().length > 0 ? permissionAnno.exclueRoles()
+        : resourceConfig.getExclueRoles();
     if (predicates.size() == 1) {
-      return new PermissionAnnoPredicate(predicates.get(0), permissionAnno.subjectType());
+      return new PermissionAnnoPredicate(predicates.get(0), subjectTypes, exclueSubjectTypes, exclueRoles);
     }
-    if (permissionAnno.logic().equals(Logic.ALL)) {
-      return new PermissionAnnoPredicate(Predicates.and(predicates), permissionAnno.subjectType());
+    if (Logic.ALL.equals(permissionAnno.logic())) {
+      return new PermissionAnnoPredicate(Predicates.and(predicates), subjectTypes, exclueSubjectTypes, exclueRoles);
     } else {
-      return new PermissionAnnoPredicate(Predicates.or(predicates), permissionAnno.subjectType());
+      return new PermissionAnnoPredicate(Predicates.or(predicates), subjectTypes, exclueSubjectTypes, exclueRoles);
     }
 
   }
@@ -152,24 +149,60 @@ public class AuthzCheckerPermission extends AbstractAuthzChecker<CheckPermission
   private static class PermissionAnnoPredicate implements Predicate<AuthSession> {
 
     private final Predicate<Collection<Permission>> permission;
-    private final Set<String> userTypes;
+    private final Set<String> subjectTypes;
+    private final Set<String> exclueSubjectTypes;
+    private final Set<String> exclueRoles;
 
-    public PermissionAnnoPredicate(Predicate<Collection<Permission>> permission, String[] userTypes) {
+    public PermissionAnnoPredicate(Predicate<Collection<Permission>> permission, String[] subjectTypes,
+        String[] exclueSubjectTypes, String[] exclueRoles) {
       this.permission = permission;
-      this.userTypes = new HashSet<>(Arrays.asList(userTypes));
+      this.subjectTypes = new HashSet<>(Arrays.asList(subjectTypes));
+      this.exclueSubjectTypes = new HashSet<>(Arrays.asList(exclueSubjectTypes));
+      this.exclueRoles = new HashSet<>(Arrays.asList(exclueRoles));
     }
 
     @Override
     public boolean test(AuthSession session) {
-      if (userTypes.isEmpty()) {
+      // check if user type is exclued, return true
+      var userType = session.getSubjectType();
+      if (this.exclueSubjectTypes.contains(userType)) {
         return true;
       }
-      //check user type
-      var userType = session.getSubjectType();
-      if (Objects.isNull(userType) || !userTypes.contains(userType)) {
+
+      // check if user role is exclued, return true
+      var userRoles = session.getSubjectRoles();
+      if (CollectionUtils.isNotEmpty(userRoles)) {
+        if (this.exclueRoles.stream().anyMatch(userRoles::contains)) {
+          return true;
+        }
+      }
+
+      // check user type
+      if (Objects.isNull(userType) || !this.subjectTypes.contains(userType)) {
         return false;
       }
-      return permission.test(session.getSubjectPermissions());
+
+      // test permission
+      return this.permission.test(session.getSubjectPermissions());
+    }
+  }
+
+  @Data
+  private static class ResourceConfig {
+    private String resourceName;
+    private String[] exclueRoles;
+    private String[] exclueSubjectTypes;
+    private String[] subjectTypes;
+
+    public static ResourceConfig of(CheckResource resourceAnno) {
+      var config = new ResourceConfig();
+      if (!Objects.isNull(resourceAnno)) {
+        config.setResourceName(resourceAnno.name());
+        config.setExclueRoles(resourceAnno.exclueRoles());
+        config.setExclueSubjectTypes(resourceAnno.exclueSubjectTypes());
+        config.setSubjectTypes(resourceAnno.subjectType());
+      }
+      return config;
     }
   }
 

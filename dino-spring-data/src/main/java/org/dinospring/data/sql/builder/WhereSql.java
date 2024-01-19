@@ -398,6 +398,80 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
   }
 
   /**
+   * where ne 表达式，用 AND 连接，例如：
+   * <p>
+   * - <code>and("col1", val)</code>
+   * <p>
+   * in表达式请使用 {@link #in(String, List)}
+   * <p>
+   * like表达式请使用 {@link #like(String, String)}
+   * <p>
+   * 如果前面没有其他表达式，则 AND 会被忽略
+   *
+   * @param column
+   * @param op
+   * @param value
+   * @return
+   */
+  public T ne(final String column, final Object value) {
+    return and(String.format("%s != ?", column), value);
+  }
+
+  /**
+   * where ne 表达式，用 AND 连接，根据传入条件，当为false时，则忽略此查询条件
+   * <p>
+   * - <code>neIf(false, "type", 1); 则会忽略这个表达式，不会根据type字段筛选。</code>
+   * <p>
+   * - <code>neIf(true, "type", 1); type= 1的记录会被筛选出来。</code>
+   * <p>
+   * in表达式请使用 {@link #in(String, List)}
+   * <p>
+   * like表达式请使用 {@link #like(String, String)}
+   * <p>
+   * 如果前面没有其他表达式，则 AND 会被忽略
+   *
+   * @param cnd
+   * @param column
+   * @param value
+   * @return
+   */
+  public T neIf(final boolean cnd, final String column, final Object value) {
+    return andIf(cnd, column, Oper.NE, value);
+  }
+
+  /**
+   * where ne 表达式，用 AND 连接，判断值不为null时，表达式才被采用，否则表达式会被丢弃：
+   * <p>
+   * - <code>neIfNotNull("type", null); 则会忽略这个表达式，不会根据type字段筛选。</code>
+   * <p>
+   * - <code>nqIfNotNull("type", 1);</code>
+   * 如果前面没有其他表达式，则 AND 会被忽略
+   *
+   * @param column
+   * @param value
+   * @return
+   */
+  public T neIfNotNull(final String column, final Object value) {
+    return andIf(!Objects.isNull(value), column, Oper.NE, value);
+  }
+
+  /**
+   * where ne 表达式，用 AND 连接，判断值不为null时，表达式才被采用，否则表达式会被丢弃：
+   * <p>
+   * - <code>neIfNotNull("type", null); 则会忽略这个表达式，不会根据type字段筛选。</code>
+   * <p>
+   * - <code>neIfNotNull("type", 1);</code>
+   * 如果前面没有其他表达式，则 AND 会被忽略
+   *
+   * @param column
+   * @param value
+   * @return
+   */
+  public T neIfNotBlank(final String column, final String value) {
+    return andIf(StringUtils.isNotBlank(value), column, Oper.NE, value);
+  }
+
+  /**
    * where 表达式，用OR连接，如下写法都是合法的：
    * <p>- <code>or("status = 1")</code>
    * <p>- <code>or("status = 1 and id = ?")</code>
@@ -607,7 +681,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * <p>- <code>如果value为blank，则会忽略此条件</code></p>
    * <p>- 如 some(["col1", "col2"], Oper.EQ "a", Logic.AND) 则转化为 AND ( col1 = 'a' OR col2 = 'a')</p>
    * <p>- 如 some(["col1", "col2"], Oper.EQ, "a", Logic.OR) 则转化为 OR ( col1 = 'a' OR col2 = 'a')</p>
-   * @param columns 多个列
+      * @param columns 多个列
    * @param op 操作符
    * @param value 关键字
    * @param logic 外围逻辑
@@ -630,7 +704,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * AND 任意列LIKE %value%:
    * <p>- <code>如果value为blank，则会忽略此条件</code></p>
    * <p>- 如 some(["col1", "col2"], Oper.EQ, "a") 则转化为 AND ( col1 = 'a' OR col2 = 'a')</p>
-   * @param columns 多个列
+      * @param columns 多个列
    * @param op 操作符
    * @param value 关键字
    * @return
@@ -825,7 +899,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
 
   /**
    * [AND] column IS NULL
-   * @param column 列名
+      * @param column 列名
    * @return
    */
   public T isNull(final String column) {
@@ -834,7 +908,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
 
   /**
    * [AND|OR] column IS NULL
-   * @param column 列名
+      * @param column 列名
    * @param logic 外部逻辑符
    * @return
    */
@@ -873,7 +947,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
 
   /**
    * [AND] column IS NOT NULL
-   * @param column 列名
+      * @param column 列名
    * @return
    */
   public T isNotNull(final String column) {
@@ -882,7 +956,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
 
   /**
    * [AND|OR] column IS NOT NULL
-   * @param column 列名
+      * @param column 列名
    * @param logic 外部逻辑符
    * @return
    */
@@ -965,7 +1039,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * <p>- <code>如果value为blank，则会忽略此条件</code></p>
    * <p>- 如 someLike(["col1", "col2", "a", Logic.AND]) 则转化为 AND ( col1 LIKE '%a%' OR col2 LIKE '%a%')</p>
    * <p>- 如 someLike(["col1", "col2", "a", Logic.OR]) 则转化为 OR ( col1 LIKE '%a%' OR col2 LIKE '%a%')</p>
-   * @param columns 多个列
+      * @param columns 多个列
    * @param value 关键字
    * @param logic 外围逻辑
    * @return
@@ -984,7 +1058,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * AND 任意列LIKE %value%:
    * <p>- <code>如果value为blank，则会忽略此条件</code></p>
    * <p>如 someLike(["col1", "col2", "a") 则转化为 AND ( col1 LIKE '%a%' OR col2 LIKE '%a%')</p>
-   * @param columns 多个列
+      * @param columns 多个列
    * @param value 关键字
    * @return
    */
@@ -1038,7 +1112,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * <p>- <code>如果value为blank，则会忽略此条件</code></p>
    * <p>- 如 someStartWith(["col1", "col2", "a", Logic.AND]) 则转化为 AND ( col1 LIKE 'a%' OR col2 LIKE 'a%')</p>
    * <p>- 如 someStartWith(["col1", "col2", "a", Logic.OR]) 则转化为 OR ( col1 LIKE 'a%' OR col2 LIKE 'a%')</p>
-   * @param columns 多个列
+      * @param columns 多个列
    * @param value 关键字
    * @param logic 外围逻辑
    * @return
@@ -1058,7 +1132,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * AND 任意列LIKE value%:
    * <p>- <code>如果value为blank，则会忽略此条件</code></p>
    * <p>如 someStartWith(["col1", "col2", "a") 则转化为 AND ( col1 LIKE 'a%' OR col2 LIKE 'a%')</p>
-   * @param columns 多个列
+      * @param columns 多个列
    * @param value 关键字
    * @return
    */
@@ -1112,7 +1186,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * <p>- <code>如果value为blank，则会忽略此条件</code></p>
    * <p>- 如 someEndWith(["col1", "col2", "a", Logic.AND]) 则转化为 AND ( col1 LIKE '%a' OR col2 LIKE '%a')</p>
    * <p>- 如 someEndWith(["col1", "col2", "a", Logic.OR]) 则转化为 OR ( col1 LIKE '%a' OR col2 LIKE '%a')</p>
-   * @param columns 多个列
+      * @param columns 多个列
    * @param value 关键字
    * @param logic 外围逻辑
    * @return
@@ -1132,7 +1206,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * AND 任意列LIKE %value:
    * <p>- <code>如果value为blank，则会忽略此条件</code></p>
    * <p>如 someEndWith(["col1", "col2", "a") 则转化为 AND ( col1 LIKE '%a' OR col2 LIKE '%a')</p>
-   * @param columns 多个列
+      * @param columns 多个列
    * @param value 关键字
    * @return
    */
@@ -1156,7 +1230,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
 
   /**
    * 如果是OR逻辑表达式，则自动添加 OR 1=1，如果是AND，则什么都不添加
-   * @param logicOp
+      * @param logicOp
    */
   private void appendOrTrue(final Logic logicOp) {
     if (logicOp == Logic.OR) {
@@ -1166,7 +1240,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
 
   /**
    * 添加N列表达式
-   * @param logicOp 外部逻辑运算符
+      * @param logicOp 外部逻辑运算符
    * @param columns 多个列
    * @param op 操作符
    * @param value 值

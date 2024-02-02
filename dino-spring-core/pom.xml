@@ -22,7 +22,6 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
-
   </properties>
 
   <dependencies>
@@ -126,6 +125,32 @@
     <dependency>
       <groupId>com.alibaba</groupId>
       <artifactId>easyexcel</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- tool-htmltopdf -->
+    <dependency>
+      <groupId>com.openhtmltopdf</groupId>
+      <artifactId>openhtmltopdf-pdfbox</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <!-- Optional, leave out if you do not need SVG support. -->
+      <groupId>com.openhtmltopdf</groupId>
+      <artifactId>openhtmltopdf-svg-support</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <!-- Optional, leave out if you do not need MathML support. -->
+      <groupId>com.openhtmltopdf</groupId>
+      <artifactId>openhtmltopdf-mathml-support</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <!-- Latex support plugin - also pulls in MathML support plugin. -->
+      <groupId>com.openhtmltopdf</groupId>
+      <artifactId>openhtmltopdf-latex-support</artifactId>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 

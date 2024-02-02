@@ -28,7 +28,7 @@
     <commons-csv.version>1.10.0</commons-csv.version>
     <lombok.version>1.18.28</lombok.version>
     <easyexcel.version>3.3.2</easyexcel.version>
-    <flying-saucer.version>9.2.2</flying-saucer.version>
+    <openhtml.version>1.0.10</openhtml.version>
     <jackson.version>2.15.2</jackson.version>
     <gson.version>2.10.1</gson.version>
     <slf4j.version>2.0.9</slf4j.version>
@@ -151,29 +151,27 @@
 
       <!-- tools-pdf-->
       <dependency>
-        <groupId>org.xhtmlrenderer</groupId>
-        <artifactId>flying-saucer-core</artifactId>
-        <version>${flying-saucer.version}</version>
+        <groupId>com.openhtmltopdf</groupId>
+        <artifactId>openhtmltopdf-pdfbox</artifactId>
+        <version>${openhtml.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.xhtmlrenderer</groupId>
-        <artifactId>flying-saucer-pdf</artifactId>
-        <version>${flying-saucer.version}</version>
+        <!-- Optional, leave out if you do not need SVG support. -->
+        <groupId>com.openhtmltopdf</groupId>
+        <artifactId>openhtmltopdf-svg-support</artifactId>
+        <version>${openhtml.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.xhtmlrenderer</groupId>
-        <artifactId>flying-saucer-pdf-openpdf</artifactId>
-        <version>${flying-saucer.version}</version>
+        <!-- Optional, leave out if you do not need MathML support. -->
+        <groupId>com.openhtmltopdf</groupId>
+        <artifactId>openhtmltopdf-mathml-support</artifactId>
+        <version>${openhtml.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.xhtmlrenderer</groupId>
-        <artifactId>flying-saucer-fop</artifactId>
-        <version>${flying-saucer.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.xhtmlrenderer</groupId>
-        <artifactId>flying-saucer-pdf-itext5</artifactId>
-        <version>${flying-saucer.version}</version>
+        <!-- Latex support plugin - also pulls in MathML support plugin. -->
+        <groupId>com.openhtmltopdf</groupId>
+        <artifactId>openhtmltopdf-latex-support</artifactId>
+        <version>${openhtml.version}</version>
       </dependency>
 
       <!-- tools-multimedia-->
@@ -430,6 +428,7 @@
       <artifactId>slf4j-api</artifactId>
       <version>${slf4j.version}</version>
     </dependency>
+
     <!-- tools-json -->
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>

@@ -17,7 +17,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class HtmlToPdfModel extends PdfModel {
+public class PdfFromHtmlModel extends PdfModel {
 
   /**
    * HTML内容。

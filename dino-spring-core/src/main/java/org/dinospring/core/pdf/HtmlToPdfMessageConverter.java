@@ -39,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @ConditionalOnClass(PdfRendererBuilder.class)
 @Slf4j
-public class HtmlToPdfMessageConverter extends AbstractHttpMessageConverter<HtmlToPdfModel> {
+public class HtmlToPdfMessageConverter extends AbstractHttpMessageConverter<PdfFromHtmlModel> {
   private static final String CLASS_SVG = "com.openhtmltopdf.svgsupport.BatikSVGDrawer";
   private static final String CLASS_MATH = "com.openhtmltopdf.mathmlsupport.MathMLDrawer";
   private static final String CLASS_LATEX = "com.openhtmltopdf.latexsupport.LaTeXDOMMutator";
@@ -50,7 +50,7 @@ public class HtmlToPdfMessageConverter extends AbstractHttpMessageConverter<Html
 
   @Override
   protected boolean supports(Class<?> clazz) {
-    return HtmlToPdfModel.class.isAssignableFrom(clazz);
+    return PdfFromHtmlModel.class.isAssignableFrom(clazz);
   }
 
   @Override
@@ -59,13 +59,13 @@ public class HtmlToPdfMessageConverter extends AbstractHttpMessageConverter<Html
   }
 
   @Override
-  protected HtmlToPdfModel readInternal(Class<? extends HtmlToPdfModel> clazz, HttpInputMessage inputMessage)
+  protected PdfFromHtmlModel readInternal(Class<? extends PdfFromHtmlModel> clazz, HttpInputMessage inputMessage)
       throws IOException, HttpMessageNotReadableException {
     throw new UnsupportedOperationException("Unimplemented method 'readInternal'");
   }
 
   @Override
-  protected void writeInternal(HtmlToPdfModel model, HttpOutputMessage outputMessage)
+  protected void writeInternal(PdfFromHtmlModel model, HttpOutputMessage outputMessage)
       throws IOException, HttpMessageNotWritableException {
 
     String fileName = model.getFileName();
@@ -85,7 +85,7 @@ public class HtmlToPdfMessageConverter extends AbstractHttpMessageConverter<Html
     pdfBuilder.run();
   }
 
-  private PdfRendererBuilder createBuilder(HtmlToPdfModel model) throws IOException {
+  private PdfRendererBuilder createBuilder(PdfFromHtmlModel model) throws IOException {
     PdfRendererBuilder builder = new PdfRendererBuilder();
     builder.useFastMode();
 

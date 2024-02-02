@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 将HTML转换为PDF的工具类。
+ * PdfFromHtmlModel类是一个继承自PdfModel的模型类，用于生成基于HTML内容的PDF文件。
  *
  * @author Cody Lu
  * @date 2024-02-02 05:47:19
@@ -29,6 +29,9 @@ public class PdfFromHtmlModel extends PdfModel {
    */
   private String workDir;
 
+  /**
+   * URI解析器，用于解析HTML中的资源URI。
+   */
   private Resolver<String> uriResolver;
 
 }

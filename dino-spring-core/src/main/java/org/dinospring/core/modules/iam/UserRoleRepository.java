@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dinospring.core.entity.Code;
 import org.dinospring.data.dao.CrudRepositoryBase;
 import org.springframework.data.domain.Page;
@@ -102,7 +103,9 @@ public interface UserRoleRepository extends CrudRepositoryBase<UserRoleEntity, L
   default List<Long> getUserRoles(String tenantId, String userType, String userId) {
     var sql = newSelect();
     sql.column("role_id");
-    sql.eq("tenant_id", tenantId);
+    if (StringUtils.isNoneBlank(tenantId)) {
+      sql.eq("tenant_id", tenantId);
+    }
     sql.eq("user_type", userType);
     sql.eq("user_id", userId);
     return this.queryList(sql, Long.class);

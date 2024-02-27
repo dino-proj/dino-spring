@@ -5,6 +5,7 @@ package org.dinospring.commons.data;
 
 import java.io.Serializable;
 
+import org.dinospring.commons.json.annotation.JsonDiscriminator;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,6 +19,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * @author Cody Lu
  * @date 2024-01-30 23:44:19
  */
+
+@JsonDiscriminator
 public interface Typed extends Serializable {
   /**
    * 类型名

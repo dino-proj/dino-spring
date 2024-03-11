@@ -81,7 +81,8 @@ public class DinoFlaywayConfiguration implements ApplicationListener<Application
     var javaMigrations = ContextHelper.getApplicationContext().getBeansOfType(JavaMigration.class).values();
     log.info("--->> flyway: exec java migration, count:{}", javaMigrations.size());
     javaMigrations.forEach(
-        migration -> log.info("   -- {}, class:{}", buildJavaMigrationName(migration), migration.getClass().getName()));
+        migration -> log.info("   -- {}, class:{}", this.buildJavaMigrationName(migration),
+            migration.getClass().getName()));
     configuration.javaMigrations(javaMigrations.toArray(new JavaMigration[javaMigrations.size()]));
     var flyway = configuration.load();
     flyway.migrate();
@@ -102,19 +103,19 @@ public class DinoFlaywayConfiguration implements ApplicationListener<Application
       ObjectProvider<Callback> callbacks) {
     log.info("--->> flyway: setup FlywayConfiguration");
     FluentConfiguration configuration = new FluentConfiguration(resourceLoader.getClassLoader());
-    configureDataSource(configuration, properties, flywayDataSource.getIfAvailable(), dataSource.getIfUnique());
-    configureProperties(configuration, properties);
+    this.configureDataSource(configuration, properties, flywayDataSource.getIfAvailable(), dataSource.getIfUnique());
+    this.configureProperties(configuration, properties);
     List<Callback> orderedCallbacks = callbacks.orderedStream().collect(Collectors.toList());
-    configureCallbacks(configuration, orderedCallbacks);
+    this.configureCallbacks(configuration, orderedCallbacks);
     fluentConfigurationCustomizers.orderedStream().forEach(customizer -> customizer.customize(configuration));
-    configureFlywayCallbacks(configuration, orderedCallbacks);
+    this.configureFlywayCallbacks(configuration, orderedCallbacks);
     return configuration;
 
   }
 
   private void configureDataSource(FluentConfiguration configuration, FlywayProperties properties,
       DataSource flywayDataSource, DataSource dataSource) {
-    DataSource migrationDataSource = getMigrationDataSource(properties, flywayDataSource, dataSource);
+    DataSource migrationDataSource = this.getMigrationDataSource(properties, flywayDataSource, dataSource);
     configuration.dataSource(migrationDataSource);
   }
 
@@ -126,13 +127,13 @@ public class DinoFlaywayConfiguration implements ApplicationListener<Application
     if (properties.getUrl() != null) {
       DataSourceBuilder<?> builder = DataSourceBuilder.create().type(SimpleDriverDataSource.class);
       builder.url(properties.getUrl());
-      applyCommonBuilderProperties(properties, builder);
+      this.applyCommonBuilderProperties(properties, builder);
       return builder.build();
     }
     if (properties.getUser() != null && dataSource != null) {
       DataSourceBuilder<?> builder = DataSourceBuilder.derivedFrom(dataSource)
           .type(SimpleDriverDataSource.class);
-      applyCommonBuilderProperties(properties, builder);
+      this.applyCommonBuilderProperties(properties, builder);
       return builder.build();
     }
     Assert.state(dataSource != null, "Flyway migration DataSource missing");
@@ -149,9 +150,9 @@ public class DinoFlaywayConfiguration implements ApplicationListener<Application
 
   private void configureProperties(FluentConfiguration configuration, FlywayProperties properties) {
     PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
-    failOnMissingLocations(configuration, properties, map);
-    createSchemas(configuration, properties, map);
-    validateMigrationNaming(configuration, properties, map);
+    this.failOnMissingLocations(configuration, properties, map);
+    this.createSchemas(configuration, properties, map);
+    this.validateMigrationNaming(configuration, properties, map);
   }
 
   private void failOnMissingLocations(FluentConfiguration configuration, FlywayProperties properties,
@@ -252,11 +253,6 @@ public class DinoFlaywayConfiguration implements ApplicationListener<Application
         .to(configuration::errorOverrides);
     map.from(properties.getLicenseKey())
         .to(configuration::licenseKey);
-    map.from(properties.getOracleSqlplus())
-        .to(configuration::oracleSqlplus);
-    // No method reference for compatibility with Flyway 5.x
-    map.from(properties.getOracleSqlplusWarn())
-        .to(configuration::oracleSqlplusWarn);
     map.from(properties.getStream())
         .to(configuration::stream);
     map.from(properties.getUndoSqlMigrationPrefix())
@@ -271,9 +267,6 @@ public class DinoFlaywayConfiguration implements ApplicationListener<Application
     // No method reference for compatibility with Flyway 6.x
     map.from(properties.getKerberosConfigFile())
         .to(configuration::kerberosConfigFile);
-    // No method reference for compatibility with Flyway 6.x
-    map.from(properties.getOracleKerberosCacheFile())
-        .to(configuration::oracleKerberosCacheFile);
     // No method reference for compatibility with Flyway 6.x
     map.from(properties.getOutputQueryResults())
         .to(configuration::outputQueryResults);
@@ -324,9 +317,9 @@ public class DinoFlaywayConfiguration implements ApplicationListener<Application
     }
 
     List<String> resolveLocations(List<String> locations) {
-      if (usesVendorLocation(locations)) {
-        DatabaseDriver databaseDriver = getDatabaseDriver();
-        return replaceVendorLocations(locations, databaseDriver);
+      if (this.usesVendorLocation(locations)) {
+        DatabaseDriver databaseDriver = this.getDatabaseDriver();
+        return this.replaceVendorLocations(locations, databaseDriver);
       }
       return locations;
     }

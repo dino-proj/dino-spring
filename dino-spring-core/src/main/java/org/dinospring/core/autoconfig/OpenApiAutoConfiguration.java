@@ -65,9 +65,9 @@ public class OpenApiAutoConfiguration {
       }
       if (Objects.isNull(info)) {
         info = new Info()
-            .title(StringUtils.capitalize(apiName) + " Open API")
-            .description(StringUtils.defaultString(apiDescription, "开放API"))
-            .version(apiVersion);
+            .title(StringUtils.capitalize(this.apiName) + " Open API")
+            .description(Objects.toString(this.apiDescription, "开放API"))
+            .version(this.apiVersion);
 
       }
       if (Objects.isNull(info.getContact())) {

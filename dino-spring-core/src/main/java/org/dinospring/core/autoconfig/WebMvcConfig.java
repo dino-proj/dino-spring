@@ -23,6 +23,7 @@ import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.context.DinoContext;
 import org.dinospring.commons.sys.Tenant;
 import org.dinospring.commons.utils.TypeUtils;
+import org.dinospring.core.pdf.HtmlToPdfMessageConverter;
 import org.dinospring.core.sys.tenant.TenantService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,9 @@ public class WebMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
 
   private ApplicationContext applicationContext;
 
+  @Autowired(required = false)
+  HtmlToPdfMessageConverter htmlToPdfMessageConverter;
+
   private CorsConfiguration buildConfig() {
     CorsConfiguration corsConfiguration = new CorsConfiguration();
     //sessionid 多次访问一致
@@ -84,7 +88,7 @@ public class WebMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
     log.info("--->> mvc: config cors filter");
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     // 对接口配置跨域设置
-    source.registerCorsConfiguration("/**", buildConfig());
+    source.registerCorsConfiguration("/**", this.buildConfig());
     return new CorsFilter(source);
   }
 
@@ -92,7 +96,17 @@ public class WebMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
   public void addInterceptors(InterceptorRegistry registry) {
     WebMvcConfigurer.super.addInterceptors(registry);
     log.info("--->> mvc: add TenantSupportInterceptor");
-    registry.addInterceptor(tenantSupportInterceptor());
+    registry.addInterceptor(this.tenantSupportInterceptor());
+  }
+
+  @Override
+  public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+    WebMvcConfigurer.super.configureMessageConverters(converters);
+
+    if (Objects.nonNull(this.htmlToPdfMessageConverter)) {
+      log.info("--->> mvc: add HtmlToPdfMessageConverter");
+      converters.add(this.htmlToPdfMessageConverter);
+    }
   }
 
   @Override
@@ -141,7 +155,7 @@ public class WebMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
         throws Exception {
-      dinoContext.currentTenant(null);
+      this.dinoContext.currentTenant(null);
       HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
     }
 
@@ -157,9 +171,9 @@ public class WebMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
       Map<String, String> uriTemplateVars = TypeUtils.cast(request.getAttribute(
           HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE));
       if (Objects.nonNull(uriTemplateVars) && uriTemplateVars.containsKey(TENANT_VAR_NAME)) {
-        var tenant = tenantService.getById(uriTemplateVars.get(TENANT_VAR_NAME));
+        var tenant = this.tenantService.getById(uriTemplateVars.get(TENANT_VAR_NAME));
 
-        dinoContext.currentTenant(tenantService.projection(Tenant.class, tenant));
+        this.dinoContext.currentTenant(this.tenantService.projection(Tenant.class, tenant));
       }
       return HandlerInterceptor.super.preHandle(request, response, handler);
     }

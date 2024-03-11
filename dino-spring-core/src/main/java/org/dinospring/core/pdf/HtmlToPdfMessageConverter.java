@@ -69,13 +69,12 @@ public class HtmlToPdfMessageConverter extends AbstractHttpMessageConverter<PdfF
       throws IOException, HttpMessageNotWritableException {
 
     String fileName = model.getFileName();
-    if (StringUtils.isBlank(fileName)) {
-      fileName = System.currentTimeMillis() + "";
+    if (StringUtils.isNotBlank(fileName)) {
       if (log.isDebugEnabled()) {
-        log.debug("The pdf file name is empty, use the current time as the file name.");
+        log.debug("to view pdf in browser, set Content-Disposition to inline");
       }
+      outputMessage.getHeaders().add("Content-Disposition", "inline; filename=" + fileName + ".pdf");
     }
-    outputMessage.getHeaders().add("Content-Disposition", "attachment; filename=" + fileName + ".pdf");
 
     // 写出pdf
     var pdfBuilder = this.createBuilder(model);

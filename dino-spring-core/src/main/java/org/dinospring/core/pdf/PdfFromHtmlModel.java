@@ -4,6 +4,7 @@
 package org.dinospring.core.pdf;
 
 import org.dinospring.commons.function.Resolver;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,6 +18,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
+@ResponseBody
 public class PdfFromHtmlModel extends PdfModel {
 
   /**

@@ -34,9 +34,9 @@ public class ErrorRethrowController implements ErrorController {
 
   @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public void handleError(HttpServletRequest request, HttpServletResponse response) throws Throwable {
-    if (request.getAttribute("javax.servlet.error.exception") != null) {
+    if (request.getAttribute("jakarta.servlet.error.exception") != null) {
       response.setStatus(HttpStatus.OK.value());
-      throw (Throwable) request.getAttribute("javax.servlet.error.exception");
+      throw (Throwable) request.getAttribute("jakarta.servlet.error.exception");
     }
   }
 }

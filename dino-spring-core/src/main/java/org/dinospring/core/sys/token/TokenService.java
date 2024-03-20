@@ -1,16 +1,5 @@
-// Copyright 2021 dinodev.cn
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright 2024 dinosdev.cn.
+// SPDX-License-Identifier: Apache-2.0
 
 package org.dinospring.core.sys.token;
 
@@ -65,7 +54,7 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
 
   @Override
   public CrudRepositoryBase<TokenEntity, String> repository() {
-    return tokenRepository;
+    return this.tokenRepository;
   }
 
   private final JdbcAggregateTemplate jdbcAggregateTemplate;
@@ -81,16 +70,16 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
    * @return
    */
   public Token genLoginToken(TokenPrincaple princ, String secretKey) {
-    Optional<TokenEntity> dbOptional = repository().findById(generateTokenId(princ));
+    Optional<TokenEntity> dbOptional = this.repository().findById(this.generateTokenId(princ));
     TokenEntity token = new TokenEntity();
     long time = System.currentTimeMillis();
-    token.setToken(generateToken(princ, secretKey, time));
-    token.setRefreshToken(generateRefreshToken(princ, secretKey, time));
-    token.setExpiresIn(loginModuleProperties.getToken().getLoginTokenExpiresIn().toSeconds());
-    token.setRefreshExpiresIn(loginModuleProperties.getToken().getRefreshTokenExpiresIn().toSeconds());
+    token.setToken(this.generateToken(princ, secretKey, time));
+    token.setRefreshToken(this.generateRefreshToken(princ, secretKey, time));
+    token.setExpiresIn(this.loginModuleProperties.getToken().getLoginTokenExpiresIn().toSeconds());
+    token.setRefreshExpiresIn(this.loginModuleProperties.getToken().getRefreshTokenExpiresIn().toSeconds());
     token.setTenantId(princ.getTenantId());
 
-    token.setId(generateTokenId(princ));
+    token.setId(this.generateTokenId(princ));
     token.setUserId(princ.getUserId());
     token.setUserType(princ.getUserType());
     token.setUpdateAt(new Date(time));
@@ -99,13 +88,13 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
       this.save(token);
     } else {
       this.beforeSaveEntity(token);
-      jdbcAggregateTemplate.insert(token);
+      this.jdbcAggregateTemplate.insert(token);
     }
 
     var t = this.projection(Token.class, token);
     try {
-      t.setPrinc(Base64.getUrlEncoder().encodeToString(objectMapper.writeValueAsBytes(princ)));
-      t.setAuthHeaderName(securityProperties.getAuthHeaderName());
+      t.setPrinc(Base64.getUrlEncoder().encodeToString(this.objectMapper.writeValueAsBytes(princ)));
+      t.setAuthHeaderName(this.securityProperties.getAuthHeaderName());
     } catch (JsonProcessingException e) {
       log.error("Impossible!", e);
     }
@@ -118,7 +107,7 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
    * @param princ
    */
   public void clearLoginToken(TokenPrincaple princ) {
-    this.removeById(generateTokenId(princ));
+    this.removeById(this.generateTokenId(princ));
   }
 
   /**
@@ -129,7 +118,7 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
    * @return
    */
   public boolean checkLoginToken(TokenPrincaple princ, String token) {
-    var tokenEntity = tokenRepository.findById(generateTokenId(princ));
+    var tokenEntity = this.tokenRepository.findById(this.generateTokenId(princ));
     // 不存在
     if (tokenEntity.isEmpty()) {
       return false;
@@ -151,7 +140,7 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
    * @return
    */
   public Optional<Token> refreshLoginToken(TokenPrincaple princ, String secretKey, String refreshToken) {
-    var tokenEntity = tokenRepository.findById(generateTokenId(princ));
+    var tokenEntity = this.tokenRepository.findById(this.generateTokenId(princ));
     // 不存在
     if (tokenEntity.isEmpty()) {
       return Optional.empty();
@@ -165,7 +154,7 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
       return Optional.empty();
     }
 
-    return Optional.ofNullable(genLoginToken(princ, secretKey));
+    return Optional.ofNullable(this.genLoginToken(princ, secretKey));
 
   }
 
@@ -173,7 +162,7 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
     var idBuilder = new StringBuilder();
     idBuilder.append(princ.getTenantId()).append('_').append(princ.getUserId()).append('@').append(princ.getUserType());
     // 允许多设备登录，则增加设备ID作为Token ID的一部分。
-    if (loginModuleProperties.getToken().isAllowMutiDeviceLogin()) {
+    if (this.loginModuleProperties.isAllowMutiDeviceLogin()) {
       idBuilder.append('_').append(princ.getGuid()).append('@').append(princ.getPlt());
     } else {
       idBuilder.append('_').append(princ.getPlt());
@@ -195,8 +184,8 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
    * @return
    */
   private String generateToken(TokenPrincaple princ, String secretKey, long authAt) {
-    return calculateToken(princ, secretKey, authAt,
-        loginModuleProperties.getToken().getLoginTokenExpiresIn().toMillis());
+    return this.calculateToken(princ, secretKey, authAt,
+        this.loginModuleProperties.getToken().getLoginTokenExpiresIn().toMillis());
 
   }
 
@@ -209,8 +198,8 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
    * @return
    */
   private String generateRefreshToken(TokenPrincaple princ, String secretKey, long authAt) {
-    return calculateToken(princ, StringUtils.reverse(secretKey), authAt,
-        loginModuleProperties.getToken().getRefreshTokenExpiresIn().toMillis());
+    return this.calculateToken(princ, StringUtils.reverse(secretKey), authAt,
+        this.loginModuleProperties.getToken().getRefreshTokenExpiresIn().toMillis());
   }
 
   /**
@@ -254,8 +243,8 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
    * @return
    */
   public boolean verifyParamSigin(Tenant tenant, String siginToken, Map<String, String> params, long signTimeMS) {
-    return verifyParam(siginToken, params, signTimeMS, tenant.getSecretKey(),
-        loginModuleProperties.getToken().getSignTokenExpiresIn().toSeconds());
+    return this.verifyParam(siginToken, params, signTimeMS, tenant.getSecretKey(),
+        this.loginModuleProperties.getToken().getSignTokenExpiresIn().toSeconds());
   }
 
   /**
@@ -270,8 +259,8 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
    */
   public <K extends Serializable> boolean verifyParamSigin(User<K> user, String siginToken, Map<String, String> params,
       long signTimeMS) {
-    return verifyParam(siginToken, params, signTimeMS, user.getSecretKey(),
-        loginModuleProperties.getToken().getSignTokenExpiresIn().toSeconds());
+    return this.verifyParam(siginToken, params, signTimeMS, user.getSecretKey(),
+        this.loginModuleProperties.getToken().getSignTokenExpiresIn().toSeconds());
   }
 
   private boolean verifyParam(String siginToken, Map<String, String> params, long signTimeMS, String secretKey,
@@ -279,13 +268,15 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
 
     long currentTime = System.currentTimeMillis();
     if (Math.abs(currentTime - signTimeMS) > siginTtlSecondes * 1000) {
-      log.warn("token is expired， token:{}", siginToken);
+      if (log.isDebugEnabled()) {
+        log.debug("token is expired， token:{}", siginToken);
+      }
       return false;
     }
     if (StringUtils.isEmpty(siginToken)) {
       return false;
     }
-    var hmacSha1Hex = siginParams(secretKey, params);
+    var hmacSha1Hex = this.siginParams(secretKey, params);
 
     return hmacSha1Hex.equalsIgnoreCase(siginToken);
   }

@@ -69,6 +69,13 @@
       <artifactId>spring-boot-starter-hateoas</artifactId>
     </dependency>
 
+    <!-- 集成redis依赖  -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-redis</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
     <!-- 监控服务-->
     <dependency>
       <groupId>org.springframework.boot</groupId>

@@ -90,10 +90,11 @@ public class TencentSmsService extends SmsServiceBase {
     try {
       // 发送短信
       var resp = client.SendSms(req);
+      log.info("TencentSms response: {}", resp);
       var status = resp.getSendStatusSet();
       if (status != null && status.length > 0) {
         for (var s : status) {
-          if (s.getCode() != "Ok") {
+          if (!"Ok".equals(s.getCode())) {
             log.error("Failed to send sms to {}, code: {}, message: {}", s.getPhoneNumber(), s.getCode(),
                 s.getMessage());
             failedMobiles.add(s.getPhoneNumber());

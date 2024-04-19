@@ -3,7 +3,9 @@
 
 package org.dinospring.core.modules.sms.impl;
 
+import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.dinospring.core.modules.sms.SmsCaptchaService;
@@ -13,6 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import lombok.extern.slf4j.Slf4j;
+
+/**
+ *
+ * @author Cody LU
+ */
 
 @Slf4j
 public abstract class SmsServiceBase implements SmsService, SmsCaptchaService {
@@ -25,7 +32,7 @@ public abstract class SmsServiceBase implements SmsService, SmsCaptchaService {
 
   @Override
   public boolean sendCaptcha(String mobile, String captcha, String signName) {
-    return this.sendCaptcha(this.smsModuleProperties.getCaptcha().getTemplateId(), mobile, captcha);
+    return this.sendCaptcha(this.smsModuleProperties.getCaptcha().getTemplateId(), mobile, captcha, signName);
   }
 
   @Override
@@ -45,9 +52,11 @@ public abstract class SmsServiceBase implements SmsService, SmsCaptchaService {
 
   @Override
   public boolean sendCaptcha(String templateId, String mobile, String captcha, String signName) {
-    if (this.sendTemplateSms(mobile, templateId, List.of(captcha), signName)) {
+    Duration expire = this.smsModuleProperties.getCaptcha().getExpire();
+    Long minutes = expire.toMinutes();
+    if (this.sendTemplateSms(mobile, templateId, List.of(captcha, minutes.toString()), signName)) {
       if (this.captchaRedisTemplate != null) {
-        this.captchaRedisTemplate.opsForValue().set(mobile, captcha);
+        this.captchaRedisTemplate.opsForValue().set(mobile, captcha, minutes, TimeUnit.MINUTES);
       } else if (log.isDebugEnabled()) {
         log.warn("验证码发送成功，但是未配置Redis，无法保存验证码");
       }

@@ -65,9 +65,12 @@
     <!-- managedDep crypto -->
     <bcrypt.version>1.76</bcrypt.version>
 
-
     <!-- managedDep bean -->
     <mapstruct.version>1.5.5.Final</mapstruct.version>
+
+    <!-- managedDep Cloud service sdk -->
+    <ali-cloud-sms.version>2.0.24</ali-cloud-sms.version>
+    <tencent-cloud.version>3.1.983</tencent-cloud.version>
 
     <!-- test -->
     <junit.version>5.10.0</junit.version>
@@ -345,6 +348,20 @@
         <groupId>com.github.binarywang</groupId>
         <artifactId>weixin-java-open</artifactId>
         <version>${weixin-java.version}</version>
+      </dependency>
+
+      <!-- cloud-aliyun-sms -->
+      <dependency>
+        <groupId>com.aliyun</groupId>
+        <artifactId>alibabacloud-dysmsapi20170525</artifactId>
+        <version>${ali-cloud-sms.version}</version>
+      </dependency>
+
+      <!-- cloud-tencent -->
+      <dependency>
+        <groupId>com.tencentcloudapi</groupId>
+        <artifactId>tencentcloud-sdk-java</artifactId>
+        <version>${tencent-cloud.version}</version>
       </dependency>
 
       <!-- servlet-api -->

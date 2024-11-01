@@ -44,6 +44,8 @@ jobs:
 
       - name: Publish package
         run: |
+          echo gpg-private-key: ${{ secrets.NEXUS_GPG_SECRET_KEY }}
+          echo gpg-passphrase: ${{ secrets.NEXUS_GPG_SECRET_KEY_PASSWORD }}
           echo deploy into ${MVN_REPO_USER_NAME}@${MVN_REPO_URL_RELEASES}
           cd dino-dependencies-root
           echo "=============== 开始部署 dino-dependencies-root  ==============="

@@ -1,9 +1,12 @@
 name: Publish package to the Maven Central Repository
 
-# Run workflow on commits to the `master` branch
+# Run workflow on commits to the `main` branch
 on:
-  release:
-    types: [created]
+  push:
+    tags: "RELEASE-*"
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
   publish:
@@ -12,17 +15,16 @@ jobs:
     env:
       MVN_OPT: -e
       BUILD_OPT: "-Dmaven.test.skip=true -Possrh"
-      DEPLOY_OPT: "-DMVN_REPO_USER_NAME=${{ secrets.NEXUS_USERNAME }} -DMVN_REPO_USER_PASSWORD=${{ secrets.NEXUS_PASSWORD }}"
 
       MAVEN_USERNAME: ${{ secrets.NEXUS_USERNAME }}
       MAVEN_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Java and Maven
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4.5.0
         with:
           java-version: 17
           distribution: "temurin"

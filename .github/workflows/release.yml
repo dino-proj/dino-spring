@@ -52,7 +52,7 @@ jobs:
           echo deploy into ${MVN_REPO_USER_NAME}@${MVN_REPO_URL_RELEASES}
           cd dino-dependencies-root
           echo "=============== 开始部署 dino-dependencies-root  ==============="
-          mvn --batch-mode  clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+          mvn --batch-mode -X   clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
           cd ..
           cd dino-spring-assembly
           echo "=============== 开始部署 dino-spring-assembly  ==============="

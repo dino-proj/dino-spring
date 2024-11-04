@@ -44,7 +44,7 @@ jobs:
 
       - name: Decode and display GPG key
         run: |
-          if [ -z "$GPG_PRIVATE_BASE64" ]; then
+          if [ -z "${{ vars.GPG_PRIVATE_KEY_BASE64 }}" ]; then
             echo "GPG_PRIVATE_BASE64 is not set"
             exit 1
           fi

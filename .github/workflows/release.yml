@@ -38,14 +38,12 @@ jobs:
           server-id: central
           server-username: ${{ secrets.NEXUS_USERNAME }}
           server-password: ${{ secrets.NEXUS_PASSWORD }}
-          gpg-private-key: ${{ secrets.NEXUS_GPG_SECRET_KEY }}
-          gpg-passphrase: ${{ secrets.NEXUS_GPG_SECRET_KEY_PASSWORD }}
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           cache: "maven"
 
       - name: Publish package
         run: |
-          echo gpg-private-key: ${{ secrets.NEXUS_GPG_SECRET_KEY }}
-          echo gpg-passphrase: ${{ secrets.NEXUS_GPG_SECRET_KEY_PASSWORD }}
+          echo gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           echo deploy into ${MVN_REPO_USER_NAME}@${MVN_REPO_URL_RELEASES}
           cd dino-dependencies-root
           echo "=============== 开始部署 dino-dependencies-root  ==============="

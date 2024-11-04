@@ -54,8 +54,8 @@ jobs:
             "dino-spring-cloud-starter-parent"
             "dino-spring-commons"
             "dino-spring-data"
-            "dino-spring-core"
             "dino-spring-auth"
+            "dino-spring-core"
           )
           # 循环遍历项目数组
           for project in "${projects[@]}"; do
@@ -82,8 +82,8 @@ jobs:
             "dino-spring-cloud-starter-parent"
             "dino-spring-commons"
             "dino-spring-data"
-            "dino-spring-core"
             "dino-spring-auth"
+            "dino-spring-core"
           )
           # 循环遍历项目数组
           for project in "${projects[@]}"; do

@@ -1,22 +1,26 @@
 // Copyright 2024 dinosdev.cn.
 // SPDX-License-Identifier: Apache-2.0
 
-package org.dinospring.core.modules.login;
+package org.dinospring.core.modules.login.tenanted;
 
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.RandomStringGenerator;
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.response.Status;
+import org.dinospring.commons.sys.Tenant;
 import org.dinospring.commons.sys.User;
 import org.dinospring.commons.utils.Assert;
 import org.dinospring.commons.utils.TypeUtils;
 import org.dinospring.commons.utils.ValidateUtil;
 import org.dinospring.core.entity.Code;
+import org.dinospring.core.modules.login.LoginAuth;
 import org.dinospring.core.modules.login.config.LoginModuleProperties;
-import org.dinospring.core.modules.sms.SmsCaptchaService;
+import org.dinospring.core.modules.sms.SmsService;
 import org.dinospring.core.sys.token.TokenPrincaple;
 import org.dinospring.core.sys.token.TokenService;
 import org.dinospring.core.sys.user.UserService;
@@ -26,7 +30,7 @@ import org.dinospring.core.sys.user.UserService;
  * @author Cody LU
  */
 
-public abstract interface LoginServiceBase<U extends User<K>, K extends Serializable> {
+public abstract interface LoginServiceBaseTenanted<U extends User<K>, K extends Serializable> {
 
   /**
    * UserService
@@ -43,11 +47,11 @@ public abstract interface LoginServiceBase<U extends User<K>, K extends Serializ
   }
 
   /**
-   * SmsCaptchaService
+   * SmsService
    * @return
    */
-  default SmsCaptchaService smsCaptchaService() {
-    return ContextHelper.findBean(SmsCaptchaService.class);
+  default SmsService smsService() {
+    return ContextHelper.findBean(SmsService.class);
   }
 
   /**
@@ -55,7 +59,7 @@ public abstract interface LoginServiceBase<U extends User<K>, K extends Serializ
    * @return
    */
   default Class<U> userClass() {
-    return TypeUtils.getGenericParamClass(this, LoginServiceBase.class, 0);
+    return TypeUtils.getGenericParamClass(this, LoginServiceTenantedBase.class, 0);
   }
 
   /**
@@ -71,45 +75,38 @@ public abstract interface LoginServiceBase<U extends User<K>, K extends Serializ
    * @return
    */
   default LoginAuth<U, K> newLoginAuth() {
-    return new LoginAuth<>();
+    return new LoginAuthTenanted<>();
   }
 
   /**
-   * 检查mock登录
+   * 是否是模拟登录,默认根据配置信息
    * @param mobile 手机号
    * @param captcha 短信验证码
    * @return
    */
-  default boolean verifyMockLogin(String mobile, String captcha) {
+  default boolean isMockLogin(String mobile, String captcha) {
     return CollectionUtils.containsAny(this.loginModuleProperties().getMock().getMobiles(), mobile)
         && captcha.equals(this.loginModuleProperties().getMock().getCaptcha());
   }
 
   /**
-   * 是否是模拟登录，检查是否将此手机号加入到模拟登录列表中
-   * @param mobile 手机号
-   * @return
-   */
-  default boolean isMockLogin(String mobile) {
-    return CollectionUtils.containsAny(this.loginModuleProperties().getMock().getMobiles(), mobile);
-  }
-
-  /**
    * 对用户登录生成授权Token
+   * @param tenant
    * @param user
    * @param plt
    * @param guid
    * @return
    */
-  default LoginAuth<U, K> loginAuth(U user, String plt, String guid) {
+  default LoginAuth<U, K> loginAuth(Tenant tenant, U user, String plt, String guid) {
     Assert.notNull(user, Status.CODE.FAIL_USER_NOT_EXIST);
 
     Assert.isTrue(user.getStatus().equals(Code.STATUS.OK.name().toLowerCase()), Status.CODE.FAIL_LOGIN_DENNY);
 
     var auth = this.newLoginAuth();
     auth.setUser(user);
+    auth.setCurrentTenant(tenant);
 
-    var princ = TokenPrincaple.builder()//
+    var princ = TokenPrincaple.builder().tenantId(tenant.getId())//
         .userId(String.valueOf(user.getId()))//
         .userType(user.getUserType().getType())//
         .guid(guid).plt(plt).build();
@@ -132,11 +129,11 @@ public abstract interface LoginServiceBase<U extends User<K>, K extends Serializ
     Assert.hasText(captcha, Status.invalidParam("手机验证码不能为空!"));
 
     //检查能否模拟登录
-    if (this.verifyMockLogin(mobile, captcha)) {
+    if (this.isMockLogin(mobile, captcha)) {
       return true;
     }
 
-    return this.smsCaptchaService().verifyCaptcha(mobile, captcha);
+    return StringUtils.equals(this.retriveSmsCaptcha(mobile), captcha);
   }
 
   /**
@@ -153,19 +150,47 @@ public abstract interface LoginServiceBase<U extends User<K>, K extends Serializ
   }
 
   /**
+   * 发送手机短信验证码
+   * @param mobile
+   * @return
+   */
+  default boolean sendSmsCaptcha(String mobile) {
+    var captcha = new RandomStringGenerator.Builder().withinRange('0', '9').build().generate(4);
+    if (this.smsService().sendSmsCaptcha(mobile, captcha, null)) {
+      this.saveSmsCaptcha(mobile, captcha);
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * 根据用户名查找用户
-   *
+   * @param tenantId
    * @param username
    * @return
    */
-  Optional<U> findUserByLoginName(String username);
+  Optional<U> findUserByLoginName(String tenantId, String username);
 
   /**
    * 根据手机号码查询用户
    *
+   * @param tenantId
    * @param mobile
    * @return
    */
-  Optional<U> findUserByMobile(String mobile);
+  Optional<U> findUserByMobile(String tenantId, String mobile);
 
+  /**
+   * 存储验证码
+   * @param mobile
+   * @param captcha
+   */
+  void saveSmsCaptcha(String mobile, String captcha);
+
+  /**
+   * 获取验证码
+   * @param mobile
+   * @return
+   */
+  String retriveSmsCaptcha(String mobile);
 }

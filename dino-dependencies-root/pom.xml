@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.dinospring</groupId>
   <artifactId>dino-dependencies-root</artifactId>
-  <version>3.0.0</version>
+  <version>3.0.1</version>
   <packaging>pom</packaging>
   <description>dino-spring依赖管理</description>
   <url>https://dinodev.cn/</url>
@@ -532,8 +532,22 @@
         <extensions>true</extensions>
         <configuration>
           <publishingServerId>central</publishingServerId>
+          <autoPublish>true</autoPublish>
           <waitUntil>published</waitUntil>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

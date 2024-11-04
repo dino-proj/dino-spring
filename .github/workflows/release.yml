@@ -25,7 +25,7 @@ jobs:
 
     env:
       MVN_OPT: -e
-      BUILD_OPT: "-Dmaven.test.skip=true"
+      BUILD_OPT: "-Dmaven.test.skip=true -P publish"
       MVN_NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
       MVN_NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
 
@@ -92,7 +92,7 @@ jobs:
             # 输出开始发布信息
             echo "=============== 开始发布 $project ==============="
             # 执行mvn命令
-            mvn --batch-mode deploy $MVN_OPT $BUILD_OPT
+            mvn --batch-mode deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
             # 返回到上一级目录
             cd ..
           done

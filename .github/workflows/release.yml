@@ -40,8 +40,13 @@ jobs:
           server-password: ${{ secrets.NEXUS_PASSWORD }}
           cache: "maven"
 
+      - name: Decode and display GPG key
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}"
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | base64 --decode
+
       - name: Import GPG key
-        run: echo "${{ secrets.GPG_PRIVATE_KEY }}" | base64 --decode | gpg --import
+        run: echo "${{ secrets.GPG_PRIVATE_KEY }}" | base64 --decode | gpg --import --batch --yes
 
       - name: Publish package
         run: |

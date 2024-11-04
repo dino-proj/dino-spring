@@ -44,7 +44,7 @@ jobs:
 
       - name: Publish package
         run: |
-          echo deploy into ${MVN_REPO_USER_NAME}@${MVN_REPO_URL_RELEASES}
+          echo deploy into ${{ secrets.NEXUS_USERNAME }}@${MVN_REPO_URL_RELEASES}
           cd dino-dependencies-root
           echo "=============== 开始部署 dino-dependencies-root  ==============="
           mvn   deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT

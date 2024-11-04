@@ -65,7 +65,6 @@ jobs:
             echo "=============== 开始打包 $project ==============="
             # 执行mvn命令
             mvn --batch-mode clean package install $MVN_OPT $BUILD_OPT
-            fi
             # 返回到上一级目录
             cd ..
           done
@@ -90,13 +89,12 @@ jobs:
           for project in "${projects[@]}"; do
             # 进入项目目录
             cd "$project"
-            # 输出开始打包信息
-            echo "=============== 开始打包 $project ==============="
+            # 输出开始发布信息
+            echo "=============== 开始发布 $project ==============="
             # 执行mvn命令
             mvn --batch-mode deploy $MVN_OPT $BUILD_OPT
-            fi
             # 返回到上一级目录
             cd ..
           done
 
-          echo "所有项目打包完成。"
+          echo "所有项目发布完成。"

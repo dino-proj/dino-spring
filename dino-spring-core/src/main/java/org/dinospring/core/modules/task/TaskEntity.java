@@ -53,6 +53,14 @@ public class TaskEntity extends TenantRowEntityBase<String> {
   @Column(name = "task_timeout", nullable = true)
   private Long taskTimeout;
 
+  @Schema(description = "任务的步骤总数")
+  @Column(name = "task_steps", nullable = true)
+  private Integer taskSteps;
+
+  @Schema(description = "任务的当前步骤")
+  @Column(name = "task_current_step", nullable = true)
+  private Integer taskCurrentStep;
+
   @Schema(description = "任务的进度", minimum = "0", maximum = "100")
   @Column(name = "task_progress", nullable = false)
   private Integer taskProgress;

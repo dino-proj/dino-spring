@@ -30,7 +30,7 @@ public interface TaskRepository extends CrudRepositoryBase<TaskEntity, String> {
    */
   @Modifying
   @Transactional(rollbackFor = Exception.class)
-  @Query("UPDATE TaskEntity e SET e.taskMsg=:msg WHERE e.id=:id")
+  @Query("UPDATE sys_task  SET task_msg=:msg WHERE id=:id")
   void updateTaskMsg(String id, String msg);
 
   /**
@@ -40,6 +40,16 @@ public interface TaskRepository extends CrudRepositoryBase<TaskEntity, String> {
    */
   @Modifying
   @Transactional(rollbackFor = Exception.class)
-  @Query("UPDATE TaskEntity e SET e.taskProgress=:progress WHERE e.id=:id")
+  @Query("UPDATE sys_task  SET task_progress=:progress WHERE id=:id")
   void updateTaskProgress(String id, int progress);
+
+  /**
+  * 通过id修改任务的进度
+  * @param id
+  * @param step
+  */
+  @Modifying
+  @Transactional(rollbackFor = Exception.class)
+  @Query("UPDATE sys_task SET task_current_step=:step WHERE id=:id")
+  void updateTaskStep(String id, int step);
 }

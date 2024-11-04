@@ -26,6 +26,8 @@ jobs:
     env:
       MVN_OPT: -e
       BUILD_OPT: "-Dmaven.test.skip=true"
+      MVN_NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+      MVN_NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
 
     steps:
       - name: Check out Git repository
@@ -47,7 +49,7 @@ jobs:
           echo deploy into ${{ secrets.NEXUS_USERNAME }}@${MVN_REPO_URL_RELEASES}
           cd dino-dependencies-root
           echo "=============== 开始部署 dino-dependencies-root  ==============="
-          mvn   deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+          mvn clean  deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
           cd ..
           cd dino-spring-assembly
           echo "=============== 开始部署 dino-spring-assembly  ==============="

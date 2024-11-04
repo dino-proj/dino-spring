@@ -42,6 +42,6 @@ public abstract class TenantRowEntityBase<K extends Serializable> extends Entity
   * 租户ID
   */
   @Schema(description = "租户ID")
-  @Column(name = "tenant_id", nullable = false, updatable = false, length = 16)
+  @Column(name = "tenant_id", nullable = true, updatable = false, length = 16)
   private String tenantId;
 }

@@ -147,7 +147,7 @@ public interface Code {
   enum TASK implements Code {
 
     //任务进度
-    INIT(1, "init"), RUNNING(2, "running"), SUCCEED(0, "succeed"), FAILD(3, "faild"), TIMEOUT(4, "timeout");
+    INIT(1, "init"), RUNNING(2, "running"), SUCCEED(0, "succeed"), FAILED(3, "failed"), TIMEOUT(4, "timeout");
 
     int id;
     String name;

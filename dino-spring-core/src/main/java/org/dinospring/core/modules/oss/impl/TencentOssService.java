@@ -44,8 +44,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -274,7 +276,11 @@ public class TencentOssService implements OssService {
   @Override
   public String getPresignedObjectUrl(String bucket, String objectName, Integer timeout, TimeUnit unit) {
     GeneratePresignedUrlRequest urlRequest = new GeneratePresignedUrlRequest(bucket, objectName, HttpMethodName.GET);
-    //TODO:
-    return cosClient.generatePresignedUrl(urlRequest).getPath();
+    if (Objects.nonNull(timeout) && Objects.nonNull(unit)) {
+      Date expiration = new Date(System.currentTimeMillis() + unit.toMillis(timeout));
+      urlRequest.setExpiration(expiration);
+    }
+
+    return cosClient.generatePresignedUrl(urlRequest).toString();
   }
 }

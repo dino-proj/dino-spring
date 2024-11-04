@@ -860,6 +860,46 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
   /**
    * where 表达式中的 NOT IN 语句，其参数为数组，按照如下处理逻辑：
    * <p>- <code>如果数组为空，则会忽略此条件</code>
+   * <p>- <code>如果数组长度为1，则用=操作符替代</code>
+   * <p>- <code>not in("type", typesList);</code>
+   * <p>默认使用 AND 连接
+   *
+   * @param column
+   * @param values
+   * @return
+   */
+  public T notIn(final String column, final Collection<?> values) {
+    return notIn(column, values, Logic.AND);
+  }
+
+  /**
+  * where 表达式中的 NOT IN 语句，其参数为数组，按照如下处理逻辑：
+  * <p>- <code>如果数组为空，则会忽略此条件</code>
+  * <p>- <code>如果数组长度为1，则用=操作符替代</code>
+  * <p>- <code>not in("type", typesList, "OR");</code>
+  * <p>使用 logic 逻辑符 连接，如果前面没有任何条件表达式，则 logic 会被忽略
+  *
+  * @param column
+  * @param values
+  * @param logic
+  * @return
+  */
+  public T notIn(final String column, final Collection<?> values, final Logic logic) {
+    if (values == null || values.isEmpty()) {
+      return that;
+    }
+    if (values.size() == 1) {
+      appendWhere(logic, Oper.NE.makeExpr(column));
+    } else {
+      appendWhere(logic, makeINExpr(column, "NOT IN", values.size()));
+    }
+    whereParams.addAll(values);
+    return that;
+  }
+
+  /**
+   * where 表达式中的 NOT IN 语句，其参数为数组，按照如下处理逻辑：
+   * <p>- <code>如果数组为空，则会忽略此条件</code>
    * <p>- <code>如果数组长度为1，则用!=操作符替代</code>
    * <p>- <code>notIn("type", typesArray);</code>
    * <p>默认使用 AND 连接

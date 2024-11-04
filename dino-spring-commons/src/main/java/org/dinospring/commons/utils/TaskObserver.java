@@ -39,6 +39,12 @@ public interface TaskObserver {
   void updateProgress(int progress);
 
   /**
+   * 更新任务步数
+   * @param step
+   */
+  void updateStep(int step);
+
+  /**
    * 更新任务状态
    * @param status
    */
@@ -58,6 +64,6 @@ public interface TaskObserver {
     //成功
     SUCCEED,
     //失败
-    FAILD;
+    FAILED;
   }
 }

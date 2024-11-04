@@ -6,12 +6,12 @@
   <parent>
     <groupId>org.dinospring</groupId>
     <artifactId>dino-spring-boot-starter-parent</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <relativePath>../dino-spring-boot-starter-parent/pom.xml</relativePath>
   </parent>
   <groupId>org.dinospring</groupId>
   <artifactId>dino-spring-auth</artifactId>
-  <version>3.0.0</version>
+  <version>3.0.1</version>
   <name>dino-spring-auth</name>
   <description>dino-spring访问验证模块</description>
   <url>https://dinodev.cn/</url>
@@ -74,21 +74,6 @@
       <name>Cody Lu</name>
       <email>tuuboo@gmail.com</email>
     </developer>
-    <developer>
-      <name>Jack</name>
-      <email>liujiehaobang@163.com</email>
-    </developer>
   </developers>
-
-  <distributionManagement>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-    <repository>
-      <id>ossrh</id>
-      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-  </distributionManagement>
 
 </project>

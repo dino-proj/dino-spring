@@ -10,7 +10,7 @@
   </parent>
   <groupId>org.dinospring</groupId>
   <artifactId>dino-spring-boot-starter-parent</artifactId>
-  <version>3.0.0</version>
+  <version>3.0.1</version>
   <packaging>pom</packaging>
   <description>dino-spring项目boot starter parent</description>
   <url>https://dinodev.cn/</url>
@@ -20,7 +20,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>17</java.version>
 
-    <dino-spring.version>3.0.0</dino-spring.version>
+    <dino-spring.version>3.0.1</dino-spring.version>
 
     <!-- plugin -->
     <maven-pmd-plugin.version>3.21.0</maven-pmd-plugin.version>
@@ -38,7 +38,7 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.dino</groupId>
+        <groupId>org.dinospring</groupId>
         <artifactId>dino-dependencies-root</artifactId>
         <version>${dino-spring.version}</version>
         <type>pom</type>
@@ -210,18 +210,6 @@
               </annotationProcessorPath>
             </annotationProcessorPaths>
           </configuration>
-        </plugin>
-
-        <plugin>
-          <artifactId>maven-source-plugin</artifactId>
-          <executions>
-            <execution>
-              <phase>package</phase>
-              <goals>
-                <goal>jar</goal>
-              </goals>
-            </execution>
-          </executions>
         </plugin>
 
         <plugin>
@@ -424,32 +412,19 @@
 
     <!-- FOR ossrh-->
     <profile>
-      <id>ossrh</id>
-
+      <id>publish</id>
       <build>
         <plugins>
           <plugin>
-            <groupId>org.sonatype.plugins</groupId>
-            <artifactId>nexus-staging-maven-plugin</artifactId>
-            <version>${maven-nexus-staging-plugin.version}</version>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>0.6.0</version>
             <extensions>true</extensions>
             <configuration>
-              <serverId>ossrh</serverId>
-              <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-              <autoReleaseAfterClose>true</autoReleaseAfterClose>
+              <publishingServerId>central</publishingServerId>
+              <waitUntil>published</waitUntil>
+              <deploymentName>${project.artifactId}</deploymentName>
             </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>attach-sources</id>
-                <goals>
-                  <goal>jar-no-fork</goal>
-                </goals>
-              </execution>
-            </executions>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -461,13 +436,19 @@
                 <goals>
                   <goal>sign</goal>
                 </goals>
-                <configuration>
-                  <!-- Prevent gpg from using pinentry programs -->
-                  <gpgArguments>
-                    <arg>--pinentry-mode</arg>
-                    <arg>loopback</arg>
-                  </gpgArguments>
-                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.2.1</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
               </execution>
             </executions>
           </plugin>
@@ -495,21 +476,6 @@
       <name>Cody Lu</name>
       <email>tuuboo@gmail.com</email>
     </developer>
-    <developer>
-      <name>Jack</name>
-      <email>liujiehaobang@163.com</email>
-    </developer>
   </developers>
-
-  <distributionManagement>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-    <repository>
-      <id>ossrh</id>
-      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-  </distributionManagement>
 
 </project>

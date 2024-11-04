@@ -44,11 +44,15 @@ jobs:
 
       - name: Decode and display GPG key
         run: |
-          echo "$GPG_PRIVATE_BASE64"
-          echo "$GPG_PRIVATE_BASE64" | base64 --decode
+          if [ -z "$GPG_PRIVATE_BASE64" ]; then
+            echo "GPG_PRIVATE_BASE64 is not set"
+            exit 1
+          fi
+          echo $GPG_PRIVATE_BASE64
+          echo $GPG_PRIVATE_BASE64 | base64 --decode
 
       - name: Import GPG key
-        run: echo "$GPG_PRIVATE_BASE64" | base64 --decode | gpg --import --batch --yes
+        run: echo $GPG_PRIVATE_BASE64 | base64 --decode | gpg --import --batch --yes
 
       - name: Publish package
         run: |

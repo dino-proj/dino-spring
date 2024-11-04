@@ -38,8 +38,10 @@ jobs:
           server-id: central
           server-username: ${{ secrets.NEXUS_USERNAME }}
           server-password: ${{ secrets.NEXUS_PASSWORD }}
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           cache: "maven"
+
+      - name: Import GPG key
+        run: echo "${{ secrets.GPG_PRIVATE_KEY }}" | base64 --decode | gpg --import
 
       - name: Publish package
         run: |
@@ -47,7 +49,7 @@ jobs:
           echo deploy into ${MVN_REPO_USER_NAME}@${MVN_REPO_URL_RELEASES}
           cd dino-dependencies-root
           echo "=============== 开始部署 dino-dependencies-root  ==============="
-          mvn -X   deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+          mvn   deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
           cd ..
           cd dino-spring-assembly
           echo "=============== 开始部署 dino-spring-assembly  ==============="

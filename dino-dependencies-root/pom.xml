@@ -522,7 +522,7 @@
             <configuration>
               <publishingServerId>central</publishingServerId>
               <waitUntil>published</waitUntil>
-              <deploymentName>org.dinospring:dino-dependencies-root</deploymentName>
+              <deploymentName>${project.artifactId}</deploymentName>
             </configuration>
           </plugin>
           <plugin>

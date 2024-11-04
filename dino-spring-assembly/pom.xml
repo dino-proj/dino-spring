@@ -51,7 +51,7 @@
             <configuration>
               <publishingServerId>central</publishingServerId>
               <waitUntil>published</waitUntil>
-              <deploymentName>org.dinospring:dino-spring-assembly</deploymentName>
+              <deploymentName>${project.artifactId}</deploymentName>
             </configuration>
           </plugin>
           <plugin>

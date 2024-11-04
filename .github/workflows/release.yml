@@ -46,6 +46,7 @@ jobs:
 
       - name: Package & Install to Local Repository
         run: |
+          touch /home/runner/.m2/settings-security.xml
           # 定义项目数组
           projects=(
             "dino-dependencies-root"

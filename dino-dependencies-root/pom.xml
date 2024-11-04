@@ -15,7 +15,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>17</java.version>
 
-    <dino-spring.version>3.0.0</dino-spring.version>
+    <dino-spring.version>3.0.1</dino-spring.version>
 
     <!-- managedDep common tools -->
     <commons-lang3.version>3.13.0</commons-lang3.version>
@@ -506,10 +506,6 @@
       <name>Cody Lu</name>
       <email>tuuboo@gmail.com</email>
     </developer>
-    <developer>
-      <name>Jack</name>
-      <email>liujiehaobang@163.com</email>
-    </developer>
   </developers>
 
   <build>
@@ -521,8 +517,9 @@
         <extensions>true</extensions>
         <configuration>
           <publishingServerId>central</publishingServerId>
-          <autoPublish>true</autoPublish>
           <waitUntil>published</waitUntil>
+          <checksums>required</checksums>
+          <deploymentName>org.dinospring:dino-dependencies-root</deploymentName>
         </configuration>
       </plugin>
       <plugin>
@@ -544,7 +541,6 @@
         <executions>
           <execution>
             <id>attach-sources</id>
-            <phase>verify</phase>
             <goals>
               <goal>jar-no-fork</goal>
             </goals>

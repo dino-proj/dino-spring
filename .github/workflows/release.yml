@@ -44,38 +44,59 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           cache: "maven"
 
-      - name: Publish package
+      - name: Package & Install to Local Repository
         run: |
-          echo deploy into $MVN_NEXUS_USERNAME
-          cd dino-dependencies-root
-          echo "=============== 开始部署 dino-dependencies-root  ==============="
-          mvn clean  deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
-          cd ..
-          cd dino-spring-assembly
-          echo "=============== 开始部署 dino-spring-assembly  ==============="
-          mvn --batch-mode  clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
-          cd ..
-          cd dino-spring-boot-starter-parent
-          echo "=============== 开始部署 dino-spring-boot-starter-parent  ==============="
-          mvn --batch-mode  clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
-          cd ..
-          cd dino-spring-cloud-starter-parent
-          echo "=============== 开始部署 dino-spring-cloud-starter-parent  ==============="
-          mvn --batch-mode  clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
-          cd ..
-          cd dino-spring-commons
-          echo "=============== 开始部署 dino-spring-commons  ==============="
-          mvn --batch-mode  clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
-          cd ..
-          cd dino-spring-data
-          echo "=============== 开始部署 dino-spring-data  ==============="
-          mvn --batch-mode  clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
-          cd ..
-          cd dino-spring-core
-          echo "=============== 开始部署 dino-spring-core  ==============="
-          mvn --batch-mode  clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
-          cd ..
-          cd dino-spring-auth
-          echo "=============== 开始部署 dino-spring-auth  ==============="
-          mvn --batch-mode  clean deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
-          cd ..
+          # 定义项目数组
+          projects=(
+            "dino-dependencies-root"
+            "dino-spring-assembly"
+            "dino-spring-boot-starter-parent"
+            "dino-spring-cloud-starter-parent"
+            "dino-spring-commons"
+            "dino-spring-data"
+            "dino-spring-core"
+            "dino-spring-auth"
+          )
+          # 循环遍历项目数组
+          for project in "${projects[@]}"; do
+            # 进入项目目录
+            cd "$project"
+            # 输出开始打包信息
+            echo "=============== 开始打包 $project ==============="
+            # 执行mvn命令
+            mvn --batch-mode clean package install $MVN_OPT $BUILD_OPT
+            fi
+            # 返回到上一级目录
+            cd ..
+          done
+
+          echo "所有项目打包完成。"
+
+      - name: Publish to Maven Central
+        run: |
+          echo "=============== 开始发布到Maven中央仓库 ==============="
+          # 定义项目数组
+          projects=(
+            "dino-dependencies-root"
+            "dino-spring-assembly"
+            "dino-spring-boot-starter-parent"
+            "dino-spring-cloud-starter-parent"
+            "dino-spring-commons"
+            "dino-spring-data"
+            "dino-spring-core"
+            "dino-spring-auth"
+          )
+          # 循环遍历项目数组
+          for project in "${projects[@]}"; do
+            # 进入项目目录
+            cd "$project"
+            # 输出开始打包信息
+            echo "=============== 开始打包 $project ==============="
+            # 执行mvn命令
+            mvn --batch-mode deploy $MVN_OPT $BUILD_OPT
+            fi
+            # 返回到上一级目录
+            cd ..
+          done
+
+          echo "所有项目打包完成。"

@@ -44,6 +44,11 @@ jobs:
           gpg-passphrase: GPG_PASSPHRASE
           cache: "maven"
 
+      - name: Install gpg secret key
+        run: |
+          cat <(echo -e "${{ secrets.GPG_PRIVATE_KEY }}") | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
+
       - name: Publish package
         run: |
           echo deploy into ${MVN_REPO_USER_NAME}@${MVN_REPO_URL_RELEASES}

@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.codec.digest.HmacAlgorithms;
 import org.apache.commons.codec.digest.HmacUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dinospring.commons.sys.Tenant;
 import org.dinospring.commons.sys.User;
@@ -21,6 +22,7 @@ import org.dinospring.core.modules.login.config.LoginModuleProperties;
 import org.dinospring.core.security.config.SecurityProperties;
 import org.dinospring.core.service.impl.ServiceBase;
 import org.dinospring.data.dao.CrudRepositoryBase;
+import org.dinospring.data.sql.builder.SelectSqlBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.stereotype.Service;
@@ -281,4 +283,19 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
     return hmacSha1Hex.equalsIgnoreCase(siginToken);
   }
 
+  /**
+   * 注销用户时，删除用户的所有Token
+   * @param userId
+   * @param userType
+   * @return
+   */
+  public void clearUserToken(String userId, String userType) {
+    SelectSqlBuilder sqlBuilder = repository().newSelect().eq("user_id", userId).eq("user_type", userType);
+    List<TokenEntity> list = repository().queryList(sqlBuilder);
+    if (CollectionUtils.isNotEmpty(list)) {
+      list.forEach(token -> {
+        this.removeById(token.getId());
+      });
+    }
+  }
 }

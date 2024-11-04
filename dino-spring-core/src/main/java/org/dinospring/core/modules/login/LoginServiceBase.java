@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.RandomStringGenerator;
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.response.Status;
 import org.dinospring.commons.sys.User;
@@ -16,7 +18,7 @@ import org.dinospring.commons.utils.TypeUtils;
 import org.dinospring.commons.utils.ValidateUtil;
 import org.dinospring.core.entity.Code;
 import org.dinospring.core.modules.login.config.LoginModuleProperties;
-import org.dinospring.core.modules.sms.SmsCaptchaService;
+import org.dinospring.core.modules.sms.SmsService;
 import org.dinospring.core.sys.token.TokenPrincaple;
 import org.dinospring.core.sys.token.TokenService;
 import org.dinospring.core.sys.user.UserService;
@@ -43,11 +45,11 @@ public abstract interface LoginServiceBase<U extends User<K>, K extends Serializ
   }
 
   /**
-   * SmsCaptchaService
+   * SmsService
    * @return
    */
-  default SmsCaptchaService smsCaptchaService() {
-    return ContextHelper.findBean(SmsCaptchaService.class);
+  default SmsService smsService() {
+    return ContextHelper.findBean(SmsService.class);
   }
 
   /**
@@ -136,7 +138,7 @@ public abstract interface LoginServiceBase<U extends User<K>, K extends Serializ
       return true;
     }
 
-    return this.smsCaptchaService().verifyCaptcha(mobile, captcha);
+    return StringUtils.equals(retriveSmsCaptcha(mobile), captcha);
   }
 
   /**
@@ -150,6 +152,20 @@ public abstract interface LoginServiceBase<U extends User<K>, K extends Serializ
         Map.of("username", user.getLoginName(), "password", password));
 
     return user.getPasswordHash().equalsIgnoreCase(signToken);
+  }
+
+  /**
+   * 发送手机短信验证码
+   * @param mobile
+   * @return
+   */
+  default boolean sendSmsCaptcha(String mobile) {
+    var captcha = new RandomStringGenerator.Builder().withinRange('0', '9').build().generate(4);
+    if (smsService().sendSms(mobile, captcha)) {
+      saveSmsCaptcha(mobile, captcha);
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -168,4 +184,17 @@ public abstract interface LoginServiceBase<U extends User<K>, K extends Serializ
    */
   Optional<U> findUserByMobile(String mobile);
 
+  /**
+   * 存储验证码
+   * @param mobile
+   * @param captcha
+   */
+  void saveSmsCaptcha(String mobile, String captcha);
+
+  /**
+   * 获取验证码
+   * @param mobile
+   * @return
+   */
+  String retriveSmsCaptcha(String mobile);
 }

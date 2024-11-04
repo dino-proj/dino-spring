@@ -26,7 +26,6 @@ jobs:
     env:
       MVN_OPT: -e
       BUILD_OPT: "-Dmaven.test.skip=true"
-      GPG_PRIVATE_BASE64: ${{ vars.GPG_PRIVATE_KEY_BASE64 }}
 
     steps:
       - name: Check out Git repository
@@ -40,19 +39,8 @@ jobs:
           server-id: central
           server-username: ${{ secrets.NEXUS_USERNAME }}
           server-password: ${{ secrets.NEXUS_PASSWORD }}
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           cache: "maven"
-
-      - name: Decode and display GPG key
-        run: |
-          if [ -z "${{ secrets.GPG_PRIVATE_KEY_BASE64 }}" ]; then
-            echo "GPG_PRIVATE_BASE64 is not set"
-            exit 1
-          fi
-          echo $GPG_PRIVATE_BASE64
-          echo $GPG_PRIVATE_BASE64 | base64 --decode
-
-      - name: Import GPG key
-        run: echo $GPG_PRIVATE_BASE64 | base64 --decode | gpg --import --batch --yes
 
       - name: Publish package
         run: |

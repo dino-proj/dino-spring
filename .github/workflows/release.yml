@@ -42,11 +42,11 @@ jobs:
 
       - name: Decode and display GPG key
         run: |
-          echo "${{ vars.GPG_PRIVATE_KEY }}"
-          echo "${{ vars.GPG_PRIVATE_KEY }}" | base64 --decode
+          echo "${{ vars.GPG_PRIVATE_KEY_BASE64 }}"
+          echo "${{ vars.GPG_PRIVATE_KEY_BASE64 }}" | base64 --decode
 
       - name: Import GPG key
-        run: echo "${{ vars.GPG_PRIVATE_KEY }}" | base64 --decode | gpg --import --batch --yes
+        run: echo "${{ vars.GPG_PRIVATE_KEY_BASE64 }}" | base64 --decode | gpg --import --batch --yes
 
       - name: Publish package
         run: |

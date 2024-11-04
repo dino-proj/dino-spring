@@ -39,14 +39,14 @@ jobs:
           java-version: 17
           distribution: "temurin"
           server-id: central
-          server-username: ${{ secrets.NEXUS_USERNAME }}
-          server-password: ${{ secrets.NEXUS_PASSWORD }}
+          server-username: MVN_NEXUS_USERNAME
+          server-password: MVN_NEXUS_PASSWORD
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           cache: "maven"
 
       - name: Publish package
         run: |
-          echo deploy into ${{ secrets.NEXUS_USERNAME }}@${MVN_REPO_URL_RELEASES}
+          echo deploy into ${{ secrets.NEXUS_USERNAME }}
           cd dino-dependencies-root
           echo "=============== 开始部署 dino-dependencies-root  ==============="
           mvn clean  deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT

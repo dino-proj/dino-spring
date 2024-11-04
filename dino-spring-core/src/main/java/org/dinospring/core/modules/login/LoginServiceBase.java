@@ -30,7 +30,7 @@ import org.dinospring.commons.utils.TypeUtils;
 import org.dinospring.commons.utils.ValidateUtil;
 import org.dinospring.core.entity.Code;
 import org.dinospring.core.modules.login.config.LoginModuleProperties;
-import org.dinospring.core.modules.message.sms.SmsService;
+import org.dinospring.core.modules.sms.SmsService;
 import org.dinospring.core.sys.token.TokenPrincaple;
 import org.dinospring.core.sys.token.TokenService;
 import org.dinospring.core.sys.user.UserService;
@@ -166,7 +166,7 @@ public abstract interface LoginServiceBase<U extends User<K>, K extends Serializ
    */
   default boolean sendSmsCaptcha(String mobile) {
     var captcha = new RandomStringGenerator.Builder().withinRange('0', '9').build().generate(4);
-    if (smsService().sendSmsCaptcha(mobile, captcha, null)) {
+    if (smsService().sendSms(mobile, captcha)) {
       saveSmsCaptcha(mobile, captcha);
       return true;
     }

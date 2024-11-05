@@ -163,14 +163,14 @@
     <!-- 阿里云-短信SDK -->
     <dependency>
       <groupId>com.aliyun</groupId>
-      <artifactId>alibabacloud-dysmsapi20170525</artifactId>
+      <artifactId>dysmsapi20170525</artifactId>
       <scope>provided</scope>
     </dependency>
 
     <!-- 腾讯云SDK -->
     <dependency>
       <groupId>com.tencentcloudapi</groupId>
-      <artifactId>tencentcloud-sdk-java</artifactId>
+      <artifactId>tencentcloud-sdk-java-sms</artifactId>
       <scope>provided</scope>
     </dependency>
   </dependencies>

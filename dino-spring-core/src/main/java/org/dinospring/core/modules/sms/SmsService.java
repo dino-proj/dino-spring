@@ -23,7 +23,7 @@ public interface SmsService {
    * @param signName 短信签名, 可以为空, 为空时使用配置中的默认签名
    * @return 返回发送失败的手机号码列表
    */
-  Collection<String> sendTemplateSms(Collection<String> mobiles, String templateId, Collection<String> templateParams,
+  Collection<String> sendTemplateSms(Collection<String> mobiles, String templateId, Object templateParams,
       @Nullable String signName);
 
   /**
@@ -34,7 +34,7 @@ public interface SmsService {
    * @param signName 短信签名, 可以为空, 为空时使用配置中的默认签名
    * @return 发送成功返回true，否则返回false
    */
-  default boolean sendTemplateSms(String mobile, String templateId, Collection<String> templateParams,
+  default boolean sendTemplateSms(String mobile, String templateId, Object templateParams,
       @Nullable String signName) {
     return this.sendTemplateSms(List.of(mobile), templateId, templateParams, signName).isEmpty();
   }

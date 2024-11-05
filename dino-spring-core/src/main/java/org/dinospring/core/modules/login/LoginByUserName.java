@@ -1,16 +1,5 @@
-// Copyright 2021 dinodev.cn
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright 2024 dinosdev.cn.
+// SPDX-License-Identifier: Apache-2.0
 
 package org.dinospring.core.modules.login;
 
@@ -25,6 +14,7 @@ import org.dinospring.commons.response.Status;
 import org.dinospring.commons.sys.Tenant;
 import org.dinospring.commons.sys.User;
 import org.dinospring.commons.utils.Assert;
+import org.dinospring.commons.utils.ProjectionUtils;
 import org.dinospring.core.annotion.param.ParamTenant;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,32 +35,26 @@ public interface LoginByUserName<U extends User<K>, K extends Serializable>
 
   /**
    * 用户名密码登录
-   * @param tenantId
    * @param req
    * @return
    */
   @Operation(summary = "用户名密码登录")
   @ParamTenant
   @PostMapping("/username")
-  default Response<LoginAuth<U, K>> byUserName(@PathVariable("tenant_id") String tenantId,
-      @RequestBody PostBody<UserNameLoginBody> req) {
-    if (Tenant.isSys(tenantId)) {
-      return Response.fail(Status.CODE.FAIL_TENANT_NOT_EXIST);
-    }
-    var tenant = tenantService().getById(tenantId, Tenant.class);
-    Assert.notNull(tenant, Status.CODE.FAIL_TENANT_NOT_EXIST);
+  default Response<LoginAuth<U, K>> byUserName(@RequestBody PostBody<UserNameLoginBody> req) {
+
     //查询用户
     var username = req.getBody().getUsername();
     //通过用户名登录，如果用户使用手机号作为登录名，则和其他用户相同的手机号字段冲突，登录的时候存在不确定性
-    U user = loginService().findUserByLoginName(tenant.getId(), username).orElse(null);
+    U user = loginService().findUserByLoginName(username).orElse(null);
     Assert.notNull(user, Status.CODE.FAIL_USER_NOT_EXIST);
 
     //验证用户密码
     Assert.isTrue(loginService().verifyUserPassword(user, req.getBody().getPassword()),
         Status.CODE.FAIL_INVALID_PASSWORD);
     //返回授权签名
-    return Response.success(loginService().loginAuth(tenant,
-        tenantService().projection(loginService().userClass(), user), req.getPlt(), req.getGuid()));
+    return Response.success(loginService().loginAuth(
+        ProjectionUtils.projectProperties(loginService().userClass(), user), req.getPlt(), req.getGuid()));
   }
 
   @Data

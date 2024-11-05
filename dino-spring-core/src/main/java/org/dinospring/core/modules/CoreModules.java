@@ -1,6 +1,9 @@
+// Copyright 2023 dinosdev.cn.
+// SPDX-License-Identifier: Apache-2.0
+
 package org.dinospring.core.modules;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 /**
@@ -10,7 +13,7 @@ import java.util.Map;
  */
 
 public class CoreModules {
-  private static final Map<ModuleType, Boolean> MODULES_ENABLED = new HashMap<>();
+  private static final Map<ModuleType, Boolean> MODULES_ENABLED = new EnumMap<>(ModuleType.class);
 
   public static void useModuleWallet() {
     MODULES_ENABLED.put(ModuleType.WALLET, true);

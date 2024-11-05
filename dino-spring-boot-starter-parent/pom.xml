@@ -23,9 +23,10 @@
     <dino-spring.version>3.0.1</dino-spring.version>
 
     <!-- plugin -->
-    <maven-pmd-plugin.version>3.21.0</maven-pmd-plugin.version>
-    <maven-nexus-staging-plugin.version>1.6.13</maven-nexus-staging-plugin.version>
-    <p3c-pmd.version>2.1.1</p3c-pmd.version>
+    <central-publishing-maven-plugin.version>0.6.0</central-publishing-maven-plugin.version>
+    <maven-pmd-plugin.version>3.21.2</maven-pmd-plugin.version>
+    <p3c-pmd.version>2.2.1.0x</p3c-pmd.version>
+    <pmd.version>6.55.0</pmd.version>
     <mapstruct.version>1.5.5.Final</mapstruct.version>
     <lombok.version>1.18.28</lombok.version>
 
@@ -267,9 +268,26 @@
             </dependency>
             <!-- 需要使用阿里的一些xml文件，因此需要这里增加p3c的依赖 -->
             <dependency>
-              <groupId>com.alibaba.p3c</groupId>
+              <groupId>com.xenoamess.p3c</groupId>
               <artifactId>p3c-pmd</artifactId>
               <version>${p3c-pmd.version}</version>
+              <exclusions>
+                <exclusion>
+                  <groupId>net.sourceforge.pmd</groupId>
+                  <artifactId>pmd-java</artifactId>
+                </exclusion>
+              </exclusions>
+            </dependency>
+            <!-- 配置pmd language -->
+            <dependency>
+              <groupId>net.sourceforge.pmd</groupId>
+              <artifactId>pmd-core</artifactId>
+              <version>${pmd.version}</version>
+            </dependency>
+            <dependency>
+              <groupId>net.sourceforge.pmd</groupId>
+              <artifactId>pmd-java</artifactId>
+              <version>${pmd.version}</version>
             </dependency>
           </dependencies>
         </plugin>
@@ -418,7 +436,7 @@
           <plugin>
             <groupId>org.sonatype.central</groupId>
             <artifactId>central-publishing-maven-plugin</artifactId>
-            <version>0.6.0</version>
+            <version>${central-publishing-maven-plugin.version}</version>
             <extensions>true</extensions>
             <configuration>
               <publishingServerId>central</publishingServerId>
@@ -442,7 +460,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
-            <version>3.2.1</version>
             <executions>
               <execution>
                 <id>attach-sources</id>

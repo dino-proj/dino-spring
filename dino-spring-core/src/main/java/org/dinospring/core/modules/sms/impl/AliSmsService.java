@@ -98,16 +98,17 @@ public class AliSmsService extends SmsServiceBase {
     // 如果是Collection或array, 则转为Index-Value的Map
 
     if (params instanceof Collection) {
-
-      var paramsMap = new HashMap<String, Object>();
-      for (var i = 0; i < ((Collection<?>) params).size(); i++) {
-        paramsMap.put(String.valueOf(i + 1), ((Collection<?>) params).toArray()[i]);
+      var paramsCol = ((Collection<?>) params);
+      var paramsMap = new HashMap<String, Object>(paramsCol.size());
+      for (var i = 0; i < paramsCol.size(); i++) {
+        paramsMap.put(String.valueOf(i + 1), paramsCol.toArray()[i]);
       }
       return gson.toJson(paramsMap);
     } else if (params.getClass().isArray()) {
-      var paramsMap = new HashMap<String, Object>();
-      for (var i = 0; i < ((Object[]) params).length; i++) {
-        paramsMap.put(String.valueOf(i + 1), ((Object[]) params)[i]);
+      var paramsArr = (Object[]) params;
+      var paramsMap = new HashMap<String, Object>(paramsArr.length);
+      for (var i = 0; i < paramsArr.length; i++) {
+        paramsMap.put(String.valueOf(i + 1), paramsArr[i]);
       }
       return gson.toJson(paramsMap);
     } else {

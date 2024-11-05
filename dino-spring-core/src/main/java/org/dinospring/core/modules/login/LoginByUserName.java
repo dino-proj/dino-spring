@@ -5,24 +5,19 @@ package org.dinospring.core.modules.login;
 
 import java.io.Serializable;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-
 import org.dinospring.commons.request.PostBody;
 import org.dinospring.commons.response.Response;
 import org.dinospring.commons.response.Status;
-import org.dinospring.commons.sys.Tenant;
 import org.dinospring.commons.sys.User;
 import org.dinospring.commons.utils.Assert;
-import org.dinospring.commons.utils.ProjectionUtils;
-import org.dinospring.core.annotion.param.ParamTenant;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 /**
@@ -34,12 +29,17 @@ public interface LoginByUserName<U extends User<K>, K extends Serializable>
     extends LoginControllerBase<U, K> {
 
   /**
+   * 登录Service
+   * @return
+   */
+  LoginServiceBase<U, K> loginService();
+
+  /**
    * 用户名密码登录
    * @param req
    * @return
    */
   @Operation(summary = "用户名密码登录")
-  @ParamTenant
   @PostMapping("/username")
   default Response<LoginAuth<U, K>> byUserName(@RequestBody PostBody<UserNameLoginBody> req) {
 
@@ -53,8 +53,7 @@ public interface LoginByUserName<U extends User<K>, K extends Serializable>
     Assert.isTrue(loginService().verifyUserPassword(user, req.getBody().getPassword()),
         Status.CODE.FAIL_INVALID_PASSWORD);
     //返回授权签名
-    return Response.success(loginService().loginAuth(
-        ProjectionUtils.projectProperties(loginService().userClass(), user), req.getPlt(), req.getGuid()));
+    return Response.success(loginService().loginAuth(user, req.getPlt(), req.getGuid()));
   }
 
   @Data

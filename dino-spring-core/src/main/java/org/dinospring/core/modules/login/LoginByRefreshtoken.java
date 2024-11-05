@@ -5,25 +5,21 @@ package org.dinospring.core.modules.login;
 
 import java.io.Serializable;
 
-import jakarta.validation.constraints.NotBlank;
-
 import org.dinospring.commons.request.PostBody;
 import org.dinospring.commons.response.Response;
 import org.dinospring.commons.response.Status;
-import org.dinospring.commons.sys.Tenant;
 import org.dinospring.commons.sys.User;
 import org.dinospring.commons.utils.Assert;
-import org.dinospring.core.annotion.param.ParamTenant;
 import org.dinospring.core.sys.token.TokenPrincaple;
 import org.dinospring.core.sys.user.UserService;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 /**
@@ -36,18 +32,19 @@ public interface LoginByRefreshtoken<U extends User<K>, K extends Serializable>
     extends LoginControllerBase<U, K> {
 
   /**
+   * 登录Service
+   * @return
+   */
+  LoginServiceBase<U, K> loginService();
+
+  /**
    * 用户名密码登录
-   * @param tenantId
    * @param req
    * @return
    */
   @Operation(summary = "Refreshtoken登录")
-  @ParamTenant
   @PostMapping("/refreshtoken")
-  default Response<LoginAuth<U, K>> byRefreshToken(@PathVariable("tenant_id") String tenantId,
-      @RequestBody @Validated PostBody<RefreshtokenLoginBody> req) {
-    var tenant = tenantService().getById(tenantId, Tenant.class);
-    Assert.notNull(tenant, Status.CODE.FAIL_TENANT_NOT_EXIST);
+  default Response<LoginAuth<U, K>> byRefreshToken(@RequestBody @Validated PostBody<RefreshtokenLoginBody> req) {
 
     var body = req.getBody();
     var userType = userServiceProvider().resolveUserType(body.getUserType());
@@ -57,14 +54,13 @@ public interface LoginByRefreshtoken<U extends User<K>, K extends Serializable>
     Assert.notNull(user, Status.CODE.FAIL_USER_NOT_EXIST);
 
     var pric = TokenPrincaple.builder().userId(body.getUserId()).userType(body.getUserType()).plt(req.getPlt())
-        .guid(req.getGuid()).tenantId(tenantId).build();
+        .guid(req.getGuid()).build();
     var newToken = tokenService().refreshLoginToken(pric, user.getSecretKey(), body.refreshToken).orElse(null);
     Assert.notNull(newToken, Status.fail("refreshtoken失败"));
 
     var auth = loginService().newLoginAuth();
     auth.setUser(user);
     auth.setAuthToken(newToken);
-    auth.setCurrentTenant(tenant);
 
     return Response.success(auth);
   }

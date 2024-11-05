@@ -4,11 +4,9 @@
 package org.dinospring.core.modules.login;
 
 import java.io.Serializable;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import org.dinospring.commons.sys.Tenant;
 import org.dinospring.commons.sys.User;
 import org.dinospring.core.sys.token.Token;
 
@@ -25,12 +23,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class LoginAuth<U extends User<K>, K extends Serializable> {
-
-  @Schema(description = "用户最近使用的租户")
-  private Tenant currentTenant;
-
-  @Schema(description = "用户所属的所有租户")
-  private List<Tenant> tenantList;
 
   @Schema(description = "用户信息")
   private U user;

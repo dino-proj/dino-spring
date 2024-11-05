@@ -16,7 +16,6 @@ import org.dinospring.core.modules.login.LoginAuth;
 import org.dinospring.core.sys.token.TokenPrincaple;
 import org.dinospring.core.sys.user.UserService;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -37,16 +36,16 @@ public interface LoginByRefreshtokenTenanted<U extends User<K>, K extends Serial
 
   /**
    * 用户名密码登录
-   * @param tenantId
+   * @param tenant
    * @param req
    * @return
    */
   @Operation(summary = "Refreshtoken登录")
   @ParamTenant
   @PostMapping("/refreshtoken")
-  default Response<LoginAuth<U, K>> byRefreshToken(@PathVariable("tenant_id") String tenantId,
+  default Response<LoginAuth<U, K>> byRefreshToken(Tenant tenant,
       @RequestBody @Validated PostBody<RefreshtokenLoginBody> req) {
-    var tenant = tenantService().getById(tenantId, Tenant.class);
+
     Assert.notNull(tenant, Status.CODE.FAIL_TENANT_NOT_EXIST);
 
     var body = req.getBody();
@@ -57,7 +56,7 @@ public interface LoginByRefreshtokenTenanted<U extends User<K>, K extends Serial
     Assert.notNull(user, Status.CODE.FAIL_USER_NOT_EXIST);
 
     var pric = TokenPrincaple.builder().userId(body.getUserId()).userType(body.getUserType()).plt(req.getPlt())
-        .guid(req.getGuid()).tenantId(tenantId).build();
+        .guid(req.getGuid()).tenantId(tenant.getId()).build();
     var newToken = tokenService().refreshLoginToken(pric, user.getSecretKey(), body.refreshToken).orElse(null);
     Assert.notNull(newToken, Status.fail("refreshtoken失败"));
 

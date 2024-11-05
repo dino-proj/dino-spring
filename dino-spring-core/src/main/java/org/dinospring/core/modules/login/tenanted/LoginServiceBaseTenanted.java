@@ -5,11 +5,10 @@ package org.dinospring.core.modules.login.tenanted;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.RandomStringGenerator;
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.response.Status;
 import org.dinospring.commons.sys.Tenant;
@@ -18,9 +17,8 @@ import org.dinospring.commons.utils.Assert;
 import org.dinospring.commons.utils.TypeUtils;
 import org.dinospring.commons.utils.ValidateUtil;
 import org.dinospring.core.entity.Code;
-import org.dinospring.core.modules.login.LoginAuth;
 import org.dinospring.core.modules.login.config.LoginModuleProperties;
-import org.dinospring.core.modules.sms.SmsService;
+import org.dinospring.core.modules.sms.SmsCaptchaService;
 import org.dinospring.core.sys.token.TokenPrincaple;
 import org.dinospring.core.sys.token.TokenService;
 import org.dinospring.core.sys.user.UserService;
@@ -50,8 +48,8 @@ public abstract interface LoginServiceBaseTenanted<U extends User<K>, K extends 
    * SmsService
    * @return
    */
-  default SmsService smsService() {
-    return ContextHelper.findBean(SmsService.class);
+  default SmsCaptchaService smsService() {
+    return ContextHelper.findBean(SmsCaptchaService.class);
   }
 
   /**
@@ -59,7 +57,7 @@ public abstract interface LoginServiceBaseTenanted<U extends User<K>, K extends 
    * @return
    */
   default Class<U> userClass() {
-    return TypeUtils.getGenericParamClass(this, LoginServiceTenantedBase.class, 0);
+    return TypeUtils.getGenericParamClass(this, LoginServiceBaseTenanted.class, 0);
   }
 
   /**
@@ -74,7 +72,7 @@ public abstract interface LoginServiceBaseTenanted<U extends User<K>, K extends 
    * 生成LoginAuth对象
    * @return
    */
-  default LoginAuth<U, K> newLoginAuth() {
+  default LoginAuthTenanted<U, K> newLoginAuth() {
     return new LoginAuthTenanted<>();
   }
 
@@ -97,7 +95,7 @@ public abstract interface LoginServiceBaseTenanted<U extends User<K>, K extends 
    * @param guid
    * @return
    */
-  default LoginAuth<U, K> loginAuth(Tenant tenant, U user, String plt, String guid) {
+  default LoginAuthTenanted<U, K> loginAuth(Tenant tenant, U user, String plt, String guid) {
     Assert.notNull(user, Status.CODE.FAIL_USER_NOT_EXIST);
 
     Assert.isTrue(user.getStatus().equals(Code.STATUS.OK.name().toLowerCase()), Status.CODE.FAIL_LOGIN_DENNY);
@@ -133,7 +131,7 @@ public abstract interface LoginServiceBaseTenanted<U extends User<K>, K extends 
       return true;
     }
 
-    return StringUtils.equals(this.retriveSmsCaptcha(mobile), captcha);
+    return this.smsService().verifyCaptcha(mobile, captcha);
   }
 
   /**
@@ -155,12 +153,8 @@ public abstract interface LoginServiceBaseTenanted<U extends User<K>, K extends 
    * @return
    */
   default boolean sendSmsCaptcha(String mobile) {
-    var captcha = new RandomStringGenerator.Builder().withinRange('0', '9').build().generate(4);
-    if (this.smsService().sendSmsCaptcha(mobile, captcha, null)) {
-      this.saveSmsCaptcha(mobile, captcha);
-      return true;
-    }
-    return false;
+    var captcha = this.smsService().sendCaptcha(mobile);
+    return Objects.nonNull(captcha);
   }
 
   /**
@@ -180,17 +174,4 @@ public abstract interface LoginServiceBaseTenanted<U extends User<K>, K extends 
    */
   Optional<U> findUserByMobile(String tenantId, String mobile);
 
-  /**
-   * 存储验证码
-   * @param mobile
-   * @param captcha
-   */
-  void saveSmsCaptcha(String mobile, String captcha);
-
-  /**
-   * 获取验证码
-   * @param mobile
-   * @return
-   */
-  String retriveSmsCaptcha(String mobile);
 }

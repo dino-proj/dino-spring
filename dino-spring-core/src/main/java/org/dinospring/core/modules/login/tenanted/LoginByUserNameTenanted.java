@@ -13,7 +13,6 @@ import org.dinospring.commons.sys.User;
 import org.dinospring.commons.utils.Assert;
 import org.dinospring.core.annotion.param.ParamTenant;
 import org.dinospring.core.modules.login.LoginAuth;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -34,19 +33,16 @@ public interface LoginByUserNameTenanted<U extends User<K>, K extends Serializab
 
   /**
    * 用户名密码登录
-   * @param tenantId
+   * @param tenant
    * @param req
    * @return
    */
   @Operation(summary = "用户名密码登录")
   @ParamTenant
   @PostMapping("/username")
-  default Response<LoginAuth<U, K>> byUserName(@PathVariable("tenant_id") String tenantId,
+  default Response<LoginAuth<U, K>> byUserName(Tenant tenant,
       @RequestBody PostBody<UserNameLoginBody> req) {
-    if (Tenant.isSys(tenantId)) {
-      return Response.fail(Status.CODE.FAIL_TENANT_NOT_EXIST);
-    }
-    var tenant = tenantService().getById(tenantId, Tenant.class);
+
     Assert.notNull(tenant, Status.CODE.FAIL_TENANT_NOT_EXIST);
     //查询用户
     var username = req.getBody().getUsername();
@@ -58,8 +54,7 @@ public interface LoginByUserNameTenanted<U extends User<K>, K extends Serializab
     Assert.isTrue(loginService().verifyUserPassword(user, req.getBody().getPassword()),
         Status.CODE.FAIL_INVALID_PASSWORD);
     //返回授权签名
-    return Response.success(loginService().loginAuth(tenant,
-        tenantService().projection(loginService().userClass(), user), req.getPlt(), req.getGuid()));
+    return Response.success(loginService().loginAuth(tenant, user, req.getPlt(), req.getGuid()));
   }
 
   @Data

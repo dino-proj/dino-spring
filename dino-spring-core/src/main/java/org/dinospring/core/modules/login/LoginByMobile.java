@@ -16,7 +16,6 @@ import org.dinospring.commons.response.Response;
 import org.dinospring.commons.response.Status;
 import org.dinospring.commons.sys.User;
 import org.dinospring.commons.utils.Assert;
-import org.dinospring.commons.utils.ProjectionUtils;
 import org.dinospring.commons.validation.constraints.Mobile;
 import org.dinospring.core.annotion.param.ParamJsonBody;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,15 +39,20 @@ public interface LoginByMobile<U extends User<K>, K extends Serializable>
     extends LoginControllerBase<U, K> {
 
   /**
-       * 用手机短信验证码登录
-       * @param req
-       * @return
-       */
+   * 登录Service
+   * @return
+   */
+  LoginServiceBase<U, K> loginService();
+
+  /**
+   * 用手机短信验证码登录
+   * @param req
+   * @return
+   */
   @Operation(summary = "用短信验证码登陆")
   @ParamJsonBody(example = "{\"mobile\":\"13800138000\", \"captcha\":\"1234\"}")
   @PostMapping("/mobile")
-  default Response<LoginAuth<U, K>> byMobile(
-      @RequestBody PostBody<MobileLoginBody> req) {
+  default Response<LoginAuth<U, K>> byMobile(@RequestBody PostBody<MobileLoginBody> req) {
 
     String mobile = req.getBody().mobile;
     String captcha = req.getBody().captcha;
@@ -62,8 +66,7 @@ public interface LoginByMobile<U extends User<K>, K extends Serializable>
     if (user == null) {
       throw BusinessException.of(Status.CODE.FAIL_USER_NOT_EXIST);
     }
-    return Response.success(this.loginService().loginAuth(
-        ProjectionUtils.projectProperties(this.loginService().userClass(), user), req.getPlt(), req.getGuid()));
+    return Response.success(this.loginService().loginAuth(user, req.getPlt(), req.getGuid()));
   }
 
   @Data
@@ -90,8 +93,9 @@ public interface LoginByMobile<U extends User<K>, K extends Serializable>
   @Operation(summary = "发送验证码")
   @GetMapping("/captcha/sms")
   default Response<Boolean> sendSmsCaptcha(
-      @RequestParam(value = "mobile") String mobile, @RequestParam(value = "_nonce", required = false) String ts,
-      @RequestParam(value = "sign", required = false) String sign,
+      @RequestParam String mobile,
+      @RequestParam(value = "_nonce", required = false) String ts,
+      @RequestParam(required = false) String sign,
       @RequestParam(value = "sign_name", required = false) String signName) {
 
     try {

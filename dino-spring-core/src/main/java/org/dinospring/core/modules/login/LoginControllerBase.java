@@ -6,6 +6,7 @@ package org.dinospring.core.modules.login;
 import java.io.Serializable;
 
 import org.dinospring.commons.context.ContextHelper;
+import org.dinospring.commons.projection.ProjectionService;
 import org.dinospring.commons.sys.User;
 import org.dinospring.commons.utils.TypeUtils;
 import org.dinospring.core.sys.token.TokenService;
@@ -50,8 +51,8 @@ public interface LoginControllerBase<U extends User<K>, K extends Serializable> 
   }
 
   /**
-   * 登录Service
+   * 投影服务
    * @return
    */
-  LoginServiceBase<U, K> loginService();
+  ProjectionService projectionService();
 }

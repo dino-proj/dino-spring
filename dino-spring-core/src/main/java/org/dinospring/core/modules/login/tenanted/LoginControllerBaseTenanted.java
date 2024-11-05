@@ -26,4 +26,9 @@ public interface LoginControllerBaseTenanted<U extends User<K>, K extends Serial
     return ContextHelper.findBean(TenantService.class);
   }
 
+  /**
+   * 登录Service
+   * @return
+   */
+  LoginServiceBaseTenanted<U, K> loginService();
 }

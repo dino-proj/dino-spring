@@ -21,7 +21,6 @@ import org.dinospring.commons.validation.constraints.Mobile;
 import org.dinospring.core.annotion.param.ParamJsonBody;
 import org.dinospring.core.annotion.param.ParamTenant;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,22 +41,17 @@ public interface LoginByMobileTenanted<U extends User<K>, K extends Serializable
     extends LoginControllerBaseTenanted<U, K> {
 
   /**
-       * 用手机短信验证码登录
-       * @param tenantId
-       * @param req
-       * @return
-       */
+   * 用手机短信验证码登录
+   * @param tenant
+   * @param req
+   * @return
+   */
   @Operation(summary = "用短信验证码登陆")
   @ParamTenant
   @ParamJsonBody(example = "{\"mobile\":\"13800138000\", \"captcha\":\"1234\"}")
   @PostMapping("/mobile")
-  default Response<LoginAuthTenanted<U, K>> byMobile(@PathVariable("tenant_id") String tenantId, //
-      @RequestBody PostBody<MobileLoginBody> req) {
+  default Response<LoginAuthTenanted<U, K>> byMobile(Tenant tenant, @RequestBody PostBody<MobileLoginBody> req) {
 
-    if (Tenant.isSys(tenantId)) {
-      return Response.fail(Status.CODE.FAIL_TENANT_NOT_EXIST);
-    }
-    var tenant = tenantService().getById(tenantId, Tenant.class);
     Assert.notNull(tenant, Status.CODE.FAIL_TENANT_NOT_EXIST);
 
     String mobile = req.getBody().mobile;
@@ -72,8 +66,7 @@ public interface LoginByMobileTenanted<U extends User<K>, K extends Serializable
     if (user == null) {
       throw BusinessException.of(Status.CODE.FAIL_USER_NOT_EXIST);
     }
-    return Response.success(loginService().loginAuth(tenant,
-        tenantService().projection(loginService().userClass(), user), req.getPlt(), req.getGuid()));
+    return Response.success(loginService().loginAuth(tenant, user, req.getPlt(), req.getGuid()));
   }
 
   @Data
@@ -91,7 +84,7 @@ public interface LoginByMobileTenanted<U extends User<K>, K extends Serializable
 
   /**
    * 发送验证码
-   * @param tenantId
+   * @param tenant
    * @param mobile
    * @param ts
    * @param sign
@@ -101,10 +94,13 @@ public interface LoginByMobileTenanted<U extends User<K>, K extends Serializable
   @Operation(summary = "发送验证码")
   @ParamTenant
   @GetMapping("/captcha/sms")
-  default Response<Boolean> sendSmsCaptcha(@PathVariable("tenant_id") String tenantId,
-      @RequestParam(value = "mobile") String mobile, @RequestParam(value = "_nonce", required = false) String ts,
-      @RequestParam(value = "sign", required = false) String sign,
+  default Response<Boolean> sendSmsCaptcha(Tenant tenant,
+      @RequestParam String mobile, //
+      @RequestParam(value = "_nonce", required = false) String ts,
+      @RequestParam(required = false) String sign,
       @RequestParam(value = "sign_name", required = false) String signName) {
+
+    Assert.notNull(tenant, Status.CODE.FAIL_TENANT_NOT_EXIST);
 
     try {
       if (checkSign(mobile, ts, sign)) {

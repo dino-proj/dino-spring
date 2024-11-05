@@ -63,6 +63,11 @@ public class SmsModuleProperties {
      * 验证码模版ID
      */
     private String templateId;
+
+    /**
+     * 短信签名
+     */
+    private String signName;
   }
 
   public static enum SmsVendor {

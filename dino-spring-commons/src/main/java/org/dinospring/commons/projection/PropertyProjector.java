@@ -35,6 +35,7 @@ public class PropertyProjector<S, T> {
   private ConversionService conversionService;
 
   /**
+   * Constructor with default conversion service
    * @param sourceClass
    * @param targetClass
    */
@@ -43,6 +44,7 @@ public class PropertyProjector<S, T> {
   }
 
   /**
+   * Constructor with specified conversion service
    * @param sourceClass
    * @param targetClass
    * @param conversionService
@@ -54,27 +56,52 @@ public class PropertyProjector<S, T> {
     this.conversionService = conversionService;
   }
 
+  /**
+   * Get the conversion service
+   * @return
+   */
   @Nullable
   public ConversionService getConversionService() {
     return this.conversionService;
   }
 
+  /**
+   * Set the conversion service
+   * @param conversionService
+   */
   public void setConversionService(@Nullable ConversionService conversionService) {
     this.conversionService = conversionService;
   }
 
   private List<PropertyCopier> copiers = new ArrayList<>(4);
 
+  /**
+   * Copy the source object to the target object
+   * @param source source object
+   * @return
+   */
   public T copy(S source) {
     T target = TypeUtils.newInstance(this.targetClass);
     return this.copy(source, target);
   }
 
-  public T copy(S source, Class<?> activeView) {
+  /**
+   * Copy the source object to the target object with specified json view
+   * @param source source object
+   * @param activeJsonView json view class to filter the properties
+   * @return
+   */
+  public T copy(S source, Class<?> activeJsonView) {
     T target = TypeUtils.newInstance(this.targetClass);
-    return this.copy(source, target, activeView);
+    return this.copy(source, target, activeJsonView);
   }
 
+  /**
+   * Copy the source object to the target object
+   * @param source source object
+   * @param target target object
+   * @return
+   */
   public T copy(S source, T target) {
     for (PropertyCopier copier : this.copiers) {
       copier.copy(source, target);
@@ -82,29 +109,62 @@ public class PropertyProjector<S, T> {
     return target;
   }
 
-  public T copy(S source, T target, Class<?> activeView) {
+  /**
+   * Copy the source object to the target object with specified json view
+   * @param source source object
+   * @param target target object
+   * @param activeJsonView json view class to filter the properties
+   * @return
+   */
+  public T copy(S source, T target, Class<?> activeJsonView) {
     for (PropertyCopier copier : this.copiers) {
-      if (copier.canCopy(activeView)) {
+      if (copier.canCopy(activeJsonView)) {
         copier.copy(source, target);
       }
     }
     return target;
   }
 
+  /**
+   * Copy the source object to the target object with specified json view
+   * @param source source object
+   * @param targetSupplier target object supplier
+   * @return
+   */
   public T copy(S source, Function<S, T> targetSupplier) {
     T target = targetSupplier.apply(source);
     return this.copy(source, target);
   }
 
-  public T copy(S source, Function<S, T> targetSupplier, Class<?> activeView) {
+  /**
+   * Copy the source object to the target object with specified json view
+   * @param source source object
+   * @param targetSupplier target object supplier
+   * @param activeJsonView json view class to filter the properties
+   * @return
+   */
+  public T copy(S source, Function<S, T> targetSupplier, Class<?> activeJsonView) {
     T target = targetSupplier.apply(source);
-    return this.copy(source, target, activeView);
+    return this.copy(source, target, activeJsonView);
   }
 
+  /**
+   * Add a property copier
+   * @param sourceGetter source getter method
+   * @param targetSetter target setter method
+   * @return
+   */
   public PropertyProjector<S, T> add(Method sourceGetter, Method targetSetter) {
     return this.add(sourceGetter, targetSetter, Functions.identity());
   }
 
+  /**
+   * Add a property copier with converter
+   * @param sourceGetter source getter method
+   * @param targetSetter target setter method
+   * @param converter converter function
+   * @return
+   */
   public PropertyProjector<S, T> add(Method sourceGetter, Method targetSetter, Function<?, ?> converter) {
     this.copiers.add(new PropertyCopier(t -> {
       try {
@@ -124,10 +184,25 @@ public class PropertyProjector<S, T> {
     return this;
   }
 
+  /**
+   * Add a property copier with specified json view
+   * @param sourceGetter source getter method
+   * @param targetSetter target setter method
+   * @param views json view classes
+   * @return
+   */
   public <V> PropertyProjector<S, T> add(Method sourceGetter, BiConsumer<T, V> setter) {
     return this.add(this.makeGetter(sourceGetter), setter, Functions.identity(), JsonViewUtils.findViews(sourceGetter));
   }
 
+  /**
+   * Add a property copier with specified json view
+   * @param sourceGetter source getter method
+   * @param setter target setter method
+   * @param converter converter function
+   * @param views json view classes
+   * @return PropertyProjector
+   */
   public PropertyProjector<S, T> add(String sourcePropertyName, String targetPropertyName) {
     var getter = BeanMetaUtils.forClass(this.sourceClass).getProperty(sourcePropertyName);
     if (Objects.isNull(getter)) {
@@ -140,6 +215,14 @@ public class PropertyProjector<S, T> {
     return this.add(getter.getReadMethod(), setter.getWriteMethod());
   }
 
+  /**
+   * Add a property copier with specified json view
+   * @param sourceGetter source getter method
+   * @param setter target setter method
+   * @param converter converter function
+   * @param views json view classes
+   * @return
+   */
   public PropertyProjector<S, T> add(String sourcePropertyName, String targetPropertyName, Function<?, ?> converter) {
     var getter = BeanMetaUtils.forClass(this.sourceClass).getProperty(sourcePropertyName);
     if (Objects.isNull(getter)) {
@@ -152,6 +235,14 @@ public class PropertyProjector<S, T> {
     return this.add(getter.getReadMethod(), setter.getWriteMethod(), converter);
   }
 
+  /**
+   * Add a property copier with specified json view
+   * @param sourceGetter source getter method
+   * @param setter target setter method
+   * @param converter converter function
+   * @param views json view classes
+   * @return
+   */
   public PropertyProjector<S, T> add(PropertyDescriptor getter, String targetPropertyName,
       Function<?, ?> converter) {
     var setter = BeanMetaUtils.forClass(this.targetClass).getProperty(targetPropertyName);
@@ -161,15 +252,39 @@ public class PropertyProjector<S, T> {
     return this.add(getter.getReadMethod(), setter.getWriteMethod(), converter);
   }
 
+  /**
+   * Add a property copier with specified json view
+   * @param sourceGetter source getter method
+   * @param setter target setter method
+   * @param converter converter function
+   * @param views json view classes
+   * @return
+   */
   public PropertyProjector<S, T> add(PropertyDescriptor getter, PropertyDescriptor setter,
       Supplier<Function<?, ?>> converter) {
     return this.add(getter.getReadMethod(), setter.getWriteMethod(), converter.get());
   }
 
+  /**
+   * Add a property copier with specified json view
+   * @param sourceGetter source getter method
+   * @param setter target setter method
+   * @param converter converter function
+   * @param views json view classes
+   * @return
+   */
   public PropertyProjector<S, T> add(PropertyDescriptor getter, PropertyDescriptor setter) {
     return this.add(getter.getReadMethod(), setter.getWriteMethod());
   }
 
+  /**
+   * Add a property copier with specified json view
+   * @param sourceGetter source getter method
+   * @param setter target setter method
+   * @param converter converter function
+   * @param views json view classes
+   * @return
+   */
   public <V> PropertyProjector<S, T> add(String sourcePropertyName, BiConsumer<T, V> setter) {
     var getter = BeanMetaUtils.forClass(this.sourceClass).getProperty(sourcePropertyName);
     if (Objects.isNull(getter)) {
@@ -178,6 +293,14 @@ public class PropertyProjector<S, T> {
     return this.add(getter.getReadMethod(), setter);
   }
 
+  /**
+   * Add a property copier with specified json view
+   * @param sourceGetter source getter method
+   * @param setter target setter method
+   * @param converter converter function
+   * @param views json view classes
+   * @return
+   */
   public <V> PropertyProjector<S, T> add(String sourcePropertyName, BiConsumer<T, V> setter,
       Function<V, V> converter) {
     var getter = BeanMetaUtils.forClass(this.sourceClass).getProperty(sourcePropertyName);
@@ -188,28 +311,68 @@ public class PropertyProjector<S, T> {
         JsonViewUtils.findViews(getter.getReadMethod()));
   }
 
+  /**
+   * Add a property copier with specified json view
+   * @param sourceGetter source getter method
+   * @param setter target setter method
+   * @param converter converter function
+   * @param views json view classes
+   * @return
+   */
   public <V> PropertyProjector<S, T> add(Function<S, V> getter, BiConsumer<T, V> setter) {
     this.copiers.add(new PropertyCopier(getter, setter));
     return this;
   }
 
+  /**
+   * Add a property copier with specified json view
+   * @param sourceGetter source getter method
+   * @param setter target setter method
+   * @param converter converter function
+   * @param views json view classes
+   * @return
+   */
   public <V> PropertyProjector<S, T> add(Function<S, V> getter, BiConsumer<T, V> setter, Class<?>... views) {
     this.copiers.add(new PropertyCopier(getter, setter, views));
     return this;
   }
 
+  /**
+   * Add a property copier with specified json view
+   * @param sourceGetter source getter method
+   * @param setter target setter method
+   * @param converter converter function
+   * @param views json view classes
+   * @return
+   */
   public <V> PropertyProjector<S, T> add(Function<S, V> getter, BiConsumer<T, V> setter, Class<?>[] getterViews,
       Class<?>[] setterViews) {
     this.copiers.add(new PropertyCopier(getter, setter, getterViews, setterViews));
     return this;
   }
 
+  /**
+   * Add a property copier with specified json view
+   * @param sourceGetter source getter method
+   * @param setter target setter method
+   * @param converter converter function
+   * @param views json view classes
+   * @return
+   */
   public <V> PropertyProjector<S, T> add(Function<S, V> getter, BiConsumer<T, V> setter, Function<V, V> converter) {
     return this.add(getter, (t, u) -> {
       setter.accept(t, converter.apply(TypeUtils.cast(u)));
     });
   }
 
+  /**
+   * Add a property copier with specified json view
+   * @param sourceGetter source getter method
+   * @param setter target setter method
+   * @param converter converter function
+   * @param views json view classes
+   * @return
+   */
   public <V> PropertyProjector<S, T> add(Function<S, V> getter, BiConsumer<T, V> setter, Function<V, V> converter,
       Class<?>... views) {
     if (Objects.isNull(converter)) {
@@ -266,15 +429,15 @@ public class PropertyProjector<S, T> {
       this.setter.accept(target, TypeUtils.cast(this.getter.apply(source)));
     }
 
-    public boolean canCopy(Class<?> activeView) {
-      if (Objects.isNull(activeView)) {
+    public boolean canCopy(Class<?> activeJsonView) {
+      if (Objects.isNull(activeJsonView)) {
         return true;
       }
       if (Objects.nonNull(this.views)) {
-        return JsonViewUtils.isInView(activeView, this.views);
+        return JsonViewUtils.isInView(activeJsonView, this.views);
       }
-      return JsonViewUtils.isInView(activeView, this.getterViews)
-          && JsonViewUtils.isInView(activeView, this.setterViews);
+      return JsonViewUtils.isInView(activeJsonView, this.getterViews)
+          && JsonViewUtils.isInView(activeJsonView, this.setterViews);
     }
   }
 

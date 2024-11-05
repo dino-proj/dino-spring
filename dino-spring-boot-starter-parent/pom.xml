@@ -442,7 +442,7 @@
             <extensions>true</extensions>
             <configuration>
               <publishingServerId>central</publishingServerId>
-              <waitUntil>published</waitUntil>
+              <waitUntil>uploaded</waitUntil>
               <deploymentName>${project.artifactId}</deploymentName>
             </configuration>
           </plugin>

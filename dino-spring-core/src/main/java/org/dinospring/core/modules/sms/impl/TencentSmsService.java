@@ -37,7 +37,7 @@ public class TencentSmsService extends SmsServiceBase {
 
   @Override
   public Collection<String> sendTemplateSms(Collection<String> mobiles, String templateId,
-      Collection<String> templateParams, @Nullable String signName) {
+      Object templateParams, @Nullable String signName) {
     signName = StringUtils.defaultIfBlank(signName, this.smsModuleProperties.getTencent().getSignName());
     return this.doSendTemplateSms(mobiles, templateId, templateParams, signName);
   }
@@ -48,7 +48,12 @@ public class TencentSmsService extends SmsServiceBase {
   }
 
   private Collection<String> doSendTemplateSms(Collection<String> mobiles, String templateId,
-      Collection<String> templateParams, String signName) {
+      Object templateParams, String signName) {
+    // 检查templateParams是否为Collection
+    if (!(templateParams instanceof Collection)) {
+      throw new IllegalArgumentException("templateParams must be a Collection");
+    }
+    var templateParamsList = (Collection<?>) templateParams;
 
     var failedMobiles = new ArrayList<String>();
     var tencentSmsProperties = this.smsModuleProperties.getTencent();
@@ -86,7 +91,7 @@ public class TencentSmsService extends SmsServiceBase {
 
     // 设置发送手机号
     req.setPhoneNumberSet(mobiles.toArray(new String[mobiles.size()]));
-    req.setTemplateParamSet(templateParams.toArray(new String[templateParams.size()]));
+    req.setTemplateParamSet(templateParamsList.toArray(new String[templateParamsList.size()]));
     try {
       // 发送短信
       var resp = client.SendSms(req);

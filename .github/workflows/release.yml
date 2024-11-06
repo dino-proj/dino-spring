@@ -44,20 +44,6 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           cache: "maven"
 
-      - name: Change Project Version to Release Version
-        run: |
-          # 如果是发布版本，则修改所有项目的版本号
-          # 获取发布版本号
-          RELEASE_VERSION=$(echo "${GITHUB_REF}" | sed 's/refs\/tags\/RELEASE-//')
-          if [ -z "$RELEASE_VERSION" ]; then
-            echo "发布版本号为空，不需要修改项目版本信息。"
-            exit 0
-          fi
-          # 调用change-version.sh脚本修改项目版本信息
-          bash change-version.sh "$RELEASE_VERSION"
-
-          echo "所有项目版本信息修改完成。V:$RELEASE_VERSION"
-
       - name: Package & Install to Local Repository
         run: |
           touch /home/runner/.m2/settings-security.xml

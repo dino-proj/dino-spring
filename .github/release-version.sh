@@ -59,11 +59,10 @@ git commit -m "release version $NEW_VER"
 echo "git tag"
 git tag -a "RELEASE-$NEW_VER" -m "release version $NEW_VER"
 
-# git push
+# git push main and tag
 echo "git push"
-git push origin master
-git push origin "RELEASE-$NEW_VER"
-
+git push Github main
+git push Github "RELEASE-$NEW_VER"
 
 echo "done!"
 

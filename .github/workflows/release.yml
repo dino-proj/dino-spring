@@ -56,7 +56,7 @@ jobs:
           # 调用change-version.sh脚本修改项目版本信息
           bash change-version.sh "$RELEASE_VERSION"
 
-          echo "所有项目版本信息修改完成。"
+          echo "所有项目版本信息修改完成。V:$RELEASE_VERSION"
 
       - name: Package & Install to Local Repository
         run: |

@@ -34,7 +34,7 @@ import lombok.EqualsAndHashCode;
  *   <li>of(Status status, Throwable cause)：根据状态和异常原因创建 BusinessException 实例，不包含附加数据</li>
  * </ul>
  *
- * @author : luxueyu
+ * @author : Cody
  * @version : v1.0
  * @since 2021-06-20
  *

@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * 分页请求信息
- * @author Cody LU
+ * @author Cody Lu
  */
 
 @Data

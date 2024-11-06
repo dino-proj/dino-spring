@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 @Data

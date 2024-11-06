@@ -5,7 +5,7 @@ package org.dinospring.commons.bean;
 
 /**
  * bean meta info
- * @author Cody LU
+ * @author Cody Lu
  * @date 2022-07-01 10:43:49
  */
 

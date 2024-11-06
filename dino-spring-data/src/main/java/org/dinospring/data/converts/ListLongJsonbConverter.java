@@ -18,7 +18,7 @@ import jakarta.persistence.Converter;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 @Component

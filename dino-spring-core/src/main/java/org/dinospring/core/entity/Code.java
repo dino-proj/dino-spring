@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public interface Code {

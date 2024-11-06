@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public interface Property {

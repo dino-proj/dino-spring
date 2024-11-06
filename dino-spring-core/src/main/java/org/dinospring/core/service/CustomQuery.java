@@ -9,7 +9,7 @@ import org.dinospring.data.sql.builder.SelectSqlBuilder;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public interface CustomQuery extends Serializable {

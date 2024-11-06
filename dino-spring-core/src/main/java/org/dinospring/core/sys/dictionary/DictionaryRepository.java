@@ -11,7 +11,7 @@ import org.springframework.data.jdbc.repository.query.Query;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public interface DictionaryRepository extends CrudRepositoryBase<DictionaryEntity, Long> {

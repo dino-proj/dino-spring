@@ -5,7 +5,7 @@ package org.dinospring.auth.exception;
 
 /**
  * 未登录异常，用于标识用户未登录、登录已过期或者登录身份不匹配
- * @author Cody LU
+ * @author Cody Lu
  * @date 2022-04-06 23:05:50
  */
 

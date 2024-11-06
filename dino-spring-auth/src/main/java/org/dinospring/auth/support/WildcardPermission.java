@@ -17,7 +17,7 @@ import jakarta.annotation.Nonnull;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  * @date 2022-04-07 03:02:53
  */
 public class WildcardPermission implements Permission, Serializable {

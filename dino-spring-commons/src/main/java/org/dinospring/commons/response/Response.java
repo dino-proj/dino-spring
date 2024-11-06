@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 
 /**
  * restApi响应
- * @author Cody LU
+ * @author Cody Lu
  */
 
 @ApiResponse(description = "restApi响应", content = @Content(mediaType = "application/json"))

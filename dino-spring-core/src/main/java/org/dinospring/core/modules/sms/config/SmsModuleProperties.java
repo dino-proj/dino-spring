@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import lombok.Data;
 
 /**
- * @author Cody LU
+ * @author Cody Lu
  */
 
 @Data

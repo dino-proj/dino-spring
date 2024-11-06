@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public interface Component extends Serializable {

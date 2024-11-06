@@ -1,7 +1,7 @@
 package org.dinospring.data.domain;
 
 /**
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public enum TenantLevel {

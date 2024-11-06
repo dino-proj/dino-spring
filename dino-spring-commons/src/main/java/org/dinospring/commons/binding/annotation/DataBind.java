@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 
 /**
  * 自动绑定注解
- * @author Cody LU
+ * @author Cody Lu
  * @date 2022-04-13 04:12:27
  */
 

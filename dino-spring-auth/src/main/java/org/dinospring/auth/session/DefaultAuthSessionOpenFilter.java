@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 缺省的会话打开过滤器，用于在每次请求时打开Auth会话
  *
- * @author Cody LU
+ * @author Cody Lu
  * @date 2022-04-11 17:38:45
  */
 

@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 
 /**
  * restApi分页响应
- * @author Cody LU
+ * @author Cody Lu
  */
 
 @Schema(description = "restApi分页响应")

@@ -8,7 +8,7 @@ import org.dinospring.core.modules.framework.Component;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 @JsonDiscriminator

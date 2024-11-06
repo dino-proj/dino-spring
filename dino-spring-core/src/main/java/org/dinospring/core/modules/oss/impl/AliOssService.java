@@ -5,7 +5,7 @@ package org.dinospring.core.modules.oss.impl;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public class AliOssService {

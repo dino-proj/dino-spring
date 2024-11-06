@@ -22,7 +22,7 @@ import lombok.Data;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public interface LoginByUserName<U extends User<K>, K extends Serializable>

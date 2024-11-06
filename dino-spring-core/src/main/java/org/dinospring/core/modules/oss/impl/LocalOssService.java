@@ -31,7 +31,7 @@ import org.dinospring.core.modules.oss.config.LocalOssProperties;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  * @author JL
  */
 

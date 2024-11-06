@@ -1,7 +1,7 @@
 package org.dinospring.commons.promise;
 
 /**
- * @author Cody LU
+ * @author Cody Lu
  */
 public interface Defer {
 

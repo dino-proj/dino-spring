@@ -8,7 +8,7 @@ import lombok.Getter;
 
 /**
  * 权限-操作 类型定义
- * @author Cody LU
+ * @author Cody Lu
  */
 @Getter
 @AllArgsConstructor

@@ -5,7 +5,7 @@ package org.dinospring.data.domain;
 
 /**
  * 基于Table的Tenant实体接口，
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public interface TenantTableEntity {

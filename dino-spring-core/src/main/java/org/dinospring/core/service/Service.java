@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * 基础服务Service
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 public interface Service<T, K extends Serializable> extends ListServiceBase<T, K> {
 

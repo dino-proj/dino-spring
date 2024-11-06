@@ -8,7 +8,7 @@ import org.dinospring.core.service.Service;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public interface TenantService extends Service<TenantEntity, String> {

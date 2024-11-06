@@ -14,7 +14,7 @@ import jakarta.validation.Payload;
 
 /**
  * Xss检查，对字符串进行Xss检查
- * @author Cody LU
+ * @author Cody Lu
  * @date 2022-03-31 23:42:45
  */
 

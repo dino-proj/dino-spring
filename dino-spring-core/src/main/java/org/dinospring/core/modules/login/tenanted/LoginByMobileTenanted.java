@@ -34,7 +34,7 @@ import lombok.Data;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public interface LoginByMobileTenanted<U extends User<K>, K extends Serializable>

@@ -5,7 +5,7 @@ import org.dinospring.data.sql.builder.SelectSqlBuilder;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public class NopSearchQuery implements CustomQuery {

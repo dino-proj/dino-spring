@@ -18,7 +18,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 @Target({ PARAMETER, METHOD, FIELD, ANNOTATION_TYPE })

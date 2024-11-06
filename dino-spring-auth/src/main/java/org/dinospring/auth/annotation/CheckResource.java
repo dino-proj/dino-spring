@@ -13,7 +13,7 @@ import org.springframework.core.annotation.AliasFor;
 
 /**
  * 权限所对应的资源的名称
- * @author Cody LU
+ * @author Cody Lu
  * @date 2022-04-06 23:32:36
  */
 

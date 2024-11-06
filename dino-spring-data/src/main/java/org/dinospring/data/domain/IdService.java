@@ -7,7 +7,7 @@ import java.util.Base64;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  * @author JL
  */
 

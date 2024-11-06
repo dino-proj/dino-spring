@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  * @author JL
  */
 public abstract class CategoryService<E extends CategoryEntityBase, N extends TreeNode> extends ServiceBase<E, Long>

@@ -27,7 +27,7 @@ import org.bouncycastle.math.ec.custom.gm.SM2P256V1Curve;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  * @date 2022-05-06 06:40:57
  */
 

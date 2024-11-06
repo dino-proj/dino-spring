@@ -19,7 +19,7 @@ import lombok.experimental.FieldNameConstants;
 
 /**
  * 数据字典实体
- * @author Cody LU
+ * @author Cody Lu
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

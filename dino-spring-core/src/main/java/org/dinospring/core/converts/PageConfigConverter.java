@@ -17,7 +17,7 @@ import org.springframework.data.convert.WritingConverter;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public class PageConfigConverter {

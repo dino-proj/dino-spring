@@ -13,7 +13,7 @@ import org.dinospring.commons.utils.TaskObserver;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public interface TaskService {

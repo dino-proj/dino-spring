@@ -16,7 +16,7 @@ import lombok.experimental.FieldNameConstants;
 /**
  * Token 信息
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 @Data

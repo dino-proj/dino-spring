@@ -12,7 +12,7 @@ import org.dinospring.core.service.Service;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public interface DictionaryService extends Service<DictionaryEntity, Long> {

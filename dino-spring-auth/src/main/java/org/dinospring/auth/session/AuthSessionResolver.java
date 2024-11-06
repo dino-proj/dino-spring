@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
  * <p>配合{@link DefaultAuthSessionOpenFilter}使用</p>
  *
  *
- * @author Cody LU
+ * @author Cody Lu
  * @date 2022-04-09 21:50:24
  */
 

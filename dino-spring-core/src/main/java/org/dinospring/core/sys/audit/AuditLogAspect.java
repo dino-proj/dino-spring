@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
  * 用于记录日志的Aspect,
  * 请使用 {@link AuditLogEntity} 注解
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 @Aspect
 @Component

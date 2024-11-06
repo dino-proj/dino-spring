@@ -7,7 +7,7 @@ import org.dinospring.commons.json.annotation.JsonDiscriminator;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 @JsonDiscriminator

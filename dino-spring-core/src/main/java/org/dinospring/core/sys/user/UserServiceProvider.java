@@ -10,7 +10,7 @@ import org.dinospring.commons.sys.UserType;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public interface UserServiceProvider {

@@ -12,7 +12,7 @@ import org.springframework.util.Assert;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 public class ContextHelper {
 

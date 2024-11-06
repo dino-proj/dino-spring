@@ -9,7 +9,7 @@ import org.dinospring.auth.session.AuthSession;
 
 /**
  * 权限检查接口
- * @author Cody LU
+ * @author Cody Lu
  * @date 2022-04-07 01:08:14
  */
 public interface AuthzChecker {

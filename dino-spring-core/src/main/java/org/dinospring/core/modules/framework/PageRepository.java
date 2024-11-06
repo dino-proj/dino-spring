@@ -10,7 +10,7 @@ import org.springframework.data.jdbc.repository.query.Query;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public interface PageRepository extends CrudRepositoryBase<PageEntity, Long> {

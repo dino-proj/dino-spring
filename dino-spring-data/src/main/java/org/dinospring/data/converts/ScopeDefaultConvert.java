@@ -9,7 +9,7 @@ import jakarta.persistence.AttributeConverter;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public class ScopeDefaultConvert implements AttributeConverter<Scope, String> {

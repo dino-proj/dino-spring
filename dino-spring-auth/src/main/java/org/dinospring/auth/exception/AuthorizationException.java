@@ -4,7 +4,7 @@ package org.dinospring.auth.exception;
 
 /**
  * 权限异常，当权限不足时抛出
- * @author Cody LU
+ * @author Cody Lu
  * @date 2022-04-06 23:04:04
  */
 

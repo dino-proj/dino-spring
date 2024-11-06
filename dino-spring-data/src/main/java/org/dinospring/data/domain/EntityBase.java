@@ -23,7 +23,7 @@ import lombok.experimental.SuperBuilder;
 
 /**
  * Entity基础父类
- * @author Cody LU
+ * @author Cody Lu
  * @author JL
  */
 

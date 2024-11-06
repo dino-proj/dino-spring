@@ -20,7 +20,7 @@ import io.minio.MinioClient;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 @Configuration

@@ -7,7 +7,7 @@ import org.dinospring.data.dao.CrudRepositoryBase;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public interface TokenRepository extends CrudRepositoryBase<TokenEntity, String> {

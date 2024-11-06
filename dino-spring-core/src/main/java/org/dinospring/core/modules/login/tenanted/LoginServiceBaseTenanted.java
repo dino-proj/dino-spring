@@ -25,7 +25,7 @@ import org.dinospring.core.sys.user.UserService;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public abstract interface LoginServiceBaseTenanted<U extends User<K>, K extends Serializable> {

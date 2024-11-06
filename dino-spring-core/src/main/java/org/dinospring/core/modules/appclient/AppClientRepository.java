@@ -9,7 +9,7 @@ import org.dinospring.core.sys.tenant.TenantEntity;
 import org.dinospring.data.dao.CrudRepositoryBase;
 
 /**
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public interface AppClientRepository extends CrudRepositoryBase<AppClientEntity, String> {

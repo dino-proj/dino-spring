@@ -5,7 +5,7 @@ package org.dinospring.commons.utils;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public interface TaskObserver {

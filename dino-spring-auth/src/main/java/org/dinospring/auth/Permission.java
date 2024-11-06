@@ -5,7 +5,7 @@ package org.dinospring.auth;
 
 /**
  * 权限接口
- * @author Cody LU
+ * @author Cody Lu
  * @date 2022-04-07 03:05:11
  */
 

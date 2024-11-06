@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 
 /**
  * 基于Row的Tenant实体基类，
- * @author Cody LU
+ * @author Cody Lu
  */
 
 @Data

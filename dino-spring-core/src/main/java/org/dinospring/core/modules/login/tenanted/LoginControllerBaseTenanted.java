@@ -12,7 +12,7 @@ import org.dinospring.core.sys.tenant.TenantService;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public interface LoginControllerBaseTenanted<U extends User<K>, K extends Serializable>

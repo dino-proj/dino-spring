@@ -8,7 +8,7 @@ import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * @author Cody LU
+ * @author Cody Lu
  */
 public interface TaskRepository extends CrudRepositoryBase<TaskEntity, String> {
 

@@ -15,7 +15,7 @@ import org.dinospring.data.domain.EntityBase;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public interface ControllerBase<S extends ServiceBase<E, K>, E extends EntityBase<K>, VO extends VoBase<K>, K extends Serializable>

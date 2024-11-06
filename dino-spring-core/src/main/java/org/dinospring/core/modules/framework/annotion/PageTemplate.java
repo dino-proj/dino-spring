@@ -13,7 +13,7 @@ import org.dinospring.core.modules.framework.PageType;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 @Target(ElementType.TYPE)

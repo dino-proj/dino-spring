@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @author Cody LU
+ * @author Cody Lu
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

@@ -5,7 +5,7 @@ package org.dinospring.commons.annotation;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  * @date 2021-12-22 20:35:55
  */
 

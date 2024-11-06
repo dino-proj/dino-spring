@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  * @date 2022-03-01 20:54:29
  */
 

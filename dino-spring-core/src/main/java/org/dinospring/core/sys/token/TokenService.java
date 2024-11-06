@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Token相关的服务
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 @Slf4j

@@ -9,7 +9,7 @@ import lombok.Data;
 
 /**
  * Post请求包装
- * @author Cody LU
+ * @author Cody Lu
  */
 
 @Data

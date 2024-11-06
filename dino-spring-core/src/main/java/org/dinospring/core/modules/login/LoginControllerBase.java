@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public interface LoginControllerBase<U extends User<K>, K extends Serializable> {

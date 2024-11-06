@@ -7,7 +7,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 @NoRepositoryBean

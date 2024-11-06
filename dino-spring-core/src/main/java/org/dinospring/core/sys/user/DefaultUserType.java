@@ -11,7 +11,7 @@ import org.dinospring.commons.sys.UserType;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public enum DefaultUserType implements UserType {

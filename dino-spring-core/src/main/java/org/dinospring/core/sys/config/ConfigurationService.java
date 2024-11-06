@@ -15,7 +15,7 @@ import org.dinospring.core.service.impl.ServiceBase;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public abstract class ConfigurationService<T extends Configuration> extends ServiceBase<T, Long> {

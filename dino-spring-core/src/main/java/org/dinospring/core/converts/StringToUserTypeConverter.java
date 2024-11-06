@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 @Component
 @ReadingConverter

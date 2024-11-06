@@ -21,7 +21,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
- * @author Cody LU
+ * @author Cody Lu
  */
 public interface TenantControllerBase extends ControllerBase<TenantService, TenantEntity, TenantVo, String> {
 

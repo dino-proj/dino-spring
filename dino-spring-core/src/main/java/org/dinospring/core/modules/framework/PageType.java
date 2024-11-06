@@ -5,7 +5,7 @@ package org.dinospring.core.modules.framework;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 public enum PageType {
   //功能类页面

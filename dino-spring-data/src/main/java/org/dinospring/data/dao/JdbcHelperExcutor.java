@@ -11,7 +11,7 @@ import org.springframework.data.jdbc.repository.query.Modifying;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public interface JdbcHelperExcutor<T, K> {

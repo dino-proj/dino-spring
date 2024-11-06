@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * @author Cody LU
+ * @author Cody Lu
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

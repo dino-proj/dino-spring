@@ -5,7 +5,7 @@ package org.dinospring.commons.data;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public enum FileTypes {

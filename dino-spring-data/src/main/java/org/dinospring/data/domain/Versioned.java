@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 
 /**
- * @author Cody LU
+ * @author Cody Lu
  */
 public interface Versioned {
 

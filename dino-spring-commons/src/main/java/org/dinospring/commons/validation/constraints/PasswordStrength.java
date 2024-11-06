@@ -15,7 +15,7 @@ import jakarta.validation.Payload;
 
 /**
  * 密码强度
- * @author Cody LU
+ * @author Cody Lu
  * @date 2022-04-01 01:32:46
  */
 @Retention(RetentionPolicy.RUNTIME)

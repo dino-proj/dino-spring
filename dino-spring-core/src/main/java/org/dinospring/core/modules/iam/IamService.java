@@ -16,7 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
- * @author Cody LU
+ * @author Cody Lu
  */
 @Service
 public class IamService {

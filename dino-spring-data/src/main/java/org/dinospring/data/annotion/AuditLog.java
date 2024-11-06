@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 
 /**
  * 操作日志注解
- * @author Cody LU
+ * @author Cody Lu
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD })

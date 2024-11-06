@@ -8,7 +8,7 @@ import jakarta.persistence.Column;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public interface Orderable {

@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 @RequestBody(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(type = "json", implementation = Object.class, example = "{}")))

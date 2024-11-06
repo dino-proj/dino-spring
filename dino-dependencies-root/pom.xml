@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.dinospring</groupId>
   <artifactId>dino-dependencies-root</artifactId>
-  <version>3.0.1</version>
+  <version>3.0.2</version>
   <packaging>pom</packaging>
   <description>dino-spring依赖管理</description>
   <url>https://dinodev.cn/</url>
@@ -15,7 +15,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>17</java.version>
 
-    <dino-spring.version>3.0.1</dino-spring.version>
+    <dino-spring.version>3.0.2</dino-spring.version>
 
     <!-- managedDep common tools -->
     <commons-lang3.version>3.13.0</commons-lang3.version>

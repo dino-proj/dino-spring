@@ -45,7 +45,7 @@ java spring项目maven pom.xml配置如下：
   <parent>
     <groupId>org.dinospring</groupId>
     <artifactId>dino-spring-boot-starter-parent</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.2</version>
   </parent>
   <groupId>your group id</groupId>
   <artifactId>your artifact id</artifactId>

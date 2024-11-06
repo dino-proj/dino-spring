@@ -7,6 +7,7 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>3.2.3</version>
+    <relativePath /> <!-- lookup parent from repository -->
   </parent>
   <groupId>org.dinospring</groupId>
   <artifactId>dino-spring-boot-starter-parent</artifactId>
@@ -21,6 +22,7 @@
     <java.version>17</java.version>
 
     <dino-spring.version>3.0.1</dino-spring.version>
+    <spring-boot-dependencies.version>3.2.3</spring-boot-dependencies.version>
 
     <!-- plugin -->
     <central-publishing-maven-plugin.version>0.6.0</central-publishing-maven-plugin.version>
@@ -201,21 +203,6 @@
     <pluginManagement>
       <plugins>
         <plugin>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-maven-plugin</artifactId>
-          <configuration>
-            <executable>false</executable>
-            <layout>ZIP</layout>
-            <annotationProcessorPaths>
-              <annotationProcessorPath>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-configuration-processor</artifactId>
-              </annotationProcessorPath>
-            </annotationProcessorPaths>
-          </configuration>
-        </plugin>
-
-        <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
           <configuration>
             <descriptorRefs>
@@ -311,7 +298,6 @@
         </executions>
       </plugin>
 
-      <!-- Mapstruct 支持-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -322,6 +308,13 @@
               <artifactId>lombok</artifactId>
               <version>${lombok.version}</version>
             </path>
+            <!-- Spring Configuration Meta -->
+            <path>
+              <groupId>org.springframework.boot</groupId>
+              <artifactId>spring-boot-configuration-processor</artifactId>
+              <version>${spring-boot-dependencies.version}</version>
+            </path>
+            <!-- Mapstruct 支持-->
             <path>
               <groupId>org.mapstruct</groupId>
               <artifactId>mapstruct-processor</artifactId>

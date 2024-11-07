@@ -9,7 +9,7 @@
     <version>3.3.5</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
-  <groupId>org.dinospring</groupId>
+  <groupId>cn.dinodev</groupId>
   <artifactId>dino-spring-boot-starter-parent</artifactId>
   <version>3.3.0</version>
   <packaging>pom</packaging>
@@ -43,7 +43,7 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.dinospring</groupId>
+        <groupId>cn.dinodev</groupId>
         <artifactId>dino-dependencies-root</artifactId>
         <version>${dino-spring.version}</version>
         <type>pom</type>
@@ -99,7 +99,7 @@
 
       <!-- DINO spring -->
       <dependency>
-        <groupId>org.dinospring</groupId>
+        <groupId>cn.dinodev</groupId>
         <artifactId>dino-spring-assembly</artifactId>
         <version>${dino-spring.version}</version>
       </dependency>
@@ -199,7 +199,7 @@
           </configuration>
           <dependencies>
             <dependency>
-              <groupId>org.dinospring</groupId>
+              <groupId>cn.dinodev</groupId>
               <artifactId>dino-spring-assembly</artifactId>
               <version>${dino-spring.version}</version>
             </dependency>
@@ -224,7 +224,7 @@
           <configuration>
             <targetJdk>${java.version}</targetJdk>
             <rulesets>
-              <ruleset>rulesets/java/dinospring-all.xml</ruleset>
+              <ruleset>rulesets/java/dino.spring-all.xml</ruleset>
             </rulesets>
             <printFailingErrors>true</printFailingErrors>
           </configuration>
@@ -239,7 +239,7 @@
           </executions>
           <dependencies>
             <dependency>
-              <groupId>org.dinospring</groupId>
+              <groupId>cn.dinodev</groupId>
               <artifactId>dino-spring-assembly</artifactId>
               <version>${dino-spring.version}</version>
             </dependency>
@@ -373,7 +373,7 @@
 
       <dependencies>
         <dependency>
-          <groupId>org.dinospring</groupId>
+          <groupId>cn.dinodev</groupId>
           <artifactId>dino-spring-assembly</artifactId>
         </dependency>
       </dependencies>
@@ -405,7 +405,7 @@
 
       <dependencies>
         <dependency>
-          <groupId>org.dinospring</groupId>
+          <groupId>cn.dinodev</groupId>
           <artifactId>dino-spring-assembly</artifactId>
         </dependency>
       </dependencies>

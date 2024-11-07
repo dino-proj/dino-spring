@@ -92,7 +92,7 @@ RUN_JAVA ()
   CLASSPATH=${CLASSPATH}:$APP_DIR'/conf/*'
   CLASSPATH=${CLASSPATH}:$APP_DIR'/conf/'
   CLASSPATH=${CLASSPATH}:$APP_DIR
-  CLASS=${MAIN_CLASS:-"org.dinospring.core.ApplicationMain"}
+  CLASS=${MAIN_CLASS:-"cn.dinodev.spring.core.ApplicationMain"}
 
   export CLASSPATH=$CLASSPATH
 

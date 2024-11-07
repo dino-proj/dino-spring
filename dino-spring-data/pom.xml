@@ -4,12 +4,12 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.dinospring</groupId>
+    <groupId>cn.dinodev</groupId>
     <artifactId>dino-spring-boot-starter-parent</artifactId>
     <version>3.3.0</version>
     <relativePath>../dino-spring-boot-starter-parent/pom.xml</relativePath>
   </parent>
-  <groupId>org.dinospring</groupId>
+  <groupId>cn.dinodev</groupId>
   <artifactId>dino-spring-data</artifactId>
   <version>3.3.0</version>
   <name>dino-spring-data</name>
@@ -26,7 +26,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.dinospring</groupId>
+      <groupId>cn.dinodev</groupId>
       <artifactId>dino-spring-commons</artifactId>
       <version>${dino-spring.version}</version>
     </dependency>

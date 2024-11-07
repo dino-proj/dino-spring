@@ -43,7 +43,7 @@ java spring项目maven pom.xml配置如下：
 ```xml
 <project>
   <parent>
-    <groupId>org.dinospring</groupId>
+    <groupId>cn.dinodev</groupId>
     <artifactId>dino-spring-boot-starter-parent</artifactId>
     <version>3.3.0</version>
   </parent>
@@ -52,7 +52,7 @@ java spring项目maven pom.xml配置如下：
 
   <dependencies>
     <dependency>
-      <groupId>org.dinospring</groupId>
+      <groupId>cn.dinodev</groupId>
       <artifactId>dino-spring-core</artifactId>
       <version>${dino-spring.version}</version>
     </dependency>

@@ -1,0 +1,18 @@
+package cn.dinodev.spring.data.domain;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
+
+/**
+ * @author Cody Lu
+ */
+public interface Versioned {
+
+  /**
+   * 版本号
+   * @return
+   */
+  @Schema(description = "版本号")
+  @Column(name = "version", nullable = true)
+  Long getVersion();
+}

@@ -22,9 +22,9 @@ Dino Spring用于快速构建前后端分离应用，支持微服务，多租户
 
 ## 💡 版本说明
 - **Java JDK:** >=17
-- **Spring Framework:** 6.0.11
-- **Spring Boot:** 3.1.2
-- **Spring Cloud:** 2022.0.3
+- **Spring Framework:** 6.1.14
+- **Spring Boot:** 3.3.5
+- **Spring Cloud:** 2023.0.3
 
 ## ✨ 内置模块
 

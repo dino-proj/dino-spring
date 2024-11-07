@@ -240,15 +240,9 @@ public class DinoFlaywayConfiguration implements ApplicationListener<Application
         .to(configuration::dryRunOutput);
     map.from(properties.getErrorOverrides())
         .to(configuration::errorOverrides);
-    map.from(properties.getLicenseKey())
-        .to(configuration::licenseKey);
+
     map.from(properties.getStream())
         .to(configuration::stream);
-    map.from(properties.getUndoSqlMigrationPrefix())
-        .to(configuration::undoSqlMigrationPrefix);
-    // No method reference for compatibility with Flyway 6.x
-    map.from(properties.getCherryPick())
-        .to(configuration::cherryPick);
     // No method reference for compatibility with Flyway 6.x
     map.from(properties.getJdbcProperties())
         .whenNot(Map::isEmpty)

@@ -11,35 +11,35 @@ package cn.dinodev.spring.auth.exception;
 public class AuthorizationException extends RuntimeException {
 
   /**
-   * Creates a new AuthorizationException.
+   * 创建一个新的 AuthorizationException。
    */
   public AuthorizationException() {
     super();
   }
 
   /**
-   * Constructs a new AuthorizationException.
+   * 构造一个新的 AuthorizationException。
    *
-   * @param message the reason for the exception
+   * @param message 异常原因
    */
   public AuthorizationException(String message) {
     super(message);
   }
 
   /**
-   * Constructs a new AuthorizationException.
+   * 构造一个新的 AuthorizationException。
    *
-   * @param cause the underlying Throwable that caused this exception to be thrown.
+   * @param cause 导致此异常被抛出的底层 Throwable。
    */
   public AuthorizationException(Throwable cause) {
     super(cause);
   }
 
   /**
-   * Constructs a new AuthorizationException.
+   * 构造一个新的 AuthorizationException。
    *
-   * @param message the reason for the exception
-   * @param cause   the underlying Throwable that caused this exception to be thrown.
+   * @param message 异常原因
+   * @param cause   导致此异常被抛出的底层 Throwable。
    */
   public AuthorizationException(String message, Throwable cause) {
     super(message, cause);

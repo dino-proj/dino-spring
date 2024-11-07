@@ -27,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2024-01-08 05:19:53
  */
 
+@SuppressWarnings("rawtypes")
 @Slf4j
 public class JsonbPropertyValueConverter implements PropertyValueConverter {
   @Autowired

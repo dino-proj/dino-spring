@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.2.3</version>
+    <version>3.3.5</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
   <groupId>org.dinospring</groupId>
@@ -22,22 +22,22 @@
     <java.version>17</java.version>
 
     <dino-spring.version>3.3.0</dino-spring.version>
-    <spring-boot-dependencies.version>3.2.3</spring-boot-dependencies.version>
+    <spring-boot-dependencies.version>3.3.5</spring-boot-dependencies.version>
 
     <!-- plugin -->
     <central-publishing-maven-plugin.version>0.6.0</central-publishing-maven-plugin.version>
     <maven-pmd-plugin.version>3.21.2</maven-pmd-plugin.version>
     <p3c-pmd.version>2.2.1.0x</p3c-pmd.version>
     <pmd.version>6.55.0</pmd.version>
-    <mapstruct.version>1.5.5.Final</mapstruct.version>
-    <lombok.version>1.18.28</lombok.version>
+    <mapstruct.version>1.6.2</mapstruct.version>
+    <lombok.version>1.18.34</lombok.version>
 
     <druid.version>1.2.23</druid.version>
 
     <!-- open api-->
-    <springdoc.version>2.3.0</springdoc.version>
-    <swagger.version>2.2.19</swagger.version>
-    <weixin-java.version>4.5.9.B</weixin-java.version>
+    <springdoc.version>2.6.0</springdoc.version>
+    <swagger.version>2.2.25</swagger.version>
+    <weixin-java.version>4.6.7.B</weixin-java.version>
   </properties>
 
   <dependencyManagement>
@@ -118,20 +118,8 @@
       <artifactId>commons-collections4</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-text</artifactId>
-    </dependency>
-    <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-compress</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>

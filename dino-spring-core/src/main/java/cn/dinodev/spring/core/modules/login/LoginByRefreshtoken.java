@@ -5,6 +5,10 @@ package cn.dinodev.spring.core.modules.login;
 
 import java.io.Serializable;
 
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import cn.dinodev.spring.commons.request.PostBody;
 import cn.dinodev.spring.commons.response.Response;
 import cn.dinodev.spring.commons.response.Status;
@@ -12,10 +16,6 @@ import cn.dinodev.spring.commons.sys.User;
 import cn.dinodev.spring.commons.utils.Assert;
 import cn.dinodev.spring.core.sys.token.TokenPrincaple;
 import cn.dinodev.spring.core.sys.user.UserService;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
@@ -30,12 +30,6 @@ import lombok.Data;
 
 public interface LoginByRefreshtoken<U extends User<K>, K extends Serializable>
     extends LoginControllerBase<U, K> {
-
-  /**
-   * 登录Service
-   * @return
-   */
-  LoginServiceBase<U, K> loginService();
 
   /**
    * 用户名密码登录
@@ -58,7 +52,7 @@ public interface LoginByRefreshtoken<U extends User<K>, K extends Serializable>
     var newToken = tokenService().refreshLoginToken(pric, user.getSecretKey(), body.refreshToken).orElse(null);
     Assert.notNull(newToken, Status.fail("refreshtoken失败"));
 
-    var auth = loginService().newLoginAuth();
+    var auth = newLoginAuth();
     auth.setUser(user);
     auth.setAuthToken(newToken);
 

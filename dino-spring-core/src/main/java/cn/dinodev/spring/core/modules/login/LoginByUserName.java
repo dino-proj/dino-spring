@@ -4,15 +4,17 @@
 package cn.dinodev.spring.core.modules.login;
 
 import java.io.Serializable;
+import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import cn.dinodev.spring.commons.request.PostBody;
 import cn.dinodev.spring.commons.response.Response;
 import cn.dinodev.spring.commons.response.Status;
 import cn.dinodev.spring.commons.sys.User;
 import cn.dinodev.spring.commons.utils.Assert;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
@@ -29,12 +31,6 @@ public interface LoginByUserName<U extends User<K>, K extends Serializable>
     extends LoginControllerBase<U, K> {
 
   /**
-   * 登录Service
-   * @return
-   */
-  LoginServiceBase<U, K> loginService();
-
-  /**
    * 用户名密码登录
    * @param req
    * @return
@@ -46,14 +42,14 @@ public interface LoginByUserName<U extends User<K>, K extends Serializable>
     //查询用户
     var username = req.getBody().getUsername();
     //通过用户名登录，如果用户使用手机号作为登录名，则和其他用户相同的手机号字段冲突，登录的时候存在不确定性
-    U user = loginService().findUserByLoginName(username).orElse(null);
+    U user = findUserByLoginName(username).orElse(null);
     Assert.notNull(user, Status.CODE.FAIL_USER_NOT_EXIST);
 
     //验证用户密码
-    Assert.isTrue(loginService().verifyUserPassword(user, req.getBody().getPassword()),
+    Assert.isTrue(verifyUserPassword(user, req.getBody().getPassword()),
         Status.CODE.FAIL_INVALID_PASSWORD);
     //返回授权签名
-    return Response.success(loginService().loginAuth(user, req.getPlt(), req.getGuid()));
+    return Response.success(loginAuth(user, req.getPlt(), req.getGuid()));
   }
 
   @Data
@@ -69,4 +65,26 @@ public interface LoginByUserName<U extends User<K>, K extends Serializable>
     @NotBlank
     private String password;
   }
+
+  /**
+   * 验证用户密码
+   * @param user
+   * @param password
+   * @return
+   */
+  default boolean verifyUserPassword(U user, String password) {
+    var signToken = tokenService().siginParams(user.getSecretKey(),
+        Map.of("username", user.getLoginName(), "password", password));
+
+    return user.getPasswordHash().equalsIgnoreCase(signToken);
+  }
+
+  /**
+   * 根据用户名查找用户
+   *
+   * @param username
+   * @return
+   */
+  Optional<U> findUserByLoginName(String username);
+
 }

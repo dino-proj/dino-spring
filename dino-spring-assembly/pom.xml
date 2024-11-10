@@ -50,8 +50,8 @@
             <extensions>true</extensions>
             <configuration>
               <publishingServerId>central</publishingServerId>
-              <autoPublish>true</autoPublish>
-              <waitUntil>published</waitUntil>
+              <autoPublish>${env.DEPLOY_AUTO_PUBLISH}</autoPublish>
+              <waitUntil>${env.DEPLOY_WAIT_UNTIL}</waitUntil>
               <deploymentName>${project.artifactId}-${project.version}</deploymentName>
             </configuration>
           </plugin>

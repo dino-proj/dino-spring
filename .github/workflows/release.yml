@@ -17,6 +17,21 @@ on:
           - error
           - warning
           - info
+          - debug
+      autoPublish:
+        description: "Auto publish"
+        required: true
+        default: true
+        type: boolean
+      waitUntil:
+        description: "Wait until"
+        required: true
+        type: choice
+        options:
+          - published
+          - uploaded
+          - validated
+
 
 
 jobs:
@@ -28,6 +43,8 @@ jobs:
       BUILD_OPT: "-Dmaven.test.skip=true -P publish"
       MVN_NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
       MVN_NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+      AUTO_PUBLISH: ${{ github.event.inputs.autoPublish || true }}
+      WAIT_UNTIL: ${{ github.event.inputs.waitUntil }}
 
     steps:
       - name: Check out Git repository
@@ -74,6 +91,17 @@ jobs:
 
       - name: Publish to Maven Central
         run: |
+          echo "是否自动发布：$AUTO_PUBLISH"
+          echo "等待条件：$WAIT_UNTIL"
+          # 定义发布参数
+          if [ "$AUTO_PUBLISH" = true ]; then
+            export DEPLOY_AUTO_PUBLISH=true
+            export DEPLOY_WAIT_UNTIL=${WAIT_UNTIL || "published"}
+          else
+            export DEPLOY_AUTO_PUBLISH=false
+            export DEPLOY_WAIT_UNTIL=${WAIT_UNTIL || "uploaded"}
+          fi
+
           echo "=============== 开始发布到Maven中央仓库 ==============="
           # 定义项目数组
           projects=(

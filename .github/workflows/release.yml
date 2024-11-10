@@ -94,12 +94,12 @@ jobs:
           echo "是否自动发布：$AUTO_PUBLISH"
           echo "等待条件：$WAIT_UNTIL"
           # 定义发布参数
-          if [ "$AUTO_PUBLISH" = true ]; then
-            export DEPLOY_AUTO_PUBLISH=true
-            export DEPLOY_WAIT_UNTIL=${WAIT_UNTIL || "published"}
-          else
+          if [ "$AUTO_PUBLISH" = false ]; then
             export DEPLOY_AUTO_PUBLISH=false
-            export DEPLOY_WAIT_UNTIL=${WAIT_UNTIL || "uploaded"}
+            export DEPLOY_WAIT_UNTIL=${WAIT_UNTIL:-"uploaded"}
+          else
+            export DEPLOY_AUTO_PUBLISH=true
+            export DEPLOY_WAIT_UNTIL=${WAIT_UNTIL:-"published"}
           fi
 
           echo "=============== 开始发布到Maven中央仓库 ==============="

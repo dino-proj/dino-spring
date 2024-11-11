@@ -10,7 +10,7 @@
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
   <groupId>cn.dinodev</groupId>
-  <artifactId>dino-spring-boot-starter-parent</artifactId>
+  <artifactId>dinodev-spring-boot-starter-parent</artifactId>
   <version>3.3.0</version>
   <packaging>pom</packaging>
   <description>dino-spring项目boot starter parent</description>
@@ -44,7 +44,7 @@
     <dependencies>
       <dependency>
         <groupId>cn.dinodev</groupId>
-        <artifactId>dino-dependencies-root</artifactId>
+        <artifactId>dinodev-dependencies-root</artifactId>
         <version>${dino-spring.version}</version>
         <type>pom</type>
         <scope>import</scope>
@@ -100,7 +100,7 @@
       <!-- DINO spring -->
       <dependency>
         <groupId>cn.dinodev</groupId>
-        <artifactId>dino-spring-assembly</artifactId>
+        <artifactId>dinodev-spring-assembly</artifactId>
         <version>${dino-spring.version}</version>
       </dependency>
 
@@ -200,7 +200,7 @@
           <dependencies>
             <dependency>
               <groupId>cn.dinodev</groupId>
-              <artifactId>dino-spring-assembly</artifactId>
+              <artifactId>dinodev-spring-assembly</artifactId>
               <version>${dino-spring.version}</version>
             </dependency>
           </dependencies>
@@ -240,7 +240,7 @@
           <dependencies>
             <dependency>
               <groupId>cn.dinodev</groupId>
-              <artifactId>dino-spring-assembly</artifactId>
+              <artifactId>dinodev-spring-assembly</artifactId>
               <version>${dino-spring.version}</version>
             </dependency>
             <!-- 需要使用阿里的一些xml文件，因此需要这里增加p3c的依赖 -->
@@ -374,7 +374,7 @@
       <dependencies>
         <dependency>
           <groupId>cn.dinodev</groupId>
-          <artifactId>dino-spring-assembly</artifactId>
+          <artifactId>dinodev-spring-assembly</artifactId>
         </dependency>
       </dependencies>
     </profile>
@@ -406,7 +406,7 @@
       <dependencies>
         <dependency>
           <groupId>cn.dinodev</groupId>
-          <artifactId>dino-spring-assembly</artifactId>
+          <artifactId>dinodev-spring-assembly</artifactId>
         </dependency>
       </dependencies>
     </profile>
@@ -426,6 +426,7 @@
               <autoPublish>${env.DEPLOY_AUTO_PUBLISH}</autoPublish>
               <waitUntil>${env.DEPLOY_WAIT_UNTIL}</waitUntil>
               <deploymentName>${project.artifactId}-${project.version}</deploymentName>
+              <ignorePublishedComponents>true</ignorePublishedComponents>
             </configuration>
           </plugin>
           <plugin>

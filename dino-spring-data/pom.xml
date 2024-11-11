@@ -5,12 +5,12 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>cn.dinodev</groupId>
-    <artifactId>dino-spring-boot-starter-parent</artifactId>
+    <artifactId>dinodev-spring-boot-starter-parent</artifactId>
     <version>3.3.0</version>
     <relativePath>../dino-spring-boot-starter-parent/pom.xml</relativePath>
   </parent>
   <groupId>cn.dinodev</groupId>
-  <artifactId>dino-spring-data</artifactId>
+  <artifactId>dinodev-spring-data</artifactId>
   <version>3.3.0</version>
   <name>dino-spring-data</name>
   <description>dino-spring数据访问相关功能模块</description>
@@ -27,7 +27,7 @@
   <dependencies>
     <dependency>
       <groupId>cn.dinodev</groupId>
-      <artifactId>dino-spring-commons</artifactId>
+      <artifactId>dinodev-spring-commons</artifactId>
       <version>${dino-spring.version}</version>
     </dependency>
 

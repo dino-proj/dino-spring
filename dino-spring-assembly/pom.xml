@@ -4,7 +4,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>cn.dinodev</groupId>
-  <artifactId>dino-spring-assembly</artifactId>
+  <artifactId>dinodev-spring-assembly</artifactId>
   <version>3.3.0</version>
   <name>dino-spring-assembly</name>
   <description>打包及运行组件</description>
@@ -53,6 +53,7 @@
               <autoPublish>${env.DEPLOY_AUTO_PUBLISH}</autoPublish>
               <waitUntil>${env.DEPLOY_WAIT_UNTIL}</waitUntil>
               <deploymentName>${project.artifactId}-${project.version}</deploymentName>
+              <ignorePublishedComponents>true</ignorePublishedComponents>
             </configuration>
           </plugin>
           <plugin>

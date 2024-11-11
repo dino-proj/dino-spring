@@ -5,12 +5,12 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>cn.dinodev</groupId>
-    <artifactId>dino-spring-boot-starter-parent</artifactId>
+    <artifactId>dinodev-spring-boot-starter-parent</artifactId>
     <version>3.3.0</version>
     <relativePath>../dino-spring-boot-starter-parent/pom.xml</relativePath>
   </parent>
   <groupId>cn.dinodev</groupId>
-  <artifactId>dino-spring-cloud-starter-parent</artifactId>
+  <artifactId>dinodev-spring-cloud-starter-parent</artifactId>
   <version>3.3.0</version>
   <packaging>pom</packaging>
   <description>dino-spring cloud微服务starter parent</description>
@@ -36,7 +36,7 @@
       </dependency>
       <dependency>
         <groupId>cn.dinodev</groupId>
-        <artifactId>dino-spring-boot-starter-parent</artifactId>
+        <artifactId>dinodev-spring-boot-starter-parent</artifactId>
         <version>${dino-spring.version}</version>
         <type>pom</type>
         <scope>import</scope>

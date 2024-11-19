@@ -9,6 +9,8 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 
 import org.springframework.core.ResolvableType;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 
 import jakarta.annotation.Nonnull;
@@ -112,8 +114,8 @@ public class TypeUtils {
 
   /**
    * 判断class是否为基本类型或者基本类型的包装类型
-   * @param clazz
-   * @return
+   * @param clazz 类
+   * @return 是否为基本类型或者基本类型的包装类型
    */
   public static boolean isPrimitiveOrString(@Nonnull Class<?> clazz) {
     return ClassUtils.isPrimitiveOrWrapper(clazz) || clazz == String.class;
@@ -121,12 +123,12 @@ public class TypeUtils {
 
   /**
    * 用默认构造函数构建创建新实例
-   * @param cls
-   * @return
+   * @param clazz 类
+   * @return 新实例
    */
-  public static <T> T newInstance(Class<T> cls) {
+  public static <T> T newInstance(Class<T> clazz) {
     try {
-      return cls.getDeclaredConstructor().newInstance();
+      return clazz.getDeclaredConstructor().newInstance();
     } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
         | NoSuchMethodException | SecurityException e) {
       throw new UnsupportedOperationException(e);
@@ -135,8 +137,8 @@ public class TypeUtils {
 
   /**
    * 判断instance是否为types中的一种类型
-   * @param instance
-   * @param types
+   * @param instance 实例
+   * @param types 类型，可以是接口或者类，也可以是基本类型
    * @return
    */
   public static boolean isInstanceOfAny(Object instance, Type... types) {
@@ -150,11 +152,26 @@ public class TypeUtils {
 
   /**
    * 类型转换
-   * @param object
-   * @return
+   * @param object 待转换对象
+   * @return 转换后的对象，可能为空
    */
   @SuppressWarnings("unchecked")
-  public static <T> T cast(Object object) {
+  @Nullable
+  public static <T> T cast(@Nullable Object object) {
+    return (T) object;
+  }
+
+  /**
+   * 类型转换
+   * @param object 待转换对象
+   * @return 非空, 否则抛出异常
+   */
+  @SuppressWarnings("unchecked")
+  @NonNull
+  public static <T> T castNonNull(@Nullable Object object) {
+    if (object == null) {
+      throw new NullPointerException();
+    }
     return (T) object;
   }
 }

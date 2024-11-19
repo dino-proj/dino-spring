@@ -20,10 +20,6 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import org.apache.commons.collections4.CollectionUtils;
-import cn.dinodev.spring.commons.bean.BeanMetaUtils;
-import cn.dinodev.spring.commons.context.ContextHelper;
-import cn.dinodev.spring.commons.function.Suppliers;
-import cn.dinodev.spring.commons.utils.TypeUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeansException;
@@ -33,6 +29,10 @@ import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
+import cn.dinodev.spring.commons.bean.BeanMetaUtils;
+import cn.dinodev.spring.commons.context.ContextHelper;
+import cn.dinodev.spring.commons.function.Suppliers;
+import cn.dinodev.spring.commons.utils.TypeUtils;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import lombok.experimental.UtilityClass;
@@ -148,11 +148,17 @@ public class ProjectionUtils {
     ResolvableType targetResolvableType = ResolvableType.forMethodParameter(writeMethod, 0);
 
     // Ignore generic types in assignable check if either ResolvableType has unresolvable generics.
-    boolean isAssignable = (sourceResolvableType.hasUnresolvableGenerics()
-        || targetResolvableType.hasUnresolvableGenerics()
-            ? ClassUtils.isAssignable(writeMethod.getParameterTypes()[0], readMethod.getReturnType())
-            : (targetResolvableType.isAssignableFrom(sourceResolvableType)
-                || BeanUtils.isSimpleValueType(targetResolvableType.getRawClass())));
+    boolean isAssignable;
+    if (sourceResolvableType.hasUnresolvableGenerics() || targetResolvableType.hasUnresolvableGenerics()) {
+      isAssignable = ClassUtils.isAssignable(writeMethod.getParameterTypes()[0], readMethod.getReturnType());
+    } else {
+      if (targetResolvableType.isAssignableFrom(sourceResolvableType)) {
+        isAssignable = true;
+      } else {
+        var targetClass = targetResolvableType.getRawClass();
+        isAssignable = targetClass != null && BeanUtils.isSimpleValueType(targetClass);
+      }
+    }
     if (!Modifier.isPublic(readMethod.getDeclaringClass().getModifiers())) {
       readMethod.setAccessible(true);
     }

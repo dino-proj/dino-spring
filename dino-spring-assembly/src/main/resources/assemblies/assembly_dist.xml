@@ -46,7 +46,7 @@
     <dependencySet>
       <outputDirectory>lib</outputDirectory>
       <excludes>
-        <exclude>cn.dinodev:dino-spring-assembly</exclude>
+        <exclude>cn.dinodev:dinodev-spring-assembly</exclude>
       </excludes>
     </dependencySet>
 
@@ -56,7 +56,7 @@
       <fileMode>0755</fileMode>
       <useStrictFiltering>true</useStrictFiltering>
       <includes>
-        <include>cn.dinodev:dino-spring-assembly</include>
+        <include>cn.dinodev:dinodev-spring-assembly</include>
       </includes>
       <unpack>true</unpack>
       <unpackOptions>
@@ -76,7 +76,7 @@
       <useStrictFiltering>true</useStrictFiltering>
       <outputFileNameMapping></outputFileNameMapping>
       <includes>
-        <include>cn.dinodev:dino-spring-assembly</include>
+        <include>cn.dinodev:dinodev-spring-assembly</include>
       </includes>
       <unpack>true</unpack>
       <unpackOptions>

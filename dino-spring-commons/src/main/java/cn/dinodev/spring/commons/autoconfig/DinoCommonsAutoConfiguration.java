@@ -3,9 +3,6 @@
 
 package cn.dinodev.spring.commons.autoconfig;
 
-import cn.dinodev.spring.commons.context.ContextHelper;
-import cn.dinodev.spring.commons.context.DinoContext;
-import cn.dinodev.spring.commons.context.DinoContextThreadLocalImpl;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -15,7 +12,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.Ordered;
+import org.springframework.lang.NonNull;
 
+import cn.dinodev.spring.commons.context.ContextHelper;
+import cn.dinodev.spring.commons.context.DinoContext;
+import cn.dinodev.spring.commons.context.DinoContextThreadLocalImpl;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -29,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DinoCommonsAutoConfiguration implements ApplicationContextAware {
 
   @Override
-  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+  public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
     if (ContextHelper.getApplicationContext() == null) {
       log.info("--->> setup ContextHelper with applicationContext[id={}]", applicationContext.getId());
       ContextHelper.setApplicationContext(applicationContext);

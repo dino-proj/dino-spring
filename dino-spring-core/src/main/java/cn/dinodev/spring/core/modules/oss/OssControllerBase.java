@@ -7,10 +7,15 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.function.Function;
 
-import jakarta.activation.FileTypeMap;
-import jakarta.servlet.http.HttpServletRequest;
-
 import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
 import cn.dinodev.spring.commons.context.ContextHelper;
 import cn.dinodev.spring.commons.data.AudioFileMeta;
 import cn.dinodev.spring.commons.data.DocumentFileMeta;
@@ -29,16 +34,10 @@ import cn.dinodev.spring.core.sys.token.TokenService;
 import cn.dinodev.spring.core.utils.MultiMediaUtils;
 import cn.dinodev.spring.core.utils.MultiMediaUtils.MediaInfo;
 import cn.dinodev.spring.data.domain.IdService;
-import org.slf4j.Logger;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.activation.FileTypeMap;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -156,8 +155,8 @@ public interface OssControllerBase {
     var meta = new AudioFileMeta();
 
     saveFile(tenantId, service, file, media -> {
-
-      Assert.isTrue(media != null && media.isAudio() && media.getDuration() != null,
+      Assert.notNull(media, Status.CODE.FAIL_VALIDATION.withMsg("upload file is invalid audio"));
+      Assert.isTrue(media.isAudio() && media.getDuration() != null,
           Status.CODE.FAIL_VALIDATION.withMsg("upload file is invalid audio"));
 
       meta.setFormat(media.getTypeName());
@@ -187,7 +186,8 @@ public interface OssControllerBase {
 
     saveFile(tenantId, service, file, media -> {
 
-      Assert.isTrue(media != null && media.isVideo() && media.getWidth() != null,
+      Assert.notNull(media, Status.CODE.FAIL_VALIDATION.withMsg("upload file is invalid video"));
+      Assert.isTrue(media.isVideo() && media.getWidth() != null,
           Status.CODE.FAIL_VALIDATION.withMsg("upload file is invalid video"));
 
       meta.setWidth(media.getWidth());
@@ -220,7 +220,8 @@ public interface OssControllerBase {
 
     saveFile(tenantId, service, file, media -> {
 
-      Assert.isTrue(media != null && media.isImage() && media.getWidth() != null,
+      Assert.notNull(media, Status.CODE.FAIL_VALIDATION.withMsg("upload file is invalid image"));
+      Assert.isTrue(media.isImage() && media.getWidth() != null,
           Status.CODE.FAIL_VALIDATION.withMsg("upload file is invalid image"));
 
       meta.setWidth(media.getWidth());

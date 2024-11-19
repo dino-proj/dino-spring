@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SchemaManager {
 
+  @SuppressWarnings("unused")
   private JdbcOperations jdbcOperations;
   private List<TableDef> tables = new ArrayList<>();
 

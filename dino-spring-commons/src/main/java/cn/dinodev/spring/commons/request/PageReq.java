@@ -49,7 +49,7 @@ public class PageReq {
   }
 
   public Pageable pageable(SortReq sortReq, String prefix) {
-    Sort sort = null;
+    Sort sort = Sort.unsorted();
     if (sortReq != null) {
       sort = sortReq.sortable(prefix);
     }

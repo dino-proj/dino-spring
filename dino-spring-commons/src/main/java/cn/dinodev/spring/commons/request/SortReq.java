@@ -36,6 +36,20 @@ public class SortReq {
   @Setter
   private List<String> sort;
 
+  /**
+   * 根据给定的前缀生成排序对象。
+   *
+   * 示例:
+   * <pre>
+   * SortReq sortReq = new SortReq(List.of("name:desc", "age:asc"));
+   * Sort sort = sortReq.sortable("user_");
+   * // 生成的排序对象将会按照 user_name 降序和 user_age 升序排序
+   * </pre>
+   *
+   * @param prefix 排序属性的前缀
+   * @return 排序对象
+   *
+   */
   public Sort sortable(String prefix) {
     if (CollectionUtils.isEmpty(sort)) {
       return Sort.unsorted();
@@ -52,6 +66,21 @@ public class SortReq {
     return Sort.by(orders);
   }
 
+  /**
+   * 生成排序对象。
+   *
+   * <p>
+   * 示例:
+   * <pre>
+   * SortReq sortReq = new SortReq(List.of("name:desc", "age:asc"));
+   * Sort sort = sortReq.sortable();
+   * // 生成的排序对象将会按照 name 降序和 age 升序排序
+   * </pre>
+   * </p>
+   *
+   * @return 排序对象
+   *
+   */
   public Sort sortable() {
     return sortable("");
   }

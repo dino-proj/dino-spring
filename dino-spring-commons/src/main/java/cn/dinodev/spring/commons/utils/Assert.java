@@ -222,12 +222,11 @@ public class Assert {
   }
 
   /**
-   * Assert that the given String contains valid text content; that is, it must not
-   * be {@code null} and must contain at least one non-whitespace character.
-   * <pre class="code">Assert.hasText(name, "'name' must not be empty");</pre>
-   * @param text the String to check
-   * @param message the exception message to use if the assertion fails
-   * @throws BusinessException if the text does not contain valid text content
+   * 断言给定的字符串包含有效的文本内容；即，它不能为 {@code null} 并且必须包含至少一个非空白字符。
+   * <pre class="code">Assert.hasText(name, "'name' 不能为空");</pre>
+   * @param text 要检查的字符串
+   * @param message 断言失败时使用的异常消息
+   * @throws BusinessException 如果字符串不包含有效的文本内容
    * @see StringUtils#hasText
    */
   public static void hasText(@Nullable CharSequence text, String message) {
@@ -235,12 +234,11 @@ public class Assert {
   }
 
   /**
-   * Assert that the given String contains valid text content; that is, it must not
-   * be {@code null} and must contain at least one non-whitespace character.
-   * <pre class="code">Assert.hasText(name, "'name' must not be empty");</pre>
-   * @param text the String to check
-   * @param status the exception status to use if the assertion fails
-   * @throws BusinessException if the text does not contain valid text content
+   * 断言给定的字符串包含有效的文本内容；即，它不能为 {@code null} 并且必须包含至少一个非空白字符。
+   * <pre class="code">Assert.hasText(name, "'name' 不能为空");</pre>
+   * @param text 要检查的字符串
+   * @param status 断言失败时使用的异常状态
+   * @throws BusinessException 如果字符串不包含有效的文本内容
    * @see StringUtils#hasText
    */
   public static void hasText(@Nullable CharSequence text, Status status) {
@@ -250,16 +248,14 @@ public class Assert {
   }
 
   /**
-   * Assert that the given String contains valid text content; that is, it must not
-   * be {@code null} and must contain at least one non-whitespace character.
+   * 断言给定的字符串包含有效的文本内容；即，它不能为 {@code null} 并且必须包含至少一个非空白字符。
    * <pre class="code">
    * Assert.hasText(account.getName(),
-   *     () -&gt; "Name for account '" + account.getId() + "' must not be empty");
+   *     () -&gt; "账户 '" + account.getId() + "' 的名称不能为空");
    * </pre>
-   * @param text the String to check
-   * @param statusSupplier a supplier for the exception status to use if the
-   * assertion fails
-   * @throws BusinessException if the text does not contain valid text content
+   * @param text 要检查的字符串
+   * @param statusSupplier 断言失败时使用的异常状态供应者
+   * @throws BusinessException 如果字符串不包含有效的文本内容
    * @see StringUtils#hasText
    */
   public static void hasText(@Nullable CharSequence text, @Nonnull Supplier<Status> statusSupplier) {
@@ -269,24 +265,24 @@ public class Assert {
   }
 
   /**
-   * Assert that the given text does not contain the given substring.
-   * <pre class="code">Assert.doesNotContain(name, "rod", "Name must not contain 'rod'");</pre>
-   * @param textToSearch the text to search
-   * @param substring the substring to find within the text
-   * @param message the exception message to use if the assertion fails
-   * @throws BusinessException if the text contains the substring
+   * 断言给定的文本不包含给定的子字符串。
+   * <pre class="code">Assert.doesNotContain(name, "rod", "名称不能包含 'rod'");</pre>
+   * @param textToSearch 要搜索的文本
+   * @param substring 要在文本中查找的子字符串
+   * @param message 断言失败时使用的异常消息
+   * @throws BusinessException 如果文本包含子字符串
    */
   public static void doesNotContain(@Nullable String textToSearch, String substring, String message) {
     doesNotContain(textToSearch, substring, Status.fail(message));
   }
 
   /**
-   * Assert that the given text does not contain the given substring.
-   * <pre class="code">Assert.doesNotContain(name, "rod", "Name must not contain 'rod'");</pre>
-   * @param textToSearch the text to search
-   * @param substring the substring to find within the text
-   * @param status the exception status to use if the assertion fails
-   * @throws BusinessException if the text contains the substring
+   * 断言给定的文本不包含给定的子字符串。
+   * <pre class="code">Assert.doesNotContain(name, "rod", "名称不能包含 'rod'");</pre>
+   * @param textToSearch 要搜索的文本
+   * @param substring 要在文本中查找的子字符串
+   * @param status 断言失败时使用的异常状态
+   * @throws BusinessException 如果文本包含子字符串
    */
   public static void doesNotContain(@Nullable String textToSearch, String substring, Status status) {
     if (StringUtils.isNotEmpty(textToSearch) && StringUtils.isNotEmpty(substring) && textToSearch.contains(substring)) {
@@ -295,17 +291,16 @@ public class Assert {
   }
 
   /**
-   * Assert that the given text does not contain the given substring.
+   * 断言给定的文本不包含给定的子字符串。
    * <pre class="code">
-   * Assert.doesNotContain(name, forbidden, () -&gt; "Name must not contain '" + forbidden + "'");
+   * Assert.doesNotContain(name, forbidden, () -&gt; "名称不能包含 '" + forbidden + "'");
    * </pre>
-   * @param textToSearch the text to search
-   * @param substring the substring to find within the text
-   * @param statusSupplier a supplier for the exception status to use if the
-   * assertion fails
-   * @throws BusinessException if the text contains the substring
+   * @param textToSearch 要搜索的文本
+   * @param substring 要在文本中查找的子字符串
+   * @param statusSupplier 断言失败时使用的异常状态供应者
+   * @throws BusinessException 如果文本包含子字符串
    */
-  public static void doesNotContain(@Nullable String textToSearch, String substring,
+  public static void doesNotContain(@Nullable String textToSearch, @Nonnull String substring,
       @Nonnull Supplier<Status> statusSupplier) {
     if (StringUtils.isNotEmpty(textToSearch) && StringUtils.isNotEmpty(substring) && textToSearch.contains(substring)) {
       throw BusinessException.of(nullSafeGet(statusSupplier));
@@ -313,24 +308,22 @@ public class Assert {
   }
 
   /**
-   * Assert that an array contains elements; that is, it must not be
-   * {@code null} and must contain at least one element.
-   * <pre class="code">Assert.notEmpty(array, "The array must contain elements");</pre>
-   * @param array the array to check
-   * @param message the exception message to use if the assertion fails
-   * @throws BusinessException if the object array is {@code null} or contains no elements
+   * 断言数组包含元素；即，它不能为 {@code null} 并且必须包含至少一个元素。
+   * <pre class="code">Assert.notEmpty(array, "数组必须包含元素");</pre>
+   * @param array 要检查的数组
+   * @param message 断言失败时使用的异常消息
+   * @throws BusinessException 如果对象数组为 {@code null} 或不包含任何元素
    */
   public static void notEmpty(@Nullable Object[] array, String message) {
     notEmpty(array, Status.fail(message));
   }
 
   /**
-   * Assert that an array contains elements; that is, it must not be
-   * {@code null} and must contain at least one element.
-   * <pre class="code">Assert.notEmpty(array, "The array must contain elements");</pre>
-   * @param array the array to check
-   * @param status the exception status to use if the assertion fails
-   * @throws BusinessException if the object array is {@code null} or contains no elements
+   * 断言数组包含元素；即，它不能为 {@code null} 并且必须包含至少一个元素。
+   * <pre class="code">Assert.notEmpty(array, "数组必须包含元素");</pre>
+   * @param array 要检查��数组
+   * @param status 断言失败时使用的异常状态
+   * @throws BusinessException 如果对象数组为 {@code null} 或不包含任何元素
    */
   public static void notEmpty(@Nullable Object[] array, Status status) {
     if (array == null || array.length == 0) {
@@ -339,15 +332,13 @@ public class Assert {
   }
 
   /**
-   * Assert that an array contains elements; that is, it must not be
-   * {@code null} and must contain at least one element.
+   * 断言数组包含元素；即，它不能为 {@code null} 并且必须包含至少一个元素。
    * <pre class="code">
-   * Assert.notEmpty(array, () -&gt; "The " + arrayType + " array must contain elements");
+   * Assert.notEmpty(array, () -&gt; "数组 " + arrayType + " 必须包含元素");
    * </pre>
-   * @param array the array to check
-   * @param statusSupplier a supplier for the exception status to use if the
-   * assertion fails
-   * @throws BusinessException if the object array is {@code null} or contains no elements
+   * @param array 要检查的数组
+   * @param statusSupplier 断言失败时使用的异常状态供应者
+   * @throws BusinessException 如果对象数组为 {@code null} 或不包含任何元素
    */
   public static void notEmpty(@Nullable Object[] array, @Nonnull Supplier<Status> statusSupplier) {
     if (array == null || array.length == 0) {
@@ -356,24 +347,24 @@ public class Assert {
   }
 
   /**
-   * Assert that an array contains no {@code null} elements.
-   * <p>Note: Does not complain if the array is empty!
-   * <pre class="code">Assert.noNullElements(array, "The array must contain non-null elements");</pre>
-   * @param array the array to check
-   * @param message the exception message to use if the assertion fails
-   * @throws BusinessException if the object array contains a {@code null} element
+   * 断言数组不包含 {@code null} 元素。
+   * <p>注意：如果数组为空，不会抛出异常！
+   * <pre class="code">Assert.noNullElements(array, "数组必须包含非 null 元素");</pre>
+   * @param array 要检查的数组
+   * @param message 断言失败时使用的异常消息
+   * @throws BusinessException 如果对象数组包含 {@code null} 元素
    */
   public static void noNullElements(@Nullable Object[] array, String message) {
     noNullElements(array, Status.fail(message));
   }
 
   /**
-   * Assert that an array contains no {@code null} elements.
-   * <p>Note: Does not complain if the array is empty!
-   * <pre class="code">Assert.noNullElements(array, "The array must contain non-null elements");</pre>
-   * @param array the array to check
-   * @param status the exception status to use if the assertion fails
-   * @throws BusinessException if the object array contains a {@code null} element
+   * 断言数组不包含 {@code null} 元素。
+   * <p>注意：如果数组为空，不会抛出异常！
+   * <pre class="code">Assert.noNullElements(array, "数组必须包含非 null 元素");</pre>
+   * @param array 要检查的数组
+   * @param status 断言失败时使用的异常状态
+   * @throws BusinessException 如果对象数组包含 {@code null} 元素
    */
   public static void noNullElements(@Nullable Object[] array, Status status) {
     if (array != null) {
@@ -386,15 +377,14 @@ public class Assert {
   }
 
   /**
-   * Assert that an array contains no {@code null} elements.
-   * <p>Note: Does not complain if the array is empty!
+   * 断言数组不包含 {@code null} 元素。
+   * <p>注意：如果数组为空，不会抛出异常！
    * <pre class="code">
-   * Assert.noNullElements(array, () -&gt; "The " + arrayType + " array must contain non-null elements");
+   * Assert.noNullElements(array, () -&gt; "数组 " + arrayType + " 必须包含非 null 元素");
    * </pre>
-   * @param array the array to check
-   * @param statusSupplier a supplier for the exception status to use if the
-   * assertion fails
-   * @throws BusinessException if the object array contains a {@code null} element
+   * @param array 要检查的数组
+   * @param statusSupplier 断言失败时使用的异常状态供应者
+   * @throws BusinessException 如果对象数组包含 {@code null} 元素
    */
   public static void noNullElements(@Nullable Object[] array, @Nonnull Supplier<Status> statusSupplier) {
     if (array != null) {
@@ -407,26 +397,22 @@ public class Assert {
   }
 
   /**
-   * Assert that a collection contains elements; that is, it must not be
-   * {@code null} and must contain at least one element.
-   * <pre class="code">Assert.notEmpty(collection, "Collection must contain elements");</pre>
-   * @param collection the collection to check
-   * @param message the exception message to use if the assertion fails
-   * @throws BusinessException if the collection is {@code null} or
-   * contains no elements
+   * 断言集合包含元素；即，它不能为 {@code null} 并且必须包含至少一个元素。
+   * <pre class="code">Assert.notEmpty(collection, "集合必须包含元素");</pre>
+   * @param collection 要检查的集合
+   * @param message 断言失败时使用的异常消息
+   * @throws BusinessException 如果集合为 {@code null} 或不包含任何元素
    */
   public static void notEmpty(@Nullable Collection<?> collection, String message) {
     notEmpty(collection, Status.fail(message));
   }
 
   /**
-   * Assert that a collection contains elements; that is, it must not be
-   * {@code null} and must contain at least one element.
-   * <pre class="code">Assert.notEmpty(collection, "Collection must contain elements");</pre>
-   * @param collection the collection to check
-   * @param status the exception message to use if the assertion fails
-   * @throws BusinessException if the collection is {@code null} or
-   * contains no elements
+   * 断言集合包含元素；即，它不能为 {@code null} 并且必须包含至少一个元素。
+   * <pre class="code">Assert.notEmpty(collection, "集合必须包含元素");</pre>
+   * @param collection 要检查的集合
+   * @param status 断言失败时使用的异常状态
+   * @throws BusinessException 如果集合为 {@code null} 或不包含任何元素
    */
   public static void notEmpty(@Nullable Collection<?> collection, Status status) {
     if (CollectionUtils.isEmpty(collection)) {
@@ -435,16 +421,13 @@ public class Assert {
   }
 
   /**
-   * Assert that a collection contains elements; that is, it must not be
-   * {@code null} and must contain at least one element.
+   * 断言集合包含元素；即，它不能为 {@code null} 并且必须包含至少一个元素。
    * <pre class="code">
-   * Assert.notEmpty(collection, () -&gt; "The " + collectionType + " collection must contain elements");
+   * Assert.notEmpty(collection, () -&gt; "集合 " + collectionType + " 必须包含元素");
    * </pre>
-   * @param collection the collection to check
-   * @param statusSupplier a supplier for the exception message to use if the
-   * assertion fails
-   * @throws BusinessException if the collection is {@code null} or
-   * contains no elements
+   * @param collection 要检查的集合
+   * @param statusSupplier 断言失败时使用的异常状态供应者
+   * @throws BusinessException 如果集合为 {@code null} 或不包含任何元素
    */
   public static void notEmpty(@Nullable Collection<?> collection, @Nonnull Supplier<Status> statusSupplier) {
     if (CollectionUtils.isEmpty(collection)) {
@@ -453,12 +436,12 @@ public class Assert {
   }
 
   /**
-   * Assert that a collection contains no {@code null} elements.
-   * <p>Note: Does not complain if the collection is empty!
-   * <pre class="code">Assert.noNullElements(collection, "Collection must contain non-null elements");</pre>
-   * @param collection the collection to check
-   * @param message the exception message to use if the assertion fails
-   * @throws BusinessException if the collection contains a {@code null} element
+   * 断言集合不包含 {@code null} 元素。
+   * <p>注意：如果集合为空，不会抛出异常！
+   * <pre class="code">Assert.noNullElements(collection, "集合必须包含非 null 元素");</pre>
+   * @param collection 要检查的集合
+   * @param message 断言失败时使用的异常消息
+   * @throws BusinessException 如果集合包含 {@code null} 元素
    */
   public static void noNullElements(@Nullable Collection<?> collection, String message) {
     noNullElements(collection, Status.fail(message));
@@ -477,12 +460,12 @@ public class Assert {
   }
 
   /**
-   * Assert that a collection contains no {@code null} elements.
-   * <p>Note: Does not complain if the collection is empty!
-   * <pre class="code">Assert.noNullElements(collection, "Collection must contain non-null elements");</pre>
-   * @param collection the collection to check
-   * @param status the exception message to use if the assertion fails
-   * @throws BusinessException if the collection contains a {@code null} element
+   * 断言集合不包含 {@code null} 元素。
+   * <p>注意：如果集合为空，不会抛出异常！
+   * <pre class="code">Assert.noNullElements(collection, "集合必须包含非 null 元素");</pre>
+   * @param collection 要检查的集合
+   * @param status 断言失败时使用的异常状态
+   * @throws BusinessException 如果集合包含 {@code null} 元素
    */
   public static void noNullElements(@Nullable Collection<?> collection, Status status) {
     if (collection != null) {
@@ -495,15 +478,14 @@ public class Assert {
   }
 
   /**
-   * Assert that a collection contains no {@code null} elements.
-   * <p>Note: Does not complain if the collection is empty!
+   * 断言集合不包含 {@code null} 元素。
+   * <p>注意：如果集合为空，不会抛出异常！
    * <pre class="code">
-   * Assert.noNullElements(collection, () -&gt; "Collection " + collectionName + " must contain non-null elements");
+   * Assert.noNullElements(collection, () -&gt; "集合 " + collectionName + " 必须包含非 null 元素");
    * </pre>
-   * @param collection the collection to check
-   * @param statusSupplier a supplier for the exception message to use if the
-   * assertion fails
-   * @throws BusinessException if the collection contains a {@code null} element
+   * @param collection 要检查的集合
+   * @param statusSupplier 断言失败时使用的异常状态供应者
+   * @throws BusinessException 如果集合包含 {@code null} 元素
    */
   public static void noNullElements(@Nullable Collection<?> collection, @Nonnull Supplier<Status> statusSupplier) {
     if (collection != null) {
@@ -516,12 +498,11 @@ public class Assert {
   }
 
   /**
-   * Assert that a Map contains entries; that is, it must not be {@code null}
-   * and must contain at least one entry.
-   * <pre class="code">Assert.notEmpty(map, "Map must contain entries");</pre>
-   * @param map the map to check
-   * @param message the exception message to use if the assertion fails
-   * @throws BusinessException if the map is {@code null} or contains no entries
+   * 断言 Map 包含条目；即，它不能为 {@code null} 并且必须包含至少一个条目。
+   * <pre class="code">Assert.notEmpty(map, "Map 必须包含条目");</pre>
+   * @param map 要检查的 Map
+   * @param message 断言失败时使用的异常消息
+   * @throws BusinessException 如果 Map 为 {@code null} 或不包含任何条目
    */
   public static void notEmpty(@Nullable Map<?, ?> map, String message) {
     notEmpty(map, Status.fail(message));
@@ -540,12 +521,11 @@ public class Assert {
   }
 
   /**
-   * Assert that a Map contains entries; that is, it must not be {@code null}
-   * and must contain at least one entry.
-   * <pre class="code">Assert.notEmpty(map, "Map must contain entries");</pre>
-   * @param map the map to check
-   * @param status the exception message to use if the assertion fails
-   * @throws BusinessException if the map is {@code null} or contains no entries
+   * 断言 Map 包含条目；即，它不能为 {@code null} 并且必须包含至少一个条目。
+   * <pre class="code">Assert.notEmpty(map, "Map 必须包含条目");</pre>
+   * @param map 要检查的 Map
+   * @param status 断言失败时使用的异常状态
+   * @throws BusinessException 如果 Map 为 {@code null} 或不包含任何条目
    */
   public static void notEmpty(@Nullable Map<?, ?> map, Status status) {
     if (MapUtils.isEmpty(map)) {
@@ -554,15 +534,13 @@ public class Assert {
   }
 
   /**
-   * Assert that a Map contains entries; that is, it must not be {@code null}
-   * and must contain at least one entry.
+   * 断言 Map 包含条目；即，它不能为 {@code null} 并且必须包含至少一个条目。
    * <pre class="code">
-   * Assert.notEmpty(map, () -&gt; "The " + mapType + " map must contain entries");
+   * Assert.notEmpty(map, () -&gt; "Map " + mapType + " 必须包含条目");
    * </pre>
-   * @param map the map to check
-   * @param statusSupplier a supplier for the exception message to use if the
-   * assertion fails
-   * @throws BusinessException if the map is {@code null} or contains no entries
+   * @param map 要检查的 Map
+   * @param statusSupplier 断言失败时使用的异常状态供应者
+   * @throws BusinessException 如果 Map 为 {@code null} 或不包含任何条目
    */
   public static void notEmpty(@Nullable Map<?, ?> map, @Nonnull Supplier<Status> statusSupplier) {
     if (MapUtils.isEmpty(map)) {
@@ -571,32 +549,24 @@ public class Assert {
   }
 
   /**
-   * Assert that the provided object is an instance of the provided class.
-   * <pre class="code">Assert.instanceOf(Foo.class, foo, "Foo expected");</pre>
-   * @param type the type to check against
-   * @param obj the object to check
-   * @param message a message which will be prepended to provide further context.
-   * If it is empty or ends in ":" or ";" or "," or ".", a full exception message
-   * will be appended. If it ends in a space, the name of the offending object's
-   * type will be appended. In any other case, a ":" with a space and the name
-   * of the offending object's type will be appended.
-   * @throws BusinessException if the object is not an instance of type
+   * 断言提供的对象是提供的类的实例。
+   * <pre class="code">Assert.isInstanceOf(Foo.class, foo, "期望是 Foo 类的实例");</pre>
+   * @param type 要检查的类型
+   * @param obj 要检查的对象
+   * @param message 断言失败时使用的异常消息
+   * @throws BusinessException 如果对象不是该类型的实例
    */
   public static void isInstanceOf(@Nonnull Class<?> type, @Nullable Object obj, String message) {
     isInstanceOf(type, obj, Status.fail(message));
   }
 
   /**
-   * Assert that the provided object is an instance of the provided class.
-   * <pre class="code">Assert.instanceOf(Foo.class, foo, "Foo expected");</pre>
-   * @param type the type to check against
-   * @param obj the object to check
-   * @param status a message which will be prepended to provide further context.
-   * If it is empty or ends in ":" or ";" or "," or ".", a full exception message
-   * will be appended. If it ends in a space, the name of the offending object's
-   * type will be appended. In any other case, a ":" with a space and the name
-   * of the offending object's type will be appended.
-   * @throws BusinessException if the object is not an instance of type
+   * 断言提供的对象是提供的类的实例。
+   * <pre class="code">Assert.isInstanceOf(Foo.class, foo, "期望是 Foo 类的实例");</pre>
+   * @param type 要检查的类型
+   * @param obj 要检查的对象
+   * @param status 断言失败时使用的异常状态
+   * @throws BusinessException 如果对象不是该类型的实例
    */
   public static void isInstanceOf(@Nonnull Class<?> type, @Nullable Object obj, Status status) {
     if (!type.isInstance(obj)) {
@@ -605,15 +575,14 @@ public class Assert {
   }
 
   /**
-   * Assert that the provided object is an instance of the provided class.
+   * 断言提供的对象是提供的类的实例。
    * <pre class="code">
-   * Assert.instanceOf(Foo.class, foo, () -&gt; "Processing " + Foo.class.getSimpleName() + ":");
+   * Assert.isInstanceOf(Foo.class, foo, () -&gt; "处理 " + Foo.class.getSimpleName() + ":");
    * </pre>
-   * @param type the type to check against
-   * @param obj the object to check
-   * @param statusSupplier a supplier for the exception message to use if the
-   * assertion fails. See {@link #isInstanceOf(Class, Object, String)} for details.
-   * @throws BusinessException if the object is not an instance of type
+   * @param type 要检查的类型
+   * @param obj 要检查的对象
+   * @param statusSupplier 断言失败时使用的异常状态供应者
+   * @throws BusinessException 如果对象不是该类型的实例
    */
   public static void isInstanceOf(@Nonnull Class<?> type, @Nullable Object obj,
       @Nonnull Supplier<Status> statusSupplier) {
@@ -623,32 +592,24 @@ public class Assert {
   }
 
   /**
-   * Assert that {@code superType.isAssignableFrom(subType)} is {@code true}.
-   * <pre class="code">Assert.isAssignable(Number.class, myClass, "Number expected");</pre>
-   * @param superType the super type to check against
-   * @param subType the sub type to check
-   * @param message a message which will be prepended to provide further context.
-   * If it is empty or ends in ":" or ";" or "," or ".", a full exception message
-   * will be appended. If it ends in a space, the name of the offending sub type
-   * will be appended. In any other case, a ":" with a space and the name of the
-   * offending sub type will be appended.
-   * @throws BusinessException if the classes are not assignable
+   * 断言 {@code superType.isAssignableFrom(subType)} 为 {@code true}。
+   * <pre class="code">Assert.isAssignable(Number.class, myClass, "期望是 Number 类的子类");</pre>
+   * @param superType 要检查的超类
+   * @param subType 要检查的子类
+   * @param message 断言失败时使用的异常消息
+   * @throws BusinessException 如果类不可赋值
    */
   public static void isAssignable(@Nonnull Class<?> superType, @Nullable Class<?> subType, String message) {
     isAssignable(superType, subType, Status.fail(message));
   }
 
   /**
-   * Assert that {@code superType.isAssignableFrom(subType)} is {@code true}.
-   * <pre class="code">Assert.isAssignable(Number.class, myClass, "Number expected");</pre>
-   * @param superType the super type to check against
-   * @param subType the sub type to check
-   * @param status a message which will be prepended to provide further context.
-   * If it is empty or ends in ":" or ";" or "," or ".", a full exception message
-   * will be appended. If it ends in a space, the name of the offending sub type
-   * will be appended. In any other case, a ":" with a space and the name of the
-   * offending sub type will be appended.
-   * @throws BusinessException if the classes are not assignable
+   * 断言 {@code superType.isAssignableFrom(subType)} 为 {@code true}。
+   * <pre class="code">Assert.isAssignable(Number.class, myClass, "期望是 Number 类的子类");</pre>
+   * @param superType 要检查的超类
+   * @param subType 要检查的子类
+   * @param status 断言失败时使用的异常状态
+   * @throws BusinessException 如果类不可赋值
    */
   public static void isAssignable(@Nonnull Class<?> superType, @Nullable Class<?> subType, Status status) {
     if (subType == null || !superType.isAssignableFrom(subType)) {
@@ -657,15 +618,14 @@ public class Assert {
   }
 
   /**
-   * Assert that {@code superType.isAssignableFrom(subType)} is {@code true}.
+   * 断言 {@code superType.isAssignableFrom(subType)} 为 {@code true}。
    * <pre class="code">
-   * Assert.isAssignable(Number.class, myClass, () -&gt; "Processing " + myAttributeName + ":");
+   * Assert.isAssignable(Number.class, myClass, () -&gt; "处理 " + myAttributeName + ":");
    * </pre>
-   * @param superType the super type to check against
-   * @param subType the sub type to check
-   * @param statusSupplier a supplier for the exception message to use if the
-   * assertion fails. See {@link #isAssignable(Class, Class, String)} for details.
-   * @throws BusinessException if the classes are not assignable
+   * @param superType 要检查的超类
+   * @param subType 要检查的子类
+   * @param statusSupplier 断言失败时使用的异常状态供应者
+   * @throws BusinessException 如果类不可赋值
    */
   public static void isAssignable(@Nonnull Class<?> superType, @Nullable Class<?> subType,
       @Nonnull Supplier<Status> statusSupplier) {

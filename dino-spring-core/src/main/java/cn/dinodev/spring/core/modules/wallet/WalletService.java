@@ -1,5 +1,14 @@
 package cn.dinodev.spring.core.modules.wallet;
 
+import java.time.Duration;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import cn.dinodev.spring.commons.exception.BusinessException;
 import cn.dinodev.spring.commons.promise.Promise;
 import cn.dinodev.spring.commons.response.Status;
@@ -8,14 +17,6 @@ import cn.dinodev.spring.commons.utils.TaskUtils;
 import cn.dinodev.spring.core.entity.Code;
 import cn.dinodev.spring.core.service.impl.ServiceBase;
 import cn.dinodev.spring.data.dao.CrudRepositoryBase;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Duration;
-import java.util.Map;
 
 /**
  *
@@ -67,7 +68,7 @@ public class WalletService
     //最大重试5次
     Promise<Boolean> ret = TaskUtils.exec(() -> {
       var account = walletRepository.findById(accountId).orElse(null);
-      Assert.notNull(account != null, Status.CODE.FAIL_NOT_FOUND);
+      Assert.notNull(account, Status.CODE.FAIL_NOT_FOUND);
       Assert.isTrue(Code.STATUS.OK.eq(account.getStatus()), Status.CODE.FAIL_INVALID_STAUS);
 
       var newBalance = account.getBalance() + change;
@@ -103,7 +104,7 @@ public class WalletService
     //最大重试5次
     Promise<Boolean> ret = TaskUtils.exec(() -> {
       var account = walletRepository.findById(accountId).orElse(null);
-      Assert.notNull(account != null, Status.CODE.FAIL_NOT_FOUND);
+      Assert.notNull(account, Status.CODE.FAIL_NOT_FOUND);
       Assert.isTrue(Code.STATUS.OK.eq(account.getStatus()), Status.CODE.FAIL_INVALID_STAUS);
 
       var newBalance = account.getBalance() - amount;

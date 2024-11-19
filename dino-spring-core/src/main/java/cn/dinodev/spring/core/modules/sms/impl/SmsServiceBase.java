@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import cn.dinodev.spring.core.modules.sms.SmsCaptchaService;
-import cn.dinodev.spring.core.modules.sms.SmsService;
-import cn.dinodev.spring.core.modules.sms.config.SmsModuleProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
+import cn.dinodev.spring.core.modules.sms.SmsCaptchaService;
+import cn.dinodev.spring.core.modules.sms.SmsService;
+import cn.dinodev.spring.core.modules.sms.config.SmsModuleProperties;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -42,7 +42,7 @@ public abstract class SmsServiceBase implements SmsService, SmsCaptchaService {
 
   @Override
   public String sendCaptcha(String mobile, int length) {
-    String captcha = String.valueOf(RandomStringUtils.randomNumeric(length));
+    String captcha = String.valueOf(RandomStringUtils.secure().nextNumeric(length));
     if (this.sendCaptcha(mobile, captcha, this.smsModuleProperties.getCaptcha().getSignName())) {
       return captcha;
     } else {

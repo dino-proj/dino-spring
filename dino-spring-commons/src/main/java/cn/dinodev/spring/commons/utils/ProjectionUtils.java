@@ -131,11 +131,18 @@ public class ProjectionUtils {
     ResolvableType targetResolvableType = ResolvableType.forMethodParameter(writeMethod, 0);
 
     // Ignore generic types in assignable check if either ResolvableType has unresolvable generics.
-    boolean isAssignable = (sourceResolvableType.hasUnresolvableGenerics()
-        || targetResolvableType.hasUnresolvableGenerics()
-            ? ClassUtils.isAssignable(writeMethod.getParameterTypes()[0], readMethod.getReturnType())
-            : (targetResolvableType.isAssignableFrom(sourceResolvableType)
-                || BeanUtils.isSimpleValueType(targetResolvableType.getRawClass())));
+    boolean isAssignable;
+    if (sourceResolvableType.hasUnresolvableGenerics() || targetResolvableType.hasUnresolvableGenerics()) {
+      isAssignable = ClassUtils.isAssignable(writeMethod.getParameterTypes()[0], readMethod.getReturnType());
+    } else {
+      if (targetResolvableType.isAssignableFrom(sourceResolvableType)) {
+        isAssignable = true;
+      } else {
+        var targetClass = targetResolvableType.getRawClass();
+        isAssignable = targetClass != null && BeanUtils.isSimpleValueType(targetClass);
+      }
+    }
+
     if (!Modifier.isPublic(readMethod.getDeclaringClass().getModifiers())) {
       readMethod.setAccessible(true);
     }

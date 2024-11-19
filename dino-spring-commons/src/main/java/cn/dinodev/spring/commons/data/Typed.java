@@ -5,13 +5,13 @@ package cn.dinodev.spring.commons.data;
 
 import java.io.Serializable;
 
-import cn.dinodev.spring.commons.json.annotation.JsonDiscriminator;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
+import cn.dinodev.spring.commons.json.annotation.JsonDiscriminator;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
@@ -31,7 +31,9 @@ public interface Typed extends Serializable {
   default String getTypeName() {
     var typeNameAnno = AnnotationUtils.findAnnotation(this.getClass(), JsonTypeName.class);
 
-    assert typeNameAnno != null : "类型名注解'@JsonTypeName'不存在";
+    if (typeNameAnno == null) {
+      throw new IllegalStateException("类型名注解'@JsonTypeName'不存在");
+    }
 
     return typeNameAnno.value();
   }

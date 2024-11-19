@@ -42,7 +42,7 @@ public abstract class SmsServiceBase implements SmsService, SmsCaptchaService {
 
   @Override
   public String sendCaptcha(String mobile, int length) {
-    String captcha = String.valueOf(RandomStringUtils.secure().nextNumeric(length));
+    String captcha = String.valueOf(RandomStringUtils.randomNumeric(length));
     if (this.sendCaptcha(mobile, captcha, this.smsModuleProperties.getCaptcha().getSignName())) {
       return captcha;
     } else {

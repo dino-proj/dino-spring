@@ -14,6 +14,10 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import cn.dinodev.spring.auth.Permission;
 import cn.dinodev.spring.auth.session.AuthInfoProvider;
 import cn.dinodev.spring.auth.session.AuthSession;
@@ -29,10 +33,6 @@ import cn.dinodev.spring.core.sys.token.Token;
 import cn.dinodev.spring.core.sys.token.TokenPrincaple;
 import cn.dinodev.spring.core.sys.token.TokenService;
 import cn.dinodev.spring.core.sys.user.UserServiceProvider;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -103,7 +103,7 @@ public class DinoAuthSessionResolver implements AuthSessionResolver<DinoAuthSess
       if (StringUtils.isNotBlank(princ.getTenantId())) {
         // 检查租户是否存在
         var tenant = this.tenantService.findTenantById(princ.getTenantId());
-        Assert.state(tenant != null, "tenant[id={}] not found", princ.getTenantId());
+        Assert.notNull(tenant, "tenant[id={}] not found", princ.getTenantId());
         // 检查当前租户是否跟URL中的租户一致
         if (userType.isTenantUser() && Objects.nonNull(urlTenant)) {
           Assert.state(tenant.getId().equals(urlTenant.getId()), "tenant[id={}] not match",

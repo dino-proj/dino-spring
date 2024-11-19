@@ -11,17 +11,19 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.springframework.aop.MethodMatcher;
+import org.springframework.aop.support.StaticMethodMatcherPointcutAdvisor;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.AnnotatedElementUtils;
+import org.springframework.lang.NonNull;
+
 import cn.dinodev.spring.auth.annotation.CheckAuthz;
 import cn.dinodev.spring.auth.annotation.CheckLoginAs;
 import cn.dinodev.spring.auth.annotation.CheckPermission;
 import cn.dinodev.spring.auth.annotation.CheckResource;
 import cn.dinodev.spring.auth.annotation.CheckRole;
 import cn.dinodev.spring.auth.session.AuthSession;
-import org.springframework.aop.MethodMatcher;
-import org.springframework.aop.support.StaticMethodMatcherPointcutAdvisor;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.AnnotatedElementUtils;
 
 /**
  * 基于注解的权限检查的切面，将检查权限的注解转换为检查权限的切点
@@ -50,7 +52,7 @@ public class AuthzAnnotationPointcutAdvisor extends StaticMethodMatcherPointcutA
   }
 
   @Override
-  public boolean matches(Method method, Class<?> targetClass) {
+  public boolean matches(@NonNull Method method, @NonNull Class<?> targetClass) {
     if (this.isAuthzAnnotationPresent(method)) {
       return this.secondaryMatch(method, targetClass);
     }

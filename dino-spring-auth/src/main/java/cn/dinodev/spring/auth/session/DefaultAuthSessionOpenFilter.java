@@ -10,13 +10,14 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
-import cn.dinodev.spring.auth.DinoAuth;
-import cn.dinodev.spring.auth.exception.NotLoginException;
 import org.springframework.http.server.PathContainer;
+import org.springframework.lang.NonNull;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.pattern.PathPattern;
 import org.springframework.web.util.pattern.PathPatternParser;
 
+import cn.dinodev.spring.auth.DinoAuth;
+import cn.dinodev.spring.auth.exception.NotLoginException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,7 +44,8 @@ public class DefaultAuthSessionOpenFilter extends OncePerRequestFilter {
   }
 
   @Override
-  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+  protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+      @NonNull FilterChain filterChain)
       throws ServletException, IOException {
     if (isWhiteList(request)) {
       filterChain.doFilter(request, response);

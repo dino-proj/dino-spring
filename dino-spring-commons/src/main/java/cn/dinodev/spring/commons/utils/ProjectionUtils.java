@@ -19,7 +19,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
-import cn.dinodev.spring.commons.bean.BeanMetaUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeansException;
@@ -28,6 +27,7 @@ import org.springframework.core.ResolvableType;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
+import cn.dinodev.spring.commons.bean.BeanMetaUtils;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import lombok.experimental.UtilityClass;
@@ -235,7 +235,7 @@ public class ProjectionUtils {
   }
 
   private static List<?> newList(ResolvableType type, Object value) {
-    Collection<?> valueList = TypeUtils.cast(value);
+    Collection<?> valueList = TypeUtils.castNonNull(value);
     var list = new ArrayList<>(valueList.size());
     var genericCls = type.getGeneric(0);
     for (var v : valueList) {
@@ -249,7 +249,7 @@ public class ProjectionUtils {
   }
 
   private static Map<?, ?> newMap(ResolvableType type, Object value) {
-    Map<?, ?> valueMap = TypeUtils.cast(value);
+    Map<?, ?> valueMap = TypeUtils.castNonNull(value);
     var map = new HashMap<>(valueMap.size());
     var genericCls = type.getGeneric(1);
     for (var v : valueMap.entrySet()) {
@@ -263,7 +263,7 @@ public class ProjectionUtils {
   }
 
   private static Set<?> newSet(ResolvableType type, Object value) {
-    Set<?> valueSet = TypeUtils.cast(value);
+    Set<?> valueSet = TypeUtils.castNonNull(value);
     var set = new HashSet<>(valueSet.size());
     var genericCls = type.getGeneric(0);
     for (var v : valueSet) {
@@ -280,13 +280,13 @@ public class ProjectionUtils {
     Object[] srcArr;
     var type = ResolvableType.forClass(componentClass);
     if (ClassUtils.isAssignableValue(Collection.class, value)) {
-      Collection<?> col = TypeUtils.cast(value);
+      Collection<?> col = TypeUtils.castNonNull(value);
       srcArr = col.toArray();
 
     } else {
-      srcArr = TypeUtils.cast(value);
+      srcArr = TypeUtils.castNonNull(value);
     }
-    Object[] destArr = TypeUtils.cast(Array.newInstance(componentClass, srcArr.length));
+    Object[] destArr = TypeUtils.castNonNull(Array.newInstance(componentClass, srcArr.length));
 
     for (int i = 0; i < destArr.length; i++) {
       var v = srcArr[i];

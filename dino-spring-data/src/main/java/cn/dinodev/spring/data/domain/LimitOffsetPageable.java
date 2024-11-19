@@ -7,6 +7,7 @@ import java.io.Serializable;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.lang.NonNull;
 
 import lombok.Data;
 
@@ -79,11 +80,13 @@ public class LimitOffsetPageable implements Pageable, Serializable {
   }
 
   @Override
+  @NonNull
   public Sort getSort() {
     return sort;
   }
 
   @Override
+  @NonNull
   public Pageable next() {
     return new LimitOffsetPageable(getOffset() + getPageSize(), getPageSize(), getSort());
   }
@@ -93,11 +96,13 @@ public class LimitOffsetPageable implements Pageable, Serializable {
   }
 
   @Override
+  @NonNull
   public Pageable previousOrFirst() {
     return hasPrevious() ? previous() : first();
   }
 
   @Override
+  @NonNull
   public Pageable first() {
     return new LimitOffsetPageable(0, getPageSize(), getSort());
   }
@@ -108,6 +113,7 @@ public class LimitOffsetPageable implements Pageable, Serializable {
   }
 
   @Override
+  @NonNull
   public Pageable withPage(int pageNumber) {
     return new LimitOffsetPageable(1L * pageNumber * getPageSize(), getPageSize(), getSort());
   }

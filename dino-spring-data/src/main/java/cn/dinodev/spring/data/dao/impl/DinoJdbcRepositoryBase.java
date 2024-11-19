@@ -9,15 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import cn.dinodev.spring.commons.context.ContextHelper;
-import cn.dinodev.spring.commons.utils.TypeUtils;
-import cn.dinodev.spring.data.dao.EntityMeta;
-import cn.dinodev.spring.data.dao.JdbcSelectExecutor;
-import cn.dinodev.spring.data.domain.Versioned;
-import cn.dinodev.spring.data.sql.builder.DeleteSqlBuilder;
-import cn.dinodev.spring.data.sql.builder.SelectSqlBuilder;
-import cn.dinodev.spring.data.sql.builder.UpdateSqlBuilder;
-import cn.dinodev.spring.data.sql.dialect.Dialect;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jdbc.core.JdbcAggregateOperations;
 import org.springframework.data.jdbc.core.convert.JdbcConverter;
@@ -33,6 +24,15 @@ import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.JdbcUtils;
 
+import cn.dinodev.spring.commons.context.ContextHelper;
+import cn.dinodev.spring.commons.utils.TypeUtils;
+import cn.dinodev.spring.data.dao.EntityMeta;
+import cn.dinodev.spring.data.dao.JdbcSelectExecutor;
+import cn.dinodev.spring.data.domain.Versioned;
+import cn.dinodev.spring.data.sql.builder.DeleteSqlBuilder;
+import cn.dinodev.spring.data.sql.builder.SelectSqlBuilder;
+import cn.dinodev.spring.data.sql.builder.UpdateSqlBuilder;
+import cn.dinodev.spring.data.sql.dialect.Dialect;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
@@ -149,31 +149,37 @@ public class DinoJdbcRepositoryBase<T, K> extends SimpleJdbcRepository<T, K> imp
     }
     org.springframework.util.Assert.isTrue(TypeUtils.isPrimitiveOrString(keyClass), "key must be primitive class");
 
-    boolean isPrimitiveValue = TypeUtils.isPrimitiveOrString(valueClass);
-    BeanPropertyRowMapper<MV> mapper = isPrimitiveValue ? null
-        : BeanPropertyRowMapper.newInstance(valueClass, this.conversionService);
-
-    return this.jdbcTemplate.query(sql, (ResultSetExtractor<Map<MK, MV>>) rs -> {
-      Map<MK, MV> result = new HashMap<>(20);
-      if (isPrimitiveValue) {
+    if (TypeUtils.isPrimitiveOrString(valueClass)) {
+      return this.jdbcTemplate.query(sql, (ResultSetExtractor<Map<MK, MV>>) rs -> {
         org.springframework.util.Assert.isTrue(rs.getMetaData().getColumnCount() == 2,
             "resulset column count must be 2,as valueClass is primitive class");
-      }
 
-      var keyIndex = rs.findColumn(keyColumn);
-      int rowNum = 0;
-      while (rs.next()) {
-        MK key = CastUtils.cast(JdbcUtils.getResultSetValue(rs, keyIndex, keyClass));
-        if (isPrimitiveValue) {
-          MV value = CastUtils.cast(JdbcUtils.getResultSetValue(rs, 3 - keyIndex, valueClass));
+        var keyIndex = rs.findColumn(keyColumn);
+
+        Map<MK, MV> result = new HashMap<>(20);
+        while (rs.next()) {
+          MK key = TypeUtils.cast(JdbcUtils.getResultSetValue(rs, keyIndex, keyClass));
+          MV value = TypeUtils.cast(JdbcUtils.getResultSetValue(rs, 3 - keyIndex, valueClass));
           result.put(key, value);
-        } else {
+        }
+        return result;
+      }, params);
+    } else {
+      BeanPropertyRowMapper<MV> mapper = BeanPropertyRowMapper.newInstance(valueClass, this.conversionService);
+
+      return this.jdbcTemplate.query(sql, (ResultSetExtractor<Map<MK, MV>>) rs -> {
+        Map<MK, MV> result = new HashMap<>(20);
+
+        var keyIndex = rs.findColumn(keyColumn);
+        int rowNum = 0;
+        while (rs.next()) {
+          MK key = TypeUtils.cast(JdbcUtils.getResultSetValue(rs, keyIndex, keyClass));
           MV value = mapper.mapRow(rs, rowNum++);
           result.put(key, value);
         }
-      }
-      return result;
-    }, params);
+        return result;
+      }, params);
+    }
 
   }
 

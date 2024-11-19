@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
-import cn.dinodev.spring.commons.context.ContextHelper;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.MigrationVersion;
 import org.flywaydb.core.api.callback.Callback;
@@ -43,11 +42,14 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.jdbc.support.MetaDataAccessException;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import cn.dinodev.spring.commons.context.ContextHelper;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -65,7 +67,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DinoFlaywayConfiguration implements ApplicationListener<ApplicationReadyEvent> {
 
   @Override
-  public void onApplicationEvent(ApplicationReadyEvent event) {
+  public void onApplicationEvent(@NonNull ApplicationReadyEvent event) {
     var configuration = ContextHelper.findBean(FluentConfiguration.class);
     var javaMigrations = ContextHelper.getApplicationContext().getBeansOfType(JavaMigration.class).values();
     log.info("--->> flyway: exec java migration, count:{}", javaMigrations.size());
@@ -357,7 +359,8 @@ public class DinoFlaywayConfiguration implements ApplicationListener<Application
     }
 
     @Override
-    public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
+    public Object convert(@Nullable Object source, @NonNull TypeDescriptor sourceType,
+        @NonNull TypeDescriptor targetType) {
       String value = ObjectUtils.nullSafeToString(source);
       return MigrationVersion.fromVersion(value);
     }

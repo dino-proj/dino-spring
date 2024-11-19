@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.springframework.data.convert.ValueConverter;
 import org.springframework.data.jdbc.core.convert.JdbcCustomConversions;
 import org.springframework.data.mapping.PersistentProperty;
+import org.springframework.lang.NonNull;
 
 /**
  *
@@ -22,12 +23,13 @@ public class DinoJdbcCustomConversions extends JdbcCustomConversions {
   }
 
   @Override
-  public boolean hasValueConverter(PersistentProperty<?> property) {
+  public boolean hasValueConverter(@NonNull PersistentProperty<?> property) {
     return property.isAnnotationPresent(ValueConverter.class);
   }
 
   @Override
-  public Optional<Class<?>> getCustomWriteTarget(Class<?> sourceType) {
+  @NonNull
+  public Optional<Class<?>> getCustomWriteTarget(@NonNull Class<?> sourceType) {
     // TODO Auto-generated method stub
     // simple 类型返回null
     return super.getCustomWriteTarget(sourceType);

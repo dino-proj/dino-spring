@@ -9,6 +9,7 @@ import java.util.function.UnaryOperator;
 
 import org.springframework.data.relational.core.sql.IdentifierProcessing;
 import org.springframework.data.relational.core.sql.SqlIdentifier;
+import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 
 /**
@@ -35,7 +36,8 @@ public class DerivedSqlIdentifier implements SqlIdentifier {
   }
 
   @Override
-  public SqlIdentifier transform(UnaryOperator<String> transformationFunction) {
+  @NonNull
+  public SqlIdentifier transform(@NonNull UnaryOperator<String> transformationFunction) {
 
     Assert.notNull(transformationFunction, "Transformation function must not be null");
 
@@ -43,7 +45,8 @@ public class DerivedSqlIdentifier implements SqlIdentifier {
   }
 
   @Override
-  public String toSql(IdentifierProcessing processing) {
+  @NonNull
+  public String toSql(@NonNull IdentifierProcessing processing) {
 
     String normalized = processing.standardizeLetterCase(this.name);
 
@@ -51,7 +54,8 @@ public class DerivedSqlIdentifier implements SqlIdentifier {
   }
 
   @Override
-  public String getReference(IdentifierProcessing processing) {
+  @NonNull
+  public String getReference(@NonNull IdentifierProcessing processing) {
     return this.name;
   }
 

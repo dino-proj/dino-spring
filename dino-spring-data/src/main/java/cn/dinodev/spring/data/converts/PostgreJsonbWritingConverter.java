@@ -17,6 +17,8 @@ import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.ConditionalGenericConverter;
 import org.springframework.data.convert.WritingConverter;
 import org.springframework.data.mapping.model.SimpleTypeHolder;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -54,12 +56,13 @@ public class PostgreJsonbWritingConverter implements ConditionalGenericConverter
   }
 
   @Override
-  public boolean matches(TypeDescriptor sourceType, TypeDescriptor targetType) {
+  public boolean matches(@NonNull TypeDescriptor sourceType, @NonNull TypeDescriptor targetType) {
     return !this.simpleTypeHolder.isSimpleType(sourceType.getType());
   }
 
   @Override
-  public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
+  public Object convert(@Nullable Object source, @NonNull TypeDescriptor sourceType,
+      @NonNull TypeDescriptor targetType) {
     PGobject pg = new PGobject();
     pg.setType("jsonb");
     try {

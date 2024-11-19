@@ -12,6 +12,7 @@ import org.springframework.data.relational.core.mapping.RelationalPersistentProp
 import org.springframework.data.relational.core.sql.SqlIdentifier;
 import org.springframework.data.util.Lazy;
 import org.springframework.data.util.TypeInformation;
+import org.springframework.lang.NonNull;
 import org.springframework.util.StringUtils;
 
 import jakarta.persistence.Table;
@@ -65,6 +66,7 @@ public class DinoJdbcPersistentEntity<T> extends BasicPersistentEntity<T, Relati
   }
 
   @Override
+  @NonNull
   public SqlIdentifier getTableName() {
     return this.tableNameLazy.get().orElseGet(() -> {
 
@@ -77,6 +79,7 @@ public class DinoJdbcPersistentEntity<T> extends BasicPersistentEntity<T, Relati
   }
 
   @Override
+  @NonNull
   public SqlIdentifier getIdColumn() {
     return this.getRequiredIdProperty().getColumnName();
   }

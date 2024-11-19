@@ -3,8 +3,6 @@
 
 package cn.dinodev.spring.data.jdbc;
 
-import cn.dinodev.spring.data.jdbc.mapping.DinoJdbcPersistentEntity;
-import cn.dinodev.spring.data.jdbc.mapping.DinoJdbcPersistentProperty;
 import org.springframework.data.jdbc.core.mapping.JdbcMappingContext;
 import org.springframework.data.mapping.PreferredConstructor;
 import org.springframework.data.mapping.model.Property;
@@ -13,8 +11,12 @@ import org.springframework.data.relational.core.mapping.NamingStrategy;
 import org.springframework.data.relational.core.mapping.RelationalPersistentEntity;
 import org.springframework.data.relational.core.mapping.RelationalPersistentProperty;
 import org.springframework.data.util.TypeInformation;
+import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import cn.dinodev.spring.data.jdbc.mapping.DinoJdbcPersistentEntity;
+import cn.dinodev.spring.data.jdbc.mapping.DinoJdbcPersistentProperty;
 
 /**
  *
@@ -30,7 +32,8 @@ public class DinoJdbcMappingContext extends JdbcMappingContext {
   }
 
   @Override
-  protected <T> RelationalPersistentEntity<T> createPersistentEntity(TypeInformation<T> typeInformation) {
+  @NonNull
+  protected <T> RelationalPersistentEntity<T> createPersistentEntity(@NonNull TypeInformation<T> typeInformation) {
     DinoJdbcPersistentEntity<T> entity = new DinoJdbcPersistentEntity<>(typeInformation,
         this.getNamingStrategy());
     entity.setForceQuote(this.isForceQuote());
@@ -48,8 +51,9 @@ public class DinoJdbcMappingContext extends JdbcMappingContext {
   }
 
   @Override
-  protected RelationalPersistentProperty createPersistentProperty(Property property,
-      RelationalPersistentEntity<?> owner, SimpleTypeHolder simpleTypeHolder) {
+  @NonNull
+  protected RelationalPersistentProperty createPersistentProperty(@NonNull Property property,
+      @NonNull RelationalPersistentEntity<?> owner, @NonNull SimpleTypeHolder simpleTypeHolder) {
     var persistentProperty = new DinoJdbcPersistentProperty(property, owner, simpleTypeHolder,
         this.getNamingStrategy());
     persistentProperty.setForceQuote(this.isForceQuote());
@@ -57,7 +61,7 @@ public class DinoJdbcMappingContext extends JdbcMappingContext {
   }
 
   @Override
-  protected boolean shouldCreatePersistentEntityFor(TypeInformation<?> type) {
+  protected boolean shouldCreatePersistentEntityFor(@NonNull TypeInformation<?> type) {
     return super.shouldCreatePersistentEntityFor(type)//
         && (type.getType().isAnnotationPresent(jakarta.persistence.Table.class) ||
             type.getType().isAnnotationPresent(org.springframework.data.relational.core.mapping.Table.class));

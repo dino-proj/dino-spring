@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.jdbc.repository.config.JdbcRepositoryConfigExtension;
+import org.springframework.lang.NonNull;
 
 /**
  * DinoJdbc Repository Config Extension
@@ -19,11 +20,13 @@ import org.springframework.data.jdbc.repository.config.JdbcRepositoryConfigExten
 public class DinoJdbcRepositoryConfigExtension extends JdbcRepositoryConfigExtension {
 
   @Override
+  @NonNull
   public String getModuleName() {
     return "DinoJdbc";
   }
 
   @Override
+  @NonNull
   protected Collection<Class<? extends Annotation>> getIdentifyingAnnotations() {
     return List.of(jakarta.persistence.Table.class, org.springframework.data.relational.core.mapping.Table.class);
   }

@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.mapping.model.SimpleTypeHolder;
+import org.springframework.lang.NonNull;
 
 import jakarta.persistence.Table;
 
@@ -24,7 +25,7 @@ public class DinoJdbcSimpleTypeHolder extends SimpleTypeHolder {
   }
 
   @Override
-  public boolean isSimpleType(Class<?> type) {
+  public boolean isSimpleType(@NonNull Class<?> type) {
     var isSimple = super.isSimpleType(type);
     if (isSimple) {
       return AnnotationUtils.findAnnotation(type, Table.class) == null;

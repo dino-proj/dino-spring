@@ -10,9 +10,9 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.ThreadUtils;
+
 import cn.dinodev.spring.commons.promise.Defer;
 import cn.dinodev.spring.commons.promise.Promise;
-
 import lombok.experimental.UtilityClass;
 
 /**
@@ -136,7 +136,7 @@ public class TaskUtils {
       } catch (Exception t) {
         // throw out the exception
         if (!Objects.isNull(throwOutExceptions) && TypeUtils.isInstanceOfAny(t, throwOutExceptions)) {
-          throw TypeUtils.<RuntimeException>cast(t);
+          throw TypeUtils.<RuntimeException>castNonNull(t);
         }
         // nap and retry again
         if (attempts == 0) {

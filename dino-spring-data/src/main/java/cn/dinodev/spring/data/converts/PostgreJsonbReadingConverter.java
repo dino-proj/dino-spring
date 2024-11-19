@@ -16,12 +16,14 @@ import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.data.convert.ReadingConverter;
-import org.springframework.data.util.CastUtils;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import cn.dinodev.spring.commons.utils.TypeUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -51,8 +53,10 @@ public class PostgreJsonbReadingConverter implements GenericConverter {
   }
 
   @Override
-  public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
-    PGobject sourceData = CastUtils.cast(source);
+  public Object convert(@Nullable Object source, @NonNull TypeDescriptor sourceType,
+      @NonNull TypeDescriptor targetType) {
+
+    PGobject sourceData = TypeUtils.cast(source);
 
     try {
       if (targetType.isCollection()) {
@@ -97,7 +101,11 @@ public class PostgreJsonbReadingConverter implements GenericConverter {
       return Collections.emptyMap();
     }
 
-    return objectMapper.readerForMapOf(targetType.getMapValueTypeDescriptor().getResolvableType().getRawClass())
+    var mapValueTypeDescriptor = targetType.getMapValueTypeDescriptor();
+    if (mapValueTypeDescriptor == null) {
+      return Collections.emptyMap();
+    }
+    return objectMapper.readerForMapOf(mapValueTypeDescriptor.getResolvableType().getRawClass())
         .readValue(source.getValue());
   }
 

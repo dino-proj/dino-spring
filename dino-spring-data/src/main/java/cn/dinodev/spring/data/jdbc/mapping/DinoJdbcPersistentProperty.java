@@ -14,6 +14,7 @@ import org.springframework.data.relational.core.mapping.NamingStrategy;
 import org.springframework.data.relational.core.mapping.RelationalPersistentProperty;
 import org.springframework.data.relational.core.sql.SqlIdentifier;
 import org.springframework.data.util.Lazy;
+import org.springframework.lang.NonNull;
 
 /**
  * DinoJdbc Persistent Property.
@@ -74,6 +75,7 @@ public class DinoJdbcPersistentProperty extends BasicJdbcPersistentProperty {
   }
 
   @Override
+  @NonNull
   public SqlIdentifier getColumnName() {
     return this.columnName.get();
   }

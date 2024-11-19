@@ -5,10 +5,12 @@ package cn.dinodev.spring.data.jdbc;
 
 import java.lang.annotation.Annotation;
 
-import cn.dinodev.spring.data.annotion.EnableDinoDataJdbc;
 import org.springframework.data.repository.config.RepositoryBeanDefinitionRegistrarSupport;
 import org.springframework.data.repository.config.RepositoryConfigurationExtension;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
+
+import cn.dinodev.spring.data.annotion.EnableDinoDataJdbc;
 
 /**
  * DinoJdbc Repositories Registrar
@@ -20,11 +22,13 @@ import org.springframework.stereotype.Component;
 public class DinoJdbcRepositoriesRegistrar extends RepositoryBeanDefinitionRegistrarSupport {
 
   @Override
+  @NonNull
   protected Class<? extends Annotation> getAnnotation() {
     return EnableDinoDataJdbc.class;
   }
 
   @Override
+  @NonNull
   protected RepositoryConfigurationExtension getExtension() {
     return new DinoJdbcRepositoryConfigExtension();
   }

@@ -15,6 +15,8 @@ import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.data.convert.PropertyValueConverter;
 import org.springframework.data.convert.ValueConversionContext;
 import org.springframework.data.util.CastUtils;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,7 +36,7 @@ public class JsonbPropertyValueConverter implements PropertyValueConverter {
   private ObjectMapper objectMapper;
 
   @Override
-  public Object read(Object value, ValueConversionContext context) {
+  public Object read(@NonNull Object value, @NonNull ValueConversionContext context) {
     PGobject sourceData = CastUtils.cast(value);
 
     var targetType = TypeDescriptor.valueOf(context.getProperty().getType());
@@ -60,7 +62,7 @@ public class JsonbPropertyValueConverter implements PropertyValueConverter {
   }
 
   @Override
-  public Object write(Object value, ValueConversionContext context) {
+  public Object write(@Nullable Object value, @NonNull ValueConversionContext context) {
     PGobject pg = new PGobject();
     pg.setType("jsonb");
     try {
@@ -70,7 +72,7 @@ public class JsonbPropertyValueConverter implements PropertyValueConverter {
       pg.setValue(this.objectMapper.writeValueAsString(value));
       return pg;
     } catch (SQLException | JsonProcessingException e) {
-      log.error("convert write value:{}", value.getClass(), e);
+      log.error("convert write value:{}", value, e);
       throw new ConversionFailedException(TypeDescriptor.forObject(value), TypeDescriptor.valueOf(PGobject.class),
           value, e);
     }
@@ -99,7 +101,11 @@ public class JsonbPropertyValueConverter implements PropertyValueConverter {
       return Collections.emptyMap();
     }
 
-    return this.objectMapper.readerForMapOf(targetType.getMapValueTypeDescriptor().getResolvableType().getRawClass())
+    var mapValueTypeDescriptor = targetType.getMapValueTypeDescriptor();
+    if (mapValueTypeDescriptor == null) {
+      return Collections.emptyMap();
+    }
+    return this.objectMapper.readerForMapOf(mapValueTypeDescriptor.getResolvableType().getRawClass())
         .readValue(source.getValue());
   }
 

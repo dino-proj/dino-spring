@@ -11,10 +11,10 @@ import java.util.function.Supplier;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
-import cn.dinodev.spring.commons.exception.BusinessException;
-import cn.dinodev.spring.commons.response.Status;
 import org.slf4j.helpers.MessageFormatter;
 
+import cn.dinodev.spring.commons.exception.BusinessException;
+import cn.dinodev.spring.commons.response.Status;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import lombok.experimental.UtilityClass;
@@ -28,15 +28,13 @@ import lombok.experimental.UtilityClass;
 public class Assert {
 
   /**
-   * Assert a boolean expression, throwing an {@code IllegalStateException}
-   * if the expression evaluates to {@code false}.
-   * <p>Call {@link #isTrue} if you wish to throw an {@code IllegalArgumentException}
-   * on an assertion failure.
+   * 断言一个布尔表达式，如果表达式为 {@code false}，则抛出 {@code IllegalStateException}。
+   * <p>如果希望在断言失败时抛出 {@code IllegalArgumentException}，请调用 {@link #isTrue}。
    * <pre class="code">Assert.state(id == null, "The id property must not already be initialized");</pre>
-   * @param expression a boolean expression
-   * @param message the exception message pattern to use if the assertion fails. pattern is same as SLF4J
-   * @param args The argument to be substituted in place of the formatting anchor
-   * @throws IllegalStateException if {@code expression} is {@code false}
+   * @param expression 布尔表达式
+   * @param message 断言失败时使用的异常消息模式。模式与 SLF4J 相同
+   * @param args 要替换格式锚点的参数
+   * @throws IllegalStateException 如果 {@code expression} 为 {@code false}
    */
   public static void state(boolean expression, String message, Object... args) {
     if (!expression) {
@@ -45,18 +43,15 @@ public class Assert {
   }
 
   /**
-   * Assert a boolean expression, throwing an {@code IllegalStateException}
-   * if the expression evaluates to {@code false}.
-   * <p>Call {@link #isTrue} if you wish to throw an {@code IllegalArgumentException}
-   * on an assertion failure.
+   * 断言一个布尔表达式，如果表达式为 {@code false}，则抛出 {@code IllegalStateException}。
+   * <p>如果希望在断言失败时抛出 {@code IllegalArgumentException}，请调用 {@link #isTrue}。
    * <pre class="code">
    * Assert.state(entity.getId() == null,
    *     () -&gt; "ID for entity " + entity.getName() + " must not already be initialized");
    * </pre>
-   * @param expression a boolean expression
-   * @param messageSupplier a supplier for the exception status to use if the
-   * assertion fails
-   * @throws IllegalStateException if {@code expression} is {@code false}
+   * @param expression 布尔表达式
+   * @param messageSupplier 断言失败时使用的异常消息供应者
+   * @throws IllegalStateException 如果 {@code expression} 为 {@code false}
    */
   public static void state(boolean expression, Supplier<String> messageSupplier) {
     if (!expression) {
@@ -65,24 +60,22 @@ public class Assert {
   }
 
   /**
-   * Assert a boolean expression, throwing an {@code BusinessException}
-   * if the expression evaluates to {@code false}.
+   * 断言一个布尔表达式，如果表达式为 {@code false}，则抛出 {@code BusinessException}。
    * <pre class="code">Assert.isTrue(i &gt; 0, "The value must be greater than zero");</pre>
-   * @param expression a boolean expression
-   * @param message the exception message to use if the assertion fails
-   * @throws BusinessException if {@code expression} is {@code false}
+   * @param expression 布尔表达式
+   * @param message 断言失败时使用的异常消息
+   * @throws BusinessException 如果 {@code expression} 为 {@code false}
    */
   public static void isTrue(boolean expression, String message) {
     isTrue(expression, Status.fail(message));
   }
 
   /**
-   * Assert a boolean expression, throwing an {@code BusinessException}
-   * if the expression evaluates to {@code false}.
+   * 断言一个布尔表达式，如果表达式为 {@code false}，则抛出 {@code BusinessException}。
    * <pre class="code">Assert.isTrue(i &gt; 0, "The value must be greater than zero");</pre>
-   * @param expression a boolean expression
-   * @param status the exception status to use if the assertion fails
-   * @throws BusinessException if {@code expression} is {@code false}
+   * @param expression 布尔表达式
+   * @param status 断言失败时使用的异常状态
+   * @throws BusinessException 如果 {@code expression} 为 {@code false}
    */
   public static void isTrue(boolean expression, Status status) {
     if (!expression) {
@@ -91,15 +84,13 @@ public class Assert {
   }
 
   /**
-   * Assert a boolean expression, throwing an {@code BusinessException}
-   * if the expression evaluates to {@code false}.
+   * 断言一个布尔表达式，如果表达式为 {@code false}，则抛出 {@code BusinessException}。
    * <pre class="code">
    * Assert.isTrue(i &gt; 0, () -&gt; "The value '" + i + "' must be greater than zero");
    * </pre>
-   * @param expression a boolean expression
-   * @param statusSupplier a supplier for the exception status to use if the
-   * assertion fails
-   * @throws BusinessException if {@code expression} is {@code false}
+   * @param expression 布尔表达式
+   * @param statusSupplier 断言失败时使用的异常状态供应者
+   * @throws BusinessException 如果 {@code expression} 为 {@code false}
    */
   public static void isTrue(boolean expression, @Nonnull Supplier<Status> statusSupplier) {
     if (!expression) {
@@ -108,22 +99,22 @@ public class Assert {
   }
 
   /**
-   * Assert that an object is {@code null}.
-   * <pre class="code">Assert.isNull(value, "The value must be null");</pre>
-   * @param object the object to check
-   * @param message the exception message to use if the assertion fails
-   * @throws BusinessException if the object is not {@code null}
+   * 断言对象为 {@code null}。
+   * <pre class="code">Assert.isNull(value, "值必须为 null");</pre>
+   * @param object 要检查的对象
+   * @param message 断言失败时使用的异常消息
+   * @throws BusinessException 如果对象不为 {@code null}
    */
   public static void isNull(@Nullable Object object, String message) {
     isNull(object, Status.fail(message));
   }
 
   /**
-   * Assert that an object is {@code null}.
-   * <pre class="code">Assert.isNull(value, "The value must be null");</pre>
-   * @param object the object to check
-   * @param status the exception status to use if the assertion fails
-   * @throws BusinessException if the object is not {@code null}
+   * 断言对象为 {@code null}。
+   * <pre class="code">Assert.isNull(value, "值必须为 null");</pre>
+   * @param object 要检查的对象
+   * @param status 断言失败时使用的异常状态
+   * @throws BusinessException 如果对象不为 {@code null}
    */
   public static void isNull(@Nullable Object object, Status status) {
     if (!Objects.isNull(object)) {
@@ -132,14 +123,13 @@ public class Assert {
   }
 
   /**
-   * Assert that an object is {@code null}.
+   * 断言对象为 {@code null}。
    * <pre class="code">
-   * Assert.isNull(value, () -&gt; "The value '" + value + "' must be null");
+   * Assert.isNull(value, () -&gt; "值 '" + value + "' 必须为 null");
    * </pre>
-   * @param object the object to check
-   * @param statusSupplier a supplier for the exception status to use if the
-   * assertion fails
-   * @throws BusinessException if the object is not {@code null}
+   * @param object 要检查的对象
+   * @param statusSupplier 断言失败时使用的异常状态供应者
+   * @throws BusinessException 如果对象不为 {@code null}
    */
   public static void isNull(@Nullable Object object, @Nonnull Supplier<Status> statusSupplier) {
     if (!Objects.isNull(object)) {
@@ -148,23 +138,24 @@ public class Assert {
   }
 
   /**
-   * Assert that an object is not {@code null}.
-   * <pre class="code">Assert.notNull(clazz, "The class must not be null");</pre>
-   * @param object the object to check
-   * @param message the exception message to use if the assertion fails
-   * @throws BusinessException if the object is {@code null}
+   * 断言对象不为 {@code null}，并允许传递格式化消息参数。
+   * <pre class="code">Assert.notNull(value, "值 '{}' 不能为空", value);</pre>
+   * @param object 要检查的对象
+   * @param message 断言失败时使用的异常消息
+   * @param msgArgs 要替换格式锚点的参数
+   * @throws BusinessException 如果对象为 {@code null}
    */
-  public static void notNull(@Nullable Object object, String message) {
-    notNull(object, Status.fail(message));
+  public static void notNull(@Nullable Object object, String message, Object... msgArgs) {
+    notNull(object, Status.fail(MessageFormatter.arrayFormat(message, msgArgs).getMessage()));
   }
 
   /**
-  * Assert that an object is not {@code null}.
-  * <pre class="code">Assert.notNull(clazz, "The class must not be null");</pre>
-  * @param object the object to check
-  * @param status the exception status to use if the assertion fails
-  * @throws BusinessException if the object is {@code null}
-  */
+   * 断言对象不为 {@code null}。
+   * <pre class="code">Assert.notNull(clazz, "类不能为空");</pre>
+   * @param object 要检查的对象
+   * @param status 断言失败时使用的异常状态
+   * @throws BusinessException 如果对象为 {@code null}
+   */
   public static void notNull(@Nullable Object object, Status status) {
     if (Objects.isNull(object)) {
       throw BusinessException.of(status);
@@ -172,15 +163,14 @@ public class Assert {
   }
 
   /**
-   * Assert that an object is not {@code null}.
+   * 断言对象不为 {@code null}。
    * <pre class="code">
    * Assert.notNull(entity.getId(),
-   *     () -&gt; "ID for entity " + entity.getName() + " must not be null");
+   *     () -&gt; "实体 " + entity.getName() + " 的 ID 不能为空");
    * </pre>
-   * @param object the object to check
-   * @param statusSupplier a supplier for the exception status to use if the
-   * assertion fails
-   * @throws BusinessException if the object is {@code null}
+   * @param object 要检查的对象
+   * @param statusSupplier 断言失败时使用的异常状态供应者
+   * @throws BusinessException 如果对象为 {@code null}
    */
   public static void notNull(@Nullable Object object, @Nonnull Supplier<Status> statusSupplier) {
     if (Objects.isNull(object)) {
@@ -189,47 +179,43 @@ public class Assert {
   }
 
   /**
-   * Assert that the given String is not empty; that is,
-   * it must not be {@code null} and not the empty String.
-   * <pre class="code">Assert.hasLength(name, "Name must not be empty");</pre>
-   * @param text the String to check
-   * @param message the exception message to use if the assertion fails
-   * @throws BusinessException if the text is empty
+   * 断言给定的字符串不为空；即，它不能为 {@code null} 且不能是空字符串。
+   * <pre class="code">Assert.hasLength(name, "名称不能为空");</pre>
+   * @param text 要检查的字符串
+   * @param message 断言失败时使用的异常消息
+   * @throws BusinessException 如果字符串为空
    * @see StringUtils#hasLength
    */
-  public static void hasLength(@Nullable String text, String message) {
+  public static void hasLength(@Nullable CharSequence text, String message) {
     hasLength(text, Status.fail(message));
   }
 
   /**
-   * Assert that the given String is not empty; that is,
-   * it must not be {@code null} and not the empty String.
-   * <pre class="code">Assert.hasLength(name, "Name must not be empty");</pre>
-   * @param text the String to check
-   * @param status the exception status to use if the assertion fails
-   * @throws BusinessException if the text is empty
+   * 断言给定的字符串不为空；即，它不能为 {@code null} 且不能是空字符串。
+   * <pre class="code">Assert.hasLength(name, "名称不能为空");</pre>
+   * @param text 要检查的字符串
+   * @param status 断言失败时使用的异常状态
+   * @throws BusinessException 如果字符串为空
    * @see StringUtils#hasLength
    */
-  public static void hasLength(@Nullable String text, Status status) {
+  public static void hasLength(@Nullable CharSequence text, Status status) {
     if (StringUtils.isEmpty(text)) {
       throw BusinessException.of(status);
     }
   }
 
   /**
-   * Assert that the given String is not empty; that is,
-   * it must not be {@code null} and not the empty String.
+   * 断言给定的字符串不为空；即，它不能为 {@code null} 且不能是空字符串。
    * <pre class="code">
    * Assert.hasLength(account.getName(),
-   *     () -&gt; "Name for account '" + account.getId() + "' must not be empty");
+   *     () -&gt; "账户 '" + account.getId() + "' 的名称不能为空");
    * </pre>
-   * @param text the String to check
-   * @param statusSupplier a supplier for the exception status to use if the
-   * assertion fails
-   * @throws BusinessException if the text is empty
+   * @param text 要检查的字符串
+   * @param statusSupplier 断言失败时使用的异常状态供应者
+   * @throws BusinessException 如果字符串为空
    * @see StringUtils#hasLength
    */
-  public static void hasLength(@Nullable String text, @Nonnull Supplier<Status> statusSupplier) {
+  public static void hasLength(@Nullable CharSequence text, @Nonnull Supplier<Status> statusSupplier) {
     if (StringUtils.isEmpty(text)) {
       throw BusinessException.of(nullSafeGet(statusSupplier));
     }
@@ -244,7 +230,7 @@ public class Assert {
    * @throws BusinessException if the text does not contain valid text content
    * @see StringUtils#hasText
    */
-  public static void hasText(@Nullable String text, String message) {
+  public static void hasText(@Nullable CharSequence text, String message) {
     hasText(text, Status.fail(message));
   }
 
@@ -257,7 +243,7 @@ public class Assert {
    * @throws BusinessException if the text does not contain valid text content
    * @see StringUtils#hasText
    */
-  public static void hasText(@Nullable String text, Status status) {
+  public static void hasText(@Nullable CharSequence text, Status status) {
     if (StringUtils.isBlank(text)) {
       throw BusinessException.of(status);
     }
@@ -276,7 +262,7 @@ public class Assert {
    * @throws BusinessException if the text does not contain valid text content
    * @see StringUtils#hasText
    */
-  public static void hasText(@Nullable String text, @Nonnull Supplier<Status> statusSupplier) {
+  public static void hasText(@Nullable CharSequence text, @Nonnull Supplier<Status> statusSupplier) {
     if (StringUtils.isBlank(text)) {
       throw BusinessException.of(nullSafeGet(statusSupplier));
     }
@@ -479,6 +465,18 @@ public class Assert {
   }
 
   /**
+   * 断言集合不包含 {@code null} 元素。
+   * <pre class="code">Assert.noNullElements(collection, "集合 '{}' 必须包含非 null 元素", collectionName);</pre>
+   * @param collection 要检查的集合
+   * @param message 断言失败时使用的异常消息
+   * @param msgArgs 要替换格式锚点的参数
+   * @throws BusinessException 如果集合包含 {@code null} 元素
+   */
+  public static void noNullElements(@Nullable Collection<?> collection, String message, Object... msgArgs) {
+    noNullElements(collection, Status.fail(MessageFormatter.arrayFormat(message, msgArgs).getMessage()));
+  }
+
+  /**
    * Assert that a collection contains no {@code null} elements.
    * <p>Note: Does not complain if the collection is empty!
    * <pre class="code">Assert.noNullElements(collection, "Collection must contain non-null elements");</pre>
@@ -527,6 +525,18 @@ public class Assert {
    */
   public static void notEmpty(@Nullable Map<?, ?> map, String message) {
     notEmpty(map, Status.fail(message));
+  }
+
+  /**
+   * 断言 Map 包含条目，并允许传递格式化消息参数。
+   * <pre class="code">Assert.notEmpty(map, "Map '{}' 必须包含条目", mapName);</pre>
+   * @param map 要检查的 Map
+   * @param message 断言失败时使用的异常消息
+   * @param msgArgs 要替换格式锚点的参数
+   * @throws BusinessException 如果 Map 为 {@code null} 或不包含任何条目
+   */
+  public static void notEmpty(@Nullable Map<?, ?> map, String message, Object... msgArgs) {
+    notEmpty(map, Status.fail(MessageFormatter.arrayFormat(message, msgArgs).getMessage()));
   }
 
   /**

@@ -268,6 +268,30 @@
             </dependency>
           </dependencies>
         </plugin>
+
+
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <configuration>
+            <!-- 配置主类 -->
+            <mainClass>${app.mainClass}</mainClass>
+            <!-- set to false: the repackaged archive will not be installed or deployed -->
+            <attach>false</attach>
+            <!-- 配置为可执行 -->
+            <executable>true</executable>
+            <!-- 配置输出目录 -->
+            <outputDirectory>${project.build.directory}/single-jar</outputDirectory>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>repackage</goal>
+                <goal>build-info</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -343,6 +367,10 @@
             </excludes>
             <filtering>true</filtering>
           </resource>
+          <resource>
+            <directory>src/main/resources-raw</directory>
+            <filtering>false</filtering>
+          </resource>
         </resources>
       </build>
     </profile>
@@ -360,13 +388,23 @@
           <resource>
             <directory>src/main/resources</directory>
             <excludes>
-              <exclude>*</exclude>
+              <exclude>application-prod.yml</exclude>
+              <exclude>application-dev.yml</exclude>
             </excludes>
+            <filtering>true</filtering>
+          </resource>
+          <resource>
+            <directory>src/main/resources-raw</directory>
+            <filtering>false</filtering>
           </resource>
         </resources>
         <plugins>
           <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
+          </plugin>
+          <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
           </plugin>
         </plugins>
       </build>
@@ -392,13 +430,23 @@
           <resource>
             <directory>src/main/resources</directory>
             <excludes>
-              <exclude>*</exclude>
+              <exclude>application-dev.yml</exclude>
+              <exclude>application-test.yml</exclude>
             </excludes>
+            <filtering>true</filtering>
+          </resource>
+          <resource>
+            <directory>src/main/resources-raw</directory>
+            <filtering>false</filtering>
           </resource>
         </resources>
         <plugins>
           <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
+          </plugin>
+          <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
           </plugin>
         </plugins>
       </build>

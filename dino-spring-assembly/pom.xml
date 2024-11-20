@@ -53,7 +53,6 @@
               <autoPublish>${env.DEPLOY_AUTO_PUBLISH}</autoPublish>
               <waitUntil>${env.DEPLOY_WAIT_UNTIL}</waitUntil>
               <deploymentName>${project.artifactId}-${project.version}</deploymentName>
-              <ignorePublishedComponents>true</ignorePublishedComponents>
             </configuration>
           </plugin>
           <plugin>

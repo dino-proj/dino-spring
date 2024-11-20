@@ -64,4 +64,26 @@
     </root>
   </springProfile>
 
+  <!-- 定义一个用于GC日志的Appender -->
+  <appender name="GC_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!-- 设置日志文件的路径和文件名 -->
+    <file>${LOG_FILE}.gc.log</file>
+    <!-- 设置滚动策略 -->
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- 设置日志文件的命名规则 -->
+      <fileNamePattern>${LOG_FILE}.gc.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <!-- 设置日志文件的最大历史天数 -->
+      <maxHistory>30</maxHistory>
+    </rollingPolicy>
+    <!-- 设置日志的编码和格式 -->
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <charset>${FILE_LOG_CHARSET}</charset>
+    </encoder>
+  </appender>
+
+  <logger name="gc" level="INFO" additivity="false">
+    <appender-ref ref="GC_LOG" />
+  </logger>
+
 </configuration>

@@ -83,10 +83,10 @@ RUN_JAVA ()
 {
   OUT_FILE=$1
   shift
-  APP_JAVA_OPTS="$APP_JAVA_OPTS -server -Xmx${MEMORY_SIZE} -XX:MaxGCPauseMillis=200 -XX:G1HeapRegionSize=32m  -XX:+HeapDumpOnOutOfMemoryError -verbose:gc  -XX:ErrorFile=$APP_LOG_DIR/jvm-err-%p.log -XX:HeapDumpPath=$APP_LOG_DIR/jvm-dump-heap-%p"
+  APP_JAVA_OPTS="$APP_JAVA_OPTS -server -Xmx${MEMORY_SIZE} -XX:MaxGCPauseMillis=200 -XX:G1HeapRegionSize=32m  -XX:+HeapDumpOnOutOfMemoryError -XX:ErrorFile=$APP_LOG_DIR/jvm-err-%p.log -XX:HeapDumpPath=$APP_LOG_DIR/jvm-dump-heap-%p"
   APP_JAVA_OPTS="$APP_JAVA_OPTS -Djava.net.preferIPv4Stack=true"
   APP_JAVA_OPTS="$APP_JAVA_OPTS -Dlogging.dir=$APP_LOG_DIR -Dlogging.file=$LOG_FILE_PRE"
-
+  APP_JAVA_OPTS="$APP_JAVA_OPTS -Xlog:gc*:file=${LOG_FILE_PRE}.gc.%t.log:tags,time,uptime,level:filecount=30,filesize=5M"
 
   CLASSPATH=${CLASSPATH}:$APP_DIR'/lib/*'
   CLASSPATH=${CLASSPATH}:$APP_DIR'/conf/*'

@@ -60,7 +60,7 @@ public interface IamControllerBase<UK extends Serializable> {
 
   /**
    * 获取用户角色列表
-   * Tenant tenant,
+   * @param tenant,
    * @param utype 用户类型
    * @param uid 用户ID
    * @param page
@@ -81,7 +81,7 @@ public interface IamControllerBase<UK extends Serializable> {
 
   /**
    * 为用户分配角色
-   * Tenant tenant,
+   * @param tenant
    * @param utype
    * @param uid
    * @param req
@@ -101,7 +101,7 @@ public interface IamControllerBase<UK extends Serializable> {
 
   /**
    * 取消用户角色
-   * Tenant tenant,
+   * @param tenant,
    * @param utype
    * @param uid
    * @param req

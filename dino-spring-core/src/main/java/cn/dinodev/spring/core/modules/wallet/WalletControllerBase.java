@@ -1,7 +1,6 @@
 package cn.dinodev.spring.core.modules.wallet;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import cn.dinodev.spring.auth.annotation.CheckPermission;
 import cn.dinodev.spring.commons.context.ContextHelper;
@@ -34,15 +33,16 @@ public interface WalletControllerBase
 
   /**
    * 获取账户信息
-   * Tenant tenant
+   * @param tenant
    * @return
    */
   @Operation(summary = "获取登录账户信息")
   @ParamTenant
   @GetMapping("/info")
   @CheckPermission(":wallet.info")
-  default Response<WalletVo> getSummary(@PathVariable("tenant_id") String tenantId) {
-    var wallet = walletService().getOrCreateAccountByOwner(tenantId, ContextHelper.currentUser().getId().toString(),
+  default Response<WalletVo> getSummary(Tenant tenant) {
+    var wallet = walletService().getOrCreateAccountByOwner(tenant.getId(),
+        ContextHelper.currentUser().getId().toString(),
         walletType());
 
     return Response.success(walletService().projection(WalletVo.class, wallet));
@@ -50,7 +50,7 @@ public interface WalletControllerBase
 
   /**
    * 获取流水
-   * Tenant tenant
+   * @param tenant
    * @param pageReq
    * @return
    */

@@ -86,7 +86,7 @@ public interface OssControllerBase {
 
   /**
    * 上传文件
-   * Tenant tenant
+   * @param tenant
    * @param service
    * @param file
    * @return
@@ -140,7 +140,7 @@ public interface OssControllerBase {
 
   /**
    * 上传音频
-   * Tenant tenant
+   * @param tenant
    * @param service
    * @param file
    * @return
@@ -170,7 +170,7 @@ public interface OssControllerBase {
 
   /**
    * 上传视频
-   * Tenant tenant
+   * @param tenant
    * @param service
    * @param file
    * @return
@@ -204,7 +204,7 @@ public interface OssControllerBase {
 
   /**
    * 上传图片
-   * Tenant tenant
+   * @param tenant
    * @param service
    * @param file
    * @return
@@ -274,7 +274,7 @@ public interface OssControllerBase {
 
   /**
    * 获取上传元信息
-   * Tenant tenant
+   * @param tenant
    * @param fileType
    * @param service
    * @param request

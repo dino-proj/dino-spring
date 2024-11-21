@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.core.convert.ConversionService;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.jdbc.core.JdbcAggregateOperations;
 import org.springframework.data.jdbc.core.convert.JdbcConverter;
 import org.springframework.data.jdbc.repository.support.SimpleJdbcRepository;
@@ -29,7 +30,6 @@ import cn.dinodev.spring.commons.utils.TypeUtils;
 import cn.dinodev.spring.data.dao.EntityMeta;
 import cn.dinodev.spring.data.dao.JdbcSelectExecutor;
 import cn.dinodev.spring.data.domain.Versioned;
-import cn.dinodev.spring.data.sql.builder.DeleteSqlBuilder;
 import cn.dinodev.spring.data.sql.builder.SelectSqlBuilder;
 import cn.dinodev.spring.data.sql.builder.UpdateSqlBuilder;
 import cn.dinodev.spring.data.sql.dialect.Dialect;
@@ -246,13 +246,8 @@ public class DinoJdbcRepositoryBase<T, K> extends SimpleJdbcRepository<T, K> imp
   }
 
   @Override
-  public long update(UpdateSqlBuilder updateSqlBuilder) {
-    return this.jdbcTemplate.update(updateSqlBuilder.getSql(), updateSqlBuilder.getParams());
-  }
-
-  @Override
-  public long delete(DeleteSqlBuilder deleteSqlBuilder) {
-    return this.jdbcTemplate.update(deleteSqlBuilder.getSql(), deleteSqlBuilder.getParams());
+  public int update(String sql, @Nullable Object... args) throws DataAccessException {
+    return this.jdbcTemplate.update(sql, args);
   }
 
 }

@@ -5,13 +5,13 @@ package cn.dinodev.spring.core.modules.oss;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +26,7 @@ import cn.dinodev.spring.commons.data.VideoFileMeta;
 import cn.dinodev.spring.commons.exception.BusinessException;
 import cn.dinodev.spring.commons.response.Response;
 import cn.dinodev.spring.commons.response.Status;
+import cn.dinodev.spring.commons.sys.Tenant;
 import cn.dinodev.spring.commons.utils.Assert;
 import cn.dinodev.spring.core.annotion.param.ParamTenant;
 import cn.dinodev.spring.core.modules.oss.UploadMeta.OssType;
@@ -85,7 +86,7 @@ public interface OssControllerBase {
 
   /**
    * 上传文件
-   * @param tenantId
+   * Tenant tenant
    * @param service
    * @param file
    * @return
@@ -95,12 +96,12 @@ public interface OssControllerBase {
   @ParamTenant
   @Parameter(name = "service", required = false, description = "服务名字")
   @PostMapping(value = "/upload/FILE", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  default Response<FileMeta> uploadFile(@PathVariable("tenant_id") String tenantId,
+  default Response<FileMeta> uploadFile(Tenant tenant,
       String service, MultipartFile file) throws IOException {
 
     var ref = new FileMeta[1];
 
-    saveFile(tenantId, service, file, media -> {
+    saveFile(tenant, service, file, media -> {
 
       if (media == null || !media.isMultiMedia()) {
         var meta = new DocumentFileMeta();
@@ -139,7 +140,7 @@ public interface OssControllerBase {
 
   /**
    * 上传音频
-   * @param tenantId
+   * Tenant tenant
    * @param service
    * @param file
    * @return
@@ -149,12 +150,12 @@ public interface OssControllerBase {
   @ParamTenant
   @Parameter(name = "service", required = false, description = "服务名字")
   @PostMapping(value = "/upload/AUDIO", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  default Response<AudioFileMeta> uploadAudio(@PathVariable("tenant_id") String tenantId, String service,
+  default Response<AudioFileMeta> uploadAudio(Tenant tenant, String service,
       MultipartFile file) throws IOException {
 
     var meta = new AudioFileMeta();
 
-    saveFile(tenantId, service, file, media -> {
+    saveFile(tenant, service, file, media -> {
       Assert.notNull(media, Status.CODE.FAIL_VALIDATION.withMsg("upload file is invalid audio"));
       Assert.isTrue(media.isAudio() && media.getDuration() != null,
           Status.CODE.FAIL_VALIDATION.withMsg("upload file is invalid audio"));
@@ -169,7 +170,7 @@ public interface OssControllerBase {
 
   /**
    * 上传视频
-   * @param tenantId
+   * Tenant tenant
    * @param service
    * @param file
    * @return
@@ -179,12 +180,12 @@ public interface OssControllerBase {
   @ParamTenant
   @Parameter(name = "service", required = false, description = "服务名字")
   @PostMapping(value = "/upload/VIDEO", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  default Response<VideoFileMeta> uploadVideo(@PathVariable("tenant_id") String tenantId, String service,
+  default Response<VideoFileMeta> uploadVideo(Tenant tenant, String service,
       MultipartFile file) throws IOException {
 
     var meta = new VideoFileMeta();
 
-    saveFile(tenantId, service, file, media -> {
+    saveFile(tenant, service, file, media -> {
 
       Assert.notNull(media, Status.CODE.FAIL_VALIDATION.withMsg("upload file is invalid video"));
       Assert.isTrue(media.isVideo() && media.getWidth() != null,
@@ -203,7 +204,7 @@ public interface OssControllerBase {
 
   /**
    * 上传图片
-   * @param tenantId
+   * Tenant tenant
    * @param service
    * @param file
    * @return
@@ -213,12 +214,12 @@ public interface OssControllerBase {
   @ParamTenant
   @Parameter(name = "service", required = false, description = "服务名字")
   @PostMapping(value = "/upload/IMAGE", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  default Response<ImageFileMeta> uploadImage(@PathVariable("tenant_id") String tenantId, String service,
+  default Response<ImageFileMeta> uploadImage(Tenant tenant, String service,
       MultipartFile file) throws IOException {
 
     var meta = new ImageFileMeta();
 
-    saveFile(tenantId, service, file, media -> {
+    saveFile(tenant, service, file, media -> {
 
       Assert.notNull(media, Status.CODE.FAIL_VALIDATION.withMsg("upload file is invalid image"));
       Assert.isTrue(media.isImage() && media.getWidth() != null,
@@ -235,13 +236,13 @@ public interface OssControllerBase {
 
   /**
    * 保存文件
-   * @param tenantId
+   * @param tenant
    * @param serviceId
    * @param file
    * @param metaProvider
    * @throws IOException
    */
-  private void saveFile(String tenantId, String serviceId, MultipartFile file,
+  private void saveFile(Tenant tenant, String serviceId, MultipartFile file,
       Function<MediaInfo, FileMeta> metaProvider) throws IOException {
 
     var media = MultiMediaUtils.extractMediaInfo(file);
@@ -250,7 +251,9 @@ public interface OssControllerBase {
     meta.setSize(file.getSize());
 
     var objectName = new StringBuilder();
-    objectName.append(tenantId).append('/');
+    if (Objects.nonNull(tenant)) {
+      objectName.append(tenant.getId()).append('/');
+    }
     objectName.append(idService().genUUID());
     objectName.append('.').append(FilenameUtils.getExtension(file.getOriginalFilename()));
     var objectKey = objectName.toString();
@@ -271,7 +274,7 @@ public interface OssControllerBase {
 
   /**
    * 获取上传元信息
-   * @param tenantId
+   * Tenant tenant
    * @param fileType
    * @param service
    * @param request
@@ -282,15 +285,16 @@ public interface OssControllerBase {
   @Parameter(name = "service", required = false, description = "服务名字")
   @Parameter(name = "file_type", required = true, description = "文件类型")
   @GetMapping("/upload_meta")
-  default Response<UploadMeta> requestUpload(@PathVariable("tenant_id") String tenantId,
+  default Response<UploadMeta> requestUpload(Tenant tenant,
       @RequestParam("file_type") FileTypes fileType, @RequestParam String service, HttpServletRequest request) {
 
-    var tenant = ContextHelper.currentTenant();
     var meta = new UploadMeta();
     meta.setOssType(OssType.LOCAL);
     meta.setMethod(UploadMeta.Method.POST);
 
     var nonce = String.valueOf(System.nanoTime());
+
+    var tenantId = tenant.getId();
 
     Map<String, String> params = Map.of("service", service, "tenant", tenantId, "_nonce", nonce);
 

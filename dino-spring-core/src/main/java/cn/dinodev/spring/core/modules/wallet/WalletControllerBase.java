@@ -1,16 +1,17 @@
 package cn.dinodev.spring.core.modules.wallet;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 import cn.dinodev.spring.auth.annotation.CheckPermission;
 import cn.dinodev.spring.commons.context.ContextHelper;
 import cn.dinodev.spring.commons.request.PageReq;
 import cn.dinodev.spring.commons.response.PageResponse;
 import cn.dinodev.spring.commons.response.Response;
+import cn.dinodev.spring.commons.sys.Tenant;
 import cn.dinodev.spring.core.annotion.param.ParamPageable;
 import cn.dinodev.spring.core.annotion.param.ParamTenant;
 import cn.dinodev.spring.core.controller.ControllerBase;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
 import io.swagger.v3.oas.annotations.Operation;
 
 /**
@@ -33,7 +34,7 @@ public interface WalletControllerBase
 
   /**
    * 获取账户信息
-   * @param tenantId
+   * Tenant tenant
    * @return
    */
   @Operation(summary = "获取登录账户信息")
@@ -49,7 +50,7 @@ public interface WalletControllerBase
 
   /**
    * 获取流水
-   * @param tenantId
+   * Tenant tenant
    * @param pageReq
    * @return
    */
@@ -58,10 +59,11 @@ public interface WalletControllerBase
   @ParamPageable
   @GetMapping("/bills")
   @CheckPermission(":wallet.bills")
-  default PageResponse<WalletBillVo> getBills(@PathVariable("tenant_id") String tenantId, PageReq pageReq) {
-    var wallet = walletService().getOrCreateAccountByOwner(tenantId, ContextHelper.currentUser().getId().toString(),
+  default PageResponse<WalletBillVo> getBills(Tenant tenant, PageReq pageReq) {
+    var wallet = walletService().getOrCreateAccountByOwner(tenant.getId(),
+        ContextHelper.currentUser().getId().toString(),
         walletType());
     return PageResponse
-        .success(walletService().listBills(tenantId, wallet.getId(), pageReq.pageable(), WalletBillVo.class));
+        .success(walletService().listBills(tenant.getId(), wallet.getId(), pageReq.pageable(), WalletBillVo.class));
   }
 }

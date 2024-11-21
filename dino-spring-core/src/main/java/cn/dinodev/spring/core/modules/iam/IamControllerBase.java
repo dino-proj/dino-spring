@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +18,7 @@ import cn.dinodev.spring.commons.request.PageReq;
 import cn.dinodev.spring.commons.request.PostBody;
 import cn.dinodev.spring.commons.response.PageResponse;
 import cn.dinodev.spring.commons.response.Response;
+import cn.dinodev.spring.commons.sys.Tenant;
 import cn.dinodev.spring.core.annotion.param.ParamPageable;
 import cn.dinodev.spring.core.annotion.param.ParamTenant;
 import io.swagger.v3.oas.annotations.Operation;
@@ -60,7 +60,7 @@ public interface IamControllerBase<UK extends Serializable> {
 
   /**
    * 获取用户角色列表
-   * @param tenantId
+   * Tenant tenant,
    * @param utype 用户类型
    * @param uid 用户ID
    * @param page
@@ -73,15 +73,15 @@ public interface IamControllerBase<UK extends Serializable> {
   @Parameter(name = "utype", description = "用户类型", required = true)
   @Parameter(name = "uid", description = "用户ID", required = true)
   @CheckPermission("sys.iam:grant")
-  default PageResponse<RoleVo> listUserRoles(@PathVariable("tenant_id") String tenantId, String utype, UK uid,
+  default PageResponse<RoleVo> listUserRoles(Tenant tenant, String utype, UK uid,
       PageReq page) {
-    Page<RoleVo> userRoles = iamService().listUserRoles(tenantId, utype, uid.toString(), page.pageable());
+    Page<RoleVo> userRoles = iamService().listUserRoles(tenant.getId(), utype, uid.toString(), page.pageable());
     return PageResponse.success(userRoles);
   }
 
   /**
    * 为用户分配角色
-   * @param tenantId
+   * Tenant tenant,
    * @param utype
    * @param uid
    * @param req
@@ -93,15 +93,15 @@ public interface IamControllerBase<UK extends Serializable> {
   @Parameter(name = "uid", description = "用户ID", required = true)
   @PostMapping("/user/grant")
   @CheckPermission("sys.iam:grant")
-  default Response<Integer> grantRoles(@PathVariable("tenant_id") String tenantId, String utype, UK uid,
+  default Response<Integer> grantRoles(Tenant tenant, String utype, UK uid,
       @RequestBody PostBody<List<Long>> req) {
-    var result = iamService().grantRoles(tenantId, utype, uid.toString(), req.getBody());
+    var result = iamService().grantRoles(tenant.getId(), utype, uid.toString(), req.getBody());
     return Response.success(result);
   }
 
   /**
    * 取消用户角色
-   * @param tenantId
+   * Tenant tenant,
    * @param utype
    * @param uid
    * @param req
@@ -113,9 +113,9 @@ public interface IamControllerBase<UK extends Serializable> {
   @Parameter(name = "uid", description = "用户ID", required = true)
   @PostMapping("/user/revoke")
   @CheckPermission("sys.iam:grant")
-  default Response<Integer> revokeRoles(@PathVariable("tenant_id") String tenantId, String utype, UK uid,
+  default Response<Integer> revokeRoles(Tenant tenant, String utype, UK uid,
       @RequestBody PostBody<List<Long>> req) {
-    var result = iamService().revokeRoles(tenantId, utype, utype, req.getBody());
+    var result = iamService().revokeRoles(tenant.getId(), utype, utype, req.getBody());
     return Response.success(result);
   }
 

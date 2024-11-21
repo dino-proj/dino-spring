@@ -9,12 +9,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import cn.dinodev.spring.core.entity.Code;
-import cn.dinodev.spring.data.dao.CrudRepositoryBase;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.transaction.annotation.Transactional;
+
+import cn.dinodev.spring.core.entity.Code;
+import cn.dinodev.spring.data.dao.CrudRepositoryBase;
 
 /**
  *
@@ -34,7 +35,7 @@ public interface UserRoleRepository extends CrudRepositoryBase<UserRoleEntity, L
    */
   @Modifying
   @Transactional(rollbackFor = Exception.class)
-  default Optional<Long> addUserRoles(String tenantId, String userType, String userId, List<Long> roleIds) {
+  default Optional<Integer> addUserRoles(String tenantId, String userType, String userId, List<Long> roleIds) {
     var sql = newSelect();
     sql.eq("tenant_id", tenantId);
     sql.column("id, role_id");
@@ -59,7 +60,7 @@ public interface UserRoleRepository extends CrudRepositoryBase<UserRoleEntity, L
       this.saveAll(entities);
     }
 
-    return Optional.of(Long.valueOf(roleIds.size()));
+    return Optional.of(Integer.valueOf(roleIds.size()));
   }
 
   /**
@@ -72,7 +73,7 @@ public interface UserRoleRepository extends CrudRepositoryBase<UserRoleEntity, L
    */
   @Modifying
   @Transactional(rollbackFor = Exception.class)
-  default Optional<Long> removeUserRoles(String tenantId, String userType, String userId, List<Long> roleIds) {
+  default Optional<Integer> removeUserRoles(String tenantId, String userType, String userId, List<Long> roleIds) {
     var sql = newDelete();
     sql.eq("tenant_id", tenantId);
     sql.eq("user_type", userType);

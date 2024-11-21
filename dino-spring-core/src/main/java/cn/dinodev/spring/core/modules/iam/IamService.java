@@ -8,12 +8,13 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
-import cn.dinodev.spring.data.sql.builder.SelectSqlBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import cn.dinodev.spring.data.sql.builder.SelectSqlBuilder;
 
 /**
  * @author Cody Lu
@@ -64,15 +65,15 @@ public class IamService {
     return new PageImpl<>(List.of(), pageable, roles.getTotalElements());
   }
 
-  public long grantRoles(String tenantId, String userType, String userId, List<Long> roleIds) {
-    return userRoleRepository.addUserRoles(tenantId, userType, userId, roleIds).orElse(0L);
+  public int grantRoles(String tenantId, String userType, String userId, List<Long> roleIds) {
+    return userRoleRepository.addUserRoles(tenantId, userType, userId, roleIds).orElse(0);
   }
 
-  public long revokeRoles(String tenantId, String userType, String userId, List<Long> roleIds) {
-    return userRoleRepository.removeUserRoles(tenantId, userType, userId, roleIds).orElse(0L);
+  public int revokeRoles(String tenantId, String userType, String userId, List<Long> roleIds) {
+    return userRoleRepository.removeUserRoles(tenantId, userType, userId, roleIds).orElse(0);
   }
 
-  public long revokeUserRoles(String tenantId, String userType, String userId) {
+  public int revokeUserRoles(String tenantId, String userType, String userId) {
     return revokeRoles(tenantId, userType, userId, List.of());
   }
 

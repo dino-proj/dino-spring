@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>cn.dinodev</groupId>
   <artifactId>dinodev-spring-assembly</artifactId>
-  <version>3.3.1</version>
+  <version>3.3.2</version>
   <name>dino-spring-assembly</name>
   <description>打包及运行组件</description>
   <url>https://dinodev.cn/</url>

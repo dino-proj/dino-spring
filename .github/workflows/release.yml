@@ -132,31 +132,6 @@ jobs:
             export DEPLOY_WAIT_UNTIL=${WAIT_UNTIL:-"published"}
           fi
 
-          # 根据用户选择要skip的项目，设置发布参数
-          skipedProjects=()
-          if [ "$dino-dependencies-root" = true ]; then
-            skipedProjects+=("dino-dependencies-root")
-          fi
-          if [ "$dino-spring-assembly" = true ]; then
-            skipedProjects+=("dino-spring-assembly")
-          fi
-          if [ "$dino-spring-boot-starter-parent" = true ]; then
-            skipedProjects+=("dino-spring-boot-starter-parent")
-          fi
-          if [ "$dino-spring-cloud-starter-parent" = true ]; then
-            skipedProjects+=("dino-spring-cloud-starter-parent")
-          fi
-          if [ "$dino-spring-commons" = true ]; then
-            skipedProjects+=("dino-spring-commons")
-          fi
-          if [ "$dino-spring-data" = true ]; then
-            skipedProjects+=("dino-spring-data")
-          fi
-          if [ "$dino-spring-auth" = true ]; then
-            skipedProjects+=("dino-spring-auth")
-          fi
-
-
           echo "=============== 开始发布到Maven中央仓库 ==============="
           # 定义项目数组
           projects=(
@@ -172,7 +147,8 @@ jobs:
           # 循环遍历项目数组
           for project in "${projects[@]}"; do
             # 如果用户选择跳过当前项目，则跳过当前项目
-            if [[ " ${skipedProjects[@]} " =~ " ${project} " ]]; then
+            var_name="github.event.inputs.$project"
+            if [ "${(P)var_name}" = true ]; then
               echo "=============== 跳过发布 $project ==============="
               continue
             fi

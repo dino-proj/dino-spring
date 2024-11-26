@@ -133,7 +133,7 @@ jobs:
           fi
 
           # 根据用户选择要skip的项目，设置发布参数
-          skipedProjects = ()
+          skipedProjects=()
           if [ "$dino-dependencies-root" = true ]; then
             skipedProjects+=("dino-dependencies-root")
           fi

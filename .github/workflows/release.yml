@@ -148,7 +148,8 @@ jobs:
           for project in "${projects[@]}"; do
             # 如果用户选择跳过当前项目，则跳过当前项目
             var_name="github.event.inputs.$project"
-            if [ "${(P)var_name}" = true ]; then
+            skip_project=$(eval echo \$$var_name)
+            if [ "$skip_project" = true ]; then
               echo "=============== 跳过发布 $project ==============="
               continue
             fi

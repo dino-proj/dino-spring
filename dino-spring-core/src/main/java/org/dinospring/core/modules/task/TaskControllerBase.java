@@ -14,17 +14,15 @@
 
 package org.dinospring.core.modules.task;
 
-import jakarta.annotation.Nonnull;
-
 import org.dinospring.commons.context.ContextHelper;
 import org.dinospring.commons.response.Response;
 import org.dinospring.core.annotion.param.ParamTenant;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.annotation.Nonnull;
 
 /**
  *
@@ -34,9 +32,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 public interface TaskControllerBase {
 
   /**
-  * Service 服务实例
-  * @return
-  */
+   * Service 服务实例
+   * 
+   * @return
+   */
   @Nonnull
   default TaskService taskService() {
     return ContextHelper.findBean(TaskService.class);
@@ -44,6 +43,7 @@ public interface TaskControllerBase {
 
   /**
    * 查询任务信息，包括状态，进度，错误信息等
+   * 
    * @param tenantId
    * @param id
    * @return
@@ -52,7 +52,7 @@ public interface TaskControllerBase {
   @ParamTenant
   @Parameter(name = "id", description = "任务的ID")
   @GetMapping("/info")
-  default Response<TaskVo> getTaskInfo(@PathVariable("tenant_id") String tenantId, @RequestParam String id) {
+  default Response<TaskVo> getTaskInfo(@RequestParam String id) {
     return Response.success(taskService().getTaskInfo(id));
   }
 }

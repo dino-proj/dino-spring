@@ -285,6 +285,7 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
 
   /**
    * 注销用户时，删除用户的所有Token
+   * 
    * @param userId
    * @param userType
    * @return
@@ -295,6 +296,26 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
     if (CollectionUtils.isNotEmpty(list)) {
       list.forEach(token -> {
         this.removeById(token.getId());
+      });
+    }
+  }
+
+  /**
+   * 清除指定用户的所有令牌，除了当前使用的令牌
+   * 
+   * @param userId   用户ID，用于标识特定用户
+   * @param userType 用户类型，用于区分不同类型的用户（如管理员、普通用户等）
+   * @param token    当前需要保留的令牌，该令牌不会被删除
+   * 
+   */
+  public void clearUserTokenExceptCurrent(String userId, String userType, String token) {
+    SelectSqlBuilder sqlBuilder = repository().newSelect().eq("user_id", userId).eq("user_type", userType);
+    List<TokenEntity> list = repository().queryList(sqlBuilder);
+    if (CollectionUtils.isNotEmpty(list)) {
+      list.forEach(t -> {
+        if (!t.getToken().equalsIgnoreCase(token)) {
+          this.removeById(t.getId());
+        }
       });
     }
   }

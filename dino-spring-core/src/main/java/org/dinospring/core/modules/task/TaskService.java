@@ -1,16 +1,5 @@
-// Copyright 2021 dinodev.cn
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright 2024 dinosdev.cn.
+// SPDX-License-Identifier: Apache-2.0
 
 package org.dinospring.core.modules.task;
 
@@ -24,7 +13,7 @@ import org.dinospring.commons.utils.TaskObserver;
 
 /**
  *
- * @author Cody LU
+ * @author Cody Lu
  */
 
 public interface TaskService {
@@ -37,6 +26,17 @@ public interface TaskService {
    * @return
    */
   TaskVo runTask(@Nonnull String name, @Nullable Duration timeout, @Nonnull Predicate<TaskObserver> task);
+
+  /**
+   * 创建带步数的任务
+   * @param name 任务的名字
+   * @param totalSteps 任务的总步数
+   * @param timeout 任务执行超时时间，null表示不超时
+   * @param task 任务执行主体
+   * @return
+   */
+  TaskVo runStepTask(@Nonnull String name, int totalSteps, @Nullable Duration timeout,
+      @Nonnull Predicate<TaskObserver> task);
 
   /**
    * 获取任务信息

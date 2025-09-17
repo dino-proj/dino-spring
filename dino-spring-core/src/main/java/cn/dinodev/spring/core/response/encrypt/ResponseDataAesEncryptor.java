@@ -28,9 +28,9 @@ public class ResponseDataAesEncryptor implements ResponseDataEncryptor {
   }
 
   @Override
-  public String encryptData(@Nullable String plainText) {
+  public String encryptData(@Nullable byte[] plainBytes) {
     // 实现AES加密逻辑，使用aesKey和aesIv进行加密
-    if (plainText == null) {
+    if (plainBytes == null) {
       return null;
     }
     byte[] aesIv = new byte[16]; // 16字节 for AES
@@ -40,7 +40,7 @@ public class ResponseDataAesEncryptor implements ResponseDataEncryptor {
       Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
       IvParameterSpec ivSpec = new IvParameterSpec(aesIv);
       cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
-      byte[] encrypted = cipher.doFinal(plainText.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+      byte[] encrypted = cipher.doFinal(plainBytes);
       // 将iv和加密数据一起返回，方便解密时使用
       byte[] combined = new byte[aesIv.length + encrypted.length];
       System.arraycopy(aesIv, 0, combined, 0, aesIv.length);

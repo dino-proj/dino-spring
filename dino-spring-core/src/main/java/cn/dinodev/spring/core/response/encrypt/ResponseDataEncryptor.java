@@ -14,9 +14,9 @@ public interface ResponseDataEncryptor {
   /**
    * 加密数据
    *
-   * @param plainText 明文数据
+   * @param plainBytes 明文数据
    * @return 加密后的数据
    */
-  String encryptData(String plainText);
+  String encryptData(byte[] plainBytes);
 
 }

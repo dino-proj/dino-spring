@@ -6,12 +6,12 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.2.3</version>
+    <version>3.3.5</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
-  <groupId>org.dinospring</groupId>
-  <artifactId>dino-spring-boot-starter-parent</artifactId>
-  <version>3.0.2</version>
+  <groupId>cn.dinodev</groupId>
+  <artifactId>dinodev-spring-boot-starter-parent</artifactId>
+  <version>3.3.2</version>
   <packaging>pom</packaging>
   <description>dino-spring项目boot starter parent</description>
   <url>https://dinodev.cn/</url>
@@ -21,30 +21,30 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>17</java.version>
 
-    <dino-spring.version>3.0.2</dino-spring.version>
-    <spring-boot-dependencies.version>3.2.3</spring-boot-dependencies.version>
+    <dino-spring.version>3.3.2</dino-spring.version>
+    <spring-boot-dependencies.version>3.3.5</spring-boot-dependencies.version>
 
     <!-- plugin -->
     <central-publishing-maven-plugin.version>0.6.0</central-publishing-maven-plugin.version>
     <maven-pmd-plugin.version>3.21.2</maven-pmd-plugin.version>
     <p3c-pmd.version>2.2.1.0x</p3c-pmd.version>
     <pmd.version>6.55.0</pmd.version>
-    <mapstruct.version>1.5.5.Final</mapstruct.version>
-    <lombok.version>1.18.28</lombok.version>
+    <mapstruct.version>1.6.2</mapstruct.version>
+    <lombok.version>1.18.34</lombok.version>
 
     <druid.version>1.2.23</druid.version>
 
     <!-- open api-->
-    <springdoc.version>2.3.0</springdoc.version>
-    <swagger.version>2.2.19</swagger.version>
-    <weixin-java.version>4.5.9.B</weixin-java.version>
+    <springdoc.version>2.6.0</springdoc.version>
+    <swagger.version>2.2.25</swagger.version>
+    <weixin-java.version>4.6.7.B</weixin-java.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.dinospring</groupId>
-        <artifactId>dino-dependencies-root</artifactId>
+        <groupId>cn.dinodev</groupId>
+        <artifactId>dinodev-dependencies-root</artifactId>
         <version>${dino-spring.version}</version>
         <type>pom</type>
         <scope>import</scope>
@@ -99,8 +99,8 @@
 
       <!-- DINO spring -->
       <dependency>
-        <groupId>org.dinospring</groupId>
-        <artifactId>dino-spring-assembly</artifactId>
+        <groupId>cn.dinodev</groupId>
+        <artifactId>dinodev-spring-assembly</artifactId>
         <version>${dino-spring.version}</version>
       </dependency>
 
@@ -118,20 +118,8 @@
       <artifactId>commons-collections4</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-text</artifactId>
-    </dependency>
-    <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-compress</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -211,8 +199,8 @@
           </configuration>
           <dependencies>
             <dependency>
-              <groupId>org.dinospring</groupId>
-              <artifactId>dino-spring-assembly</artifactId>
+              <groupId>cn.dinodev</groupId>
+              <artifactId>dinodev-spring-assembly</artifactId>
               <version>${dino-spring.version}</version>
             </dependency>
           </dependencies>
@@ -236,7 +224,7 @@
           <configuration>
             <targetJdk>${java.version}</targetJdk>
             <rulesets>
-              <ruleset>rulesets/java/dinospring-all.xml</ruleset>
+              <ruleset>rulesets/java/dino.spring-all.xml</ruleset>
             </rulesets>
             <printFailingErrors>true</printFailingErrors>
           </configuration>
@@ -251,8 +239,8 @@
           </executions>
           <dependencies>
             <dependency>
-              <groupId>org.dinospring</groupId>
-              <artifactId>dino-spring-assembly</artifactId>
+              <groupId>cn.dinodev</groupId>
+              <artifactId>dinodev-spring-assembly</artifactId>
               <version>${dino-spring.version}</version>
             </dependency>
             <!-- 需要使用阿里的一些xml文件，因此需要这里增加p3c的依赖 -->
@@ -279,6 +267,30 @@
               <version>${pmd.version}</version>
             </dependency>
           </dependencies>
+        </plugin>
+
+
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <configuration>
+            <!-- 配置主类 -->
+            <mainClass>${app.mainClass}</mainClass>
+            <!-- set to false: the repackaged archive will not be installed or deployed -->
+            <attach>false</attach>
+            <!-- 配置为可执行 -->
+            <executable>true</executable>
+            <!-- 配置输出目录 -->
+            <outputDirectory>${project.build.directory}/single-jar</outputDirectory>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>repackage</goal>
+                <goal>build-info</goal>
+              </goals>
+            </execution>
+          </executions>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -355,6 +367,10 @@
             </excludes>
             <filtering>true</filtering>
           </resource>
+          <resource>
+            <directory>src/main/resources-raw</directory>
+            <filtering>false</filtering>
+          </resource>
         </resources>
       </build>
     </profile>
@@ -372,21 +388,31 @@
           <resource>
             <directory>src/main/resources</directory>
             <excludes>
-              <exclude>*</exclude>
+              <exclude>application-prod.yml</exclude>
+              <exclude>application-dev.yml</exclude>
             </excludes>
+            <filtering>true</filtering>
+          </resource>
+          <resource>
+            <directory>src/main/resources-raw</directory>
+            <filtering>false</filtering>
           </resource>
         </resources>
         <plugins>
           <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
           </plugin>
+          <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+          </plugin>
         </plugins>
       </build>
 
       <dependencies>
         <dependency>
-          <groupId>org.dinospring</groupId>
-          <artifactId>dino-spring-assembly</artifactId>
+          <groupId>cn.dinodev</groupId>
+          <artifactId>dinodev-spring-assembly</artifactId>
         </dependency>
       </dependencies>
     </profile>
@@ -404,21 +430,31 @@
           <resource>
             <directory>src/main/resources</directory>
             <excludes>
-              <exclude>*</exclude>
+              <exclude>application-dev.yml</exclude>
+              <exclude>application-test.yml</exclude>
             </excludes>
+            <filtering>true</filtering>
+          </resource>
+          <resource>
+            <directory>src/main/resources-raw</directory>
+            <filtering>false</filtering>
           </resource>
         </resources>
         <plugins>
           <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
           </plugin>
+          <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+          </plugin>
         </plugins>
       </build>
 
       <dependencies>
         <dependency>
-          <groupId>org.dinospring</groupId>
-          <artifactId>dino-spring-assembly</artifactId>
+          <groupId>cn.dinodev</groupId>
+          <artifactId>dinodev-spring-assembly</artifactId>
         </dependency>
       </dependencies>
     </profile>
@@ -435,8 +471,8 @@
             <extensions>true</extensions>
             <configuration>
               <publishingServerId>central</publishingServerId>
-              <autoPublish>true</autoPublish>
-              <waitUntil>published</waitUntil>
+              <autoPublish>${env.DEPLOY_AUTO_PUBLISH}</autoPublish>
+              <waitUntil>${env.DEPLOY_WAIT_UNTIL}</waitUntil>
               <deploymentName>${project.artifactId}-${project.version}</deploymentName>
             </configuration>
           </plugin>

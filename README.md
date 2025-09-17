@@ -22,9 +22,9 @@ Dino Spring用于快速构建前后端分离应用，支持微服务，多租户
 
 ## 💡 版本说明
 - **Java JDK:** >=17
-- **Spring Framework:** 6.0.11
-- **Spring Boot:** 3.1.2
-- **Spring Cloud:** 2022.0.3
+- **Spring Framework:** 6.1.14
+- **Spring Boot:** 3.3.5
+- **Spring Cloud:** 2023.0.3
 
 ## ✨ 内置模块
 
@@ -43,17 +43,17 @@ java spring项目maven pom.xml配置如下：
 ```xml
 <project>
   <parent>
-    <groupId>org.dinospring</groupId>
-    <artifactId>dino-spring-boot-starter-parent</artifactId>
-    <version>3.0.2</version>
+    <groupId>cn.dinodev</groupId>
+    <artifactId>dinodev-spring-boot-starter-parent</artifactId>
+    <version>3.3.2</version>
   </parent>
   <groupId>your group id</groupId>
   <artifactId>your artifact id</artifactId>
 
   <dependencies>
     <dependency>
-      <groupId>org.dinospring</groupId>
-      <artifactId>dino-spring-core</artifactId>
+      <groupId>cn.dinodev</groupId>
+      <artifactId>dinodev-spring-core</artifactId>
       <version>${dino-spring.version}</version>
     </dependency>
   <dependencies>

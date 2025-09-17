@@ -4,14 +4,14 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.dinospring</groupId>
-    <artifactId>dino-spring-boot-starter-parent</artifactId>
-    <version>3.0.2</version>
+    <groupId>cn.dinodev</groupId>
+    <artifactId>dinodev-spring-boot-starter-parent</artifactId>
+    <version>3.3.2</version>
     <relativePath>../dino-spring-boot-starter-parent/pom.xml</relativePath>
   </parent>
-  <groupId>org.dinospring</groupId>
-  <artifactId>dino-spring-auth</artifactId>
-  <version>3.0.2</version>
+  <groupId>cn.dinodev</groupId>
+  <artifactId>dinodev-spring-auth</artifactId>
+  <version>3.3.2</version>
   <name>dino-spring-auth</name>
   <description>dino-spring访问验证模块</description>
   <url>https://dinodev.cn/</url>
@@ -27,8 +27,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.dinospring</groupId>
-      <artifactId>dino-spring-commons</artifactId>
+      <groupId>cn.dinodev</groupId>
+      <artifactId>dinodev-spring-commons</artifactId>
       <version>${dino-spring.version}</version>
     </dependency>
 

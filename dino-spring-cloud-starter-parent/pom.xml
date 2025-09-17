@@ -4,14 +4,14 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.dinospring</groupId>
-    <artifactId>dino-spring-boot-starter-parent</artifactId>
-    <version>3.0.2</version>
+    <groupId>cn.dinodev</groupId>
+    <artifactId>dinodev-spring-boot-starter-parent</artifactId>
+    <version>3.3.2</version>
     <relativePath>../dino-spring-boot-starter-parent/pom.xml</relativePath>
   </parent>
-  <groupId>org.dinospring</groupId>
-  <artifactId>dino-spring-cloud-starter-parent</artifactId>
-  <version>3.0.2</version>
+  <groupId>cn.dinodev</groupId>
+  <artifactId>dinodev-spring-cloud-starter-parent</artifactId>
+  <version>3.3.2</version>
   <packaging>pom</packaging>
   <description>dino-spring cloud微服务starter parent</description>
   <url>https://dinodev.cn/</url>
@@ -23,7 +23,7 @@
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
 
-    <spring-cloud.version>2022.0.3</spring-cloud.version>
+    <spring-cloud.version>2023.0.3</spring-cloud.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -35,8 +35,8 @@
         <scope>import</scope>
       </dependency>
       <dependency>
-        <groupId>org.dinospring</groupId>
-        <artifactId>dino-spring-boot-starter-parent</artifactId>
+        <groupId>cn.dinodev</groupId>
+        <artifactId>dinodev-spring-boot-starter-parent</artifactId>
         <version>${dino-spring.version}</version>
         <type>pom</type>
         <scope>import</scope>

@@ -50,6 +50,15 @@ echo "change version in README.md"
 cd "$CWD/.."
 sed -i '' -E '/<parent>/,/<\/parent>/ s/(<version>)[^<]+(<\/version>)/\1'"$NEW_VER"'\2/' README.md
 
+# ask for confirmation to push
+read -p "Do you want to push the changes to Github? (y/n) " -n 1 -r
+echo   # (optional) move to a new line
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+    echo "exit without push"
+    exit
+fi
+
 # git commit
 echo "git commit"
 git add .
@@ -61,7 +70,7 @@ git tag -a "RELEASE-$NEW_VER" -m "release version $NEW_VER"
 
 # git push main and tag
 echo "git push"
-git push Github main
+git push
 git push Github "RELEASE-$NEW_VER"
 
 echo "done!"

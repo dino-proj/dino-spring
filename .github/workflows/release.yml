@@ -17,6 +17,49 @@ on:
           - error
           - warning
           - info
+          - debug
+      autoPublish:
+        description: "Auto publish"
+        required: true
+        default: true
+        type: boolean
+      waitUntil:
+        description: "Wait until"
+        required: true
+        type: choice
+        options:
+          - published
+          - uploaded
+          - validated
+      dino_dependencies_root:
+        description: "Skip dependencies?"
+        required: false
+        type: boolean
+      dino_spring_assembly:
+        description: "Skip assembly?"
+        required: false
+        type: boolean
+      dino_spring_boot_starter_parent:
+        description: "Skip boot?"
+        required: false
+        type: boolean
+      dino_spring_cloud_starter_parent:
+        description: "Skip cloud?"
+        required: false
+        type: boolean
+      dino_spring_commons:
+        description: "Skip commons?"
+        required: false
+        type: boolean
+      dino_spring_data:
+        description: "Skip data?"
+        required: false
+        type: boolean
+      dino_spring_auth:
+        description: "Skip auth?"
+        required: false
+        type: boolean
+
 
 
 jobs:
@@ -28,6 +71,8 @@ jobs:
       BUILD_OPT: "-Dmaven.test.skip=true -P publish"
       MVN_NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
       MVN_NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+      AUTO_PUBLISH: ${{ github.event.inputs.autoPublish || true }}
+      WAIT_UNTIL: ${{ github.event.inputs.waitUntil }}
 
     steps:
       - name: Check out Git repository
@@ -47,6 +92,8 @@ jobs:
       - name: Package & Install to Local Repository
         run: |
           touch /home/runner/.m2/settings-security.xml
+          # 将secrets.MVN_SETTINGS_SECURITY写入到settings-security.xml文件
+          echo "${{ secrets.MVN_SETTINGS_SECURITY }}" > /home/runner/.m2/settings-security.xml
           # 定义项目数组
           projects=(
             "dino-dependencies-root"
@@ -74,6 +121,41 @@ jobs:
 
       - name: Publish to Maven Central
         run: |
+          echo "是否自动发布：$AUTO_PUBLISH"
+          echo "等待条件：$WAIT_UNTIL"
+          # 定义发布参数
+          if [ "$AUTO_PUBLISH" = false ]; then
+            export DEPLOY_AUTO_PUBLISH=false
+            export DEPLOY_WAIT_UNTIL=${WAIT_UNTIL:-"uploaded"}
+          else
+            export DEPLOY_AUTO_PUBLISH=true
+            export DEPLOY_WAIT_UNTIL=${WAIT_UNTIL:-"published"}
+          fi
+
+          # 从用户输入中获取skip_projects变量
+          skip_projects=()
+          if [ "${{ github.event.inputs.dino_dependencies_root }}" = true ]; then
+            skip_projects+=("dino-dependencies-root")
+          fi
+          if [ "${{ github.event.inputs.dino_spring_assembly }}" = true ]; then
+            skip_projects+=("dino-spring-assembly")
+          fi
+          if [ "${{ github.event.inputs.dino_spring_boot_starter_parent }}" = true ]; then
+            skip_projects+=("dino-spring-boot-starter-parent")
+          fi
+          if [ "${{ github.event.inputs.dino_spring_cloud_starter_parent }}" = true ]; then
+            skip_projects+=("dino-spring-cloud-starter-parent")
+          fi
+          if [ "${{ github.event.inputs.dino_spring_commons }}" = true ]; then
+            skip_projects+=("dino-spring-commons")
+          fi
+          if [ "${{ github.event.inputs.dino_spring_data }}" = true ]; then
+            skip_projects+=("dino-spring-data")
+          fi
+          if [ "${{ github.event.inputs.dino_spring_auth }}" = true ]; then
+            skip_projects+=("dino-spring-auth")
+          fi
+
           echo "=============== 开始发布到Maven中央仓库 ==============="
           # 定义项目数组
           projects=(
@@ -88,6 +170,11 @@ jobs:
           )
           # 循环遍历项目数组
           for project in "${projects[@]}"; do
+            # 如果用户选择跳过当前项目，则跳过当前项目
+            if [[ " ${skip_projects[@]} " =~ " $project " ]]; then
+              echo "=============== 跳过发布 $project ==============="
+              continue
+            fi
             # 进入项目目录
             cd "$project"
             # 输出开始发布信息

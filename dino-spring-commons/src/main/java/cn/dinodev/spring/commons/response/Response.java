@@ -41,6 +41,19 @@ public class Response<T> {
     this.msg = msg;
   }
 
+  protected Response(int code, String msg, T data) {
+    this.code = code;
+    this.msg = msg;
+    this.data = data;
+  }
+
+  protected Response(int code, String msg, T data, Long cost) {
+    this.code = code;
+    this.msg = msg;
+    this.data = data;
+    this.cost = cost;
+  }
+
   public static <T> Response<T> success() {
     return new Response<>(0, "success");
   }

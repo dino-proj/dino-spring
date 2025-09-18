@@ -5,12 +5,13 @@ package cn.dinodev.spring.core.converts;
 
 import java.util.Set;
 
-import cn.dinodev.spring.commons.sys.UserType;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.data.convert.WritingConverter;
-import org.springframework.data.util.CastUtils;
 import org.springframework.stereotype.Component;
+
+import cn.dinodev.spring.commons.sys.UserType;
+import cn.dinodev.spring.commons.utils.CastUtils;
 
 /**
  *

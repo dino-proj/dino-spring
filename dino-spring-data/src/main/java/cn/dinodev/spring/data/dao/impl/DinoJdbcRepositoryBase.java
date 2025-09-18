@@ -15,7 +15,6 @@ import org.springframework.data.jdbc.core.JdbcAggregateOperations;
 import org.springframework.data.jdbc.core.convert.JdbcConverter;
 import org.springframework.data.jdbc.repository.support.SimpleJdbcRepository;
 import org.springframework.data.relational.core.mapping.RelationalPersistentEntity;
-import org.springframework.data.util.CastUtils;
 import org.springframework.jdbc.core.ArgumentPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,6 +25,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.JdbcUtils;
 
 import cn.dinodev.spring.commons.context.ContextHelper;
+import cn.dinodev.spring.commons.utils.CastUtils;
 import cn.dinodev.spring.commons.utils.TypeUtils;
 import cn.dinodev.spring.data.dao.EntityMeta;
 import cn.dinodev.spring.data.dao.JdbcSelectExecutor;

@@ -54,12 +54,6 @@ public class DerivedSqlIdentifier implements SqlIdentifier {
   }
 
   @Override
-  @NonNull
-  public String getReference(@NonNull IdentifierProcessing processing) {
-    return this.name;
-  }
-
-  @Override
   public boolean equals(Object o) {
 
     if (this == o) {

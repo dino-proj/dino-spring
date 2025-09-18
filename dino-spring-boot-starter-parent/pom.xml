@@ -28,7 +28,7 @@
     <central-publishing-maven-plugin.version>0.8.0</central-publishing-maven-plugin.version>
     <maven-pmd-plugin.version>3.27.0</maven-pmd-plugin.version>
     <p3c-pmd.version>2.2.1.0x</p3c-pmd.version>
-    <pmd.version>7.17.0</pmd.version>
+    <pmd.version>7.16.0</pmd.version>
     <mapstruct.version>1.6.3</mapstruct.version>
     <lombok.version>1.18.42</lombok.version>
 

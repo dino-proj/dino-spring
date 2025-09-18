@@ -25,8 +25,12 @@ public class ResponseDataAesEncryptor implements ResponseDataEncryptor {
 
   public ResponseDataAesEncryptor(String aesKey) {
     // 检查配置的aesKey是否有效，以及长度是否正确，16, 24, 32
-    if (aesKey == null || !(aesKey.length() == 16 || aesKey.length() == 24 || aesKey.length() == 32)) {
+    if (aesKey == null) {
       throw new IllegalArgumentException("Invalid aesKey for response data encryptor, must be 16, 24 or 32 characters");
+    }
+    int length = aesKey.getBytes(java.nio.charset.StandardCharsets.UTF_8).length;
+    if (length != 16 && length != 24 && length != 32) {
+      throw new IllegalArgumentException("Invalid aesKey length for response data encryptor, must be 16, 24 or 32 bytes");
     }
 
     this.keySpec = new SecretKeySpec(aesKey.getBytes(java.nio.charset.StandardCharsets.UTF_8), "AES");

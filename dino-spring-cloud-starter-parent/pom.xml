@@ -13,6 +13,7 @@
   <artifactId>dinodev-spring-cloud-starter-parent</artifactId>
   <version>3.3.4</version>
   <packaging>pom</packaging>
+  <name>Dino Spring Cloud Starter Parent</name>
   <description>dino-spring cloud微服务starter parent</description>
   <url>https://dinodev.cn/</url>
 

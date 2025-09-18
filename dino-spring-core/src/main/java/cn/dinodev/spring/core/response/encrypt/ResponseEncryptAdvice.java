@@ -105,16 +105,51 @@ public class ResponseEncryptAdvice implements ResponseBodyAdvice<Object> {
     return body;
   }
 
+  /**
+   * 响应混合接口，用于在序列化时忽略特定字段
+   * <p>
+   * 该接口定义了响应对象中需要被忽略的字段方法，通过@JsonIgnore注解
+   * 确保这些字段在JSON序列化过程中不会被包含在输出结果中
+   */
   private static interface ResponseMixin {
+
+    /**
+     * 获取响应状态码
+     * <p>
+     * 该方法在JSON序列化时会被忽略
+     *
+     * @return 响应状态码字符串
+     */
     @JsonIgnore
     String getCode();
 
+    /**
+     * 获取响应消息
+     * <p>
+     * 该方法在JSON序列化时会被忽略
+     *
+     * @return 响应消息字符串
+     */
     @JsonIgnore
     String getMsg();
 
+    /**
+     * 获取响应数据
+     * <p>
+     * 该方法在JSON序列化时会被忽略
+     *
+     * @return 响应数据对象
+     */
     @JsonIgnore
     Object getData();
 
+    /**
+     * 获取请求处理耗时
+     * <p>
+     * 该方法在JSON序列化时会被忽略
+     *
+     * @return 请求处理耗时（毫秒）
+     */
     @JsonIgnore
     Long getCost();
   }

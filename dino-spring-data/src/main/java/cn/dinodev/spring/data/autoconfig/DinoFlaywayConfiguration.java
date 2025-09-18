@@ -207,8 +207,6 @@ public class DinoFlaywayConfiguration implements ApplicationListener<Application
         .to(configuration::baselineOnMigrate);
     map.from(properties.isCleanDisabled())
         .to(configuration::cleanDisabled);
-    map.from(properties.isCleanOnValidationError())
-        .to(configuration::cleanOnValidationError);
     map.from(properties.isGroup())
         .to(configuration::group);
 

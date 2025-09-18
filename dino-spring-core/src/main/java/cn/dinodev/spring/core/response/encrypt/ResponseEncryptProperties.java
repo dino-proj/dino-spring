@@ -4,6 +4,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import lombok.Data;
 
+/**
+ * 响应数据加密配置
+ * @author Cody Lu
+ * @date 2025-09-17 18:16:41
+ */
+
 @Data
 @ConfigurationProperties(prefix = ResponseEncryptProperties.PREFIX)
 public class ResponseEncryptProperties {

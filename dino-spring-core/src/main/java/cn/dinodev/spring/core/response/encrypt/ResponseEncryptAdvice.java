@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -18,12 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 
 import cn.dinodev.spring.commons.response.Response;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @ControllerAdvice(annotations = RestController.class)
-@ConditionalOnBean(ResponseDataEncryptor.class)
+@ConditionalOnProperty(prefix = ResponseEncryptProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 @Slf4j
 public class ResponseEncryptAdvice implements ResponseBodyAdvice<Object> {
 
@@ -45,12 +43,12 @@ public class ResponseEncryptAdvice implements ResponseBodyAdvice<Object> {
   @Autowired
   private ResponseDataEncryptor responseDataEncryptor;
 
-  private FilterProvider filterProvider = new SimpleFilterProvider()
-      .addFilter("propertyFilter",
-          SimpleBeanPropertyFilter.serializeAllExcept("code", "msg", "data", "cost"));
-
   private static final TypeReference<Map<String, Object>> MAP_TYPE_REF = new TypeReference<>() {
   };
+
+  public ResponseEncryptAdvice() {
+    log.info("---->> response-encrypt: ResponseEncryptAdvice loaded.");
+  }
 
   @Override
   public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
@@ -92,8 +90,10 @@ public class ResponseEncryptAdvice implements ResponseBodyAdvice<Object> {
           // 这里进行加密操作，假设encryptData是一个加密方法
           String encryptedData = responseDataEncryptor.encryptData(jsonData);
 
-          var exPropJson = objectMapper.writer(filterProvider).writeValueAsString(responseObj);
-          var exPropMap = objectMapper.readValue(exPropJson, MAP_TYPE_REF);
+          var omCopy = objectMapper.copy();
+          omCopy.addMixIn(Response.class, ResponseMixin.class);
+          var exPropMap = omCopy.convertValue(responseObj, MAP_TYPE_REF);
+
           return new ResponseWithEncryptedData(responseObj, encryptedData, exPropMap);
         } catch (Exception e) {
           throw new RuntimeException("Failed to encrypt response data", e);
@@ -103,6 +103,20 @@ public class ResponseEncryptAdvice implements ResponseBodyAdvice<Object> {
     }
 
     return body;
+  }
+
+  private static interface ResponseMixin {
+    @JsonIgnore
+    String getCode();
+
+    @JsonIgnore
+    String getMsg();
+
+    @JsonIgnore
+    Object getData();
+
+    @JsonIgnore
+    Long getCost();
   }
 
   /**

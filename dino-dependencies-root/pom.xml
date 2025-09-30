@@ -38,7 +38,7 @@
     <postgresql.version>42.7.8</postgresql.version>
 
     <!-- managedDep io -->
-    <minio.version>8.5.13</minio.version>
+    <minio.version>8.5.17</minio.version>
     <qcloud-cos.version>5.6.255</qcloud-cos.version>
     <okhttp3.version>5.1.0</okhttp3.version>
     <httpclient5.version>5.5</httpclient5.version>

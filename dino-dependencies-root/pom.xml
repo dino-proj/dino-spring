@@ -40,7 +40,6 @@
     <!-- managedDep io -->
     <minio.version>8.5.17</minio.version>
     <qcloud-cos.version>5.6.255</qcloud-cos.version>
-    <okhttp3.version>5.1.0</okhttp3.version>
     <httpclient5.version>5.5</httpclient5.version>
 
     <!-- managedDep servlet-api -->
@@ -259,12 +258,6 @@
         <groupId>org.apache.httpcomponents.client5</groupId>
         <artifactId>httpclient5</artifactId>
         <version>${httpclient5.version}</version>
-      </dependency>
-      <!-- tools-okhttp3 -->
-      <dependency>
-        <groupId>com.squareup.okhttp3</groupId>
-        <artifactId>okhttp</artifactId>
-        <version>${okhttp3.version}</version>
       </dependency>
 
       <!-- tools-weixin-java-sdk -->

@@ -26,6 +26,7 @@ import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * 基于注解的JSON类型ID解析器，用于多态类型的序列化和反序列化
  *
  * @author Cody Lu
  */

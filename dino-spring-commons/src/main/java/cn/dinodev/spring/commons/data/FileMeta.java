@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
+ * 文件元数据基类，定义文件的基本属性
  *
  * @author Cody Lu
  */

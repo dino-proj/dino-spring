@@ -8,7 +8,9 @@ import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * Promise的抽象实现类，提供Promise模式的基础功能
  *
+ * @param <D> Promise解决时的数据类型
  * @author Cody Lu
  * @since 2022-03-14
  */

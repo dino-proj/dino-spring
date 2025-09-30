@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
+ * 音频文件元数据类，存储音频文件的相关信息
  *
  * @author Cody Lu
  */

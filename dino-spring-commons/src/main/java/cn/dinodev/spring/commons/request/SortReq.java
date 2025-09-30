@@ -21,6 +21,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
+ * 排序请求参数类，用于API请求中的排序配置
  *
  * @author Cody Lu
  */

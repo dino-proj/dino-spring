@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
+ * 联系人信息类，存储联系人的基本信息
  *
  * @author Cody Lu
  */

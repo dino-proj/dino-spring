@@ -1,6 +1,8 @@
 package cn.dinodev.spring.commons.promise;
 
 /**
+ * 延迟执行接口，提供Promise模式的基本操作
+ *
  * @author Cody Lu
  */
 public interface Defer {

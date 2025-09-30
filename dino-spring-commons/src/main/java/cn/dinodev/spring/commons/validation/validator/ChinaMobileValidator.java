@@ -10,18 +10,28 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
- * 检查手机号格式
+ * 检查手机号格式的验证器
  * @author Cody Lu
  * @since 2022-04-01
  */
 
 public class ChinaMobileValidator implements ConstraintValidator<Mobile, String> {
 
+  /**
+   * 初始化验证器
+   * @param constraintAnnotation 约束注解
+   */
   @Override
   public void initialize(Mobile constraintAnnotation) {
     //do nothing
   }
 
+  /**
+   * 验证手机号格式
+   * @param value 待验证的手机号
+   * @param context 验证上下文
+   * @return 验证结果，true表示格式正确，false表示格式错误
+   */
   @Override
   public boolean isValid(String value, ConstraintValidatorContext context) {
     if (StringUtils.isBlank(value)) {

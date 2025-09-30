@@ -13,7 +13,7 @@ import jakarta.persistence.Embeddable;
 import lombok.Data;
 
 /**
- *
+ * 地址信息类，包含省份、城市、区县、详细地址等信息
  * @author Cody Lu
  */
 @Data

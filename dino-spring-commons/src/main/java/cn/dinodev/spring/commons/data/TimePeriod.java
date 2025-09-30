@@ -14,7 +14,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- *
+ * 时间周期类，表示一个时间范围，包含开始时间和结束时间
  * @author Cody Lu
  */
 

@@ -4,7 +4,7 @@
 package cn.dinodev.spring.commons.data;
 
 /**
- *
+ * 文件类型枚举，定义了系统支持的文件类型
  * @author Cody Lu
  */
 

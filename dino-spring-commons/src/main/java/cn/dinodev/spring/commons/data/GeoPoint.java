@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- *
+ * 地理坐标点类，包含经度和纬度信息
  * @author Cody Lu
  */
 @Data

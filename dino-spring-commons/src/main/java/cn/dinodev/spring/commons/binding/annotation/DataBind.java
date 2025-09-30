@@ -21,8 +21,8 @@ public @interface DataBind {
 
   /**
    * 处理此绑定的bean name，此属性和{@link #beanClass()}必须设置一个，如果都设置，则同时使用Name和Class.
-   * <p>** 支持spring {@linkplain https://docs.spring.io/spring-framework/docs/5.3.20/reference/html/core.html#expressions SpEL表达式}  **</p>
-   * @return
+   * <p>支持spring SpEL表达式</p>
+   * @return bean名称
    */
   String beanName() default "";
 

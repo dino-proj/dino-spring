@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- *
+ * 图像文件元数据类，包含图像文件的特有属性信息
  * @author Cody Lu
  */
 

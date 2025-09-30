@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
+ * 文档文件元数据类，存储文档文件的相关信息
  *
  * @author JL
  */

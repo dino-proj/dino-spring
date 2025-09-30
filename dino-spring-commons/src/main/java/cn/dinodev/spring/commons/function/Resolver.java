@@ -4,7 +4,9 @@
 package cn.dinodev.spring.commons.function;
 
 /**
- * 资源解析器接口。
+ * 资源解析器接口
+ *
+ * @param <T> 解析的目标类型
  * @author Cody Lu
  * @since 2024-02-03
  */

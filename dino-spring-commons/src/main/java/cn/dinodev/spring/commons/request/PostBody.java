@@ -9,6 +9,7 @@ import lombok.Data;
 
 /**
  * Post请求包装
+ * @param <T> 请求体数据类型
  * @author Cody Lu
  */
 

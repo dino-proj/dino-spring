@@ -49,8 +49,18 @@ public class BusinessException extends RuntimeException {
    */
   private final int code;
 
+  /**
+   * 附加数据，使用 transient 修饰，表示该字段不会被序列化
+   */
   private final transient Object data;
 
+  /**
+   * 受保护的构造方法，用于初始化错误编码、错误信息、附加数据和异常原因
+   * @param code 错误编码
+   * @param msg 错误信息
+   * @param data 附加数据
+   * @param cause 异常原因
+   */
   protected BusinessException(int code, String msg, Object data, Throwable cause) {
     super(msg, cause);
     this.code = code;
@@ -87,6 +97,12 @@ public class BusinessException extends RuntimeException {
     return new BusinessException(status.getCode(), status.getMsg(), data, cause);
   }
 
+  /**
+   * 根据状态和异常原因创建 BusinessException 实例，不包含附加数据
+   * @param status 状态
+   * @param cause 异常原因
+   * @return BusinessException 实例
+   */
   public static BusinessException of(@Nonnull Status status, @Nullable Throwable cause) {
     return new BusinessException(status.getCode(), status.getMsg(), null, cause);
   }

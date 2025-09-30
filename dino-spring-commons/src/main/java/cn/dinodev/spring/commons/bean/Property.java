@@ -170,7 +170,7 @@ public final class Property {
   }
 
   /**
-   * is the property readable && visible in the given view.
+   * is the property readable &amp;&amp; visible in the given view.
    * @param activeView active jsonView
    * @return true if the property is readable and visible in the given view.
    */
@@ -190,7 +190,7 @@ public final class Property {
   }
 
   /**
-   * is the property writable && visible in the given view.
+   * is the property writable &amp;&amp; visible in the given view.
    * @param activeView active jsonView
    * @return true if the property is writable and visible in the given view.
    */

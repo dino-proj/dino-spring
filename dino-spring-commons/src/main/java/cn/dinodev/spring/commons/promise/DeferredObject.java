@@ -2,24 +2,22 @@ package cn.dinodev.spring.commons.promise;
 
 /**
  * An implementation of {@link Deferred} interface.
- * <p>
+ *
  * <pre>
  * <code>
- * final {@link Deferred} deferredObject = new {@link DeferredObject}
+ * final Deferred deferredObject = new DeferredObject();
  *
- * {@link Promise} promise = deferredObject.promise();
+ * Promise promise = deferredObject.promise();
  * promise
- *   .done(new DoneCallback() { ... })
- *   .fail(new FailCallback() { ... })
- *   .progress(new ProgressCallback() { ... });
+ *   .done(result -&gt; { ... })
+ *   .fail(error -&gt; { ... });
  *
- * {@link Runnable} runnable = new {@link Runnable}() {
+ * Runnable runnable = new Runnable() {
  *   public void run() {
  *     int sum = 0;
- *     for (int i = 0; i < 100; i++) {
+ *     for (int i = 0; i &lt; 100; i++) {
  *       // something that takes time
  *       sum += i;
- *       deferredObject.notify(i);
  *     }
  *     deferredObject.resolve(sum);
  *   }
@@ -29,9 +27,8 @@ package cn.dinodev.spring.commons.promise;
  * </code>
  * </pre>
  *
+ * @param <D> Type of the resolved value
  * @author Ray Tsang
- * @see DoneCallback
- * @see FailCallback
  */
 public class DeferredObject<D> extends AbstractPromise<D> implements Deferred<D> {
   @Override

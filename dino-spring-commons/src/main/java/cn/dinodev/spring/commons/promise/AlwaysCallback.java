@@ -6,12 +6,9 @@ import cn.dinodev.spring.commons.promise.Promise.State;
  * A callback invoked when the {@code Promise}'s state becomes either {@link Promise.State#RESOLVED} or
  * {@link Promise.State#REJECTED}.
  *
- * @param <D> Type used for {@link Deferred#resolve(Object)}
- * @param <F> Type used for {@link Deferred#reject(Object)}
+ * @param <D> Type used for resolved value
  *
  * @author Ray Tsang
- * @see Deferred#resolve(Object)
- * @see Deferred#reject(Object)
  * @see Promise#always(AlwaysCallback)
  */
 public interface AlwaysCallback<D> {

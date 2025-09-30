@@ -35,7 +35,7 @@ public class JsonViewUtils {
    * @param activeView 视图
    * @param views 视图集合
    * @param defaultViewInclusion 是否默认包含默认视图
-   * @return true：在视图集合中，或者activeView==null， 或者(views为空&&defaultViewInclusion==true)；false：不在视图集合中
+   * @return true：在视图集合中，或者activeView==null， 或者(views为空&amp;&amp;defaultViewInclusion==true)；false：不在视图集合中
    */
 
   public static boolean isInView(Class<?> activeView, Class<?>[] views, boolean defaultViewInclusion) {

@@ -12,7 +12,8 @@ import jakarta.annotation.Nullable;
 import lombok.Data;
 
 /**
- *
+ * 选项类，用于表示一个选项的值和标签
+ * @param <V> 选项值的类型，必须实现Serializable接口
  * @author Cody Lu
  */
 

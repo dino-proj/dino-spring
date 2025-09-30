@@ -5,8 +5,7 @@ package cn.dinodev.spring.commons.promise;
  * Subsequently, this will allow Promise observers to listen in on the event
  * (done, fail, progress).
  *
- * @param <D> Type used for {@link #resolve(Object)}
- * @param <F> Type used for {@link #reject(Object)}
+ * @param <D> Type used for resolved value
  *
  * @author Ray Tsang
  * @see DeferredObject
@@ -14,15 +13,13 @@ package cn.dinodev.spring.commons.promise;
 public interface Deferred<D> extends Promise<D> {
   /**
    * This should be called when a task has completed successfully.
-   * <p>
+   *
    * <pre>
    * <code>
-   * {@link Deferred} deferredObject = new {@link DeferredObject}();
-   * {@link Promise} promise = deferredObject.promise();
-   * promise.done(new {@link DoneCallback}() {
-   *   public void onDone(Object result) {
-   *   	// Done!
-   *   }
+   * Deferred deferredObject = new DeferredObject();
+   * Promise promise = deferredObject.promise();
+   * promise.done(result -&gt; {
+   *   // Done!
    * });
    *
    * // another thread using the same deferredObject
@@ -40,15 +37,13 @@ public interface Deferred<D> extends Promise<D> {
   /**
    * This should be called when a task has completed unsuccessfully,
    * i.e., a failure may have occurred.
-   * <p>
+   *
    * <pre>
    * <code>
-   * {@link Deferred} deferredObject = new {@link DeferredObject}();
-   * {@link Promise} promise = deferredObject.promise();
-   * promise.fail(new {@link FailCallback}() {
-   *   public void onFail(Object result) {
-   *   	// Failed :(
-   *   }
+   * Deferred deferredObject = new DeferredObject();
+   * Promise promise = deferredObject.promise();
+   * promise.fail(error -&gt; {
+   *   // Failed :(
    * });
    *
    * // another thread using the same deferredObject
@@ -57,6 +52,7 @@ public interface Deferred<D> extends Promise<D> {
    * </code>
    * </pre>
    *
+   * @param <F> Type of the exception/error
    * @param reject the rejected value for this {@code Deferred}
    *
    * @return the reference to this {@code Deferred} instance.

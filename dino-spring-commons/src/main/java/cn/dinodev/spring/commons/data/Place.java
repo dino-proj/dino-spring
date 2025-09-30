@@ -10,7 +10,7 @@ import jakarta.persistence.Embeddable;
 import lombok.Data;
 
 /**
- *
+ * 地点信息类，包含地点名称和坐标信息
  * @author Cody Lu
  */
 

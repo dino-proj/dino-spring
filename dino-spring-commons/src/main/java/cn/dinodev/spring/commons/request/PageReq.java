@@ -44,14 +44,14 @@ public class PageReq {
   /**
    * 生成分页请求对象。
    *
-   * <p>
-   * 示例:
    * <pre>
+   * 示例:
+   * <code>
    * PageReq pageReq = new PageReq(0, 10);
    * Pageable pageable = pageReq.pageable();
    * // 生成的分页请求对象将会请求第0页，每页10条记录
+   * </code>
    * </pre>
-   * </p>
    *
    * @return 分页请求对象
    */
@@ -62,15 +62,15 @@ public class PageReq {
   /**
    * 根据排序请求生成分页请求对象。
    *
-   * <p>
-   * 示例:
    * <pre>
+   * 示例:
+   * <code>
    * SortReq sortReq = new SortReq(List.of("name:desc"));
    * PageReq pageReq = new PageReq(0, 10);
    * Pageable pageable = pageReq.pageable(sortReq);
    * // 生成的分页请求对象将会请求第0页，每页10条记录，并按照name降序排序
+   * </code>
    * </pre>
-   * </p>
    *
    * @param sortReq 排序请求对象
    * @return 分页请求对象
@@ -82,15 +82,15 @@ public class PageReq {
   /**
    * 根据排序请求和前缀生成分页请求对象。
    *
-   * <p>
-   * 示例:
    * <pre>
+   * 示例:
+   * <code>
    * SortReq sortReq = new SortReq(List.of("name:desc"));
    * PageReq pageReq = new PageReq(0, 10);
    * Pageable pageable = pageReq.pageable(sortReq, "user_");
    * // 生成的分页请求对象将会请求第0页，每页10条记录，并按照user_name降序排序
+   * </code>
    * </pre>
-   * </p>
    *
    * @param sortReq 排序请求对象
    * @param prefix 排序属性的前缀
@@ -107,15 +107,15 @@ public class PageReq {
   /**
    * 根据排序对象生成分页请求对象。
    *
-   * <p>
-   * 示例:
    * <pre>
+   * 示例:
+   * <code>
    * Sort sort = Sort.by(Sort.Order.desc("name"));
    * PageReq pageReq = new PageReq(0, 10);
    * Pageable pageable = pageReq.pageable(sort);
    * // 生成的分页请求对象将会请求第0页，每页10条记录，并按照name降序排序
+   * </code>
    * </pre>
-   * </p>
    *
    * @param sort 排序对象
    * @return 分页请求对象

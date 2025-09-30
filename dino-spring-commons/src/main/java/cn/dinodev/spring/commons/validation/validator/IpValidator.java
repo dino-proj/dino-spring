@@ -14,7 +14,7 @@ import cn.dinodev.spring.commons.validation.constraints.Ip;
 /**
  * 检查IP格式
  * @author Cody Lu
- * @date 2022-04-06 19:36:05
+ * @since 2022-04-06
  */
 
 public class IpValidator implements ConstraintValidator<Ip, String> {

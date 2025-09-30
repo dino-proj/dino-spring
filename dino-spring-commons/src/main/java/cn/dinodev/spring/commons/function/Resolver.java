@@ -6,7 +6,7 @@ package cn.dinodev.spring.commons.function;
 /**
  * 资源解析器接口。
  * @author Cody Lu
- * @date 2024-02-03 01:53:52
+ * @since 2024-02-03
  */
 
 public interface Resolver<T> {

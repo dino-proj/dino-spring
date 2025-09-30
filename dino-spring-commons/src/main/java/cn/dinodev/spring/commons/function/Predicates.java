@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 /**
  *
  * @author Cody Lu
- * @date 2022-04-08 14:42:03
+ * @since 2022-04-08
  */
 
 public interface Predicates {

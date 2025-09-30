@@ -12,7 +12,7 @@ import jakarta.validation.ConstraintValidatorContext;
 /**
  * 检测XSS注入
  * @author Cody Lu
- * @date 2022-04-06 19:38:07
+ * @since 2022-04-06
  */
 
 public class XssValidator implements ConstraintValidator<Xss, String> {

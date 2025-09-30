@@ -15,7 +15,7 @@ import jakarta.validation.ConstraintValidatorContext;
 /**
  * 密码强度校验器
  * @author Cody Lu
- * @date 2022-04-01 01:03:58
+ * @since 2022-04-01
  */
 
 public class PasswordStrengthValidator implements ConstraintValidator<PasswordStrength, String> {

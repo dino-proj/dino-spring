@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 投影服务，用于将对象的属性投影到另一个对象中
  * @author Cody Lu
- * @date 2024-11-05 15:30:33
+ * @since 2024-11-05
  */
 
 @Service

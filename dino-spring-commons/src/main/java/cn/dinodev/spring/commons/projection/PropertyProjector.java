@@ -25,7 +25,7 @@ import jakarta.annotation.Nullable;
 /**
  *
  * @author Cody Lu
- * @date 2022-06-09 01:15:01
+ * @since 2022-06-09
  */
 
 public class PropertyProjector<S, T> {

@@ -12,7 +12,7 @@ import jakarta.validation.ConstraintValidatorContext;
 /**
  * 检查身份证号格式
  * @author Cody Lu
- * @date 2022-04-06 19:32:13
+ * @since 2022-04-06
  */
 
 public class ChinaIdCardValidator implements ConstraintValidator<IdCard, String> {

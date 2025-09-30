@@ -24,7 +24,7 @@ import cn.dinodev.spring.commons.json.annotation.JsonDiscriminator;
 /**
  * 实现对JsonDiscriminator注解的支持模块
  * @author Cody Lu
- * @date 2022-04-23 21:35:21
+ * @since 2022-04-23
  */
 
 public class JsonDiscriminatorModule extends SimpleModule {

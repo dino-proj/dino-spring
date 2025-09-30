@@ -16,7 +16,7 @@ import jakarta.validation.Payload;
 /**
  * 手机号格式检查，对字符串进行手机号格式验证
  * @author Cody Lu
- * @date 2022-04-01 00:14:44
+ * @since 2022-04-01
  */
 
 @Retention(RetentionPolicy.RUNTIME)

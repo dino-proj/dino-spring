@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  *
  * @author Cody Lu
- * @date 2022-03-07 19:13:38
+ * @since 2022-03-07
  */
 
 public interface Range<T extends Serializable> extends Serializable {

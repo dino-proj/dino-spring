@@ -10,7 +10,7 @@ import org.apache.commons.lang3.ObjectUtils;
 /**
  * InheritableThreadLocalMap
  * @author Cody Lu
- * @date 2022-04-08 17:58:00
+ * @since 2022-04-08
  */
 
 public class InheritableThreadLocalMap extends InheritableThreadLocal<Map<String, Object>> {

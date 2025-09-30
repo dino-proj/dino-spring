@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 /**
  * 自动绑定注解
  * @author Cody Lu
- * @date 2022-04-13 04:12:27
+ * @since 2022-04-13
  */
 
 @Retention(RetentionPolicy.RUNTIME)

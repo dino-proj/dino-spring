@@ -17,7 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 /**
  * 可感知的类型接口
  * @author Cody Lu
- * @date 2024-01-30 23:44:19
+ * @since 2024-01-30
  */
 
 @JsonDiscriminator

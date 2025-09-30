@@ -10,7 +10,7 @@ import cn.dinodev.spring.commons.utils.TypeUtils;
 /**
  *
  * @author Cody Lu
- * @date 2022-06-09 03:48:25
+ * @since 2022-06-09
  */
 
 public interface Functions {

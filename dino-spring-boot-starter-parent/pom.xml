@@ -26,9 +26,8 @@
 
     <!-- plugin -->
     <central-publishing-maven-plugin.version>0.9.0</central-publishing-maven-plugin.version>
-    <maven-pmd-plugin.version>3.27.0</maven-pmd-plugin.version>
+    <maven-pmd-plugin.version>3.24.0</maven-pmd-plugin.version>
     <p3c-pmd.version>2.2.1.0x</p3c-pmd.version>
-    <pmd.version>7.16.0</pmd.version>
     <mapstruct.version>1.6.3</mapstruct.version>
     <lombok.version>1.18.42</lombok.version>
 
@@ -250,17 +249,6 @@
                   <artifactId>pmd-java</artifactId>
                 </exclusion>
               </exclusions>
-            </dependency>
-            <!-- 配置pmd language -->
-            <dependency>
-              <groupId>net.sourceforge.pmd</groupId>
-              <artifactId>pmd-core</artifactId>
-              <version>${pmd.version}</version>
-            </dependency>
-            <dependency>
-              <groupId>net.sourceforge.pmd</groupId>
-              <artifactId>pmd-java</artifactId>
-              <version>${pmd.version}</version>
             </dependency>
           </dependencies>
         </plugin>

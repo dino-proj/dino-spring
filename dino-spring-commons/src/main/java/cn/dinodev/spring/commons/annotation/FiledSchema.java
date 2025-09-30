@@ -4,9 +4,10 @@
 package cn.dinodev.spring.commons.annotation;
 
 /**
+ * 字段模式类，用于定义字段的结构和约束
  *
  * @author Cody Lu
- * @date 2021-12-22 20:35:27
+ * @since 2021-12-22
  */
 
 public class FiledSchema {

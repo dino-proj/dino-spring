@@ -13,7 +13,8 @@ import cn.dinodev.spring.commons.utils.TypeUtils;
 import org.springframework.context.ApplicationContext;
 
 /**
- * {@link #DinoContext} 的ThreadLocal版本的实现
+ * {@link DinoContext} 的ThreadLocal版本的实现
+ *
  * @author Cody Lu
  */
 public class DinoContextThreadLocalImpl implements DinoContext {

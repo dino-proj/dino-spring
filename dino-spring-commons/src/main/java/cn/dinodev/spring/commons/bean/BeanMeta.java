@@ -4,9 +4,10 @@
 package cn.dinodev.spring.commons.bean;
 
 /**
- * bean meta info
+ * Bean元信息接口，定义Bean的元数据访问方法
+ * 
  * @author Cody Lu
- * @date 2022-07-01 10:43:49
+ * @since 2022-07-01
  */
 
 public interface BeanMeta {

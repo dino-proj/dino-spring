@@ -14,9 +14,11 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- *
+ * REST API滑动窗口响应类，用于分页滚动加载
+ * 
+ * @param <T> 响应数据元素类型
  * @author Cody Lu
- * @date 2022-07-11 21:21:08
+ * @since 2022-07-11
  */
 
 @Schema(description = "restApi滑动窗口响应")

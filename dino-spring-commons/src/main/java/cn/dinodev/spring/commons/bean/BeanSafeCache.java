@@ -17,9 +17,11 @@ import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * Bean安全缓存类，用于缓存Bean相关的信息
  *
+ * @param <T> 缓存信息的类型
  * @author Cody Lu
- * @date 2022-05-30 11:57:57
+ * @since 2022-05-30
  */
 
 @Slf4j

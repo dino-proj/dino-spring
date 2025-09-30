@@ -25,9 +25,10 @@ import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.annotation.Nullable;
 
 /**
+ * Bean属性描述类，用于表示对象的属性信息
  *
  * @author Cody Lu
- * @date 2022-07-01 20:51:22
+ * @since 2022-07-01
  */
 
 public final class Property {

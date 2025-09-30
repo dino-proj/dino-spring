@@ -11,9 +11,10 @@ import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
 /**
- *
+ * SM2数字签名结果类，包含签名的r和s值
+ * 
  * @author Cody Lu
- * @date 2022-05-06 06:40:57
+ * @since 2022-05-06
  */
 
 @Data

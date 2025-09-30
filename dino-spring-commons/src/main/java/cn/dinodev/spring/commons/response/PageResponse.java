@@ -15,7 +15,9 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * restApi分页响应
+ * REST API分页响应包装类
+ * 
+ * @param <T> 分页数据元素类型
  * @author Cody Lu
  */
 

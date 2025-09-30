@@ -10,7 +10,9 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 /**
- * restApi响应
+ * REST API通用响应包装类
+ * 
+ * @param <T> 响应数据类型
  * @author Cody Lu
  */
 

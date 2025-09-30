@@ -14,9 +14,10 @@ import cn.dinodev.spring.commons.function.Suppliers;
 import org.springframework.beans.BeanUtils;
 
 /**
+ * Bean元信息实现类，提供Bean元数据的具体实现
  *
  * @author Cody Lu
- * @date 2022-05-30 10:31:18
+ * @since 2022-05-30
  */
 
 public class BeanMetaImpl implements BeanMeta {

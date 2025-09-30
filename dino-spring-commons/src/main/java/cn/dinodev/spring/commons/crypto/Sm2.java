@@ -26,9 +26,11 @@ import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.math.ec.custom.gm.SM2P256V1Curve;
 
 /**
- *
+ * SM2椭圆曲线加密算法工具类
+ * <p>提供SM2密钥生成、加密、解密等功能的静态方法</p>
+ * 
  * @author Cody Lu
- * @date 2022-05-06 06:40:57
+ * @since 2022-05-06
  */
 
 public class Sm2 {

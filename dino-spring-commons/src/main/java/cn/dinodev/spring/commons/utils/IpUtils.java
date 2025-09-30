@@ -9,9 +9,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * IP地址工具类，提供IP地址处理和验证的便捷方法
  *
  * @author Cody Lu
- * @date 2022-03-07 21:58:04
+ * @since 2022-03-07
  */
 
 @Slf4j

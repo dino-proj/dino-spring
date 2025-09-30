@@ -20,6 +20,7 @@ import jakarta.annotation.Nullable;
 import lombok.experimental.UtilityClass;
 
 /**
+ * 断言工具类，提供各种参数和状态验证的便捷方法
  *
  * @author Cody Lu
  */

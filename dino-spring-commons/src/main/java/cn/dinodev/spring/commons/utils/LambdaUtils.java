@@ -17,9 +17,10 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * Lambda表达式工具类，提供Lambda表达式解析和处理的便捷方法
  *
  * @author Cody Lu
- * @date 2022-03-07 19:18:39
+ * @since 2022-03-07
  */
 
 @Slf4j

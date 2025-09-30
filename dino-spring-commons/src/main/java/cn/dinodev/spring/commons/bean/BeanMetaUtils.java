@@ -6,9 +6,10 @@ package cn.dinodev.spring.commons.bean;
 import lombok.experimental.UtilityClass;
 
 /**
+ * Bean元数据工具类，提供Bean元信息处理的便捷方法
  *
  * @author Cody Lu
- * @date 2022-05-28 04:26:05
+ * @since 2022-05-28
  */
 
 @UtilityClass

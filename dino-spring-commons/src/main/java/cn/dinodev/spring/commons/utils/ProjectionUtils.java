@@ -33,6 +33,7 @@ import jakarta.annotation.Nullable;
 import lombok.experimental.UtilityClass;
 
 /**
+ * 投影工具类，提供对象属性复制和映射的便捷方法
  *
  * @author Cody Lu
  */

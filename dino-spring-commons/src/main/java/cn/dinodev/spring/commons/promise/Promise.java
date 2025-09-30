@@ -4,35 +4,26 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * Promise interface to observe when some action has occurred on the corresponding {@link Deferred} object.
- *
- * A promise object should be obtained from {@link Deferred#promise()), or
- * by using DeferredManager.
- *
+ * Promise接口，用于观察对应Deferred对象上发生的操作
+ * 
+ * <p>Promise对象应该从{@link Deferred#promise()}获取，或通过DeferredManager使用。
+ * 
  * <pre>
- * <code>
- * Deferred deferredObject = new DeferredObject();
- * Promise promise = deferredObject.promise();
- * promise.done(new DoneCallback() {
- *   public void onDone(Object result) {
- *     // Done!
- *   }
+ * {@code
+ * Deferred<String> deferredObject = new DeferredObject<>();
+ * Promise<String> promise = deferredObject.promise();
+ * promise.done(result -> {
+ *     // 处理成功结果
  * });
- *
- * // another thread using the same deferredObject
+ * 
+ * // 另一个线程使用同一个deferredObject
  * deferredObject.resolve("OK");
- *
- * </code>
+ * }
  * </pre>
  *
- * @see Deferred#resolve(Object)
- * @see Deferred#reject(Object)
- *
+ * @param <D> 用于成功回调的数据类型
  * @author Ray Tsang
  * @author Stephan Classen
- *
- * @param <D> Type used for {@link #done(DoneCallback)}
- * @param <F> Type used for {@link #fail(FailCallback)}
  */
 public interface Promise<D> extends Supplier<D> {
   enum State {
@@ -91,15 +82,15 @@ public interface Promise<D> extends Supplier<D> {
 
   /**
    * get the resolved value， return defaultValue for rejected
-   * @param defaultValue
-   * @return
+   * @param defaultValue 默认值
+   * @return 如果Promise已解决则返回解决的值，否则返回默认值
    */
   D getOrElse(D defaultValue);
 
   /**
    * get the resolved value， return defaultSupplier‘s result for rejected
-   * @param defaultSupplier
-   * @return
+   * @param defaultSupplier 默认值提供者
+   * @return 如果Promise已解决则返回解决的值，否则返回默认值
    */
   D getOrElse(Supplier<D> defaultSupplier);
 

@@ -12,8 +12,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
+ * 可见范围配置类，用于控制数据的可见性范围
+ * 
  * @author JL
- * @Date: 2021/10/25
+ * @since 2021-10-25
  */
 @Schema(description = "可见范围")
 @Data

@@ -9,14 +9,16 @@ import cn.dinodev.spring.commons.sys.Tenant;
 import cn.dinodev.spring.commons.sys.User;
 
 /**
+ * Dino框架上下文接口，提供用户、租户等上下文信息访问
  *
  * @author Cody Lu
  */
 public interface DinoContext {
   /**
    * 获取当前登录的用户
+   * 
    * @param <K> 用户ID类型参数
-   * @return
+   * @return 当前登录用户信息，如果未登录则返回null
    */
   <K extends Serializable> User<K> currentUser();
 

@@ -17,6 +17,7 @@ import jakarta.annotation.Nonnull;
 import lombok.experimental.UtilityClass;
 
 /**
+ * 类型工具类，提供泛型类型解析和处理的便捷方法
  *
  * @author Cody Lu
  * @author JL

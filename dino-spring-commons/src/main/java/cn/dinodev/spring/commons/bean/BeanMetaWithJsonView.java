@@ -7,9 +7,10 @@ import java.util.Arrays;
 import java.util.Objects;
 
 /**
+ * 带JsonView支持的Bean元信息实现类
  *
  * @author Cody Lu
- * @date 2022-05-28 03:54:53
+ * @since 2022-05-28
  */
 
 public class BeanMetaWithJsonView implements BeanMeta {

@@ -4,6 +4,7 @@
 package cn.dinodev.spring.commons.utils;
 
 /**
+ * 任务观察者接口，用于监控任务执行状态
  *
  * @author Cody Lu
  */
@@ -11,7 +12,8 @@ package cn.dinodev.spring.commons.utils;
 public interface TaskObserver {
   /**
    * 获取任务ID
-   * @return
+   *
+   * @return 任务的唯一标识ID
    */
   String getId();
 

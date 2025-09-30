@@ -6,9 +6,11 @@ package cn.dinodev.spring.commons.response;
 import java.util.Collection;
 
 /**
- * ResponseList类用于返回列表数据。
+ * ResponseList类用于返回列表数据
+ *
+ * @param <T> 列表元素类型
  * @author Cody Lu
- * @date 2024-02-03 01:57:07
+ * @since 2024-02-03
  */
 
 public class ResponseList<T> extends Response<Collection<?>> {

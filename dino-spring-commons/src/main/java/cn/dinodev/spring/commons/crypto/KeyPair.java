@@ -8,9 +8,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- *
+ * 密钥对类，用于存储公钥和私钥信息
+ * 
  * @author Cody Lu
- * @date 2022-05-06 06:40:57
+ * @since 2022-05-06
  */
 
 @Data

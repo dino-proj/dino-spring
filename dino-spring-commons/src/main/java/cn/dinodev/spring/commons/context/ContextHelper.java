@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.util.Assert;
 
 /**
+ * 上下文帮助类，提供Spring应用上下文和Dino上下文的便捷访问方法
  *
  * @author Cody Lu
  */

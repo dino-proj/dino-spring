@@ -4,9 +4,10 @@
 package cn.dinodev.spring.commons.annotation;
 
 /**
+ * 设置项注解，用于标记配置设置项的元数据
  *
  * @author Cody Lu
- * @date 2021-12-22 20:35:55
+ * @since 2021-12-22
  */
 
 public @interface SettingItem {

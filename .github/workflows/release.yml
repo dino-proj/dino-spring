@@ -3,15 +3,16 @@ name: Publish package to the Maven Central Repository
 # Run workflow on commits to the `main` branch
 on:
   push:
-    tags: "RELEASE-*"
+    tags:
+      - 'RELEASE-*'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
       logLevel:
-        description: "Log level"
+        description: 'Log level'
         required: true
-        default: "info"
+        default: 'info'
         type: choice
         options:
           - error
@@ -19,12 +20,12 @@ on:
           - info
           - debug
       autoPublish:
-        description: "Auto publish"
+        description: 'Auto publish'
         required: true
         default: true
         type: boolean
       waitUntil:
-        description: "Wait until"
+        description: 'Wait until'
         required: true
         type: choice
         options:
@@ -32,43 +33,41 @@ on:
           - uploaded
           - validated
       dino_dependencies_root:
-        description: "Skip dependencies?"
+        description: 'Skip dependencies?'
         required: false
         type: boolean
       dino_spring_assembly:
-        description: "Skip assembly?"
+        description: 'Skip assembly?'
         required: false
         type: boolean
       dino_spring_boot_starter_parent:
-        description: "Skip boot?"
+        description: 'Skip boot?'
         required: false
         type: boolean
       dino_spring_cloud_starter_parent:
-        description: "Skip cloud?"
+        description: 'Skip cloud?'
         required: false
         type: boolean
       dino_spring_commons:
-        description: "Skip commons?"
+        description: 'Skip commons?'
         required: false
         type: boolean
       dino_spring_data:
-        description: "Skip data?"
+        description: 'Skip data?'
         required: false
         type: boolean
       dino_spring_auth:
-        description: "Skip auth?"
+        description: 'Skip auth?'
         required: false
         type: boolean
-
-
 
 jobs:
   publish:
     runs-on: ubuntu-latest
 
     env:
-      MVN_OPT: "--errors --no-transfer-progress --batch-mode"
-      BUILD_OPT: "-Dmaven.test.skip=true -P publish"
+      MVN_OPT: '--errors --no-transfer-progress --batch-mode'
+      BUILD_OPT: '-Dmaven.test.skip=true -P publish'
       MVN_NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
       MVN_NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
       AUTO_PUBLISH: ${{ github.event.inputs.autoPublish || true }}
@@ -76,18 +75,18 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Java and Maven
-        uses: actions/setup-java@v4.5.0
+        uses: actions/setup-java@v5
         with:
-          java-version: 17
-          distribution: "temurin"
+          java-version: 21
+          distribution: 'temurin'
           server-id: central
           server-username: MVN_NEXUS_USERNAME
           server-password: MVN_NEXUS_PASSWORD
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          cache: "maven"
+          cache: 'maven'
 
       - name: Package & Install to Local Repository
         run: |

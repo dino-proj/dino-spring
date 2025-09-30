@@ -158,29 +158,17 @@ public class TaskServiceImpl extends ServiceBase<TaskEntity, String> implements 
     @Transactional(rollbackFor = Exception.class)
     public void updateStatus(TaskStatus status) {
       switch (status) {
-        case INIT:
-          updateStatusById(taskId, Code.TASK.INIT.getName());
-          break;
-
-        case RUNNING:
-          updateStatusById(taskId, Code.TASK.RUNNING.getName());
-          break;
-
-        case SUCCEED:
+        case INIT -> updateStatusById(taskId, Code.TASK.INIT.getName());
+        case RUNNING -> updateStatusById(taskId, Code.TASK.RUNNING.getName());
+        case SUCCEED -> {
           updateStatusById(taskId, Code.TASK.SUCCEED.getName());
           taskRepository.updateTaskProgress(taskId, 100);
-          break;
-
-        case FAILED:
+        }
+        case FAILED -> {
           updateStatusById(taskId, Code.TASK.FAILED.getName());
           taskRepository.updateTaskProgress(taskId, 100);
-          break;
-
-        default:
-          break;
-
+        }
       }
-
     }
 
     @Override

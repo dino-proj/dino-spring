@@ -24,31 +24,23 @@ public class PasswordStrengthValidator implements ConstraintValidator<PasswordSt
 
   @Override
   public void initialize(PasswordStrength constraintAnnotation) {
-    switch (constraintAnnotation.format()) {
-      case NUMERIC:
-        checkers = new PasswordChecker[] { PasswordChecker.NUMERIC };
-        break;
-      case NUMERIC_SPECIAL_CHARACTER:
-        checkers = new PasswordChecker[] { PasswordChecker.NUMERIC, PasswordChecker.SPECIAL_CHARACTER };
-        break;
-      case LETTER:
-        checkers = letterChecker(constraintAnnotation.letterType());
-        break;
-      case NUMERIC_LETTER:
-        checkers = ArrayUtils.addAll(letterChecker(constraintAnnotation.letterType()), PasswordChecker.NUMERIC);
-        break;
-      case LETTER_SPECIAL_CHARACTER:
-        checkers = ArrayUtils.addAll(letterChecker(constraintAnnotation.letterType()),
-            PasswordChecker.SPECIAL_CHARACTER);
-        break;
-      case NUMERIC_LETTER_SPECIAL_CHARACTER:
-        checkers = ArrayUtils.addAll(letterChecker(constraintAnnotation.letterType()), PasswordChecker.NUMERIC,
-            PasswordChecker.SPECIAL_CHARACTER);
-        break;
-      default:
-        checkers = new PasswordChecker[0];
-        break;
-    }
+    checkers = switch (constraintAnnotation.format()) {
+      case NUMERIC -> new PasswordChecker[] { PasswordChecker.NUMERIC };
+      case NUMERIC_SPECIAL_CHARACTER -> new PasswordChecker[] {
+          PasswordChecker.NUMERIC, PasswordChecker.SPECIAL_CHARACTER
+      };
+      case LETTER -> letterChecker(constraintAnnotation.letterType());
+      case NUMERIC_LETTER -> ArrayUtils.addAll(
+          letterChecker(constraintAnnotation.letterType()),
+          PasswordChecker.NUMERIC);
+      case LETTER_SPECIAL_CHARACTER -> ArrayUtils.addAll(
+          letterChecker(constraintAnnotation.letterType()),
+          PasswordChecker.SPECIAL_CHARACTER);
+      case NUMERIC_LETTER_SPECIAL_CHARACTER -> ArrayUtils.addAll(
+          letterChecker(constraintAnnotation.letterType()),
+          PasswordChecker.NUMERIC,
+          PasswordChecker.SPECIAL_CHARACTER);
+    };
   }
 
   @Override
@@ -70,16 +62,12 @@ public class PasswordStrengthValidator implements ConstraintValidator<PasswordSt
   }
 
   private static PasswordChecker[] letterChecker(PasswordStrength.LetterType type) {
-    switch (type) {
-      case ANY:
-        return new PasswordChecker[] { PasswordChecker.LETTER };
-      case LOWER:
-        return new PasswordChecker[] { PasswordChecker.LETTER_LOWER };
-      case UPPER:
-        return new PasswordChecker[] { PasswordChecker.LETTER_UPPER };
-      default:
-        return new PasswordChecker[] { PasswordChecker.LETTER_LOWER, PasswordChecker.LETTER_UPPER };
-    }
+    return switch (type) {
+      case ANY -> new PasswordChecker[] { PasswordChecker.LETTER };
+      case LOWER -> new PasswordChecker[] { PasswordChecker.LETTER_LOWER };
+      case UPPER -> new PasswordChecker[] { PasswordChecker.LETTER_UPPER };
+      case BOTH -> new PasswordChecker[] { PasswordChecker.LETTER_LOWER, PasswordChecker.LETTER_UPPER };
+    };
   }
 
   /**

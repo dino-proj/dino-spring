@@ -36,12 +36,11 @@ public class IpValidator implements ConstraintValidator<Ip, String> {
     if (StringUtils.isBlank(value)) {
       return true;
     }
-    if (ver == Ip.IpVersion.IPV4) {
-      return PATTERN_V4.matcher(value).matches();
-    } else if (ver == Ip.IpVersion.IPV6) {
-      return PATTERN_V6.matcher(value).matches();
-    } else {
-      return PATTERN_V4.matcher(value).matches() || PATTERN_V6.matcher(value).matches();
-    }
+    return switch (ver) {
+      case IPV4 -> PATTERN_V4.matcher(value).matches();
+      case IPV6 -> PATTERN_V6.matcher(value).matches();
+      case ANY -> PATTERN_V4.matcher(value).matches() ||
+          PATTERN_V6.matcher(value).matches();
+    };
   }
 }

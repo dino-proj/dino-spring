@@ -17,6 +17,7 @@ import org.apache.commons.codec.digest.HmacUtils;
 import lombok.experimental.UtilityClass;
 
 /**
+ * 加密工具类，提供数据加密解密的便捷方法
  *
  * @author Cody Lu
  * @since 2022-03-31

@@ -10,6 +10,7 @@ import java.util.regex.PatternSyntaxException;
 import lombok.experimental.UtilityClass;
 
 /**
+ * 数据验证工具类，提供各种数据验证的便捷方法
  *
  * @author Cody Lu
  * @since 2022-03-07

@@ -20,6 +20,7 @@ import cn.dinodev.spring.commons.context.DinoContextThreadLocalImpl;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * Dino Commons自动配置类，配置通用组件和服务
  *
  * @author Cody Lu
  */

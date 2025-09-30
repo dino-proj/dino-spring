@@ -12,6 +12,7 @@ import java.util.function.Consumer;
 import lombok.experimental.UtilityClass;
 
 /**
+ * 批处理工具类，提供批量数据处理的便捷方法
  *
  * @author Cody Lu
  * @since 2022-03-07

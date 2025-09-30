@@ -1,10 +1,6 @@
 // Copyright 2024 dinosdev.cn.
 // SPDX-License-Identifier: Apache-2.0
 
-// Copyright 2022 dinodev.cn
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-
 package cn.dinodev.spring.auth.session;
 
 import java.util.Arrays;

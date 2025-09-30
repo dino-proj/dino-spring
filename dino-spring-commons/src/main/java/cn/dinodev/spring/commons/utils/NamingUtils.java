@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import lombok.experimental.UtilityClass;
 
 /**
+ * 命名工具类，提供字符串命名转换的便捷方法
  *
  * @author Cody Lu
  * @since 2022-03-07

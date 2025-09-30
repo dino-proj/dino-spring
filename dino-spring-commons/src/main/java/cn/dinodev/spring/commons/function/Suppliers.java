@@ -7,6 +7,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
+ * 供应者工具接口，提供各种Supplier实现
  *
  * @author Cody Lu
  * @since 2022-04-16

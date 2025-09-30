@@ -16,6 +16,7 @@ import cn.dinodev.spring.commons.promise.Promise;
 import lombok.experimental.UtilityClass;
 
 /**
+ * 任务工具类，提供任务处理和Promise模式的便捷方法
  *
  * @author Cody Lu
  * @since 2022-03-11

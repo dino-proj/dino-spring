@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import lombok.experimental.UtilityClass;
 
 /**
+ * JsonView工具类，提供JSON视图处理的便捷方法
  *
  * @author Cody Lu
  * @since 2022-06-09

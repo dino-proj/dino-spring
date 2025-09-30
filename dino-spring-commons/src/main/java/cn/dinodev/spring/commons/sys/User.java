@@ -10,7 +10,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
+ * 用户信息接口，定义用户的基本属性和方法
  *
+ * @param <K> 用户ID的类型
  * @author Cody Lu
  * @author JL
  */

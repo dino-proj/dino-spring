@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
+ * 租户信息接口，定义多租户系统中租户的基本属性
  *
  * @author Cody Lu
  * @author JL

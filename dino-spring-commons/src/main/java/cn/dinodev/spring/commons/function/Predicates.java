@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.function.Predicate;
 
 /**
+ * 预测器工具接口，提供条件判断的便捷方法
  *
  * @author Cody Lu
  * @since 2022-04-08

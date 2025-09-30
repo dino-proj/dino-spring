@@ -9,13 +9,16 @@ import java.util.List;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
+ * 用户类型接口，定义用户类型的基本属性
+ * 
  * @author Cody Lu
  */
 public interface UserType extends Serializable {
 
   /**
-   * 用户类型名称
-   * @return
+   * 获取用户类型名称
+   * 
+   * @return 用户类型名称
    */
   @Schema(description = "用户类型名称")
   String getType();

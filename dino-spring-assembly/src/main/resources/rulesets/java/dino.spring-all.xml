@@ -1,31 +1,109 @@
 <?xml version="1.0"?>
-<ruleset name="DinospringJavaRule" xmlns="http://pmd.sourceforge.net/ruleset/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+<ruleset name="DinospringJavaRule" xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
   <description>Dinospring Java规则(基于阿里巴巴开发手册)配置</description>
   <!-- 配置忽略检查的路径，注意以绝对路径匹配，语法为正则表达式 -->
   <exclude-pattern>.*/\.mvn/.*</exclude-pattern>
   <exclude-pattern>.*/target/.*</exclude-pattern>
   <exclude-pattern>.*/src/test/.*</exclude-pattern>
-  <rule ref="rulesets/java/ali-comment.xml">
-    <!-- 配置忽略检查的规则 -->
-    <!-- https://github.com/alibaba/p3c/tree/master/p3c-pmd/src/main/resources/rulesets/java -->
-    <!-- <exclude name="CallSuperLast" /> -->
-    <exclude name="AvoidCommentBehindStatementRule" />
+  <rule ref="category/java/bestpractices.xml">
+    <exclude name="UseVarargs" />
+    <exclude name="GuardLogStatement" />
+    <exclude name="ImplicitFunctionalInterface" />
+    <exclude name="MethodReturnsInternalArray" />
+    <exclude name="AvoidReassigningParameters" />
   </rule>
-  <rule ref="rulesets/java/ali-concurrent.xml"></rule>
-  <rule ref="rulesets/java/ali-constant.xml">
-    <exclude name="UndefineMagicConstantRule" />
+  <rule ref="category/java/bestpractices.xml/GuardLogStatement">
+    <properties>
+      <property name="logLevels"
+        value="trace,debug" />
+      <property name="guardsMethods"
+        value="isTraceEnabled,isDebugEnabled" />
+    </properties>
   </rule>
-  <rule ref="rulesets/java/ali-exception.xml"></rule>
-  <rule ref="rulesets/java/ali-flowcontrol.xml"></rule>
-  <rule ref="rulesets/java/ali-naming.xml">
-    <exclude name="AbstractClassShouldStartWithAbstractNamingRule" />
-    <exclude name="LowerCamelCaseVariableNamingRule" />
-    <exclude name="ServiceOrDaoClassShouldEndWithImplRule" />
-    <exclude name="ClassNamingShouldBeCamelRule" />
+
+  <rule ref="category/java/codestyle.xml">
+    <exclude name="LocalVariableCouldBeFinal" />
+    <exclude name="MethodArgumentCouldBeFinal" />
+    <exclude name="UseExplicitTypes" />
+    <exclude name="OnlyOneReturn" />
+    <exclude name="ShortVariable" />
+    <exclude name="ShortMethodName" />
+    <exclude name="AtLeastOneConstructor" />
+    <exclude name="LongVariable" />
+    <exclude name="MDBAndSessionBeanNamingConvention" />
+    <exclude name="RemoteInterfaceNamingConvention" />
+    <exclude name="RemoteSessionInterfaceNamingConvention" />
+    <exclude name="CallSuperInConstructor" />
+    <exclude name="ShortClassName" />
+    <exclude name="UnnecessaryFullyQualifiedName" />
   </rule>
-  <rule ref="rulesets/java/ali-oop.xml"></rule>
-  <rule ref="rulesets/java/ali-other.xml">
-    <exclude name="MethodTooLongRule" />
+  <rule ref="category/java/codestyle.xml/ShortVariable">
+    <properties>
+      <property name="minimum" value="2" />
+    </properties>
   </rule>
-  <rule ref="rulesets/java/ali-set.xml"></rule>
+
+  <rule ref="category/java/design.xml">
+    <exclude name="LoosePackageCoupling" />
+    <exclude name="TooManyMethods" />
+    <exclude name="GodClass" />
+    <exclude name="SimplifyBooleanReturns" />
+    <exclude name="LawOfDemeter" />
+    <exclude name="CyclomaticComplexity" />
+    <exclude name="ExcessiveImports" />
+    <exclude name="ExcessiveParameterList" />
+    <exclude name="ExcessivePublicCount" />
+    <exclude name="CouplingBetweenObjects" />
+    <exclude name="AvoidCatchingGenericException" />
+    <exclude name="SignatureDeclareThrowsException" />
+    <exclude name="UseObjectForClearerAPI" />
+    <exclude name="CognitiveComplexity" />
+  </rule>
+  <rule ref="category/java/design.xml/CognitiveComplexity">
+    <properties>
+      <property name="reportLevel" value="30" />
+    </properties>
+  </rule>
+
+
+  <rule ref="category/java/documentation.xml">
+    <exclude name="CommentRequired" />
+    <exclude name="CommentSize" />
+  </rule>
+  <rule ref="category/java/documentation.xml/CommentRequired">
+    <properties>
+      <property name="methodWithOverrideCommentRequirement" value="Ignored" />
+      <property name="accessorCommentRequirement" value="Ignored" />
+      <property name="classCommentRequirement" value="Required" />
+      <property name="fieldCommentRequirement" value="Ignored" />
+      <property name="publicMethodCommentRequirement" value="Required" />
+      <property name="protectedMethodCommentRequirement" value="Required" />
+      <property name="enumCommentRequirement" value="Required" />
+      <property name="serialVersionUIDCommentRequired" value="Ignored" />
+      <property name="serialPersistentFieldsCommentRequired" value="Ignored" />
+    </properties>
+  </rule>
+
+  <rule ref="category/java/errorprone.xml">
+    <exclude name="MissingSerialVersionUID" />
+    <exclude name="UseLocaleWithCaseConversions" />
+    <exclude name="UseProperClassLoader" />
+    <exclude name="ReturnEmptyCollectionRatherThanNull" />
+    <exclude name="AvoidAccessibilityAlteration" />
+    <exclude name="NullAssignment" />
+  </rule>
+
+  <rule ref="category/java/multithreading.xml">
+    <exclude name="UseConcurrentHashMap" />
+    <exclude name="AvoidUsingVolatile" />
+    <exclude name="DoNotUseThreads" />
+  </rule>
+
+  <rule ref="category/java/performance.xml">
+    <exclude name="AvoidInstantiatingObjectsInLoops" />
+  </rule>
+  <rule ref="category/java/security.xml">
+  </rule>
 </ruleset>

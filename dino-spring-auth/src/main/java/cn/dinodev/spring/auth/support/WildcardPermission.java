@@ -11,8 +11,8 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import cn.dinodev.spring.auth.Permission;
 
+import cn.dinodev.spring.auth.Permission;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -28,17 +28,20 @@ public class WildcardPermission implements Permission, Serializable {
   protected static final String PART_DIVIDER_TOKEN = ":";
   protected static final String SUBPART_DIVIDER_TOKEN = ",";
 
-  private List<Set<String>> parts;
+  private final List<Set<String>> parts;
 
+  /**
+   * 创建空的通配符权限
+   */
   public WildcardPermission() {
     this.parts = new ArrayList<>();
   }
 
+  /**
+   * 根据权限模式字符串创建通配符权限
+   * @param permPattern 权限模式字符串，使用':'分隔部分，','分隔子部分
+   */
   public WildcardPermission(@Nonnull String permPattern) {
-    this.setParts(permPattern);
-  }
-
-  protected void setParts(String permPattern) {
     this.parts = new ArrayList<>();
     var partStr = StringUtils.split(StringUtils.trim(permPattern), PART_DIVIDER_TOKEN);
     for (var part : partStr) {
@@ -59,24 +62,24 @@ public class WildcardPermission implements Permission, Serializable {
     }
     var otherParts = ((WildcardPermission) permission).getParts();
 
-    int i = 0;
+    int partIndex = 0;
     for (Set<String> otherPart : otherParts) {
       // If this permission has less parts than the other permission, everything after the number of parts contained
       // in this permission is automatically implied, so return true
-      if (this.getParts().size() - 1 < i) {
+      if (this.getParts().size() - 1 < partIndex) {
         return true;
       } else {
-        Set<String> part = this.getParts().get(i);
+        Set<String> part = this.getParts().get(partIndex);
         if (!part.contains(WILDCARD_TOKEN) && !part.containsAll(otherPart)) {
           return false;
         }
-        i++;
+        partIndex++;
       }
     }
 
     // If this permission has more parts than the other parts, only imply it if all of the other parts are wildcards
-    for (; i < this.getParts().size(); i++) {
-      Set<String> part = this.getParts().get(i);
+    for (; partIndex < this.getParts().size(); partIndex++) {
+      Set<String> part = this.getParts().get(partIndex);
       if (!part.contains(WILDCARD_TOKEN)) {
         return false;
       }
@@ -104,9 +107,9 @@ public class WildcardPermission implements Permission, Serializable {
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (o instanceof WildcardPermission wp) {
-      return this.parts.equals(wp.parts);
+  public boolean equals(Object other) {
+    if (other instanceof WildcardPermission wildcardPermission) {
+      return this.parts.equals(wildcardPermission.parts);
     }
     return false;
   }

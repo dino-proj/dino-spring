@@ -35,6 +35,12 @@ import lombok.Data;
 
 public class AuthzCheckerPermission extends AbstractAuthzChecker<CheckPermission, List<Predicate<AuthSession>>> {
 
+  /**
+   * 创建权限检查器
+   * 
+   * <p>初始化权限验证器，设置处理的注解类型为 {@link CheckPermission}，
+   * 并支持通过 {@link CheckIgnore.Type#PERMISSION} 忽略检查。</p>
+   */
   public AuthzCheckerPermission() {
     super(CheckPermission.class, CheckIgnore.Type.PERMISSION);
   }
@@ -129,10 +135,17 @@ public class AuthzCheckerPermission extends AbstractAuthzChecker<CheckPermission
     return new PermissionPredicate(permission);
   }
 
+  /**
+   * 权限谓词，用于检查权限集合中是否包含指定的权限
+   */
   public static class PermissionPredicate implements Predicate<Collection<Permission>> {
 
     private final WildcardPermission permission;
 
+    /**
+     * 创建权限谓词
+     * @param permission 要检查的权限字符串
+     */
     public PermissionPredicate(String permission) {
       this.permission = WildcardPermission.of(permission);
     }
@@ -147,6 +160,9 @@ public class AuthzCheckerPermission extends AbstractAuthzChecker<CheckPermission
     }
   }
 
+  /**
+   * 权限注解谓词，基于注解配置检查用户会话的权限
+   */
   private static class PermissionAnnoPredicate implements Predicate<AuthSession> {
 
     private final Predicate<Collection<Permission>> permission;
@@ -154,6 +170,13 @@ public class AuthzCheckerPermission extends AbstractAuthzChecker<CheckPermission
     private final Set<String> exclueSubjectTypes;
     private final Set<String> exclueRoles;
 
+    /**
+     * 创建权限注解谓词
+     * @param permission 权限检查谓词
+     * @param subjectTypes 适用的用户类型
+     * @param exclueSubjectTypes 排除的用户类型
+     * @param exclueRoles 排除的角色
+     */
     public PermissionAnnoPredicate(Predicate<Collection<Permission>> permission, String[] subjectTypes,
         String[] exclueSubjectTypes, String[] exclueRoles) {
       this.permission = permission;
@@ -172,10 +195,8 @@ public class AuthzCheckerPermission extends AbstractAuthzChecker<CheckPermission
 
       // check if user role is exclued, return true
       var userRoles = session.getSubjectRoles();
-      if (CollectionUtils.isNotEmpty(userRoles)) {
-        if (this.exclueRoles.stream().anyMatch(userRoles::contains)) {
-          return true;
-        }
+      if (CollectionUtils.isNotEmpty(userRoles) && this.exclueRoles.stream().anyMatch(userRoles::contains)) {
+        return true;
       }
 
       // check user type
@@ -188,13 +209,21 @@ public class AuthzCheckerPermission extends AbstractAuthzChecker<CheckPermission
     }
   }
 
+  /**
+   * 资源配置类，用于封装 {@link CheckResource} 注解的配置信息
+   */
   @Data
-  private static class ResourceConfig {
+  private static final class ResourceConfig {
     private String resourceName;
     private String[] exclueRoles;
     private String[] exclueSubjectTypes;
     private String[] subjectTypes;
 
+    /**
+     * 从 {@link CheckResource} 注解创建资源配置
+     * @param resourceAnno 资源注解，可以为null
+     * @return 资源配置实例
+     */
     public static ResourceConfig of(CheckResource resourceAnno) {
       var config = new ResourceConfig();
       if (Objects.nonNull(resourceAnno)) {

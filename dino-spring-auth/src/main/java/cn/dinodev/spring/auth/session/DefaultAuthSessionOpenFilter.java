@@ -38,6 +38,10 @@ public class DefaultAuthSessionOpenFilter extends OncePerRequestFilter {
 
   private List<PathPattern> whiteListPattern = List.of();
 
+  /**
+   * 创建默认的认证会话开放过滤器
+   * @param authSessionResolvers 认证会话解析器集合，用于从请求中解析出用户的认证会话
+   */
   public DefaultAuthSessionOpenFilter(Collection<AuthSessionResolver<? extends AuthSession>> authSessionResolvers) {
     this.authSessionResolvers = List.copyOf(authSessionResolvers);
     log.info("{} authSessionResolvers added: {}", authSessionResolvers.size(), authSessionResolvers);
@@ -66,6 +70,16 @@ public class DefaultAuthSessionOpenFilter extends OncePerRequestFilter {
 
   }
 
+  /**
+   * 从HTTP请求中解析认证会话
+   *
+   * <p>遍历所有已注册的认证会话解析器，尝试从请求中解析出用户的认证会话。
+   * 返回第一个成功解析的会话信息及其对应的解析器。</p>
+   *
+   * @param request HTTP请求对象
+   * @return 包含解析器和认证会话的配对，如果无法解析则抛出NotLoginException
+   * @throws NotLoginException 当所有解析器都无法解析出有效的认证会话时抛出
+   */
   @SuppressWarnings("squid:S1452")
   protected Pair<AuthSessionResolver<? extends AuthSession>, AuthSession> resolveSession(HttpServletRequest request) {
     for (var authSessionResolver : authSessionResolvers) {

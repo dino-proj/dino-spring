@@ -34,10 +34,19 @@ public abstract class AbstractAuthzChecker<A extends Annotation, M> implements A
   private final Class<A> annotationClass;
   private final CheckIgnore.Type ignoreType;
 
+  /**
+   * 创建抽象权限检查器
+   * @param annotationClass 要处理的注解类型
+   */
   protected AbstractAuthzChecker(Class<A> annotationClass) {
     this(annotationClass, null);
   }
 
+  /**
+   * 创建抽象权限检查器，支持忽略特定类型的检查
+   * @param annotationClass 要处理的注解类型
+   * @param ignoreType 可以忽略的检查类型，如果为null则不支持忽略
+   */
   protected AbstractAuthzChecker(Class<A> annotationClass, CheckIgnore.Type ignoreType) {
     this.annotationClass = annotationClass;
     this.ignoreType = ignoreType;
@@ -76,6 +85,15 @@ public abstract class AbstractAuthzChecker<A extends Annotation, M> implements A
     return meta != null;
   }
 
+  /**
+   * 检查指定的方法调用是否应该被忽略权限检查
+   *
+   * <p>该方法会检查方法或类上是否存在 {@link CheckIgnore} 注解，
+   * 并且注解中包含当前检查器对应的忽略类型。</p>
+   *
+   * @param mi 方法调用信息
+   * @return 如果应该忽略权限检查则返回true，否则返回false
+   */
   protected boolean isIgnore(MethodInvocation mi) {
     // 如果没有指定忽略的类型，则不忽略
     if (Objects.isNull(this.ignoreType)) {

@@ -27,14 +27,21 @@ public @interface CheckLoginAs {
 
   /**
    * 用户类型，默认为任意用户，多个用户类型之间为或关系
-   * @return
+   * @return Subject类型名称数组
    */
   String[] value() default {};
 
+  /**
+   * 允许在单个元素上重复使用 {@link CheckLoginAs} 注解的容器注解
+   */
   @Retention(RetentionPolicy.RUNTIME)
   @Target({ ElementType.METHOD, ElementType.TYPE, ElementType.ANNOTATION_TYPE })
   @Documented
-  public @interface List {
+  @interface List {
+    /**
+     * 返回重复的 {@link CheckLoginAs} 注解数组
+     * @return CheckLoginAs注解数组
+     */
     CheckLoginAs[] value();
   }
 }

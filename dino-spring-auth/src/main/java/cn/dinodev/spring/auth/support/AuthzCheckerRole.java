@@ -29,6 +29,12 @@ import cn.dinodev.spring.commons.function.Predicates;
 
 public class AuthzCheckerRole extends AbstractAuthzChecker<CheckRole, List<Predicate<AuthSession>>> {
 
+  /**
+   * 创建角色权限检查器
+   * 
+   * <p>初始化角色验证器，设置处理的注解类型为 {@link CheckRole}，
+   * 并支持通过 {@link CheckIgnore.Type#ROLE} 忽略检查。</p>
+   */
   public AuthzCheckerRole() {
     super(CheckRole.class, CheckIgnore.Type.ROLE);
   }
@@ -71,6 +77,21 @@ public class AuthzCheckerRole extends AbstractAuthzChecker<CheckRole, List<Predi
     }
   }
 
+  /**
+   * 创建角色检查谓词
+   * 
+   * <p>解析角色表达式并创建相应的角色检查谓词：</p>
+   * <ul>
+   * <li>使用 '|' 分隔表示OR关系（用户拥有任一角色即可）</li>
+   * <li>使用 '&' 分隔表示AND关系（用户必须拥有所有角色）</li>
+   * <li>不能同时包含 '|' 和 '&'</li>
+   * <li>单个角色名直接检查</li>
+   * </ul>
+   * 
+   * @param roleExpress 角色表达式
+   * @return 角色检查谓词
+   * @throws IllegalArgumentException 当角色表达式同时包含'|'和'&'时抛出
+   */
   public static Predicate<Collection<String>> makeRolePredicate(String roleExpress) {
     var containsAny = StringUtils.contains(roleExpress, '|');
     var containsAll = StringUtils.contains(roleExpress, '&');
@@ -91,11 +112,19 @@ public class AuthzCheckerRole extends AbstractAuthzChecker<CheckRole, List<Predi
 
   }
 
+  /**
+   * 角色注解谓词，基于注解配置检查用户会话的角色权限
+   */
   private static class RoleAnnoPredicate implements Predicate<AuthSession> {
 
     private final Predicate<Collection<String>> rolePredicate;
     private final Set<String> userTypes;
 
+    /**
+     * 创建角色注解谓词
+     * @param rolePredicate 角色检查谓词
+     * @param userTypes 适用的用户类型数组
+     */
     public RoleAnnoPredicate(Predicate<Collection<String>> rolePredicate, String[] userTypes) {
       this.rolePredicate = rolePredicate;
       this.userTypes = new HashSet<>(Arrays.asList(userTypes));

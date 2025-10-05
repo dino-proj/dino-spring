@@ -79,14 +79,21 @@ public @interface CheckPermission {
 
   /**
    * 要排除的用户类型，当用户具备此用户类型时，不需要权限即可访问
-   * @return
+   * @return 排除的Subject类型名称数组
    */
   String[] exclueSubjectTypes() default {};
 
+  /**
+   * 允许在单个元素上重复使用 {@link CheckPermission} 注解的容器注解
+   */
   @Retention(RetentionPolicy.RUNTIME)
   @Target({ ElementType.METHOD, ElementType.TYPE, ElementType.ANNOTATION_TYPE })
   @Documented
-  public @interface List {
+  @interface List {
+    /**
+     * 返回重复的 {@link CheckPermission} 注解数组
+     * @return CheckPermission注解数组
+     */
     CheckPermission[] value();
   }
 }

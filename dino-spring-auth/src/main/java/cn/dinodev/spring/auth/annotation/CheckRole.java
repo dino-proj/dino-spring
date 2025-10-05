@@ -56,10 +56,17 @@ public @interface CheckRole {
    */
   Logic logic() default Logic.ANY;
 
+  /**
+   * 允许在单个元素上重复使用 {@link CheckRole} 注解的容器注解
+   */
   @Retention(RetentionPolicy.RUNTIME)
   @Target({ ElementType.METHOD, ElementType.TYPE, ElementType.ANNOTATION_TYPE })
   @Documented
-  public @interface List {
+  @interface List {
+    /**
+     * 返回重复的 {@link CheckRole} 注解数组
+     * @return CheckRole注解数组
+     */
     CheckRole[] value();
   }
 }

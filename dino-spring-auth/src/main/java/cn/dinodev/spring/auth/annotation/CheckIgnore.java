@@ -22,11 +22,14 @@ public @interface CheckIgnore {
 
   /**
    * 忽略的类型，默认忽略所有类型，即忽略忽略{@link CheckPermission}、{@link CheckLoginAs}、{@link CheckRole}注解
-   * @return
+   * @return 要忽略的检查类型数组
    */
   Type[] value() default {};
 
-  public static enum Type {
+  /**
+   * 定义可以忽略的权限检查类型
+   */
+  enum Type {
     /**
      * 忽略权限检查
      */

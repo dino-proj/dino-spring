@@ -38,17 +38,31 @@ public class AuthzAnnotationPointcutAdvisor extends StaticMethodMatcherPointcutA
 
   private transient MethodMatcher methodMatcher;
 
+  /**
+   * 创建权限注解切点通知器
+   * @param beanFactory Spring Bean工厂，用于获取权限检查器实例
+   */
   public AuthzAnnotationPointcutAdvisor(BeanFactory beanFactory) {
-    this.setAdvice(new AuthzMethodInterceptor(beanFactory));
+    super(new AuthzMethodInterceptor(beanFactory));
   }
 
+  /**
+   * 创建权限注解切点通知器，使用自定义的会话供应商
+   * @param sessionSupplier 认证会话供应商
+   * @param beanFactory Spring Bean工厂，用于获取权限检查器实例
+   */
   public AuthzAnnotationPointcutAdvisor(Supplier<AuthSession> sessionSupplier, BeanFactory beanFactory) {
-    this.setAdvice(new AuthzMethodInterceptor(sessionSupplier, beanFactory));
+    super(new AuthzMethodInterceptor(sessionSupplier, beanFactory));
   }
 
+  /**
+   * 创建权限注解切点通知器，使用自定义的方法匹配器
+   * @param methodMatcher 自定义的方法匹配器
+   * @param beanFactory Spring Bean工厂，用于获取权限检查器实例
+   */
   public AuthzAnnotationPointcutAdvisor(MethodMatcher methodMatcher, BeanFactory beanFactory) {
+    super(new AuthzMethodInterceptor(beanFactory));
     this.methodMatcher = methodMatcher;
-    this.setAdvice(new AuthzMethodInterceptor(beanFactory));
   }
 
   @Override
@@ -61,14 +75,19 @@ public class AuthzAnnotationPointcutAdvisor extends StaticMethodMatcherPointcutA
         return this.secondaryMatch(method, targetClass);
       }
       // check the implement method of the target class
-      var m = MethodUtils.getAccessibleMethod(targetClass, method.getName(), method.getParameterTypes());
-      if (this.isAuthzAnnotationPresent(m)) {
+      var implementMethod = MethodUtils.getAccessibleMethod(targetClass, method.getName(), method.getParameterTypes());
+      if (this.isAuthzAnnotationPresent(implementMethod)) {
         return this.secondaryMatch(method, targetClass);
       }
     }
     return false;
   }
 
+  /**
+   * 检查指定的类是否存在权限注解
+   * @param clss 要检查的类
+   * @return 如果类上存在任何权限相关注解则返回true，否则返回false
+   */
   protected boolean isAuthzAnnotationPresent(Class<?> clss) {
     for (Class<? extends Annotation> annoClss : AUTHZ_ANNOTATION_CLASSES) {
       if (AnnotatedElementUtils.hasAnnotation(clss, annoClss)) {
@@ -78,6 +97,11 @@ public class AuthzAnnotationPointcutAdvisor extends StaticMethodMatcherPointcutA
     return false;
   }
 
+  /**
+   * 检查指定的方法是否存在权限注解
+   * @param method 要检查的方法
+   * @return 如果方法上存在任何权限相关注解则返回true，否则返回false
+   */
   protected boolean isAuthzAnnotationPresent(Method method) {
     if (Objects.isNull(method)) {
       return false;
@@ -90,6 +114,16 @@ public class AuthzAnnotationPointcutAdvisor extends StaticMethodMatcherPointcutA
     return false;
   }
 
+  /**
+   * 执行二次匹配检查
+   * 
+   * <p>如果配置了自定义的方法匹配器，则使用该匹配器进行进一步的匹配检查；
+   * 否则直接返回true，表示匹配成功。</p>
+   * 
+   * @param method 要检查的方法
+   * @param targetClass 目标类
+   * @return 如果匹配则返回true，否则返回false
+   */
   protected boolean secondaryMatch(Method method, Class<?> targetClass) {
     if (Objects.nonNull(this.methodMatcher)) {
       return this.methodMatcher.matches(method, targetClass);
@@ -99,6 +133,6 @@ public class AuthzAnnotationPointcutAdvisor extends StaticMethodMatcherPointcutA
 
   @Override
   public int getOrder() {
-    return Ordered.HIGHEST_PRECEDENCE + 10000;
+    return Ordered.HIGHEST_PRECEDENCE + 10_000;
   }
 }

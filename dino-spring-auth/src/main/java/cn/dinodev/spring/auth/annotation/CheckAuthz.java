@@ -39,10 +39,14 @@ public @interface CheckAuthz {
    * <p>Bean必须实现{@link cn.dinodev.spring.auth.AuthzChecker}接口</p>
    *
    * @see cn.dinodev.spring.auth.AuthzChecker
-   * @return
+   * @return bean名称数组，用于权限检查
    */
   String[] value();
 
+  /**
+   * 指定权限检查器的类型，替代bean名称的另一种配置方式
+   * @return 权限检查器类型数组
+   */
   Class<? extends AuthzChecker>[] beanClass() default {};
 
   /**
@@ -50,10 +54,17 @@ public @interface CheckAuthz {
    */
   Logic logic() default Logic.ANY;
 
+  /**
+   * 允许在单个元素上重复使用 {@link CheckAuthz} 注解的容器注解
+   */
   @Retention(RetentionPolicy.RUNTIME)
   @Target({ ElementType.METHOD, ElementType.TYPE, ElementType.ANNOTATION_TYPE })
   @Documented
-  public @interface List {
+  @interface List {
+    /**
+     * 返回重复的 {@link CheckAuthz} 注解数组
+     * @return CheckAuthz注解数组
+     */
     CheckAuthz[] value();
   }
 }

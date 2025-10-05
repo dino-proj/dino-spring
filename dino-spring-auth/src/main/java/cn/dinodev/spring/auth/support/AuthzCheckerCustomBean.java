@@ -7,19 +7,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+
 import cn.dinodev.spring.auth.AuthzChecker;
 import cn.dinodev.spring.auth.annotation.CheckAuthz;
 import cn.dinodev.spring.auth.annotation.Logic;
 import cn.dinodev.spring.auth.session.AuthSession;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
 
 /**
  * 自定义Bean权限校验器
@@ -31,6 +33,10 @@ public class AuthzCheckerCustomBean extends AbstractAuthzChecker<CheckAuthz, Lis
 
   private final BeanFactory beanFactory;
 
+  /**
+   * 创建自定义Bean权限检查器
+   * @param beanFactory Spring Bean工厂，用于获取自定义权限检查器Bean实例
+   */
   public AuthzCheckerCustomBean(BeanFactory beanFactory) {
     super(CheckAuthz.class);
     this.beanFactory = beanFactory;
@@ -102,12 +108,12 @@ public class AuthzCheckerCustomBean extends AbstractAuthzChecker<CheckAuthz, Lis
       distinctAdd(beans, this.beanFactory.getBean(name, AuthzChecker.class));
     }
 
-    return beans.toArray(new AuthzChecker[beans.size()]);
+    return beans.toArray(new AuthzChecker[0]);
   }
 
   private static <T> void distinctAdd(List<T> list, T el) {
     for (var e : list) {
-      if (e == el) {
+      if (Objects.equals(e, el)) {
         return;
       }
     }

@@ -4,6 +4,7 @@
 package cn.dinodev.spring.auth;
 
 import org.aopalliance.intercept.MethodInvocation;
+
 import cn.dinodev.spring.auth.exception.AuthorizationException;
 import cn.dinodev.spring.auth.session.AuthSession;
 
@@ -17,9 +18,8 @@ public interface AuthzChecker {
    * 权限断言，如果权限不足，则抛出异常
    * @param session 登录会话
    * @param mi 方法调用
-   * @throws AuthorizationException 权限不足时，抛出异常
    */
-  default void assertPermmited(AuthSession session, MethodInvocation mi) throws AuthorizationException {
+  default void assertPermmited(AuthSession session, MethodInvocation mi) {
     if (!isPermmited(session, mi)) {
       throw new AuthorizationException("No permission to access " + mi.getMethod().getName());
     }

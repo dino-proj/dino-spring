@@ -24,6 +24,10 @@ public class AuthzCheckerPredicate implements AuthzChecker {
 
   private final Predicate<AuthSession> predicate;
 
+  /**
+   * 创建基于谓词的权限检查器
+   * @param predicate 用于检查权限的谓词函数
+   */
   public AuthzCheckerPredicate(Predicate<AuthSession> predicate) {
     this.predicate = predicate;
   }

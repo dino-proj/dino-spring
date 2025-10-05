@@ -10,6 +10,8 @@ import java.util.function.Supplier;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.springframework.beans.factory.BeanFactory;
+
 import cn.dinodev.spring.auth.AuthzChecker;
 import cn.dinodev.spring.auth.DinoAuth;
 import cn.dinodev.spring.auth.exception.AuthorizationException;
@@ -18,7 +20,6 @@ import cn.dinodev.spring.auth.support.AuthzCheckerCustomBean;
 import cn.dinodev.spring.auth.support.AuthzCheckerLoginAs;
 import cn.dinodev.spring.auth.support.AuthzCheckerPermission;
 import cn.dinodev.spring.auth.support.AuthzCheckerRole;
-import org.springframework.beans.factory.BeanFactory;
 
 /**
  * 权限检查拦截器
@@ -31,10 +32,19 @@ public class AuthzMethodInterceptor implements MethodInterceptor {
   private Collection<AuthzChecker> checkers;
   private Supplier<AuthSession> sessionSupplier;
 
+  /**
+   * 创建权限方法拦截器，使用默认的认证会话供应商
+   * @param beanFactory Spring Bean工厂，用于获取自定义权限检查器
+   */
   public AuthzMethodInterceptor(BeanFactory beanFactory) {
     this(DinoAuth::getAuthSession, beanFactory);
   }
 
+  /**
+   * 创建权限方法拦截器，使用自定义的认证会话供应商
+   * @param sessionSupplier 认证会话供应商，用于获取当前用户的认证信息
+   * @param beanFactory Spring Bean工厂，用于获取自定义权限检查器
+   */
   public AuthzMethodInterceptor(Supplier<AuthSession> sessionSupplier, BeanFactory beanFactory) {
     this.sessionSupplier = sessionSupplier;
     this.checkers = Arrays.asList(// chekers

@@ -20,6 +20,10 @@ import jakarta.persistence.Table;
 
 public class DinoJdbcSimpleTypeHolder extends SimpleTypeHolder {
 
+  /**
+   * 创建DinoJdbcSimpleTypeHolder实例
+   * @param source 源SimpleTypeHolder实例
+   */
   public DinoJdbcSimpleTypeHolder(SimpleTypeHolder source) {
     super(Set.of(Serializable.class), source);
   }

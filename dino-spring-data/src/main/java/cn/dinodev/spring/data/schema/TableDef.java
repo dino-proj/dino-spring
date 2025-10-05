@@ -10,6 +10,8 @@ import org.springframework.core.ResolvableType;
 import lombok.Data;
 
 /**
+ * 数据库表定义
+ * 用于描述数据库表的结构信息，包括表名、字段、索引等元数据
  *
  * @author Cody Lu
  * @date 2022-08-19 05:00:55

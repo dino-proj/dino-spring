@@ -9,6 +9,8 @@ import java.util.WeakHashMap;
 import cn.dinodev.spring.commons.utils.NamingUtils;
 
 /**
+ * 蛇形命名转换器
+ * 将Java驼峰命名转换为数据库蛇形命名格式，例如userName -> user_name
  *
  * @author Cody Lu
  * @date 2022-03-07 19:15:37

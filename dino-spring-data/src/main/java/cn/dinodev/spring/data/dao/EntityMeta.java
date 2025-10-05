@@ -7,6 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.data.util.Lazy;
+import org.springframework.util.Assert;
+
 import cn.dinodev.spring.commons.context.ContextHelper;
 import cn.dinodev.spring.commons.utils.NamingUtils;
 import cn.dinodev.spring.data.domain.EntityBase;
@@ -16,10 +20,6 @@ import cn.dinodev.spring.data.domain.TenantRowEntity;
 import cn.dinodev.spring.data.domain.TenantTableEntity;
 import cn.dinodev.spring.data.domain.Versioned;
 import cn.dinodev.spring.data.sql.dialect.Dialect;
-import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.data.util.Lazy;
-import org.springframework.util.Assert;
-
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Data
-public class EntityMeta {
+public final class EntityMeta {
 
   private static final Map<Class<?>, EntityMeta> ENTITY_META_CACHE = new HashMap<>();
 
@@ -107,6 +107,12 @@ public class EntityMeta {
     }
   }
 
+  /**
+   * 为指定的数据库方言和实体类创建EntityMeta实例
+   * @param dialect 数据库方言
+   * @param cls 实体类
+   * @return EntityMeta实例
+   */
   public static EntityMeta of(Dialect dialect, Class<?> cls) {
     var cachedMeta = ENTITY_META_CACHE.get(cls);
     if (Objects.nonNull(cachedMeta)) {
@@ -140,6 +146,11 @@ public class EntityMeta {
     return new EntityMeta(dialect, cls, tenantLevel, tableName, logicalDelete, versioned);
   }
 
+  /**
+   * 使用默认数据库方言为实体类创建EntityMeta实例
+   * @param cls 实体类
+   * @return EntityMeta实例
+   */
   public static EntityMeta of(Class<?> cls) {
     return of(DEFAULT_DIALECT.get(), cls);
   }

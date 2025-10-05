@@ -91,6 +91,10 @@ public class LimitOffsetPageable implements Pageable, Serializable {
     return new LimitOffsetPageable(getOffset() + getPageSize(), getPageSize(), getSort());
   }
 
+  /**
+   * 返回上一页的分页对象
+   * @return 如果有上一页则返回上一页的分页对象，否则返回当前分页对象
+   */
   public LimitOffsetPageable previous() {
     return hasPrevious() ? new LimitOffsetPageable(getOffset() - getPageSize(), getPageSize(), getSort()) : this;
   }

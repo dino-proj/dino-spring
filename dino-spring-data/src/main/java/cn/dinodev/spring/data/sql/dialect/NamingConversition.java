@@ -25,7 +25,10 @@ public interface NamingConversition {
    */
   String convertTableName(String tableName);
 
-  public class Default implements NamingConversition {
+  /**
+   * 默认命名转换实现，不进行任何转换
+   */
+  class Default implements NamingConversition {
     public static final Default INST = new Default();
 
     @Override

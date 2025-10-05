@@ -14,15 +14,21 @@ import java.sql.DatabaseMetaData;
  */
 
 public class MysqlDialect implements Dialect {
-  private final NamingConversition namingConversition;
+  private final NamingConversition namingConversitionInstance;
 
+  /**
+   * 构造函数，创建MySQL数据库方言实例
+   * @param metaData 数据库元数据
+   * @param namingConversition 命名转换策略
+   */
+  @SuppressWarnings("unused")
   public MysqlDialect(DatabaseMetaData metaData, NamingConversition namingConversition) {
-    this.namingConversition = namingConversition;
+    this.namingConversitionInstance = namingConversition;
   }
 
   @Override
   public NamingConversition namingConversition() {
-    return namingConversition;
+    return namingConversitionInstance;
   }
 
   @Override

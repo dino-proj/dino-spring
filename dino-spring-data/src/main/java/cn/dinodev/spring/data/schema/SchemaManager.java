@@ -19,13 +19,21 @@ import org.springframework.stereotype.Component;
 public class SchemaManager {
 
   @SuppressWarnings("unused")
-  private JdbcOperations jdbcOperations;
-  private List<TableDef> tables = new ArrayList<>();
+  private final JdbcOperations jdbcOperations;
+  private final List<TableDef> tables = new ArrayList<>();
 
+  /**
+   * 构造函数，初始化模式管理器
+   * @param jdbcOperations JDBC操作实例
+   */
   public SchemaManager(JdbcOperations jdbcOperations) {
     this.jdbcOperations = jdbcOperations;
   }
 
+  /**
+   * 添加表定义
+   * @param table 表定义
+   */
   public void addTable(TableDef table) {
     tables.add(table);
   }

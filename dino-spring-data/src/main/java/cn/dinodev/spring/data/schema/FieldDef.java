@@ -8,6 +8,8 @@ import org.springframework.core.ResolvableType;
 import lombok.Data;
 
 /**
+ * 数据库字段定义
+ * 用于描述数据库表字段的结构信息，包括字段名、类型、约束等属性
  *
  * @author Cody Lu
  * @date 2022-08-19 05:00:55

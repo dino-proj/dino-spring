@@ -24,7 +24,7 @@ public enum Logic {
   /**
    *
    */
-  private Logic(String logic) {
+  Logic(String logic) {
     this.logic = logic;
   }
 

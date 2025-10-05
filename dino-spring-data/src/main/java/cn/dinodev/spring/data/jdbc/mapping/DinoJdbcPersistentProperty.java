@@ -28,12 +28,19 @@ public class DinoJdbcPersistentProperty extends BasicJdbcPersistentProperty {
 
   private final Lazy<Boolean> isId;
   private final Lazy<Boolean> isVersion;
-  private final Lazy<Boolean> isEmbedded;
-  private final Lazy<SqlIdentifier> columnName;
+  private final Lazy<Boolean> isEmbeddedLazy;
+  private final Lazy<SqlIdentifier> columnNameLazy;
   private final Lazy<Boolean> isInsertable;
   private final Lazy<Boolean> isUpdatable;
-  private final Lazy<Boolean> isTransient;
+  private final Lazy<Boolean> isTransientLazy;
 
+  /**
+   * 创建DinoJdbcPersistentProperty实例
+   * @param property 属性信息
+   * @param owner 拥有者实体
+   * @param simpleTypeHolder 简单类型持有者
+   * @param namingStrategy 命名策略
+   */
   public DinoJdbcPersistentProperty(Property property, PersistentEntity<?, RelationalPersistentProperty> owner,
       SimpleTypeHolder simpleTypeHolder, NamingStrategy namingStrategy) {
     super(property, owner, simpleTypeHolder, namingStrategy);
@@ -43,9 +50,10 @@ public class DinoJdbcPersistentProperty extends BasicJdbcPersistentProperty {
     this.isVersion = Lazy
         .of(() -> this.isAnnotationPresent(jakarta.persistence.Version.class) || super.isVersionProperty());
 
-    this.isEmbedded = Lazy.of(() -> this.isAnnotationPresent(jakarta.persistence.Embedded.class) || super.isEmbedded());
+    this.isEmbeddedLazy = Lazy
+        .of(() -> this.isAnnotationPresent(jakarta.persistence.Embedded.class) || super.isEmbedded());
 
-    this.columnName = Lazy.of(() -> Optional.ofNullable(this.findAnnotation(jakarta.persistence.Column.class)) //
+    this.columnNameLazy = Lazy.of(() -> Optional.ofNullable(this.findAnnotation(jakarta.persistence.Column.class)) //
         .map(jakarta.persistence.Column::name) //
         .filter(StringUtils::isNotBlank) //
         .map(this::createSqlIdentifier) //
@@ -59,7 +67,7 @@ public class DinoJdbcPersistentProperty extends BasicJdbcPersistentProperty {
         .map(jakarta.persistence.Column::updatable) //
         .orElseGet(() -> !super.isInsertOnly()));
 
-    this.isTransient = Lazy
+    this.isTransientLazy = Lazy
         .of(() -> this.isAnnotationPresent(jakarta.persistence.Transient.class) || super.isTransient());
 
   }
@@ -77,12 +85,12 @@ public class DinoJdbcPersistentProperty extends BasicJdbcPersistentProperty {
   @Override
   @NonNull
   public SqlIdentifier getColumnName() {
-    return this.columnName.get();
+    return this.columnNameLazy.get();
   }
 
   @Override
   public boolean isEmbedded() {
-    return this.isEmbedded.get();
+    return this.isEmbeddedLazy.get();
   }
 
   @Override
@@ -92,7 +100,7 @@ public class DinoJdbcPersistentProperty extends BasicJdbcPersistentProperty {
 
   @Override
   public boolean isTransient() {
-    return this.isTransient.get();
+    return this.isTransientLazy.get();
   }
 
   private SqlIdentifier createSqlIdentifier(String name) {

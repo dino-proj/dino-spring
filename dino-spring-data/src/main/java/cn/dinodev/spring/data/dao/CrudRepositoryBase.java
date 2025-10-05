@@ -50,7 +50,7 @@ public interface CrudRepositoryBase<T, K extends Serializable>
    */
   default List<T> postQuery(List<T> entities) {
     if (CollectionUtils.isNotEmpty(entities)) {
-      entities.forEach(CrudRepositoryBase.this::postQuery);
+      entities.forEach(this::postQuery);
     }
     return entities;
   }

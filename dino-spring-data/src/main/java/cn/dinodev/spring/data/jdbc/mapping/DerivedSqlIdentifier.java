@@ -54,14 +54,14 @@ public class DerivedSqlIdentifier implements SqlIdentifier {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(Object obj) {
 
-    if (this == o) {
+    if (this == obj) {
       return true;
     }
 
-    if (o instanceof SqlIdentifier) {
-      return this.toString().equals(o.toString());
+    if (obj instanceof SqlIdentifier) {
+      return this.toString().equals(obj.toString());
     }
 
     return false;

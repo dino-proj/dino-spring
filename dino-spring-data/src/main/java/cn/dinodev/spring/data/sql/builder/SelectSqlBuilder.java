@@ -16,72 +16,136 @@ import cn.dinodev.spring.data.sql.dialect.Dialect;
  * @date 2022-03-07 19:21:00
  */
 
-public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
+public final class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
 
-  protected boolean distinct;
+  private static final String TABLE_ALIAS_FORMAT = "%s AS %s";
+  private static final String TABLE_ALIAS_ON_FORMAT = "%s AS %s ON %s";
 
-  protected List<String> columns = new ArrayList<>();
+  private boolean distinctFlag;
 
-  protected List<JoinEntity<String>> joins = new ArrayList<>();
+  private final List<String> columnsList = new ArrayList<>();
 
-  protected List<String> groupBys = new ArrayList<>();
+  private final List<JoinEntity<String>> joins = new ArrayList<>();
 
-  protected List<String> havings = new ArrayList<>();
+  private final List<String> groupBysList = new ArrayList<>();
 
-  protected List<JoinEntity<SelectSqlBuilder>> unions = new ArrayList<>();
+  private final List<String> havingsList = new ArrayList<>();
 
-  protected List<String> orderBys = new ArrayList<>();
+  private final List<JoinEntity<SelectSqlBuilder>> unions = new ArrayList<>();
 
-  protected List<Object> havingParams = new ArrayList<>();
+  private final List<String> orderBysList = new ArrayList<>();
 
-  protected List<Object> joinParams = new ArrayList<>();
+  private final List<Object> havingParams = new ArrayList<>();
 
-  private int limit = 0;
+  private final List<Object> joinParams = new ArrayList<>();
 
-  private long offset = 0;
+  private int limitValue;
+
+  private long offset;
 
   private final Dialect dialect;
 
-  public SelectSqlBuilder(final Dialect dialect) {
+  /**
+   * 私有构造函数，防止直接实例化
+   * @param dialect 数据库方言
+   */
+  private SelectSqlBuilder(final Dialect dialect) {
     this.dialect = dialect;
-    setThat(this);
   }
 
   /**
-   * 根据表名构造，表名，如下写法都是合法的：
+   * 私有构造函数，防止直接实例化
+   * @param dialect 数据库方言
+   * @param table 表名
+   */
+  private SelectSqlBuilder(final Dialect dialect, final String table) {
+    this.dialect = dialect;
+    this.tables.add(table);
+  }
+
+  /**
+   * 私有构造函数，防止直接实例化
+   * @param dialect 数据库方言
+   * @param table 表名
+   * @param alias 表别名
+   */
+  private SelectSqlBuilder(final Dialect dialect, final String table, final String alias) {
+    this.dialect = dialect;
+    this.tables.add(TABLE_ALIAS_FORMAT.formatted(table, alias));
+  }
+
+  /**
+   * 私有构造函数，防止直接实例化
+   * @param subQuery 子查询
+   * @param alias 子查询别名
+   */
+  private SelectSqlBuilder(final SelectSqlBuilder subQuery, final String alias) {
+    this.dialect = subQuery.dialect;
+    this.tables.add(String.format("( %s ) AS %s", subQuery.getSql(), alias));
+    this.whereParams.addAll(Arrays.asList(subQuery.getParams()));
+  }
+
+  /**
+   * 创建SelectSqlBuilder实例
+   * @param dialect 数据库方言
+   * @return 配置好的SelectSqlBuilder实例
+   */
+  public static SelectSqlBuilder create(final Dialect dialect) {
+    SelectSqlBuilder builder = new SelectSqlBuilder(dialect);
+    builder.initializeBuilder();
+    return builder;
+  }
+
+  /**
+   * 根据表名创建SelectSqlBuilder实例
+   * <p>支持的格式：
    * <p>- <code>"table1"</code>
    * <p>- <code>"table1, table2"</code>
    * <p>- <code>"table1 as t1"</code>
    * <p>- <code>"table1 as t1 join table2 as t2 on t1.id=t2.id"</code>
    *
-   * @param table
+   * @param dialect 数据库方言
+   * @param table 表名
+   * @return 配置好的SelectSqlBuilder实例
    */
-  public SelectSqlBuilder(final Dialect dialect, final String table) {
-    this(dialect);
-    this.table(table);
+  public static SelectSqlBuilder create(final Dialect dialect, final String table) {
+    SelectSqlBuilder builder = new SelectSqlBuilder(dialect, table);
+    builder.initializeBuilder();
+    return builder;
   }
 
   /**
-   * 设置表名，更设置表的别名
-   * <p>- <code>生成的sql片段为：table AS alias</code>
+   * 根据表名和别名创建SelectSqlBuilder实例
+   * <p>生成的sql片段为：table AS alias
    *
-   * @param table
-   * @param alias
+   * @param dialect 数据库方言
+   * @param table 表名
+   * @param alias 表别名
+   * @return 配置好的SelectSqlBuilder实例
    */
-  public SelectSqlBuilder(final Dialect dialect, final String table, final String alias) {
-    this(dialect);
-    this.table(table + " AS " + alias);
+  public static SelectSqlBuilder create(final Dialect dialect, final String table, final String alias) {
+    SelectSqlBuilder builder = new SelectSqlBuilder(dialect, table, alias);
+    builder.initializeBuilder();
+    return builder;
   }
 
   /**
-   * 带子查询的SqlBuilder
+   * 根据子查询创建SelectSqlBuilder实例
    * @param subQuery 子查询
    * @param alias 子查询的别名
+   * @return 配置好的SelectSqlBuilder实例
    */
-  public SelectSqlBuilder(final SelectSqlBuilder subQuery, final String alias) {
-    this(subQuery.dialect);
-    this.table(String.format("( %s ) AS %s", subQuery.getSql(), alias));
-    this.whereParams.addAll(Arrays.asList(subQuery.getParams()));
+  public static SelectSqlBuilder create(final SelectSqlBuilder subQuery, final String alias) {
+    SelectSqlBuilder builder = new SelectSqlBuilder(subQuery, alias);
+    builder.initializeBuilder();
+    return builder;
+  }
+
+  /**
+   * 初始化构建器
+   */
+  private void initializeBuilder() {
+    setThat(this);
   }
 
   /**
@@ -93,7 +157,7 @@ public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
    * @return
    */
   public SelectSqlBuilder column(final String name) {
-    columns.add(name);
+    columnsList.add(name);
     return this;
   }
 
@@ -106,7 +170,7 @@ public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
    * @return
    */
   public SelectSqlBuilder columns(final String... names) {
-    columns.addAll(Arrays.asList(names));
+    columnsList.addAll(Arrays.asList(names));
     return this;
   }
 
@@ -120,7 +184,7 @@ public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
    * @return
    */
   public SelectSqlBuilder groupBy(final String... expr) {
-    groupBys.addAll(Arrays.asList(expr));
+    groupBysList.addAll(Arrays.asList(expr));
     return this;
   }
 
@@ -135,7 +199,7 @@ public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
    */
   public SelectSqlBuilder orderBy(final String... expr) {
     if (expr != null) {
-      orderBys.addAll(Arrays.asList(expr));
+      orderBysList.addAll(Arrays.asList(expr));
     }
     return this;
   }
@@ -151,9 +215,9 @@ public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
    */
   public SelectSqlBuilder orderBy(final String name, final boolean ascending) {
     if (ascending) {
-      orderBys.add(name + " ASC");
+      orderBysList.add(name + " ASC");
     } else {
-      orderBys.add(name + " DESC");
+      orderBysList.add(name + " DESC");
     }
     return this;
   }
@@ -167,7 +231,7 @@ public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
    * @return
    */
   public SelectSqlBuilder having(final String expr) {
-    havings.add(expr);
+    havingsList.add(expr);
     return this;
   }
 
@@ -235,7 +299,7 @@ public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
    * @return
    */
   public SelectSqlBuilder join(final String table, final String alias) {
-    return join(String.format("%s AS %s", table, alias));
+    return join(String.format(TABLE_ALIAS_FORMAT, table, alias));
   }
 
   /**
@@ -250,7 +314,7 @@ public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
    * @return
    */
   public SelectSqlBuilder join(final String table, final String alias, final String onExpr, final Object... values) {
-    join(String.format("%s AS %s ON %s", table, alias, onExpr));
+    join(String.format(TABLE_ALIAS_ON_FORMAT, table, alias, onExpr));
     if (values != null) {
       joinParams.addAll(Arrays.asList(values));
     }
@@ -281,7 +345,7 @@ public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
    * @return
    */
   public SelectSqlBuilder leftJoin(final String table, final String alias) {
-    return leftJoin(String.format("%s AS %s", table, alias));
+    return leftJoin(String.format(TABLE_ALIAS_FORMAT, table, alias));
   }
 
   /**
@@ -297,7 +361,7 @@ public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
    */
   public SelectSqlBuilder leftJoin(final String table, final String alias, final String onExpr,
       final Object... values) {
-    leftJoin(String.format("%s AS %s ON %s", table, alias, onExpr));
+    leftJoin(String.format(TABLE_ALIAS_ON_FORMAT, table, alias, onExpr));
     if (values != null) {
       joinParams.addAll(Arrays.asList(values));
     }
@@ -328,7 +392,7 @@ public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
    * @return
    */
   public SelectSqlBuilder rightJoin(final String table, final String alias) {
-    return rightJoin(String.format("%s AS %s", table, alias));
+    return rightJoin(String.format(TABLE_ALIAS_FORMAT, table, alias));
   }
 
   /**
@@ -344,7 +408,7 @@ public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
    */
   public SelectSqlBuilder rightJoin(final String table, final String alias, final String onExpr,
       final Object... values) {
-    rightJoin(String.format("%s AS %s ON %s", table, alias, onExpr));
+    rightJoin(String.format(TABLE_ALIAS_ON_FORMAT, table, alias, onExpr));
     if (values != null) {
       joinParams.addAll(Arrays.asList(values));
     }
@@ -380,7 +444,7 @@ public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
    * @return
    */
   public SelectSqlBuilder crossJoin(final String joinExpr, final String alias) {
-    return crossJoin(String.format("%s AS %s", joinExpr, alias));
+    return crossJoin(String.format(TABLE_ALIAS_FORMAT, joinExpr, alias));
   }
 
   /**
@@ -389,7 +453,7 @@ public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
    * @return
    */
   public SelectSqlBuilder distinct() {
-    this.distinct = true;
+    this.distinctFlag = true;
     return this;
   }
 
@@ -413,7 +477,7 @@ public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
    * @return
    */
   public SelectSqlBuilder limit(final int limit, final long offset) {
-    this.limit = limit;
+    this.limitValue = limit;
     this.offset = offset;
     return this;
   }
@@ -441,36 +505,40 @@ public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
     appendList(sql, tables, " FROM ", ", ");
     appendList(sql, joins, " ", " ");
     appendList(sql, whereColumns, " WHERE ", " ");
-    appendList(sql, groupBys, " GROUP BY ", ", ");
-    appendList(sql, havings, " HAVING ", " AND ");
+    appendList(sql, groupBysList, " GROUP BY ", ", ");
+    appendList(sql, havingsList, " HAVING ", " AND ");
     appendList(sql, unions, "  ", " \n ");
 
     if (isCount) {
       return sql.toString();
     }
 
-    appendList(sql, orderBys, " ORDER BY ", ", ");
+    appendList(sql, orderBysList, " ORDER BY ", ", ");
 
-    if (limit > 0) {
-      sql.append(" ").append(dialect.limitOffset(limit, offset));
+    if (limitValue > 0) {
+      sql.append(' ').append(dialect.limitOffset(limitValue, offset));
     }
 
     return sql.toString();
   }
 
   private void appendColumn(StringBuilder sql, boolean isCount) {
-    if (distinct && !isCount) {
+    if (distinctFlag && !isCount) {
       sql.append("DISTINCT ");
     }
     if (isCount) {
       sql.append("count(1) AS cnt");
-    } else if (columns.isEmpty()) {
-      sql.append("*");
+    } else if (columnsList.isEmpty()) {
+      sql.append('*');
     } else {
-      appendList(sql, columns, "", ", ");
+      appendList(sql, columnsList, "", ", ");
     }
   }
 
+  /**
+   * 获取用于计数的SQL语句
+   * @return 计数SQL语句字符串
+   */
   public String getCountSql() {
     return getSql(true);
   }
@@ -487,9 +555,12 @@ public class SelectSqlBuilder extends WhereSql<SelectSqlBuilder> {
     return paramsArr.flatMap(Arrays::stream).toArray();
   }
 
+  /**
+   * 连接实体类，用于表示SQL连接操作
+   */
   private static class JoinEntity<V> {
-    String op;
-    V expr;
+    private final String op;
+    private final V expr;
 
     /**
      * @param op

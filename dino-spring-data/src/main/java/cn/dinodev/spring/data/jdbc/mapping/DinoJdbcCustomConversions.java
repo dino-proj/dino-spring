@@ -18,6 +18,11 @@ import org.springframework.lang.NonNull;
  */
 
 public class DinoJdbcCustomConversions extends JdbcCustomConversions {
+  /**
+   * 创建DinoJdbcCustomConversions实例
+   * @param storeConversions 存储转换配置
+   * @param userConverters 用户自定义转换器列表
+   */
   public DinoJdbcCustomConversions(StoreConversions storeConversions, List<?> userConverters) {
     super(storeConversions, userConverters);
   }

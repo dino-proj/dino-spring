@@ -67,7 +67,10 @@ public interface Dialect {
     return Default.INST_DEFAULT;
   }
 
-  public class Default implements Dialect {
+  /**
+   * 默认数据库方言实现
+   */
+  class Default implements Dialect {
     private static final Default INST_DEFAULT = new Default();
 
     @Override

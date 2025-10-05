@@ -78,7 +78,7 @@ public enum Oper {
    *
    * @param op the oprator
    */
-  private Oper(String op, String expr) {
+  Oper(String op, String expr) {
     this.op = op;
     this.expr = expr;
     this.paramCount = StringUtils.countMatches(expr, '%');
@@ -105,6 +105,10 @@ public enum Oper {
     return String.format(expr, (Object[]) params);
   }
 
+  /**
+   * 检查操作符是否包含值占位符
+   * @return 如果包含值占位符返回true
+   */
   public boolean hasValue() {
     return valueCount > 0;
   }

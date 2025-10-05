@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.core.convert.ConversionService;
-import org.springframework.dao.DataAccessException;
 import org.springframework.data.jdbc.core.JdbcAggregateOperations;
 import org.springframework.data.jdbc.core.convert.JdbcConverter;
 import org.springframework.data.jdbc.repository.support.SimpleJdbcRepository;
@@ -49,23 +48,29 @@ public class DinoJdbcRepositoryBase<T, K> extends SimpleJdbcRepository<T, K> imp
   private final EntityMeta entityInfo;
 
   @Nonnull
-  private JdbcTemplate jdbcTemplate;
+  private final JdbcTemplate jdbcTemplate;
 
   @Nonnull
-  private Dialect dialect;
+  private final Dialect dialectService;
 
   @Nonnull
-  private ConversionService conversionService;
+  private final ConversionService conversionService;
 
+  /**
+   * 构造函数，初始化JDBC仓库基础组件
+   * @param entityOperations JDBC聚合操作
+   * @param entity 关系持久化实体
+   * @param converter JDBC转换器
+   */
   public DinoJdbcRepositoryBase(JdbcAggregateOperations entityOperations, RelationalPersistentEntity<T> entity,
       JdbcConverter converter) {
     super(entityOperations, entity, converter);
     this.entity = entity;
 
     this.jdbcTemplate = ContextHelper.findBean(JdbcTemplate.class);
-    this.dialect = ContextHelper.findBean(Dialect.class);
+    this.dialectService = ContextHelper.findBean(Dialect.class);
     this.conversionService = ContextHelper.findBean("dataConversionService", ConversionService.class);
-    this.entityInfo = EntityMeta.of(this.dialect, this.entityClass());
+    this.entityInfo = EntityMeta.of(this.dialectService, entity.getType());
 
   }
 
@@ -92,19 +97,19 @@ public class DinoJdbcRepositoryBase<T, K> extends SimpleJdbcRepository<T, K> imp
 
   @Override
   public Dialect dialect() {
-    return this.dialect;
+    return this.dialectService;
   }
 
   @Override
-  public <C> String tableName(Class<C> cls) {
-    var meta = EntityMeta.of(this.dialect, cls);
+  public <C> String tableName(Class<C> entityClass) {
+    var meta = EntityMeta.of(this.dialectService, entityClass);
     return meta.getQuotedTableName();
   }
 
   @Override
   public <P> List<P> queryList(@Nonnull String sql, @Nonnull Class<P> clazz, @Nullable Object... params) {
     if (log.isDebugEnabled()) {
-      log.debug("query for: {},\nSQL:{},\nPARAMs:", clazz, sql, params);
+      log.debug("query for: {},\nSQL:{},\nPARAMs:{}", clazz, sql, params);
     }
     if (TypeUtils.isPrimitiveOrString(clazz)) {
       return this.jdbcTemplate.queryForList(sql, clazz, params);
@@ -117,7 +122,7 @@ public class DinoJdbcRepositoryBase<T, K> extends SimpleJdbcRepository<T, K> imp
   public <MK, MV> Map<MK, MV> queryForMap(SelectSqlBuilder sql, String keyColumn, Class<MK> keyClass,
       String valueColumn, Class<MV> valueClass) {
     if (log.isDebugEnabled()) {
-      log.debug("query for map: {}:{}, {}:{},\nSQL:{},\nPARAMs:", keyColumn, keyClass, valueColumn, valueClass,
+      log.debug("query for map: {}:{}, {}:{},\nSQL:{},\nPARAMs:{}", keyColumn, keyClass, valueColumn, valueClass,
           sql.getSql(), sql.getParams());
     }
     org.springframework.util.Assert.isTrue(TypeUtils.isPrimitiveOrString(keyClass), "key must be primitive class");
@@ -134,7 +139,7 @@ public class DinoJdbcRepositoryBase<T, K> extends SimpleJdbcRepository<T, K> imp
         result.put(key, value);
       } else {
         Object resultSetValue = JdbcUtils.getResultSetValue(rs, rs.findColumn(valueColumn));
-        MV convert = DinoJdbcRepositoryBase.this.conversionService.convert(resultSetValue, valueClass);
+        MV convert = conversionService.convert(resultSetValue, valueClass);
         result.put(key, convert);
       }
     }, sql.getParams());
@@ -145,7 +150,8 @@ public class DinoJdbcRepositoryBase<T, K> extends SimpleJdbcRepository<T, K> imp
   public <MK, MV> Map<MK, MV> queryForMap(String sql, String keyColumn, Class<MK> keyClass, Class<MV> valueClass,
       Object... params) {
     if (log.isDebugEnabled()) {
-      log.debug("query for map: {}:{}, valueClass:{},\nSQL:{},\nPARAMs:", keyColumn, keyClass, valueClass, sql, params);
+      log.debug("query for map: {}:{}, valueClass:{},\nSQL:{},\nPARAMs:{}", keyColumn, keyClass, valueClass, sql,
+          params);
     }
     org.springframework.util.Assert.isTrue(TypeUtils.isPrimitiveOrString(keyClass), "key must be primitive class");
 
@@ -198,19 +204,19 @@ public class DinoJdbcRepositoryBase<T, K> extends SimpleJdbcRepository<T, K> imp
     if (idAttr == null || map == null || !map.containsKey(idAttr.getColumnName().getReference())) {
       return null;
     }
-    var v = map.get(idAttr.getName()).toString();
-    var k = this.keyClass();
-    log.info("entity key:{} of value {}", k, v);
+    var value = map.get(idAttr.getName()).toString();
+    var keyClass = this.keyClass();
+    log.info("entity key:{} of value {}", keyClass, value);
 
-    if (v == null || k == null) {
+    if (value == null || keyClass == null) {
       return null;
     }
-    if (k.isAssignableFrom(Long.class)) {
-      return k.cast(Long.valueOf(v));
-    } else if (k.isAssignableFrom(String.class)) {
-      return k.cast(v);
-    } else if (k.isAssignableFrom(Integer.class)) {
-      return k.cast(Integer.valueOf(v));
+    if (keyClass.isAssignableFrom(Long.class)) {
+      return keyClass.cast(Long.valueOf(value));
+    } else if (keyClass.isAssignableFrom(String.class)) {
+      return keyClass.cast(value);
+    } else if (keyClass.isAssignableFrom(Integer.class)) {
+      return keyClass.cast(Integer.valueOf(value));
     }
 
     return null;
@@ -219,7 +225,7 @@ public class DinoJdbcRepositoryBase<T, K> extends SimpleJdbcRepository<T, K> imp
   @Override
   public boolean updateById(K id, Map<String, Object> columnValue) {
 
-    var sql = new UpdateSqlBuilder(this.tableName());
+    var sql = UpdateSqlBuilder.create(this.tableName());
     sql.eq("id", id);
     for (var kv : columnValue.entrySet()) {
       var colProp = this.entity.getPersistentProperty(kv.getKey());
@@ -233,7 +239,7 @@ public class DinoJdbcRepositoryBase<T, K> extends SimpleJdbcRepository<T, K> imp
   public boolean updateByIdWithVersion(K id, Map<String, Object> columnValue, Number version) {
     org.springframework.util.Assert.isTrue(this.entityInfo.isVersioned(),
         this.entityInfo.getDomainClass() + " must implements " + Versioned.class);
-    var sql = new UpdateSqlBuilder(this.tableName());
+    var sql = UpdateSqlBuilder.create(this.tableName());
     sql.eq("id", id);
     sql.eq("version", version);
     for (var kv : columnValue.entrySet()) {
@@ -246,7 +252,7 @@ public class DinoJdbcRepositoryBase<T, K> extends SimpleJdbcRepository<T, K> imp
   }
 
   @Override
-  public int update(String sql, @Nullable Object... args) throws DataAccessException {
+  public int update(String sql, @Nullable Object... args) {
     return this.jdbcTemplate.update(sql, args);
   }
 

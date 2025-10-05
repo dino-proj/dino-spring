@@ -19,14 +19,32 @@ import com.google.gson.internal.bind.TypeAdapters;
  * Gson和Jackson的转换
  * @author Cody Lu
  */
-public class JacksonCustomerModule extends SimpleModule {
-  public JacksonCustomerModule() {
-    this.addDeserializer(JsonElement.class, new JsonDeserializer<JsonElement>() {
+public final class JacksonCustomerModule extends SimpleModule {
+
+  /**
+   * 私有构造函数，防止直接实例化
+   */
+  private JacksonCustomerModule() {
+    super();
+  }
+
+  /**
+   * 创建JacksonCustomerModule实例并配置JSON元素反序列化器
+   * @return 配置好的JacksonCustomerModule实例
+   */
+  public static JacksonCustomerModule create() {
+    JacksonCustomerModule module = new JacksonCustomerModule();
+    module.configureDeserializers();
+    return module;
+  }
+
+  private void configureDeserializers() {
+    this.addDeserializer(JsonElement.class, new JsonDeserializer<>() {
       private final JsonDeserializer<?> delegate = new UntypedObjectDeserializer(null, null);
 
       @Override
-      public JsonElement deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-        Object val = delegate.deserialize(p, ctxt);
+      public JsonElement deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
+        Object val = delegate.deserialize(parser, ctxt);
         if (val == null) {
           return JsonNull.INSTANCE;
         }

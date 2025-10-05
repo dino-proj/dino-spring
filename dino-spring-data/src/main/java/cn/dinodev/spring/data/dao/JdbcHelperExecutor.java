@@ -5,7 +5,6 @@ package cn.dinodev.spring.data.dao;
 
 import java.util.Map;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +17,7 @@ import jakarta.annotation.Nullable;
  * @author Cody Lu
  */
 
-public interface JdbcHelperExcutor<T, K> {
+public interface JdbcHelperExecutor<T, K> {
 
   /**
    * entityClass
@@ -275,11 +274,10 @@ public interface JdbcHelperExcutor<T, K> {
    * @param sql sql语句
    * @param args sql参数
    * @return 影响行数
-   * @throws DataAccessException
    */
   @Transactional(rollbackFor = Exception.class)
   @Modifying
-  int update(String sql, @Nullable Object... args) throws DataAccessException;
+  int update(String sql, @Nullable Object... args);
 
   /**
    * 执行删除sql

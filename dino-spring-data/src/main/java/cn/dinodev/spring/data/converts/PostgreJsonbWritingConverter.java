@@ -40,7 +40,7 @@ public class PostgreJsonbWritingConverter implements ConditionalGenericConverter
   @Autowired
   private ObjectMapper objectMapper;
 
-  private SimpleTypeHolder simpleTypeHolder = SimpleTypeHolder.DEFAULT;
+  private static final SimpleTypeHolder SIMPLE_TYPE_HOLDER = SimpleTypeHolder.DEFAULT;
 
   @Override
   public Set<ConvertiblePair> getConvertibleTypes() {
@@ -57,7 +57,7 @@ public class PostgreJsonbWritingConverter implements ConditionalGenericConverter
 
   @Override
   public boolean matches(@NonNull TypeDescriptor sourceType, @NonNull TypeDescriptor targetType) {
-    return !this.simpleTypeHolder.isSimpleType(sourceType.getType());
+    return !SIMPLE_TYPE_HOLDER.isSimpleType(sourceType.getType());
   }
 
   @Override

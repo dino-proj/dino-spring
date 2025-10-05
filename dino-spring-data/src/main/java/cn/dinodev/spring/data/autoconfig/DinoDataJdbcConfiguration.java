@@ -11,7 +11,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationContext;
@@ -57,7 +56,7 @@ public class DinoDataJdbcConfiguration extends AbstractJdbcConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  public Dialect dialect(JdbcOperations jdbcOperations) {
+  Dialect dialect(JdbcOperations jdbcOperations) {
 
     return jdbcOperations.execute((ConnectionCallback<Dialect>) conn -> {
       DatabaseMetaData metaData = conn.getMetaData();
@@ -102,6 +101,7 @@ public class DinoDataJdbcConfiguration extends AbstractJdbcConfiguration {
 
   @Bean
   @NonNull
+  @Override
   public JdbcCustomConversions jdbcCustomConversions() {
 
     try {
@@ -150,7 +150,7 @@ public class DinoDataJdbcConfiguration extends AbstractJdbcConfiguration {
   }
 
   @Override
-  public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
+  public void setApplicationContext(@NonNull ApplicationContext applicationContext) {
     this.applicationContext = applicationContext;
     super.setApplicationContext(applicationContext);
   }

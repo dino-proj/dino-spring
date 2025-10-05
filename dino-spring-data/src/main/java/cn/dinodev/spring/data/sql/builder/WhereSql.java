@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+
 import cn.dinodev.spring.commons.data.Range;
 import cn.dinodev.spring.data.sql.Logic;
 import cn.dinodev.spring.data.sql.Oper;
@@ -24,6 +25,7 @@ import cn.dinodev.spring.data.sql.SqlBuilder;
 
 public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
   protected static final Object[] EMPTY_PARAMS = new Object[0];
+  private static final String PMD_LINGUISTIC_NAMING = "PMD.LinguisticNaming";
 
   protected List<String> tables = new ArrayList<>();
 
@@ -31,9 +33,9 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
 
   protected List<Object> whereParams = new ArrayList<>();
 
-  protected SqlBuilder withSql = null;
+  protected SqlBuilder withSql;
 
-  protected String withName = null;
+  protected String withName;
 
   private T that;
 
@@ -857,6 +859,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * @param values
    * @return
    */
+  @SuppressWarnings(PMD_LINGUISTIC_NAMING)
   public T notIn(final String column, final Collection<?> values) {
     return notIn(column, values, Logic.AND);
   }
@@ -873,6 +876,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
   * @param logic
   * @return
   */
+  @SuppressWarnings(PMD_LINGUISTIC_NAMING)
   public T notIn(final String column, final Collection<?> values, final Logic logic) {
     if (values == null || values.isEmpty()) {
       return that;
@@ -897,6 +901,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * @param values
    * @return
    */
+  @SuppressWarnings(PMD_LINGUISTIC_NAMING)
   public T notIn(final String column, final Object[] values) {
     return notIn(column, values, Logic.AND);
   }
@@ -913,6 +918,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * @param logic
    * @return
    */
+  @SuppressWarnings(PMD_LINGUISTIC_NAMING)
   public T notIn(final String column, final Object[] values, final Logic logic) {
     if (values == null || values.length == 0) {
       return that;
@@ -931,6 +937,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
       * @param column 列名
    * @return
    */
+  @SuppressWarnings(PMD_LINGUISTIC_NAMING)
   public T isNull(final String column) {
     return isNull(column, Logic.AND);
   }
@@ -941,6 +948,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * @param logic 外部逻辑符
    * @return
    */
+  @SuppressWarnings(PMD_LINGUISTIC_NAMING)
   public T isNull(final String column, final Logic logic) {
     appendWhere(logic, Oper.IS_NULL.makeExpr(column));
     return that;
@@ -952,6 +960,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * @param column 列名
    * @return
    */
+  @SuppressWarnings(PMD_LINGUISTIC_NAMING)
   public T isNullIf(final boolean cnd, final String column) {
     if (!cnd) {
       return that;
@@ -966,6 +975,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * @param logic 外部逻辑符
    * @return
    */
+  @SuppressWarnings(PMD_LINGUISTIC_NAMING)
   public T isNullIf(final boolean cnd, final String column, final Logic logic) {
     if (!cnd) {
       return that;
@@ -979,6 +989,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
       * @param column 列名
    * @return
    */
+  @SuppressWarnings(PMD_LINGUISTIC_NAMING)
   public T isNotNull(final String column) {
     return isNotNull(column, Logic.AND);
   }
@@ -989,6 +1000,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * @param logic 外部逻辑符
    * @return
    */
+  @SuppressWarnings(PMD_LINGUISTIC_NAMING)
   public T isNotNull(final String column, final Logic logic) {
     appendWhere(logic, Oper.IS_NOT_NULL.makeExpr(column));
     return that;
@@ -1000,6 +1012,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * @param column 列名
    * @return
    */
+  @SuppressWarnings(PMD_LINGUISTIC_NAMING)
   public T isNotNullIf(final boolean cnd, final String column) {
     if (!cnd) {
       return that;
@@ -1014,6 +1027,7 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * @param logic 外部逻辑符
    * @return
    */
+  @SuppressWarnings(PMD_LINGUISTIC_NAMING)
   public T isNotNullIf(final boolean cnd, final String column, final Logic logic) {
     if (!cnd) {
       return that;
@@ -1283,7 +1297,8 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
     var expr = Arrays.stream(columns).map(op::makeExpr).collect(joiner);
     appendWhere(logicOp, expr);
     if (op.hasValue()) {
-      for (int i = 0; i < columns.length; i++) {
+      for (@SuppressWarnings("unused")
+      String column : columns) {
         whereParams.add(value);
       }
     }
@@ -1300,13 +1315,14 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
   private String makeINExpr(final String column, final String op, final int nCount) {
     final StringBuilder expr = new StringBuilder();
     int idx = 0;
-    expr.append(column).append(" ").append(op).append(" (");
+    expr.append(column).append(' ').append(op).append(" (");
 
     while (idx < nCount) {
-      if (idx++ != 0) {
+      if (idx != 0) {
         expr.append(", ");
       }
       expr.append('?');
+      idx++;
     }
     expr.append(')');
 

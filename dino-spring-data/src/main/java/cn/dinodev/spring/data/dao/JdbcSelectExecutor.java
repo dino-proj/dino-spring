@@ -10,12 +10,6 @@ import java.util.Objects;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import cn.dinodev.spring.commons.context.ContextHelper;
-import cn.dinodev.spring.data.sql.builder.DeleteSqlBuilder;
-import cn.dinodev.spring.data.sql.builder.InsertSqlBuilder;
-import cn.dinodev.spring.data.sql.builder.SelectSqlBuilder;
-import cn.dinodev.spring.data.sql.builder.UpdateSqlBuilder;
-import cn.dinodev.spring.data.sql.dialect.Dialect;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +17,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.util.Assert;
 
+import cn.dinodev.spring.commons.context.ContextHelper;
+import cn.dinodev.spring.data.sql.builder.DeleteSqlBuilder;
+import cn.dinodev.spring.data.sql.builder.InsertSqlBuilder;
+import cn.dinodev.spring.data.sql.builder.SelectSqlBuilder;
+import cn.dinodev.spring.data.sql.builder.UpdateSqlBuilder;
+import cn.dinodev.spring.data.sql.dialect.Dialect;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -32,7 +32,10 @@ import jakarta.annotation.Nullable;
  */
 
 @NoRepositoryBean
-public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
+public interface JdbcSelectExecutor<T, K> extends JdbcHelperExecutor<T, K> {
+
+  /** 租户ID字段常量 */
+  String TENANT_ID_COLUMN = "tenant_id";
 
   /**
    * 数据库的Dialect
@@ -45,9 +48,9 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @return
    */
   default SelectSqlBuilder newSelect() {
-    var select = new SelectSqlBuilder(this.dialect(), this.tableName());
+    var select = SelectSqlBuilder.create(this.dialect(), this.tableName());
     if (this.entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
-      select.eq("tenant_id", ContextHelper.currentTenantId());
+      select.eq(TENANT_ID_COLUMN, ContextHelper.currentTenantId());
     }
     return select;
   }
@@ -57,7 +60,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @return
    */
   default SelectSqlBuilder newSelectWithoutTenant() {
-    return new SelectSqlBuilder(this.dialect(), this.tableName());
+    return SelectSqlBuilder.create(this.dialect(), this.tableName());
   }
 
   /**
@@ -67,9 +70,9 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    */
   default SelectSqlBuilder newSelect(String tableAlias) {
     Assert.hasText(tableAlias, "tableAlias is empty");
-    var select = new SelectSqlBuilder(this.dialect(), this.tableName(), tableAlias);
+    var select = SelectSqlBuilder.create(this.dialect(), this.tableName(), tableAlias);
     if (this.entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
-      select.eq(String.format("%s.%s", tableAlias, "tenant_id"), ContextHelper.currentTenantId());
+      select.eq(String.format("%s.%s", tableAlias, TENANT_ID_COLUMN), ContextHelper.currentTenantId());
     }
     return select;
   }
@@ -81,7 +84,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    */
   default SelectSqlBuilder newSelectWithoutTenant(String tableAlias) {
     Assert.hasText(tableAlias, "tableAlias is empty");
-    return new SelectSqlBuilder(this.dialect(), this.tableName(), tableAlias);
+    return SelectSqlBuilder.create(this.dialect(), this.tableName(), tableAlias);
   }
 
   /**
@@ -91,8 +94,8 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @return
    */
   default <E> SelectSqlBuilder newSelect(Class<E> entity, String tableAlias) {
-    return StringUtils.isEmpty(tableAlias) ? new SelectSqlBuilder(this.dialect(), this.tableName(entity))
-        : new SelectSqlBuilder(this.dialect(), this.tableName(entity), tableAlias);
+    return StringUtils.isEmpty(tableAlias) ? SelectSqlBuilder.create(this.dialect(), this.tableName(entity))
+        : SelectSqlBuilder.create(this.dialect(), this.tableName(entity), tableAlias);
   }
 
   /**
@@ -100,9 +103,9 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @return
    */
   default DeleteSqlBuilder newDelete() {
-    var delete = new DeleteSqlBuilder(this.tableName());
+    var delete = DeleteSqlBuilder.create(this.tableName());
     if (this.entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
-      delete.eq("tenant_id", ContextHelper.currentTenantId());
+      delete.eq(TENANT_ID_COLUMN, ContextHelper.currentTenantId());
     }
     return delete;
   }
@@ -114,9 +117,9 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    */
   default DeleteSqlBuilder newDelete(String tableAlias) {
     Assert.hasText(tableAlias, "tableAlias is empty");
-    var delete = new DeleteSqlBuilder(this.tableName(), tableAlias);
+    var delete = DeleteSqlBuilder.create(this.tableName(), tableAlias);
     if (this.entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
-      delete.eq(String.format("%s.%s", tableAlias, "tenant_id"), ContextHelper.currentTenantId());
+      delete.eq(String.format("%s.%s", tableAlias, TENANT_ID_COLUMN), ContextHelper.currentTenantId());
     }
     return delete;
   }
@@ -126,9 +129,9 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @return
    */
   default UpdateSqlBuilder newUpdate() {
-    var update = new UpdateSqlBuilder(this.tableName());
+    var update = UpdateSqlBuilder.create(this.tableName());
     if (this.entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
-      update.eq("tenant_id", ContextHelper.currentTenantId());
+      update.eq(TENANT_ID_COLUMN, ContextHelper.currentTenantId());
     }
     return update;
   }
@@ -139,9 +142,9 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @return
    */
   default UpdateSqlBuilder newUpdate(String alias) {
-    var update = new UpdateSqlBuilder(this.tableName(), alias);
+    var update = UpdateSqlBuilder.create(this.tableName(), alias);
     if (this.entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
-      update.eq(String.format("%s.%s", alias, "tenant_id"), ContextHelper.currentTenantId());
+      update.eq(String.format("%s.%s", alias, TENANT_ID_COLUMN), ContextHelper.currentTenantId());
     }
     return update;
   }
@@ -153,7 +156,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
   default InsertSqlBuilder newInsert() {
     var insert = new InsertSqlBuilder(this.tableName());
     if (this.entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
-      insert.set("tenant_id", ContextHelper.currentTenantId());
+      insert.set(TENANT_ID_COLUMN, ContextHelper.currentTenantId());
     }
     return insert;
   }
@@ -301,8 +304,8 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @return
    */
   default long count(SelectSqlBuilder sql) {
-    Long l = this.getOne(sql, Long.class);
-    return l == null ? 0L : l.longValue();
+    Long longResult = this.getOne(sql, Long.class);
+    return longResult == null ? 0L : longResult;
   }
 
   /**
@@ -312,29 +315,29 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @return
    */
   default long count(String sql, Object... params) {
-    Long l = this.getOne(sql, Long.class, params);
-    return l == null ? 0L : l.longValue();
+    Long longResult = this.getOne(sql, Long.class, params);
+    return longResult == null ? 0L : longResult;
   }
 
   /**
    * 将查询结果放到Map中
-   * @param <MK> key的类型
-   * @param <MV> value的类型
-   * @param sql
-   * @param keyColumn 作key的列名
-   * @param keyClass key的Class
-   * @param valueClass value的Class
+   * @param <M> key的类型
+   * @param <N> value的类型
+   * @param sql sql构建器
+   * @param keyColumn key对应的列名
+   * @param keyClass key的类型
+   * @param valueClass value的类型
    * @return
    */
-  default <MK, MV> Map<MK, MV> queryForMap(SelectSqlBuilder sql, String keyColumn, Class<MK> keyClass,
-      Class<MV> valueClass) {
+  default <M, N> Map<M, N> queryForMap(SelectSqlBuilder sql, String keyColumn, Class<M> keyClass,
+      Class<N> valueClass) {
     return this.queryForMap(sql.getSql(), keyColumn, keyClass, valueClass, sql.getParams());
   }
 
   /**
    * 将查询结果放到Map中
-   * @param <MK> key的类型
-   * @param <MV> value的类型
+   * @param <M> key的类型
+   * @param <N> value的类型
    * @param sql
    * @param keyColumn 作key的列名
    * @param keyClass key的Class
@@ -342,13 +345,13 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @param valueClass value的Class
    * @return
    */
-  <MK, MV> Map<MK, MV> queryForMap(SelectSqlBuilder sql, String keyColumn, Class<MK> keyClass, String valueColumn,
-      Class<MV> valueClass);
+  <M, N> Map<M, N> queryForMap(SelectSqlBuilder sql, String keyColumn, Class<M> keyClass, String valueColumn,
+      Class<N> valueClass);
 
   /**
    * 将查询结果放到Map中
-   * @param <MK> key的类型
-   * @param <MV> value的类型
+   * @param <M> key的类型
+   * @param <N> value的类型
    * @param sql
    * @param keyColumn 作key的列名
    * @param keyClass key的Class
@@ -356,7 +359,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExcutor<T, K> {
    * @param params 查询参数
    * @return
    */
-  <MK, MV> Map<MK, MV> queryForMap(String sql, String keyColumn, Class<MK> keyClass, Class<MV> valueClass,
+  <M, N> Map<M, N> queryForMap(String sql, String keyColumn, Class<M> keyClass, Class<N> valueClass,
       Object... params);
 
   /**

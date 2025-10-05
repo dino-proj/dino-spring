@@ -3,10 +3,6 @@
 
 package cn.dinodev.spring.data.autoconfig;
 
-import cn.dinodev.spring.commons.autoconfig.DinoCommonsAutoConfiguration;
-import cn.dinodev.spring.commons.context.ContextHelper;
-import cn.dinodev.spring.commons.json.JsonDiscriminatorModule;
-import cn.dinodev.spring.data.converts.JacksonCustomerModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
@@ -34,6 +30,10 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import cn.dinodev.spring.commons.autoconfig.DinoCommonsAutoConfiguration;
+import cn.dinodev.spring.commons.context.ContextHelper;
+import cn.dinodev.spring.commons.json.JsonDiscriminatorModule;
+import cn.dinodev.spring.data.converts.JacksonCustomerModule;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,6 +51,14 @@ public class DinoDataAutoConfiguration {
   @Autowired
   private ContextHelper contextHelper;
 
+  /**
+   * 检查必要的依赖项是否正确初始化
+   *
+   * <p>在配置初始化完成后验证 {@link ContextHelper} 是否已正确注入，
+   * 确保DinoData模块的依赖项按正确的顺序初始化。</p>
+   *
+   * @throws IllegalArgumentException 如果contextHelper为null
+   */
   @PostConstruct
   public void check() {
     Assert.notNull(this.contextHelper, "contextHelper should init before DinoDataAutoConfiguration");
@@ -59,7 +67,7 @@ public class DinoDataAutoConfiguration {
   @Bean({ "jacksonObjectMapper", "objectMapper" })
   @Primary
   @ConditionalOnMissingBean
-  public ObjectMapper objectMapper() {
+  ObjectMapper objectMapper() {
     log.info("--->> json: setup jackson ObjectMapper");
     var builder = JsonMapper.builder();
     builder.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
@@ -72,7 +80,7 @@ public class DinoDataAutoConfiguration {
     var objectMapper = builder.build();
 
     objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
-    objectMapper.registerModule(new JacksonCustomerModule());
+    objectMapper.registerModule(JacksonCustomerModule.create());
     objectMapper.registerModule(new JsonDiscriminatorModule());
     return objectMapper;
   }
@@ -80,20 +88,20 @@ public class DinoDataAutoConfiguration {
   @Bean
   @Lazy
   @ConditionalOnMissingBean
-  public Gson gson() {
+  Gson gson() {
     log.info("--->> json: setup gson");
     return new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
   }
 
   @Bean
   @ConditionalOnMissingBean
-  public ProjectionFactory projectionFactory() {
+  ProjectionFactory projectionFactory() {
     log.info("--->> projection: setup projection factory");
     return new SpelAwareProxyProjectionFactory();
   }
 
   @Bean("dataConversionService")
-  public ConversionService dataConversionService(ApplicationContext applicationContext) {
+  ConversionService dataConversionService(ApplicationContext applicationContext) {
     log.info("--->> conversion: setup dataConversionService");
     var dataConversionService = new DefaultConversionService();
     ApplicationConversionService.addApplicationConverters(dataConversionService);

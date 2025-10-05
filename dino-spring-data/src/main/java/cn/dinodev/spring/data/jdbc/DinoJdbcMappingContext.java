@@ -27,6 +27,10 @@ import cn.dinodev.spring.data.jdbc.mapping.DinoJdbcPersistentProperty;
 public class DinoJdbcMappingContext extends JdbcMappingContext {
   private static final String MISSING_PARAMETER_NAME = "A constructor parameter name must not be null to be used with Spring Data JDBC! Offending parameter: %s";
 
+  /**
+   * 创建DinoJdbcMappingContext实例
+   * @param namingStrategy 命名策略
+   */
   public DinoJdbcMappingContext(NamingStrategy namingStrategy) {
     super(namingStrategy);
   }

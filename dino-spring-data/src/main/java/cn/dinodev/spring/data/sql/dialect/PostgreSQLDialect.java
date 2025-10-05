@@ -15,11 +15,17 @@ import java.sql.SQLException;
  */
 
 public class PostgreSQLDialect implements Dialect {
-  private final NamingConversition namingConversition;
+  private final NamingConversition namingConversitionInstance;
   private final String uuidSql;
 
+  /**
+   * 构造函数，创建PostgreSQL数据库方言实例
+   * @param metaData 数据库元数据
+   * @param namingConversition 命名转换策略
+   * @throws SQLException SQL异常
+   */
   public PostgreSQLDialect(DatabaseMetaData metaData, NamingConversition namingConversition) throws SQLException {
-    this.namingConversition = namingConversition;
+    this.namingConversitionInstance = namingConversition;
     var majorVer = metaData.getDatabaseMajorVersion();
     if (majorVer >= 13) {
       uuidSql = "SELECT gen_random_uuid()";
@@ -31,7 +37,7 @@ public class PostgreSQLDialect implements Dialect {
 
   @Override
   public NamingConversition namingConversition() {
-    return namingConversition;
+    return namingConversitionInstance;
   }
 
   @Override

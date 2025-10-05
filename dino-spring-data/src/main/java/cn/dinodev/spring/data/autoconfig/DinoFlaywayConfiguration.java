@@ -74,13 +74,13 @@ public class DinoFlaywayConfiguration implements ApplicationListener<Application
     javaMigrations.forEach(
         migration -> log.info("   -- {}, class:{}", this.buildJavaMigrationName(migration),
             migration.getClass().getName()));
-    configuration.javaMigrations(javaMigrations.toArray(new JavaMigration[javaMigrations.size()]));
+    configuration.javaMigrations(javaMigrations.toArray(new JavaMigration[0]));
     var flyway = configuration.load();
     flyway.migrate();
   }
 
   @Bean
-  public FlywayConfigurationCustomizer flaywayConfigurationCustomizer() {
+  FlywayConfigurationCustomizer flaywayConfigurationCustomizer() {
     return config -> {
       config.baselineOnMigrate(true);
       config.failOnMissingLocations(false);
@@ -88,7 +88,7 @@ public class DinoFlaywayConfiguration implements ApplicationListener<Application
   }
 
   @Bean
-  public FluentConfiguration flywayConfiguration(FlywayProperties properties, ResourceLoader resourceLoader,
+  FluentConfiguration flywayConfiguration(FlywayProperties properties, ResourceLoader resourceLoader,
       ObjectProvider<DataSource> dataSource, @FlywayDataSource ObjectProvider<DataSource> flywayDataSource,
       ObjectProvider<FlywayConfigurationCustomizer> fluentConfigurationCustomizers,
       ObjectProvider<Callback> callbacks) {
@@ -289,6 +289,10 @@ public class DinoFlaywayConfiguration implements ApplicationListener<Application
     return nameBuilder.toString();
   }
 
+  /**
+   * 位置解析器，用于解析Flyway迁移脚本的位置
+   * 支持根据数据库厂商类型替换占位符
+   */
   private static class LocationResolver {
 
     private static final String VENDOR_PLACEHOLDER = "{vendor}";

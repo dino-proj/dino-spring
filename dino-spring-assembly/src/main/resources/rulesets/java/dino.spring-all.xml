@@ -30,13 +30,15 @@
     <exclude name="OnlyOneReturn" />
     <exclude name="ShortVariable" />
     <exclude name="ShortMethodName" />
+    <exclude name="ShortClassName" />
+    <exclude name="GenericsNaming" />
+    <exclude name="LinguisticNaming" />
     <exclude name="AtLeastOneConstructor" />
     <exclude name="LongVariable" />
     <exclude name="MDBAndSessionBeanNamingConvention" />
     <exclude name="RemoteInterfaceNamingConvention" />
     <exclude name="RemoteSessionInterfaceNamingConvention" />
     <exclude name="CallSuperInConstructor" />
-    <exclude name="ShortClassName" />
     <exclude name="UnnecessaryFullyQualifiedName" />
     <exclude name="CommentDefaultAccessModifier" />
   </rule>
@@ -45,10 +47,26 @@
       <property name="minimum" value="2" />
     </properties>
   </rule>
+  <rule ref="category/java/codestyle.xml/LinguisticNaming">
+    <properties>
+      <property name="ignoredAnnotations" value="java.lang.Override" />
+      <property name="checkBooleanMethod" value="true" />
+      <property name="checkGetters" value="true" />
+      <property name="checkSetters" value="true" />
+      <property name="checkPrefixedTransformMethods" value="true" />
+      <property name="checkTransformMethods" value="false" />
+      <property name="booleanMethodPrefixes" value="is,has,can,have,will,should,not,non,un" />
+      <property name="transformMethodNames" value="to,as" />
+      <property name="checkFields" value="false" />
+      <property name="checkVariables" value="true" />
+      <property name="booleanFieldPrefixes" value="is,has,can,have,will,should" />
+    </properties>
+  </rule>
 
   <rule ref="category/java/design.xml">
     <exclude name="LoosePackageCoupling" />
     <exclude name="TooManyMethods" />
+    <exclude name="TooManyFields" />
     <exclude name="GodClass" />
     <exclude name="DataClass" />
     <exclude name="SimplifyBooleanReturns" />

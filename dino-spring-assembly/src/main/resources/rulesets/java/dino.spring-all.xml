@@ -49,6 +49,7 @@
     <exclude name="LoosePackageCoupling" />
     <exclude name="TooManyMethods" />
     <exclude name="GodClass" />
+    <exclude name="DataClass" />
     <exclude name="SimplifyBooleanReturns" />
     <exclude name="LawOfDemeter" />
     <exclude name="CyclomaticComplexity" />
@@ -93,6 +94,7 @@
     <exclude name="ReturnEmptyCollectionRatherThanNull" />
     <exclude name="AvoidAccessibilityAlteration" />
     <exclude name="NullAssignment" />
+    <exclude name="AvoidLiteralsInIfCondition" />
   </rule>
 
   <rule ref="category/java/multithreading.xml">

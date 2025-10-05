@@ -1,5 +1,6 @@
 // Copyright 2024 dinosdev.cn.
 // SPDX-License-Identifier: Apache-2.0
+
 package cn.dinodev.spring.commons.utils;
 
 import java.util.HashMap;
@@ -24,7 +25,7 @@ public class InheritableThreadLocalMap extends InheritableThreadLocal<Map<String
     return ObjectUtils.clone(parentValue);
   }
 
-  private synchronized void ensureResourcesInitialized() {
+  private void ensureResourcesInitialized() {
     if (this.get() == null) {
       this.set(new HashMap<>(4));
     }

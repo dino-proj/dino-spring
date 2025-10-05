@@ -19,7 +19,7 @@ import lombok.Data;
 public class Place {
 
   @Schema(description = "地点名称")
-  String name;
+  private String name;
 
   @Schema(description = "坐标点：经纬度")
   @JsonUnwrapped

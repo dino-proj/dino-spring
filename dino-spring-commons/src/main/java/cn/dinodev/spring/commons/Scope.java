@@ -42,6 +42,18 @@ public interface Scope extends Serializable {
    */
   Scope[] higherScopes(boolean includeThis);
 
+  /**
+   * 默认的作用域枚举实现。
+   * <p>
+   * 定义了四个基本的作用域级别，按照优先级从低到高排列：
+   * <ul>
+   * <li>SYS: 系统级作用域，优先级最高</li>
+   * <li>TENANT: 租户级作用域</li>
+   * <li>PAGE: 页面级作用域</li>
+   * <li>USER: 用户级作用域，优先级最低</li>
+   * </ul>
+   * </p>
+   */
   @AllArgsConstructor
   enum DEFAULT implements Scope {
     //系统级
@@ -70,14 +82,14 @@ public interface Scope extends Serializable {
 
     @Override
     public Scope[] lowerScopes(boolean includeThis) {
-      return Arrays.stream(DEFAULT.values())
+      return Arrays.stream(values())
           .filter(s -> s.getOrder() < this.getOrder() || (includeThis && s.getOrder() == this.getOrder()))
           .collect(Collectors.toList()).toArray(EMPTY_ARRAY);
     }
 
     @Override
     public Scope[] higherScopes(boolean includeThis) {
-      return Arrays.stream(DEFAULT.values())
+      return Arrays.stream(values())
           .filter(s -> s.getOrder() > this.getOrder() || (includeThis && s.getOrder() == this.getOrder()))
           .collect(Collectors.toList()).toArray(EMPTY_ARRAY);
     }
@@ -87,10 +99,28 @@ public interface Scope extends Serializable {
       return name;
     }
 
+    /**
+     * 获取作用域提供者函数。
+     * <p>
+     * 返回一个函数，该函数可以根据作用域名称字符串获取对应的Scope实例。
+     * </p>
+     *
+     * @return 作用域提供者函数
+     */
     public static Function<String, Scope> provider() {
       return DEFAULT::of;
     }
 
+    /**
+     * 根据作用域名称获取对应的Scope实例。
+     * <p>
+     * 将输入的名称转换为大写后进行匹配。
+     * </p>
+     *
+     * @param name 作用域名称
+     * @return 对应的Scope实例
+     * @throws IllegalArgumentException 如果找不到对应的作用域
+     */
     public static Scope of(String name) {
       return DEFAULT.valueOf(name.toUpperCase());
     }

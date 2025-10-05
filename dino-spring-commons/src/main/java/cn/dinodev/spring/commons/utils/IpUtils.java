@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
-public class IpUtils {
+public final class IpUtils {
 
   private IpUtils() {
     throw new IllegalStateException("Utility class");

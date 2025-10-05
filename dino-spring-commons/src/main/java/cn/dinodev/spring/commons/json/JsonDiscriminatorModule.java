@@ -35,6 +35,11 @@ public class JsonDiscriminatorModule extends SimpleModule {
     context.insertAnnotationIntrospector(new JsonDiscriminatorAnnotationIntrospector());
   }
 
+  /**
+   * 处理JsonDiscriminator注解的自定义注解内省器。
+   * 该内省器提供基于JsonDiscriminator注解的类型判别支持，
+   * 在Jackson中启用多态序列化和反序列化功能。
+   */
   public static class JsonDiscriminatorAnnotationIntrospector extends AnnotationIntrospector {
 
     @Override

@@ -7,11 +7,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
-import cn.dinodev.spring.commons.json.JsonViewUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -22,6 +21,7 @@ import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+import cn.dinodev.spring.commons.json.JsonViewUtils;
 import jakarta.annotation.Nullable;
 
 /**
@@ -53,10 +53,31 @@ public final class Property {
   @Nullable
   private Annotation[] annotations;
 
+  /**
+   * 构造Property实例（不指定属性名）。
+   * <p>
+   * 属性名将根据读方法或写方法自动推导。
+   * </p>
+   *
+   * @param objectType 对象类型
+   * @param readMethod 读方法（可以为null）
+   * @param writeMethod 写方法（可以为null）
+   */
   public Property(Class<?> objectType, @Nullable Method readMethod, @Nullable Method writeMethod) {
     this(objectType, readMethod, writeMethod, null);
   }
 
+  /**
+   * 构造Property实例（指定属性名）。
+   * <p>
+   * 如果name为null，属性名将根据读方法或写方法自动推导。
+   * </p>
+   *
+   * @param objectType 对象类型
+   * @param readMethod 读方法（可以为null）
+   * @param writeMethod 写方法（可以为null）
+   * @param name 属性名（可以为null，会自动推导）
+   */
   public Property(
       Class<?> objectType, @Nullable Method readMethod, @Nullable Method writeMethod, @Nullable String name) {
 
@@ -258,26 +279,22 @@ public final class Property {
 
   private String resolveName() {
     if (Objects.nonNull(this.readMethod)) {
-      int index = this.readMethod.getName().indexOf("get");
-      if (index != -1) {
-        index += 3;
+      String methodName = this.readMethod.getName();
+      if (methodName.startsWith("get") && methodName.length() > 3) {
+        return StringUtils.uncapitalize(methodName.substring(3));
+      } else if (methodName.startsWith("is") && methodName.length() > 2) {
+        return StringUtils.uncapitalize(methodName.substring(2));
       } else {
-        index = this.readMethod.getName().indexOf("is");
-        if (index != -1) {
-          index += 2;
-        } else {
-          // Record-style plain accessor method, e.g. name()
-          index = 0;
-        }
+        // Record-style plain accessor method, e.g. name()
+        return StringUtils.uncapitalize(methodName);
       }
-      return StringUtils.uncapitalize(this.readMethod.getName().substring(index));
     } else if (Objects.nonNull(this.writeMethod)) {
-      int index = this.writeMethod.getName().indexOf("set");
-      if (index == -1) {
+      String methodName = this.writeMethod.getName();
+      if (methodName.startsWith("set") && methodName.length() > 3) {
+        return StringUtils.uncapitalize(methodName.substring(3));
+      } else {
         throw new IllegalArgumentException("Not a setter method");
       }
-      index += 3;
-      return StringUtils.uncapitalize(this.writeMethod.getName().substring(index));
     } else {
       throw new IllegalStateException("Property is neither readable nor writeable");
     }
@@ -321,7 +338,7 @@ public final class Property {
   private Annotation[] resolveAnnotations() {
     Annotation[] annotations = annotationCache.get(this);
     if (annotations == null) {
-      Map<Class<? extends Annotation>, Annotation> annotationMap = new LinkedHashMap<>();
+      Map<Class<? extends Annotation>, Annotation> annotationMap = new ConcurrentHashMap<>();
       this.addAnnotationsToMap(annotationMap, this.getReadMethod());
       this.addAnnotationsToMap(annotationMap, this.getWriteMethod());
       this.addAnnotationsToMap(annotationMap, this.getField());
@@ -378,18 +395,16 @@ public final class Property {
     if (this == other) {
       return true;
     }
-    if (!(other instanceof Property otherProperty)) {
-      return false;
-    }
-    return (ObjectUtils.nullSafeEquals(this.objectType, otherProperty.objectType) &&
+    return other instanceof Property otherProperty &&
+        ObjectUtils.nullSafeEquals(this.objectType, otherProperty.objectType) &&
         ObjectUtils.nullSafeEquals(this.name, otherProperty.name) &&
         ObjectUtils.nullSafeEquals(this.readMethod, otherProperty.readMethod) &&
-        ObjectUtils.nullSafeEquals(this.writeMethod, otherProperty.writeMethod));
+        ObjectUtils.nullSafeEquals(this.writeMethod, otherProperty.writeMethod);
   }
 
   @Override
   public int hashCode() {
-    return (ObjectUtils.nullSafeHashCode(this.objectType) * 31 + ObjectUtils.nullSafeHashCode(this.name));
+    return ObjectUtils.nullSafeHashCode(this.objectType) * 31 + ObjectUtils.nullSafeHashCode(this.name);
   }
 
 }

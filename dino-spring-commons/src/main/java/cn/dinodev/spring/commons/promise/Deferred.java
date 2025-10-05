@@ -32,7 +32,7 @@ public interface Deferred<D> extends Promise<D> {
    *
    * @return the reference to this {@code Deferred} instance.
    */
-  Deferred<D> resolve(final D resolve);
+  Deferred<D> resolve(D resolve);
 
   /**
    * This should be called when a task has completed unsuccessfully,
@@ -57,7 +57,7 @@ public interface Deferred<D> extends Promise<D> {
    *
    * @return the reference to this {@code Deferred} instance.
    */
-  <F extends Throwable> Deferred<D> reject(final F reject);
+  <F extends Throwable> Deferred<D> reject(F reject);
 
   /**
    * Return an {@link Promise} instance (i.e., an observer).  You can register callbacks in this observer.

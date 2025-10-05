@@ -13,26 +13,31 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import org.springframework.core.convert.ConversionService;
+
 import cn.dinodev.spring.commons.bean.BeanMetaUtils;
 import cn.dinodev.spring.commons.function.Functions;
 import cn.dinodev.spring.commons.json.JsonViewUtils;
 import cn.dinodev.spring.commons.utils.TypeUtils;
-import org.springframework.core.convert.ConversionService;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
  * @author Cody Lu
  * @since 2022-06-09
  */
-
+@Slf4j
 public class PropertyProjector<S, T> {
+
+  private static final String SOURCE_PROPERTY_NOT_FOUND = "source property not found: ";
 
   private final Class<S> sourceClass;
   private final Class<T> targetClass;
   private ConversionService conversionService;
+
+  private final List<PropertyCopier> copiers = new ArrayList<>(4);
 
   /**
    * Constructor with default conversion service
@@ -72,8 +77,6 @@ public class PropertyProjector<S, T> {
   public void setConversionService(@Nullable ConversionService conversionService) {
     this.conversionService = conversionService;
   }
-
-  private List<PropertyCopier> copiers = new ArrayList<>(4);
 
   /**
    * Copy the source object to the target object
@@ -176,7 +179,7 @@ public class PropertyProjector<S, T> {
       try {
         targetSetter.invoke(t, converter.apply(TypeUtils.cast(u)));
       } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-        e.printStackTrace();
+        log.error("Failed to invoke target setter method", e);
       }
     },
         JsonViewUtils.findViews(sourceGetter),
@@ -206,7 +209,7 @@ public class PropertyProjector<S, T> {
   public PropertyProjector<S, T> add(String sourcePropertyName, String targetPropertyName) {
     var getter = BeanMetaUtils.forClass(this.sourceClass).getProperty(sourcePropertyName);
     if (Objects.isNull(getter)) {
-      throw new IllegalArgumentException("source property not found: " + sourcePropertyName);
+      throw new IllegalArgumentException(SOURCE_PROPERTY_NOT_FOUND + sourcePropertyName);
     }
     var setter = BeanMetaUtils.forClass(this.targetClass).getProperty(targetPropertyName);
     if (Objects.isNull(setter)) {
@@ -226,7 +229,7 @@ public class PropertyProjector<S, T> {
   public PropertyProjector<S, T> add(String sourcePropertyName, String targetPropertyName, Function<?, ?> converter) {
     var getter = BeanMetaUtils.forClass(this.sourceClass).getProperty(sourcePropertyName);
     if (Objects.isNull(getter)) {
-      throw new IllegalArgumentException("source property not found: " + sourcePropertyName);
+      throw new IllegalArgumentException(SOURCE_PROPERTY_NOT_FOUND + sourcePropertyName);
     }
     var setter = BeanMetaUtils.forClass(this.targetClass).getProperty(targetPropertyName);
     if (Objects.isNull(setter)) {
@@ -288,7 +291,7 @@ public class PropertyProjector<S, T> {
   public <V> PropertyProjector<S, T> add(String sourcePropertyName, BiConsumer<T, V> setter) {
     var getter = BeanMetaUtils.forClass(this.sourceClass).getProperty(sourcePropertyName);
     if (Objects.isNull(getter)) {
-      throw new IllegalArgumentException("source property not found: " + sourcePropertyName);
+      throw new IllegalArgumentException(SOURCE_PROPERTY_NOT_FOUND + sourcePropertyName);
     }
     return this.add(getter.getReadMethod(), setter);
   }
@@ -305,7 +308,7 @@ public class PropertyProjector<S, T> {
       Function<V, V> converter) {
     var getter = BeanMetaUtils.forClass(this.sourceClass).getProperty(sourcePropertyName);
     if (Objects.isNull(getter)) {
-      throw new IllegalArgumentException("source property not found: " + sourcePropertyName);
+      throw new IllegalArgumentException(SOURCE_PROPERTY_NOT_FOUND + sourcePropertyName);
     }
     return this.add(this.makeGetter(getter.getReadMethod()), setter, converter,
         JsonViewUtils.findViews(getter.getReadMethod()));
@@ -388,11 +391,15 @@ public class PropertyProjector<S, T> {
       try {
         return TypeUtils.cast(readMethod.invoke(s));
       } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-        throw new RuntimeException(e);
+        throw new IllegalStateException("Failed to invoke getter method: " + readMethod.getName(), e);
       }
     };
   }
 
+  /**
+   * Internal class responsible for copying properties from source to target object.
+   * Supports JSON view filtering for both getter and setter operations.
+   */
   private class PropertyCopier {
     private final Function<S, ?> getter;
     private final BiConsumer<T, ?> setter;
@@ -402,11 +409,22 @@ public class PropertyProjector<S, T> {
     private final Class<?>[] getterViews;
     private final Class<?>[] setterViews;
 
+    /**
+     * Constructor for PropertyCopier without JSON view filtering.
+     * @param getter function to get value from source object
+     * @param setter function to set value to target object
+     */
     private PropertyCopier(Function<S, ?> getter, BiConsumer<T, ?> setter) {
       this(getter, setter, null);
 
     }
 
+    /**
+     * Constructor for PropertyCopier with unified JSON view filtering.
+     * @param getter function to get value from source object
+     * @param setter function to set value to target object
+     * @param views JSON view classes for both getter and setter operations
+     */
     private PropertyCopier(Function<S, ?> getter, BiConsumer<T, ?> setter, Class<?>[] views) {
       this.getter = getter;
       this.setter = setter;
@@ -416,19 +434,36 @@ public class PropertyProjector<S, T> {
 
     }
 
+    /**
+     * Constructor for PropertyCopier with separate JSON view filtering for getter and setter.
+     * @param getter function to get value from source object
+     * @param setter function to set value to target object
+     * @param getterViews JSON view classes for getter operation
+     * @param setterViews JSON view classes for setter operation
+     */
     public PropertyCopier(Function<S, ?> getter, BiConsumer<T, ?> setter, Class<?>[] getterViews,
         Class<?>[] setterViews) {
       this.getter = getter;
       this.setter = setter;
       this.views = null;
-      this.getterViews = getterViews;
-      this.setterViews = setterViews;
+      this.getterViews = getterViews == null ? null : getterViews.clone();
+      this.setterViews = setterViews == null ? null : setterViews.clone();
     }
 
+    /**
+     * Copy property value from source object to target object.
+     * @param source source object
+     * @param target target object
+     */
     public void copy(S source, T target) {
       this.setter.accept(target, TypeUtils.cast(this.getter.apply(source)));
     }
 
+    /**
+     * Check if this property copier can be executed under the specified JSON view.
+     * @param activeJsonView active JSON view class
+     * @return true if copy operation is allowed under the given view, false otherwise
+     */
     public boolean canCopy(Class<?> activeJsonView) {
       if (Objects.isNull(activeJsonView)) {
         return true;

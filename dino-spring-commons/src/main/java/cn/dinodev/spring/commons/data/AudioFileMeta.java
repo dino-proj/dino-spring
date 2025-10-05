@@ -5,8 +5,8 @@ package cn.dinodev.spring.commons.data;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import com.fasterxml.jackson.annotation.JsonTypeName;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,13 +23,20 @@ import lombok.EqualsAndHashCode;
 @JsonTypeName("AUDIO")
 public class AudioFileMeta extends FileMeta {
 
-  public AudioFileMeta() {
-    super.setType(FileTypes.AUDIO);
-  }
-
   @Schema(description = "音频文件格式")
   private String format;
 
   @Schema(description = "音频时长，单位(秒)")
   private Long duration;
+
+  /**
+   * 构造音频文件元数据对象。
+   * <p>
+   * 创建一个新的音频文件元数据实例，文件类型自动设置为AUDIO。
+   * </p>
+   */
+  public AudioFileMeta() {
+    // 调用父类构造函数，避免在构造函数中调用可重写的方法
+    super(FileTypes.AUDIO);
+  }
 }

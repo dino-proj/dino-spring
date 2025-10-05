@@ -18,6 +18,16 @@ public class BeanMetaWithJsonView implements BeanMeta {
   private final BeanMeta beanMeta;
   private final Class<?> activeView;
 
+  /**
+   * 构造一个带JsonView支持的BeanMeta实例。
+   * <p>
+   * 该构造函数创建一个包装器，用于在指定的JsonView上下文中操作Bean元信息。
+   * 所有属性访问操作都会考虑当前激活的JsonView。
+   * </p>
+   *
+   * @param beanMeta 被包装的Bean元信息对象
+   * @param activeView 当前激活的JsonView类，用于过滤属性可见性
+   */
   public BeanMetaWithJsonView(BeanMeta beanMeta, Class<?> activeView) {
     this.beanMeta = beanMeta;
     this.activeView = activeView;

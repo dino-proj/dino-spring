@@ -2,6 +2,9 @@ package cn.dinodev.spring.commons.promise;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -18,7 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class AbstractPromise<D> implements Promise<D> {
 
-  protected volatile State state = State.PENDING;
+  protected State promiseState = State.PENDING;
+  protected final ReentrantLock lock = new ReentrantLock();
+  protected final Condition condition = lock.newCondition();
 
   protected final List<Consumer<? super D>> doneCallbacks = new CopyOnWriteArrayList<>();
   protected final List<Consumer<Throwable>> failCallbacks = new CopyOnWriteArrayList<>();
@@ -29,45 +34,58 @@ public abstract class AbstractPromise<D> implements Promise<D> {
 
   @Override
   public State state() {
-    return state;
+    return promiseState;
   }
 
   @Override
   public Promise<D> done(Consumer<? super D> callback) {
-    synchronized (this) {
+    lock.lock();
+    try {
       if (isResolved()) {
         triggerDone(callback, resolveResult);
       } else {
         doneCallbacks.add(callback);
       }
+    } finally {
+      lock.unlock();
     }
     return this;
   }
 
   @Override
   public Promise<D> fail(Consumer<Throwable> callback) {
-    synchronized (this) {
+    lock.lock();
+    try {
       if (isRejected()) {
         triggerFail(callback, rejectResult);
       } else {
         failCallbacks.add(callback);
       }
+    } finally {
+      lock.unlock();
     }
     return this;
   }
 
   @Override
   public Promise<D> always(AlwaysCallback<? super D> callback) {
-    synchronized (this) {
+    lock.lock();
+    try {
       if (isPending()) {
         alwaysCallbacks.add(callback);
       } else {
-        triggerAlways(callback, state, resolveResult, rejectResult);
+        triggerAlways(callback, promiseState, resolveResult, rejectResult);
       }
+    } finally {
+      lock.unlock();
     }
     return this;
   }
 
+  /**
+   * 触发已完成回调方法
+   * @param resolved 解决的数据
+   */
   protected void triggerDone(D resolved) {
     for (Consumer<? super D> callback : doneCallbacks) {
       triggerDone(callback, resolved);
@@ -75,14 +93,23 @@ public abstract class AbstractPromise<D> implements Promise<D> {
     doneCallbacks.clear();
   }
 
+  /**
+   * 触发单个已完成回调方法
+   * @param callback 回调函数
+   * @param resolved 解决的数据
+   */
   protected void triggerDone(Consumer<? super D> callback, D resolved) {
     try {
       callback.accept(resolved);
-    } catch (Exception e) {
-      handleException(CallbackType.DONE_CALLBACK, e);
+    } catch (RuntimeException exception) {
+      handleException(CallbackType.DONE_CALLBACK, exception);
     }
   }
 
+  /**
+   * 触发失败回调方法
+   * @param rejected 拒绝的异常
+   */
   protected void triggerFail(Throwable rejected) {
     for (var callback : failCallbacks) {
       triggerFail(callback, rejected);
@@ -90,31 +117,52 @@ public abstract class AbstractPromise<D> implements Promise<D> {
     failCallbacks.clear();
   }
 
+  /**
+   * 触发单个失败回调方法
+   * @param callback 回调函数
+   * @param rejected 拒绝的异常
+   */
   protected void triggerFail(Consumer<Throwable> callback, Throwable rejected) {
     try {
       callback.accept(rejected);
-    } catch (Exception e) {
-      handleException(CallbackType.FAIL_CALLBACK, e);
+    } catch (RuntimeException exception) {
+      handleException(CallbackType.FAIL_CALLBACK, exception);
     }
   }
 
+  /**
+   * 触发总是执行的回调方法
+   * @param state Promise状态
+   * @param resolve 解决的数据
+   * @param reject 拒绝的异常
+   */
   protected void triggerAlways(State state, D resolve, Throwable reject) {
     for (AlwaysCallback<? super D> callback : alwaysCallbacks) {
       triggerAlways(callback, state, resolve, reject);
     }
     alwaysCallbacks.clear();
 
-    synchronized (this) {
-      this.notifyAll();
+    lock.lock();
+    try {
+      condition.signalAll();
+    } finally {
+      lock.unlock();
     }
   }
 
+  /**
+   * 触发单个总是执行的回调方法
+   * @param callback 回调函数
+   * @param state Promise状态
+   * @param resolve 解决的数据
+   * @param reject 拒绝的异常
+   */
   protected void triggerAlways(AlwaysCallback<? super D> callback, State state,
       D resolve, Throwable reject) {
     try {
       callback.onAlways(state, resolve, reject);
-    } catch (Exception e) {
-      handleException(CallbackType.ALWAYS_CALLBACK, e);
+    } catch (RuntimeException exception) {
+      handleException(CallbackType.ALWAYS_CALLBACK, exception);
     }
   }
 
@@ -132,46 +180,52 @@ public abstract class AbstractPromise<D> implements Promise<D> {
 
   @Override
   public boolean isPending() {
-    return state == State.PENDING;
+    return promiseState == State.PENDING;
   }
 
   @Override
   public boolean isResolved() {
-    return state == State.RESOLVED;
+    return promiseState == State.RESOLVED;
   }
 
   @Override
   public boolean isRejected() {
-    return state == State.REJECTED;
+    return promiseState == State.REJECTED;
   }
 
+  @Override
   public void waitSafely() throws InterruptedException {
     waitSafely(-1);
   }
 
+  @Override
   public void waitSafely(long timeout) throws InterruptedException {
     final long startTime = System.currentTimeMillis();
-    synchronized (this) {
+    lock.lock();
+    try {
       while (this.isPending()) {
         try {
           if (timeout <= 0) {
-            wait();
+            condition.await();
           } else {
-            final long elapsed = (System.currentTimeMillis() - startTime);
+            final long elapsed = System.currentTimeMillis() - startTime;
             final long waitTime = timeout - elapsed;
-            wait(waitTime);
+            condition.await(waitTime, TimeUnit.MILLISECONDS);
           }
         } catch (InterruptedException e) {
+          // Thread interruption is necessary for proper concurrent control in Promise implementation
           Thread.currentThread().interrupt();
           throw e;
         }
 
-        if (timeout > 0 && ((System.currentTimeMillis() - startTime) >= timeout)) {
+        if (timeout > 0 && (System.currentTimeMillis() - startTime) >= timeout) {
           return;
         } else {
           continue; // keep looping
         }
       }
+    } finally {
+      lock.unlock();
     }
   }
 
@@ -179,13 +233,13 @@ public abstract class AbstractPromise<D> implements Promise<D> {
   public D get() {
     try {
       waitSafely();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
+    } catch (InterruptedException interruptedException) {
+      log.error("Thread was interrupted while waiting for promise completion", interruptedException);
     }
     if (isResolved()) {
       return resolveResult;
     } else if (isRejected()) {
-      throw new RuntimeException(rejectResult);
+      throw new IllegalStateException("Promise was rejected", rejectResult);
     }
     return resolveResult;
   }
@@ -194,8 +248,9 @@ public abstract class AbstractPromise<D> implements Promise<D> {
   public D getOrElse(D defaultValue) {
     try {
       waitSafely();
-    } catch (InterruptedException e) {
-      // DO nothing
+    } catch (InterruptedException interruptedException) {
+      log.debug("Thread was interrupted while waiting for promise completion, returning default value",
+          interruptedException);
     }
     if (isResolved()) {
       return resolveResult;
@@ -208,8 +263,9 @@ public abstract class AbstractPromise<D> implements Promise<D> {
   public D getOrElse(Supplier<D> valueSupplier) {
     try {
       waitSafely();
-    } catch (InterruptedException e) {
-      // DO nothing
+    } catch (InterruptedException interruptedException) {
+      log.debug("Thread was interrupted while waiting for promise completion, using value supplier",
+          interruptedException);
     }
     if (isResolved()) {
       return resolveResult;
@@ -218,10 +274,18 @@ public abstract class AbstractPromise<D> implements Promise<D> {
     }
   }
 
-  protected void handleException(CallbackType callbackType, Exception e) {
-    log.error("An uncaught exception occurred  in {}", callbackType, e);
+  /**
+   * 处理回调函数执行时的异常
+   * @param callbackType 回调类型
+   * @param exception 发生的异常
+   */
+  protected void handleException(CallbackType callbackType, Exception exception) {
+    log.error("An uncaught exception occurred  in {}", callbackType, exception);
   }
 
+  /**
+   * Promise回调函数的类型
+   */
   protected enum CallbackType {
     /**
      * 完成

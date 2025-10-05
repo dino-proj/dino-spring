@@ -46,18 +46,26 @@ public enum Country {
   CROATIA("385", "克罗地亚"),
   BULGARIA("359", "保加利亚");
 
-  private String code;
-  private String name;
+  private final String code;
+  private final String name;
 
   Country(String code, String name) {
     this.code = code;
     this.name = name;
   }
 
+  /**
+   * 获取国家代码
+   * @return 国家代码
+   */
   public String getCode() {
     return code;
   }
 
+  /**
+   * 获取国家名称
+   * @return 国家名称
+   */
   public String getCountry() {
     return name;
   }

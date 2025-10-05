@@ -19,6 +19,8 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class NamingUtils {
 
+  private static final char UNDER_SCORE_CHAR = '_';
+
   /**
    * 下划线风格命名转换为驼峰
    * @param name 下划线风格
@@ -31,21 +33,21 @@ public class NamingUtils {
     }
     StringBuilder result = new StringBuilder();
     boolean nextIsUpper = false;
-    if (name.length() > 1 && name.charAt(1) == '_') {
+    if (name.length() > 1 && name.charAt(1) == UNDER_SCORE_CHAR) {
       result.append(Character.toUpperCase(name.charAt(0)));
     } else {
       result.append(Character.toLowerCase(name.charAt(0)));
     }
     for (int i = 1; i < name.length(); i++) {
-      char c = name.charAt(i);
-      if (c == '_') {
+      char currentChar = name.charAt(i);
+      if (currentChar == UNDER_SCORE_CHAR) {
         nextIsUpper = true;
       } else {
         if (nextIsUpper) {
-          result.append(Character.toUpperCase(c));
+          result.append(Character.toUpperCase(currentChar));
           nextIsUpper = false;
         } else {
-          result.append(Character.toLowerCase(c));
+          result.append(Character.toLowerCase(currentChar));
         }
       }
     }
@@ -81,20 +83,20 @@ public class NamingUtils {
     int resultLength = 0;
     boolean wasPrevTranslated = false;
     for (int i = 0; i < length; i++) {
-      char c = name.charAt(i);
+      char currentChar = name.charAt(i);
       // skip first starting underscore
-      if (i > 0 || c != '_') {
-        if (Character.isUpperCase(c)) {
-          if (!wasPrevTranslated && resultLength > 0 && result.charAt(resultLength - 1) != '_') {
-            result.append('_');
+      if (i > 0 || currentChar != UNDER_SCORE_CHAR) {
+        if (Character.isUpperCase(currentChar)) {
+          if (!wasPrevTranslated && resultLength > 0 && result.charAt(resultLength - 1) != UNDER_SCORE_CHAR) {
+            result.append(UNDER_SCORE_CHAR);
             resultLength++;
           }
-          c = Character.toLowerCase(c);
+          currentChar = Character.toLowerCase(currentChar);
           wasPrevTranslated = true;
         } else {
           wasPrevTranslated = false;
         }
-        result.append(c);
+        result.append(currentChar);
         resultLength++;
       }
     }
@@ -113,8 +115,9 @@ public class NamingUtils {
       throw new IllegalArgumentException(
           "Error parsing property name '" + name + "'.  Didn't start with 'is', 'get' or 'set'.");
     }
-    boolean b = name.length() > 1 && !Character.isUpperCase(name.charAt(1));
-    if (name.length() == 1 || b) {
+    boolean hasSecondCharLowerCase = name.length() > 1
+        && !Character.isUpperCase(name.charAt(1));
+    if (name.length() == 1 || hasSecondCharLowerCase) {
       name = name.substring(0, 1).toLowerCase(Locale.ENGLISH) + name.substring(1);
     }
     return name;

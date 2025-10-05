@@ -32,11 +32,20 @@ public class LambdaUtils {
    */
   private static final Map<String, String> FUNC_PROPERTY_CACHE = new ConcurrentHashMap<>();
 
+  /**
+   * 将 getter 方法引用转换为属性名
+   * @param getterFn getter 方法引用
+   * @param <T> 实体类型
+   * @param <R> 返回值类型
+   * @return 属性名
+   */
   public static <T, R> String methodToProperty(Function<T, R> getterFn) {
 
     Class<?> clazz = getterFn.getClass();
     String name = clazz.getName();
-    log.info(name);
+    if (log.isDebugEnabled()) {
+      log.debug("Processing getter function: {}", name);
+    }
     return Optional.ofNullable(FUNC_PROPERTY_CACHE.get(name)).orElseGet(() -> {
       SerializedLambda lambda = getSerializedLambda(getterFn);
       if (lambda == null) {
@@ -46,11 +55,20 @@ public class LambdaUtils {
     });
   }
 
+  /**
+   * 将 setter 方法引用转换为属性名
+   * @param setterFn setter 方法引用
+   * @param <T> 实体类型
+   * @param <R> 参数类型
+   * @return 属性名
+   */
   public static <T, R> String methodToProperty(BiConsumer<T, R> setterFn) {
 
     Class<?> clazz = setterFn.getClass();
     String name = clazz.getName();
-    log.info(name);
+    if (log.isDebugEnabled()) {
+      log.debug("Processing setter function: {}", name);
+    }
     return Optional.ofNullable(FUNC_PROPERTY_CACHE.get(name)).orElseGet(() -> {
       SerializedLambda lambda = getSerializedLambda(setterFn);
       if (lambda == null) {

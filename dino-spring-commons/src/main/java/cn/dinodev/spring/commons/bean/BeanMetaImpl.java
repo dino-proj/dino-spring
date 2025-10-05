@@ -3,15 +3,15 @@
 
 package cn.dinodev.spring.commons.bean;
 
-import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-import cn.dinodev.spring.commons.function.Suppliers;
 import org.springframework.beans.BeanUtils;
+
+import cn.dinodev.spring.commons.function.Suppliers;
 
 /**
  * Bean元信息实现类，提供Bean元数据的具体实现
@@ -21,20 +21,29 @@ import org.springframework.beans.BeanUtils;
  */
 
 public class BeanMetaImpl implements BeanMeta {
-  private Class<?> beanClass;
+  private final Class<?> beanClass;
 
-  private Supplier<Map<String, Property>> propertyDescriptorsSupplier = Suppliers.lazy(() -> {
-    var pds = BeanUtils.getPropertyDescriptors(beanClass);
-    Map<String, Property> map = new LinkedHashMap<>(pds.length);
-    for (PropertyDescriptor propertyDescriptor : pds) {
-      map.put(propertyDescriptor.getName(), new Property(beanClass, propertyDescriptor.getReadMethod(),
-          propertyDescriptor.getWriteMethod(), propertyDescriptor.getName()));
-    }
-    return map;
-  });
+  private final Supplier<Map<String, Property>> propertyDescriptorsSupplier;
 
+  /**
+   * 构造一个BeanMetaImpl实例。
+   * <p>
+   * 根据指定的Bean类创建元信息对象，用于后续的属性访问和操作。
+   * </p>
+   *
+   * @param beanClass Bean的Class对象
+   */
   public BeanMetaImpl(Class<?> beanClass) {
     this.beanClass = beanClass;
+    this.propertyDescriptorsSupplier = Suppliers.lazy(() -> {
+      PropertyDescriptor[] pds = BeanUtils.getPropertyDescriptors(this.beanClass);
+      Map<String, Property> map = new ConcurrentHashMap<>(pds.length);
+      for (PropertyDescriptor propertyDescriptor : pds) {
+        map.put(propertyDescriptor.getName(), new Property(this.beanClass, propertyDescriptor.getReadMethod(),
+            propertyDescriptor.getWriteMethod(), propertyDescriptor.getName()));
+      }
+      return map;
+    });
   }
 
   @Override
@@ -44,86 +53,82 @@ public class BeanMetaImpl implements BeanMeta {
 
   @Override
   public Property getProperty(String propertyName) {
-    var pds = propertyDescriptorsSupplier.get();
+    Map<String, Property> pds = propertyDescriptorsSupplier.get();
     return pds.get(propertyName);
   }
 
   @Override
   public Property[] getProperties() {
-    var pds = propertyDescriptorsSupplier.get();
-    return pds.values().toArray(new Property[pds.size()]);
+    Map<String, Property> pds = propertyDescriptorsSupplier.get();
+    return pds.values().toArray(new Property[0]);
   }
 
   @Override
   public String[] getPropertyNames() {
-    var pds = propertyDescriptorsSupplier.get();
-    return pds.values().stream().map(p -> p.getName())
+    Map<String, Property> pds = propertyDescriptorsSupplier.get();
+    return pds.values().stream().map(Property::getName)
         .toArray(String[]::new);
   }
 
   @Override
   public String[] getReadablePropertyNames() {
-    var pds = propertyDescriptorsSupplier.get();
+    Map<String, Property> pds = propertyDescriptorsSupplier.get();
     return pds.values().stream().filter(p -> Objects.nonNull(p.getReadMethod())).map(Property::getName)
         .toArray(String[]::new);
   }
 
   @Override
   public Property[] getReadableProperties() {
-    var pds = propertyDescriptorsSupplier.get();
+    Map<String, Property> pds = propertyDescriptorsSupplier.get();
     return pds.values().stream().filter(p -> Objects.nonNull(p.getReadMethod()))
         .toArray(Property[]::new);
   }
 
   @Override
   public String[] getWritablePropertyNames() {
-    var pds = propertyDescriptorsSupplier.get();
+    Map<String, Property> pds = propertyDescriptorsSupplier.get();
     return pds.values().stream().filter(p -> Objects.nonNull(p.getWriteMethod())).map(Property::getName)
         .toArray(String[]::new);
   }
 
   @Override
   public Property[] getWritableProperties() {
-    var pds = propertyDescriptorsSupplier.get();
+    Map<String, Property> pds = propertyDescriptorsSupplier.get();
     return pds.values().stream().filter(p -> Objects.nonNull(p.getWriteMethod()))
         .toArray(Property[]::new);
   }
 
   @Override
   public String[] getUnreadablePropertyNames() {
-    var pds = propertyDescriptorsSupplier.get();
+    Map<String, Property> pds = propertyDescriptorsSupplier.get();
     return pds.values().stream().filter(p -> Objects.isNull(p.getReadMethod()))
         .map(Property::getName).toArray(String[]::new);
   }
 
   @Override
   public Property[] getUnreadableProperties() {
-    var pds = propertyDescriptorsSupplier.get();
+    Map<String, Property> pds = propertyDescriptorsSupplier.get();
     return pds.values().stream().filter(p -> Objects.isNull(p.getReadMethod()))
         .toArray(Property[]::new);
   }
 
   @Override
   public String[] getUnwritablePropertyNames() {
-    var pds = propertyDescriptorsSupplier.get();
+    Map<String, Property> pds = propertyDescriptorsSupplier.get();
     return pds.values().stream().filter(p -> Objects.isNull(p.getWriteMethod()))
         .map(Property::getName).toArray(String[]::new);
   }
 
   @Override
   public Property[] getUnwritableProperties() {
-    var pds = propertyDescriptorsSupplier.get();
+    Map<String, Property> pds = propertyDescriptorsSupplier.get();
     return pds.values().stream().filter(p -> Objects.isNull(p.getWriteMethod()))
         .toArray(Property[]::new);
   }
 
   @Override
   public boolean equals(Object obj) {
-
-    if (!(obj instanceof BeanInfo)) {
-      return false;
-    }
-    return ((BeanMetaImpl) obj).beanClass.equals(beanClass);
+    return obj instanceof BeanMetaImpl && ((BeanMetaImpl) obj).beanClass.equals(beanClass);
   }
 
   @Override

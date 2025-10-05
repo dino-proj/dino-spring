@@ -15,7 +15,7 @@ import cn.dinodev.spring.commons.utils.TypeUtils;
  */
 
 public interface Functions {
-  static Function<Object, Object> IDENTITY_FUNCTION = t -> t;
+  Function<Object, Object> IDENTITY_FUNCTION = t -> t;
 
   /**
    * 创建一个Function，该Function将传入的参数原样返回

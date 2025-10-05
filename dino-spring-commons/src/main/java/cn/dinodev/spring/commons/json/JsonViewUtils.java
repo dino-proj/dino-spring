@@ -58,17 +58,17 @@ public class JsonViewUtils {
   /**
    * 获取方法的视图
    * @param element Method, Field, Constructor, Parameter, Class等
-   * @return 视图，如果没有视图或者方法为null，则返回null
+   * @return 视图数组，如果没有视图或者方法为null，则返回空数组
    */
   public static Class<?>[] findViews(AnnotatedElement element) {
     if (element == null) {
-      return null;
+      return new Class<?>[0];
     }
     var viewAnno = element.getDeclaredAnnotation(JsonView.class);
     if (Objects.nonNull(viewAnno)) {
       return viewAnno.value();
     }
-    return null;
+    return new Class<?>[0];
   }
 
   /**

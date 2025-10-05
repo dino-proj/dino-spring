@@ -67,7 +67,7 @@ public class ProjectionUtils {
    * @throws BeansException if the projecting failed
    * @see BeanWrapper
    */
-  public static void projectProperties(Object source, Object target) throws BeansException {
+  public static void projectProperties(Object source, Object target) {
     projectProperties(source, target, null, Collections.emptySet());
   }
 
@@ -83,7 +83,7 @@ public class ProjectionUtils {
    * @throws BeansException if the projecting failed
    * @see BeanWrapper
    */
-  public static void projectProperties(Object source, Object target, Class<?> editable) throws BeansException {
+  public static void projectProperties(Object source, Object target, Class<?> editable) {
     projectProperties(source, target, editable, Collections.emptySet());
   }
 
@@ -101,14 +101,15 @@ public class ProjectionUtils {
    * @throws BeansException if the projecting failed
    * @see BeanWrapper
    */
-  public static void projectProperties(Object source, Object target, String... ignoreProperties) throws BeansException {
-    Set<String> ignoreList = (ignoreProperties != null && ignoreProperties.length > 0 ? Set.of(ignoreProperties)
-        : Collections.emptySet());
+  public static void projectProperties(Object source, Object target, String... ignoreProperties) {
+    Set<String> ignoreList = (ignoreProperties != null && ignoreProperties.length > 0)
+        ? Set.of(ignoreProperties)
+        : Collections.emptySet();
     projectProperties(source, target, null, ignoreList);
   }
 
   private static void projectProperties(Object source, Object target, @Nullable Class<?> editable,
-      Set<String> ignoreProperties) throws BeansException {
+      Set<String> ignoreProperties) {
 
     Assert.notNull(source, "Source must not be null");
     Assert.notNull(target, "Target must not be null");
@@ -143,7 +144,7 @@ public class ProjectionUtils {
   }
 
   private void projectProperty(Object source, Object target, Method readMethod, Method writeMethod)
-      throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+      throws IllegalAccessException, InvocationTargetException {
     ResolvableType sourceResolvableType = ResolvableType.forMethodReturnType(readMethod);
     ResolvableType targetResolvableType = ResolvableType.forMethodParameter(writeMethod, 0);
 
@@ -189,8 +190,7 @@ public class ProjectionUtils {
    * @throws BeansException if the projecting failed
    * @see BeanWrapper
    */
-  public static void projectPropertiesWithView(Object source, Object target, @Nonnull Class<?> activeView)
-      throws BeansException {
+  public static void projectPropertiesWithView(Object source, Object target, @Nonnull Class<?> activeView) {
     projectPropertiesWithView(source, target, null, activeView);
   }
 
@@ -209,8 +209,7 @@ public class ProjectionUtils {
    * @see BeanWrapper
    */
   public static void projectPropertiesWithView(Object source, Object target, @Nullable Class<?> editable,
-      @Nonnull Class<?> activeView)
-      throws BeansException {
+      @Nonnull Class<?> activeView) {
     Class<?> actualEditable = Objects.nonNull(editable) ? editable : target.getClass();
     var ignoredProperties = new HashSet<String>();
     var unreadableProperties = BeanMetaUtils.forClassWithJsonView(source.getClass(), activeView)
@@ -254,11 +253,11 @@ public class ProjectionUtils {
     Collection<?> valueList = TypeUtils.castNonNull(value);
     var list = new ArrayList<>(valueList.size());
     var genericCls = type.getGeneric(0);
-    for (var v : valueList) {
-      if (v == null || genericCls.isAssignableFrom(ResolvableType.forInstance(v))) {
-        list.add(v);
+    for (var item : valueList) {
+      if (item == null || genericCls.isAssignableFrom(ResolvableType.forInstance(item))) {
+        list.add(item);
       } else {
-        list.add(newInstance(genericCls, v));
+        list.add(newInstance(genericCls, item));
       }
     }
     return list;
@@ -268,11 +267,11 @@ public class ProjectionUtils {
     Map<?, ?> valueMap = TypeUtils.castNonNull(value);
     var map = new HashMap<>(valueMap.size());
     var genericCls = type.getGeneric(1);
-    for (var v : valueMap.entrySet()) {
-      if (genericCls.isAssignableFrom(ResolvableType.forInstance(v.getValue()))) {
-        map.put(v.getKey(), v.getValue());
+    for (var entry : valueMap.entrySet()) {
+      if (genericCls.isAssignableFrom(ResolvableType.forInstance(entry.getValue()))) {
+        map.put(entry.getKey(), entry.getValue());
       } else {
-        map.put(v.getKey(), newInstance(genericCls, v.getValue()));
+        map.put(entry.getKey(), newInstance(genericCls, entry.getValue()));
       }
     }
     return map;
@@ -282,11 +281,11 @@ public class ProjectionUtils {
     Set<?> valueSet = TypeUtils.castNonNull(value);
     var set = new HashSet<>(valueSet.size());
     var genericCls = type.getGeneric(0);
-    for (var v : valueSet) {
-      if (genericCls.isAssignableFrom(ResolvableType.forInstance(v))) {
-        set.add(v);
+    for (var item : valueSet) {
+      if (genericCls.isAssignableFrom(ResolvableType.forInstance(item))) {
+        set.add(item);
       } else {
-        set.add(newInstance(genericCls, v));
+        set.add(newInstance(genericCls, item));
       }
     }
     return set;
@@ -305,11 +304,11 @@ public class ProjectionUtils {
     Object[] destArr = TypeUtils.castNonNull(Array.newInstance(componentClass, srcArr.length));
 
     for (int i = 0; i < destArr.length; i++) {
-      var v = srcArr[i];
-      if (v == null || type.isAssignableFrom(ResolvableType.forInstance(v))) {
-        destArr[i] = v;
+      var element = srcArr[i];
+      if (element == null || type.isAssignableFrom(ResolvableType.forInstance(element))) {
+        destArr[i] = element;
       } else {
-        destArr[i] = newInstance(type, v);
+        destArr[i] = newInstance(type, element);
       }
     }
 

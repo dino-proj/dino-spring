@@ -19,10 +19,15 @@ import lombok.RequiredArgsConstructor;
 
 public interface Status {
 
+  /**
+   * 内部预设的状态码
+   */
   @RequiredArgsConstructor
   @Schema(name = "CODE", title = "响应的状态码")
   enum CODE implements Status {
-    //成功
+    /**
+     * 成功状态码
+     */
     OK(0, "Success"),
     //操作失败
     ERROR(1, "操作失败"),
@@ -248,6 +253,9 @@ public interface Status {
 
 }
 
+/**
+ * 默认的Status实现
+ */
 @RequiredArgsConstructor
 class DefaultStatus implements Status {
 

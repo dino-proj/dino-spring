@@ -25,14 +25,17 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.math.ec.custom.gm.SM2P256V1Curve;
 
+import lombok.experimental.UtilityClass;
+
 /**
  * SM2椭圆曲线加密算法工具类
  * <p>提供SM2密钥生成、加密、解密等功能的静态方法</p>
- * 
+ *
  * @author Cody Lu
  * @since 2022-05-06
  */
 
+@UtilityClass
 public class Sm2 {
 
   static {
@@ -61,19 +64,25 @@ public class Sm2 {
       JDK_CURVE, JDK_G_POINT, SM2_ECC_N, SM2_ECC_H.intValue());
 
   /**
-   * 计算椭圆曲线的长度
-   * @param domainParams
-   * @return
+   * 计算椭圆曲线的长度。
+   * <p>
+   * 根据椭圆曲线域参数计算曲线长度，用于确定密钥和坐标的字节长度。
+   * </p>
+   *
+   * @param domainParams 椭圆曲线域参数
+   * @return 曲线长度（字节数）
    */
   public static int getCurveLength(ECDomainParameters domainParams) {
     return (domainParams.getCurve().getFieldSize() + 7) / 8;
   }
 
   /**
-   * 生成密钥对
+   * 生成SM2密钥对。
+   * <p>
+   * 使用安全随机数生成器创建一对SM2椭圆曲线密钥，包含公钥和私钥。
+   * </p>
    *
-   * @return
-   *
+   * @return 包含公钥和私钥字节数组的密钥对
    */
   public static KeyPair generateKeyPair() {
     SecureRandom random = new SecureRandom();
@@ -88,9 +97,13 @@ public class Sm2 {
   }
 
   /**
-   * 构建公钥参数
-   * @param publicKey
-   * @return
+   * 构建椭圆曲线公钥参数。
+   * <p>
+   * 根据64字节的公钥数据（前32字节为x坐标，后32字节为y坐标）构建ECPublicKeyParameters对象。
+   * </p>
+   *
+   * @param publicKey 64字节的公钥数据
+   * @return 椭圆曲线公钥参数对象
    */
   public static ECPublicKeyParameters buildECPublicKeyParameters(byte[] publicKey) {
     ECPoint pointQ = CURVE.createPoint(new BigInteger(1, publicKey, 0, 32), new BigInteger(1, publicKey, 32, 32));
@@ -98,31 +111,41 @@ public class Sm2 {
   }
 
   /**
-   * 构建私钥参数
-   * @param privateKey
-   * @return
+   * 构建椭圆曲线私钥参数。
+   * <p>
+   * 根据私钥字节数组构建ECPrivateKeyParameters对象。
+   * </p>
+   *
+   * @param privateKey 私钥字节数组
+   * @return 椭圆曲线私钥参数对象
    */
   public static ECPrivateKeyParameters buildECPrivateKeyParameters(byte[] privateKey) {
-    BigInteger d = new BigInteger(1, privateKey);
-    return new ECPrivateKeyParameters(d, SM2_DOMAIN);
+    BigInteger privateKeyValue = new BigInteger(1, privateKey);
+    return new ECPrivateKeyParameters(privateKeyValue, SM2_DOMAIN);
   }
 
   /**
-  * 取私钥里的d值
-  *
-  * @param privateKey
-  * @return Curve长度的字节数组
-  */
+   * 提取私钥中的d值。
+   * <p>
+   * 从ECPrivateKeyParameters对象中提取私钥的d值，并转换为固定长度的字节数组。
+   * </p>
+   *
+   * @param privateKey 椭圆曲线私钥参数对象
+   * @return 曲线长度的私钥字节数组
+   */
   public static byte[] getRawPrivateKey(ECPrivateKeyParameters privateKey) {
     return toCurveLengthBytes(privateKey.getD().toByteArray());
   }
 
   /**
-  * 取公钥里的XY分量
-  *
-  * @param publicKey
-  * @return 2倍Curve长度的字节数组
-  */
+   * 提取公钥中的XY坐标分量。
+   * <p>
+   * 从ECPublicKeyParameters对象中提取公钥的x和y坐标，组合成64字节的数组。
+   * </p>
+   *
+   * @param publicKey 椭圆曲线公钥参数对象
+   * @return 2倍曲线长度的公钥字节数组（x坐标+y坐标）
+   */
   public static byte[] getRawPublicKey(ECPublicKeyParameters publicKey) {
     byte[] src65 = publicKey.getQ().getEncoded(false);
     byte[] rawXY = new byte[CURVE_LEN * 2];
@@ -131,12 +154,16 @@ public class Sm2 {
   }
 
   /**
-   * 公钥加密
-   * @param input 待加密数据
-   * @param ecPublicKeyParameters 公钥参数
-   * @param mode 加密方式
-   * @return
-   * @throws InvalidCipherTextException
+   * 使用公钥加密数据。
+   * <p>
+   * 使用指定的公钥参数和加密模式对输入数据进行SM2加密。
+   * </p>
+   *
+   * @param input 待加密的数据
+   * @param ecPublicKeyParameters 椭圆曲线公钥参数
+   * @param mode SM2加密模式（C1C2C3或C1C3C2）
+   * @return 加密后的数据
+   * @throws InvalidCipherTextException 如果加密过程中发生错误
    */
   public static byte[] encrypt(byte[] input, ECPublicKeyParameters ecPublicKeyParameters, SM2Engine.Mode mode)
       throws InvalidCipherTextException {
@@ -161,11 +188,15 @@ public class Sm2 {
   }
 
   /**
-   * 公钥加密, 默认使用SM2Engine.Mode.C1C2C3
-   * @param input 待加密数据
-   * @param publicKey 公钥参数
-   * @return
-   * @throws InvalidCipherTextException
+   * 使用字节数组公钥加密数据（默认C1C2C3模式）。
+   * <p>
+   * 将64字节的公钥字节数组转换为椭圆曲线公钥参数，然后使用SM2Engine.Mode.C1C2C3模式进行加密。
+   * </p>
+   *
+   * @param input 待加密的数据
+   * @param publicKey 64字节的公钥字节数组（x坐标+y坐标）
+   * @return 加密后的数据
+   * @throws InvalidCipherTextException 如果加密过程中发生错误
    */
   public static byte[] encrypt(byte[] input, byte[] publicKey) throws InvalidCipherTextException {
     var ecPublicKeyParameters = buildECPublicKeyParameters(publicKey);
@@ -174,12 +205,16 @@ public class Sm2 {
   }
 
   /**
-   * 私钥解密
-   * @param input 待解密数据
-   * @param ecPrivateKeyParameters 私钥参数
-   * @param mode 加密方式
-   * @return
-   * @throws InvalidCipherTextException
+   * 使用私钥解密数据。
+   * <p>
+   * 使用指定的私钥参数和解密模式对输入数据进行SM2解密。
+   * </p>
+   *
+   * @param input 待解密的数据
+   * @param ecPrivateKeyParameters 椭圆曲线私钥参数
+   * @param mode SM2解密模式（C1C2C3或C1C3C2）
+   * @return 解密后的数据
+   * @throws InvalidCipherTextException 如果解密过程中发生错误
    */
   public static byte[] decrypt(byte[] input, ECPrivateKeyParameters ecPrivateKeyParameters, SM2Engine.Mode mode)
       throws InvalidCipherTextException {
@@ -189,12 +224,16 @@ public class Sm2 {
   }
 
   /**
-   * 私钥解密
-   * @param input 待解密数据
-   * @param privateKey 私钥参数
-   * @param mode 加密方式
-   * @return
-   * @throws InvalidCipherTextException
+   * 使用字节数组私钥解密数据。
+   * <p>
+   * 将32字节的私钥字节数组转换为椭圆曲线私钥参数，然后使用指定模式进行解密。
+   * </p>
+   *
+   * @param input 待解密的数据
+   * @param privateKey 32字节的私钥字节数组
+   * @param mode SM2解密模式（C1C2C3或C1C3C2）
+   * @return 解密后的数据
+   * @throws InvalidCipherTextException 如果解密过程中发生错误
    */
   public static byte[] decrypt(byte[] input, byte[] privateKey, SM2Engine.Mode mode) throws InvalidCipherTextException {
     var ecPrivateKeyParameters = buildECPrivateKeyParameters(privateKey);
@@ -202,11 +241,15 @@ public class Sm2 {
   }
 
   /**
-   * 私钥解密, 默认使用SM2Engine.Mode.C1C2C3
-   * @param input 待解密数据
-   * @param privateKey 私钥参数
-   * @return
-   * @throws InvalidCipherTextException
+   * 使用字节数组私钥解密数据（默认C1C2C3模式）。
+   * <p>
+   * 将32字节的私钥字节数组转换为椭圆曲线私钥参数，然后使用SM2Engine.Mode.C1C2C3模式进行解密。
+   * </p>
+   *
+   * @param input 待解密的数据
+   * @param privateKey 32字节的私钥字节数组
+   * @return 解密后的数据
+   * @throws InvalidCipherTextException 如果解密过程中发生错误
    */
   public static byte[] decrypt(byte[] input, byte[] privateKey) throws InvalidCipherTextException {
     var ecPrivateKeyParameters = buildECPrivateKeyParameters(privateKey);
@@ -214,19 +257,24 @@ public class Sm2 {
   }
 
   /**
-   * 私钥签名
-   * @param input 待签名数据
-   * @param ecPrivateKeyParameters 私钥数据
-   * @param ID 用户标识
-   * @return
-   * @throws CryptoException
+   * 使用私钥对数据进行数字签名。
+   * <p>
+   * 使用指定的私钥参数和用户标识对输入数据进行SM2数字签名。
+   * 如果用户标识为空或null，则不使用用户标识进行签名。
+   * </p>
+   *
+   * @param input 待签名的数据
+   * @param ecPrivateKeyParameters 椭圆曲线私钥参数
+   * @param userId 用户标识字节数组，可以为null
+   * @return Sm2Signature对象，包含r和s分量的签名结果
+   * @throws CryptoException 如果签名过程中发生错误
    */
-  public static Sm2Signature sign(byte[] input, ECPrivateKeyParameters ecPrivateKeyParameters, byte[] ID)
+  public static Sm2Signature sign(byte[] input, ECPrivateKeyParameters ecPrivateKeyParameters, byte[] userId)
       throws CryptoException {
     SM2Signer signer = new SM2Signer();
     CipherParameters param;
-    if (ID != null && ID.length > 0) {
-      param = new ParametersWithID(ecPrivateKeyParameters, ID);
+    if (userId != null && userId.length > 0) {
+      param = new ParametersWithID(ecPrivateKeyParameters, userId);
     } else {
       param = ecPrivateKeyParameters;
     }
@@ -238,37 +286,46 @@ public class Sm2 {
   }
 
   /**
-   * 私钥签名
-   * @param input 待签名数据
-   * @param privateKey 私钥数据
-   * @param ID 用户标识
-   * @return
-   * @throws CryptoException
+   * 使用字节数组私钥对数据进行数字签名。
+   * <p>
+   * 将32字节的私钥字节数组转换为椭圆曲线私钥参数，然后进行SM2数字签名。
+   * </p>
+   *
+   * @param input 待签名的数据
+   * @param privateKey 32字节的私钥字节数组
+   * @param userId 用户标识字节数组，可以为null
+   * @return Sm2Signature对象，包含r和s分量的签名结果
+   * @throws CryptoException 如果签名过程中发生错误
    */
-  public static Sm2Signature sign(byte[] input, byte[] privateKey, byte[] ID) throws CryptoException {
+  public static Sm2Signature sign(byte[] input, byte[] privateKey, byte[] userId) throws CryptoException {
     var ecPrivateKeyParameters = buildECPrivateKeyParameters(privateKey);
-    return sign(input, ecPrivateKeyParameters, ID);
+    return sign(input, ecPrivateKeyParameters, userId);
   }
 
   /**
-   * 公钥验证签名
+   * 使用公钥验证数字签名。
+   * <p>
+   * 使用指定的公钥参数和用户标识验证输入数据的SM2数字签名。
+   * 如果用户标识为空或null，则不使用用户标识进行验证。
+   * </p>
+   *
    * @param input 原始数据
-   * @param SM2SignResult 签名
-   * @param ecPublicKeyParameters 公钥参数
-   * @param ID 用户标识
-   * @return
-   * @throws IOException
+   * @param signature Sm2Signature签名对象，包含r和s分量
+   * @param ecPublicKeyParameters 椭圆曲线公钥参数
+   * @param userId 用户标识字节数组，可以为null
+   * @return 如果签名验证成功返回true，否则返回false
+   * @throws IOException 如果验证过程中发生IO错误
    */
   public static boolean verifySign(byte[] input, Sm2Signature signature,
-      ECPublicKeyParameters ecPublicKeyParameters, byte[] ID) throws IOException {
-    BigInteger signR = signature.getR();
-    BigInteger signS = signature.getS();
+      ECPublicKeyParameters ecPublicKeyParameters, byte[] userId) throws IOException {
+    BigInteger signR = signature.getSignatureR();
+    BigInteger signS = signature.getSignatureS();
     byte[] sign = StandardDSAEncoding.INSTANCE.encode(SM2_ECC_N, signR, signS);
 
     SM2Signer signer = new SM2Signer();
     CipherParameters param;
-    if (ID != null && ID.length > 0) {
-      param = new ParametersWithID(ecPublicKeyParameters, ID);
+    if (userId != null && userId.length > 0) {
+      param = new ParametersWithID(ecPublicKeyParameters, userId);
     } else {
       param = ecPublicKeyParameters;
     }
@@ -278,25 +335,34 @@ public class Sm2 {
   }
 
   /**
-   * 公钥验证签名
+   * 使用字节数组公钥验证数字签名。
+   * <p>
+   * 将64字节的公钥字节数组转换为椭圆曲线公钥参数，然后验证输入数据的SM2数字签名。
+   * </p>
+   *
    * @param input 原始数据
-   * @param SM2SignResult 签名
-   * @param publicKey 公钥参数
-   * @param ID 用户标识
-   * @return
-   * @throws IOException
+   * @param signature Sm2Signature签名对象，包含r和s分量
+   * @param publicKey 64字节的公钥字节数组（x坐标+y坐标）
+   * @param userId 用户标识字节数组，可以为null
+   * @return 如果签名验证成功返回true，否则返回false
+   * @throws IOException 如果验证过程中发生IO错误
    */
   public static boolean verifySign(byte[] input, Sm2Signature signature,
-      byte[] publicKey, byte[] ID) throws IOException {
+      byte[] publicKey, byte[] userId) throws IOException {
     var ecPublicKeyParameters = buildECPublicKeyParameters(publicKey);
-    return verifySign(input, signature, ecPublicKeyParameters, ID);
+    return verifySign(input, signature, ecPublicKeyParameters, userId);
   }
 
   /**
-   * 转为Curve长度的byte数组
+   * 将字节数组转换为曲线长度的字节数组。
+   * <p>
+   * 如果输入数组长度等于曲线长度(32字节)，直接返回。
+   * 如果长度大于曲线长度，截取末尾32字节。
+   * 如果长度小于曲线长度，在前面补零至32字节。
+   * </p>
    *
-   * @param src
-   * @return
+   * @param src 源字节数组
+   * @return 长度为32字节的字节数组
    */
   private static byte[] toCurveLengthBytes(byte[] src) {
     if (src.length == CURVE_LEN) {

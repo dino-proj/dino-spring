@@ -73,7 +73,9 @@ public class ReflectionUtils {
       return field.get(entity);
     } catch (ReflectiveOperationException e) {
       log.error("Error: Cannot read field in {}. ", cls.getSimpleName(), e);
-      throw new IllegalAccessException(e.getMessage());
+      var exception = new IllegalAccessException(e.getMessage());
+      exception.initCause(e);
+      throw exception;
     }
   }
 
@@ -178,6 +180,6 @@ public class ReflectionUtils {
    * @return 是否基本类型或基本包装类型
    */
   public static boolean isPrimitiveOrWrapper(@Nonnull Class<?> clazz) {
-    return (clazz.isPrimitive() || PRIMITIVE_WRAPPER_TYPE_MAP.containsKey(clazz));
+    return clazz.isPrimitive() || PRIMITIVE_WRAPPER_TYPE_MAP.containsKey(clazz);
   }
 }

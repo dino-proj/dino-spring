@@ -20,5 +20,5 @@ public interface AlwaysCallback<D> {
    * @param resolved the resolved value (if any) of the {@code Promise}
    * @param rejected the rejected value (if any) of the {@code Promise}
    */
-  void onAlways(final State state, final D resolved, final Throwable rejected);
+  void onAlways(State state, D resolved, Throwable rejected);
 }

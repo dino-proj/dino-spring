@@ -5,9 +5,9 @@ import java.util.function.Supplier;
 
 /**
  * Promise接口，用于观察对应Deferred对象上发生的操作
- * 
+ *
  * <p>Promise对象应该从{@link Deferred#promise()}获取，或通过DeferredManager使用。
- * 
+ *
  * <pre>
  * {@code
  * Deferred<String> deferredObject = new DeferredObject<>();
@@ -15,7 +15,7 @@ import java.util.function.Supplier;
  * promise.done(result -> {
  *     // 处理成功结果
  * });
- * 
+ *
  * // 另一个线程使用同一个deferredObject
  * deferredObject.resolve("OK");
  * }
@@ -26,6 +26,9 @@ import java.util.function.Supplier;
  * @author Stephan Classen
  */
 public interface Promise<D> extends Supplier<D> {
+  /**
+   * Promise的状态
+   */
   enum State {
     /**
      * The Promise is still pending - it could be created, submitted for execution,

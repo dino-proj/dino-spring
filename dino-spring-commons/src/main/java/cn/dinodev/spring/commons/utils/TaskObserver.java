@@ -47,6 +47,13 @@ public interface TaskObserver {
    */
   boolean isTimeout();
 
+  /**
+   * Enumeration representing the various states of a task execution lifecycle.
+   * <p>
+   * This enum defines the possible statuses that a task can have during its execution,
+   * from initialization to completion (either successful or failed).
+   * </p>
+   */
   enum TaskStatus {
     //初始化
     INIT,

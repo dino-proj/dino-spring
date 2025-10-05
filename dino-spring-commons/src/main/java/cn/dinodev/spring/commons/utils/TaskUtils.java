@@ -41,11 +41,12 @@ public class TaskUtils {
    * @param nap 重试间隔时长
    */
   public static void exec(Runnable task, int attempts, Duration nap) {
-    while (attempts-- > 0) {
+    while (attempts > 0) {
+      attempts--;
       try {
         task.run();
         return;
-      } catch (Throwable t) {
+      } catch (Exception e) {
         // nap and retry again
         nap(nap);
       }
@@ -128,7 +129,8 @@ public class TaskUtils {
   @SafeVarargs
   public static <R> Promise<R> exec(Callable<R> task, Predicate<R> checker, int attempts,
       Duration nap, Class<? extends RuntimeException>... throwOutExceptions) {
-    while (attempts-- > 0) {
+    while (attempts > 0) {
+      attempts--;
       try {
         var ret = task.call();
         if (checker.test(ret)) {
@@ -230,15 +232,15 @@ public class TaskUtils {
    * @return true：如果没被打断，false：如果被打断。
    */
   public static boolean nap(Duration nap) {
-    if (!Objects.isNull(nap)) {
+    if (Objects.isNull(nap)) {
+      return true;
+    } else {
       try {
         ThreadUtils.sleep(nap);
         return true;
       } catch (InterruptedException e) {
         return false;
       }
-    } else {
-      return true;
     }
   }
 

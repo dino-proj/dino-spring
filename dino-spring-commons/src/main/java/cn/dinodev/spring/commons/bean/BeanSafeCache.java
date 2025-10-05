@@ -167,7 +167,7 @@ public class BeanSafeCache<T> {
    * @param parent the parent ClassLoader to check for
    */
   private boolean isUnderneathClassLoader(@Nullable ClassLoader candidate, @Nullable ClassLoader parent) {
-    if (candidate == parent) {
+    if (Objects.equals(candidate, parent)) {
       return true;
     }
     if (candidate == null) {
@@ -176,7 +176,7 @@ public class BeanSafeCache<T> {
     ClassLoader classLoaderToCheck = candidate;
     while (classLoaderToCheck != null) {
       classLoaderToCheck = classLoaderToCheck.getParent();
-      if (classLoaderToCheck == parent) {
+      if (Objects.equals(classLoaderToCheck, parent)) {
         return true;
       }
     }

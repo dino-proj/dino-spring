@@ -21,7 +21,6 @@ import java.util.Set;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.core.ResolvableType;
 import org.springframework.util.Assert;
@@ -48,51 +47,48 @@ public class ProjectionUtils {
    * source bean exposes but the target bean does not will silently be ignored.
    * @param source the source bean
    * @param target the target bean
-   * @throws BeansException if the projecting failed
    * @see BeanWrapper
    */
-  public static void projectProperties(Object source, Object target) throws BeansException {
+  public static void projectProperties(Object source, Object target) {
     projectProperties(source, target, null, Collections.emptySet());
   }
 
   /**
-   * Copy the property values of the given source bean into the given target bean,
-   * only setting properties defined in the given "editable" class (or interface).
-   * <p>Note: The source and target classes do not have to match or even be derived
-   * from each other, as long as the properties match. Any bean properties that the
-   * source bean exposes but the target bean does not will silently be ignored.
-   * @param source the source bean
-   * @param target the target bean
-   * @param editable the class (or interface) to restrict property setting to
-   * @throws BeansException if the projecting failed
-   * @see BeanWrapper
-   */
-  public static void projectProperties(Object source, Object target, Class<?> editable) throws BeansException {
+  * Copy the property values of the given source bean into the given target bean,
+  * only setting properties defined in the given "editable" class (or interface).
+  * <p>Note: The source and target classes do not have to match or even be derived
+  * from each other, as long as the properties match. Any bean properties that the
+  * source bean exposes but the target bean does not will silently be ignored.
+  * @param source the source bean
+  * @param target the target bean
+  * @param editable the class (or interface) to restrict property setting to
+  * @see BeanWrapper
+  */
+  public static void projectProperties(Object source, Object target, Class<?> editable) {
     projectProperties(source, target, editable, Collections.emptySet());
   }
 
   /**
-   * project the property values of the given source bean into the given target bean,
-   * ignoring the given "ignoreProperties".
-   * <p>Note: The source and target classes do not have to match or even be derived
-   * from each other, as long as the properties match. Any bean properties that the
-   * source bean exposes but the target bean does not will silently be ignored.
-   * <p>This is just a convenience method. For more complex transfer needs,
-   * consider using a full BeanWrapper.
-   * @param source the source bean
-   * @param target the target bean
-   * @param ignoreProperties array of property names to ignore
-   * @throws BeansException if the projecting failed
-   * @see BeanWrapper
-   */
-  public static void projectProperties(Object source, Object target, String... ignoreProperties) throws BeansException {
-    Set<String> ignoreList = (ignoreProperties != null && ignoreProperties.length > 0 ? Set.of(ignoreProperties)
-        : Collections.emptySet());
+  * project the property values of the given source bean into the given target bean,
+  * ignoring the given "ignoreProperties".
+  * <p>Note: The source and target classes do not have to match or even be derived
+  * from each other, as long as the properties match. Any bean properties that the
+  * source bean exposes but the target bean does not will silently be ignored.
+  * <p>This is just a convenience method. For more complex transfer needs,
+  * consider using a full BeanWrapper.
+  * @param source the source bean
+  * @param target the target bean
+  * @param ignoreProperties array of property names to ignore
+  * @see BeanWrapper
+  */
+  public static void projectProperties(Object source, Object target, String... ignoreProperties) {
+    Set<String> ignoreList = ignoreProperties != null && ignoreProperties.length > 0 ? Set.of(ignoreProperties)
+        : Collections.emptySet();
     projectProperties(source, target, null, ignoreList);
   }
 
   private static void projectProperties(Object source, Object target, @Nullable Class<?> editable,
-      Set<String> ignoreProperties) throws BeansException {
+      Set<String> ignoreProperties) {
 
     Assert.notNull(source, "Source must not be null");
     Assert.notNull(target, "Target must not be null");
@@ -119,7 +115,7 @@ public class ProjectionUtils {
 
       try {
         projectProperty(source, target, readMethod, writeMethod);
-      } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+      } catch (IllegalAccessException | InvocationTargetException ex) {
         throw new FatalBeanException("Could not project property '" + targetPd.getName() + "' from source to target",
             ex);
       }
@@ -127,7 +123,7 @@ public class ProjectionUtils {
   }
 
   private void projectProperty(Object source, Object target, Method readMethod, Method writeMethod)
-      throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+      throws IllegalAccessException, InvocationTargetException {
     ResolvableType sourceResolvableType = ResolvableType.forMethodReturnType(readMethod);
     ResolvableType targetResolvableType = ResolvableType.forMethodParameter(writeMethod, 0);
 
@@ -171,11 +167,9 @@ public class ProjectionUtils {
    * @param source the source bean
    * @param target the target bean
    * @param activeView the active json view
-   * @throws BeansException if the projecting failed
    * @see BeanWrapper
    */
-  public static void projectPropertiesWithView(Object source, Object target, @Nonnull Class<?> activeView)
-      throws BeansException {
+  public static void projectPropertiesWithView(Object source, Object target, @Nonnull Class<?> activeView) {
     projectPropertiesWithView(source, target, null, activeView);
   }
 
@@ -190,12 +184,10 @@ public class ProjectionUtils {
    * @param target the target bean
    * @param editable the class (or interface) to restrict property setting to
    * @param activeView the active json view
-   * @throws BeansException if the projecting failed
    * @see BeanWrapper
    */
   public static void projectPropertiesWithView(Object source, Object target, @Nullable Class<?> editable,
-      @Nonnull Class<?> activeView)
-      throws BeansException {
+      @Nonnull Class<?> activeView) {
     Class<?> actualEditable = Objects.nonNull(editable) ? editable : target.getClass();
     var ignoredProperties = new HashSet<String>();
     var unreadableProperties = BeanMetaUtils.forClassWithJsonView(source.getClass(), activeView)
@@ -290,11 +282,11 @@ public class ProjectionUtils {
     Object[] destArr = TypeUtils.castNonNull(Array.newInstance(componentClass, srcArr.length));
 
     for (int i = 0; i < destArr.length; i++) {
-      var v = srcArr[i];
-      if (v == null || type.isAssignableFrom(ResolvableType.forInstance(v))) {
-        destArr[i] = v;
+      var sourceItem = srcArr[i];
+      if (sourceItem == null || type.isAssignableFrom(ResolvableType.forInstance(sourceItem))) {
+        destArr[i] = sourceItem;
       } else {
-        destArr[i] = newInstance(type, v);
+        destArr[i] = newInstance(type, sourceItem);
       }
     }
 

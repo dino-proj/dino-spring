@@ -97,17 +97,14 @@ public class TypeUtils {
    * @param paramIndex 类型参数的索引，从0开始
    * @return
    */
-  @SuppressWarnings("unchecked")
   public static <T> Class<T> getGenericSuperclassParamClass(Object inst, Class<?> interfaceClass, int paramIndex) {
     Type type = inst.getClass().getGenericSuperclass();
-    if (type instanceof ParameterizedType tp) {
-      if (tp.getRawType().equals(interfaceClass)) {
-        var t = tp.getActualTypeArguments()[paramIndex];
-        if (t instanceof ParameterizedType) {
-          return (Class<T>) ((ParameterizedType) t).getRawType();
-        } else {
-          return (Class<T>) t;
-        }
+    if (type instanceof ParameterizedType tp && tp.getRawType().equals(interfaceClass)) {
+      var actualType = tp.getActualTypeArguments()[paramIndex];
+      if (actualType instanceof ParameterizedType actualPt) {
+        return cast(actualPt.getRawType());
+      } else {
+        return cast(actualType);
       }
     }
     return null;
@@ -167,7 +164,7 @@ public class TypeUtils {
    * @param object 待转换对象
    * @return 非空, 否则抛出异常
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "PMD.AvoidThrowingNullPointerException" })
   @NonNull
   public static <T> T castNonNull(@Nullable Object object) {
     if (object == null) {

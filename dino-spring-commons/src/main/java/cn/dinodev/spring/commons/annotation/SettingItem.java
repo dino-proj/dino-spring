@@ -12,33 +12,34 @@ package cn.dinodev.spring.commons.annotation;
 
 public @interface SettingItem {
 
+  /**
+   * 设置项所属的组名。
+   * <p>
+   * 用于对相关的设置项进行分组管理，便于在配置界面中进行组织和展示。
+   * </p>
+   *
+   * @return 设置项组名
+   */
   String group();
 
+  /**
+   * 设置项的唯一标识名称。
+   * <p>
+   * 用作设置项的唯一标识符，通常对应配置文件中的键名。
+   * </p>
+   *
+   * @return 设置项名称
+   */
   String name();
 
+  /**
+   * 设置项的显示标题。
+   * <p>
+   * 用于在用户界面中显示的友好标题，便于用户理解设置项的含义。
+   * </p>
+   *
+   * @return 设置项标题
+   */
   String title();
 
 }
-/** type Configuration implements DescribedEntity {
-  id: ID!
-  name: String!
-  description: String
-  link: String
-  icon: String
-  plugin: Plugin
-  tabs: [ConfigurationTab]!
-}
-DescribedEntity {
-  name: String
-  description: String
-  link: String
-}
-
-  return {
-    value: JSON.stringify(getTransformedValue(prompt, data.value)),
-    name: data.name,
-    checked: data.checked,
-    disabled: data.disabled,
-    isDefault: data.value === defaultValue
-  }
-  **/

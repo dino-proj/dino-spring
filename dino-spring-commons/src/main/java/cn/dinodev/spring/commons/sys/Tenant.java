@@ -20,7 +20,7 @@ public interface Tenant extends Serializable {
   /**
    * 代表系统的tenant ID；
    */
-  public static final String TENANT_SYS = "_SYS_";
+  String TENANT_SYS = "_SYS_";
 
   /**
    * 租户ID

@@ -5,7 +5,7 @@ package cn.dinodev.spring.commons.utils;
 
 /**
  * SpringFramework 6.0 移除 CastUtils, 这里重新定义一个
- * 
+ *
  * @author Cody Lu
  * @since 2025-09-18
  */
@@ -23,7 +23,7 @@ public interface CastUtils {
    * <p><strong>实现说明：</strong>该方法直接进行强制类型转换，不进行类型检查，调用者需要保证类型兼容性</p>
    */
   @SuppressWarnings("unchecked")
-  public static <T> T cast(Object object) {
+  static <T> T cast(Object object) {
     return (T) object;
   }
 }

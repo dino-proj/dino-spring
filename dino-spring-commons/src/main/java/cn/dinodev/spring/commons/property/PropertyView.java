@@ -3,33 +3,38 @@
 
 package cn.dinodev.spring.commons.property;
 
-import lombok.experimental.UtilityClass;
-
 /**
  * 为 @JsonView 定义的便捷工具类
  * @author Cody Lu
  */
-@UtilityClass
-public class PropertyView {
+public interface PropertyView {
 
   /**
    * 当显示简要信息的时候，使用，如下：
-   * <pre>@JsonView(PropertyView.OnSummary.class)</pre>
+   * <pre>@JsonView(PropertyView.Summary.class)</pre>
    */
-  public static interface Summary {
+  interface Summary {
   }
 
   /**
-   * 当显示详情信息的时候，使用，其包含了 OnSummary 注解的属性 如下：
-   * <pre>@JsonView(PropertyView.OnDetail.class)</pre>
+   * 当显示详情信息的时候，使用，其包含了 Summary 注解的属性 如下：
+   * <pre>@JsonView(PropertyView.Detail.class)</pre>
    */
-  public static interface Detail extends Summary {
+  interface Detail extends Summary {
   }
 
-  public static interface Update {
+  /**
+   * 当更新的时候，使用，如下：
+   * <pre>@JsonView(PropertyView.Update.class)</pre>
+   */
+  interface Update {
   }
 
-  public static interface Insert extends Update {
+  /**
+   * 当插入的时候，使用，其包含了 Update 注解的属性 如下：
+   * <pre>@JsonView(PropertyView.Insert.class)</pre>
+   */
+  interface Insert extends Update {
   }
 
 }

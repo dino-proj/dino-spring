@@ -26,14 +26,18 @@ public interface AsmUtils {
    * @return
    * @throws Exception
    */
-  public static <T, U extends T> Class<U> defineGenericClass(String className, Class<T> superClass,
+  static <T, U extends T> Class<U> defineGenericClass(String className, Class<T> superClass,
       Class<?> parameterClass) throws Exception {
     var classLoader = Thread.currentThread().getContextClassLoader();
 
     try {
       return TypeUtils.cast(classLoader.loadClass(className));
     } catch (ClassNotFoundException e) {
-      // ignore
+      // Intentionally empty catch block:
+      // Class not found is expected behavior. When the class doesn't exist,
+      // we continue to generate it dynamically in the following code.
+      @SuppressWarnings("unused")
+      var ignore = e;
     }
 
     var param1Name = Type.getInternalName(parameterClass);
@@ -69,7 +73,7 @@ public interface AsmUtils {
    * @param postfix 后缀
    * @return
    */
-  public static String className(Class<?> baseClass, String postfix) {
+  static String className(Class<?> baseClass, String postfix) {
     return baseClass.getName() + "$" + postfix;
   }
 
@@ -79,7 +83,7 @@ public interface AsmUtils {
    * @param typeClass   类型
    * @return
    */
-  public static String className(Class<?> baseClass, Class<?> typeClass) {
+  static String className(Class<?> baseClass, Class<?> typeClass) {
     return baseClass + "$" + typeClass.getSimpleName();
   }
 

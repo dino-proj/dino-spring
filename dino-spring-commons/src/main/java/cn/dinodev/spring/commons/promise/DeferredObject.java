@@ -33,37 +33,43 @@ package cn.dinodev.spring.commons.promise;
 public class DeferredObject<D> extends AbstractPromise<D> implements Deferred<D> {
   @Override
   public Deferred<D> resolve(final D resolve) {
-    synchronized (this) {
+    lock.lock();
+    try {
       if (!isPending()) {
         throw new IllegalStateException("Deferred object already finished, cannot resolve again");
       }
 
-      this.state = State.RESOLVED;
+      this.promiseState = State.RESOLVED;
       this.resolveResult = resolve;
 
       try {
         triggerDone(resolve);
       } finally {
-        triggerAlways(state, resolve, null);
+        triggerAlways(promiseState, resolve, null);
       }
+    } finally {
+      lock.unlock();
     }
     return this;
   }
 
   @Override
   public Deferred<D> reject(final Throwable reject) {
-    synchronized (this) {
+    lock.lock();
+    try {
       if (!isPending()) {
         throw new IllegalStateException("Deferred object already finished, cannot reject again");
       }
-      this.state = State.REJECTED;
+      this.promiseState = State.REJECTED;
       this.rejectResult = reject;
 
       try {
         triggerFail(reject);
       } finally {
-        triggerAlways(state, null, reject);
+        triggerAlways(promiseState, null, reject);
       }
+    } finally {
+      lock.unlock();
     }
     return this;
   }

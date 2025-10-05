@@ -21,19 +21,19 @@ import lombok.Data;
 public class Address implements Serializable {
 
   @Schema(description = "省份")
-  String province;
+  private String province;
 
   @Schema(description = "城市")
-  String city;
+  private String city;
 
   @Schema(description = "区县")
-  String area;
+  private String area;
 
   @Schema(description = "街道")
-  String street;
+  private String street;
 
   @Schema(description = "详细地址")
-  String detail;
+  private String detail;
 
   @Schema(description = "坐标点：经纬度")
   @JsonUnwrapped

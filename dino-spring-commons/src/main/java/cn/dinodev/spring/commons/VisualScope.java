@@ -34,6 +34,15 @@ public class VisualScope implements Serializable {
   @Schema(description = "公司")
   private List<Long> company;
 
+  /**
+   * 检查可见范围配置是否为空。
+   * <p>
+   * 当所有的范围配置（用户、部门、职位、组、公司）都为空时，返回true。
+   * 这通常表示没有设置任何可见性限制。
+   * </p>
+   * 
+   * @return 如果所有范围配置都为空则返回true，否则返回false
+   */
   public boolean beEmpty() {
     return CollectionUtils.isEmpty(user) && CollectionUtils.isEmpty(dept) && CollectionUtils.isEmpty(post)
         && CollectionUtils.isEmpty(group) && CollectionUtils.isEmpty(company);

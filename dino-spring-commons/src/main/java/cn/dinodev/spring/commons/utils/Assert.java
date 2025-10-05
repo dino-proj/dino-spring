@@ -628,16 +628,16 @@ public class Assert {
    * @param statusSupplier 断言失败时使用的异常状态供应者
    * @throws BusinessException 如果类不可赋值
    */
-  public static void isAssignable(@Nonnull Class<?> superType, @Nullable Class<?> subType,
+  public static void isAssignable(final @Nonnull Class<?> superType, final @Nullable Class<?> subType,
       @Nonnull Supplier<Status> statusSupplier) {
     if (subType == null || !superType.isAssignableFrom(subType)) {
       assignableCheckFailed(superType, subType, nullSafeGet(statusSupplier));
     }
   }
 
-  private static void instanceCheckFailed(Class<?> type, @Nullable Object obj, @Nonnull Status status) {
+  private static void instanceCheckFailed(final Class<?> type, final @Nullable Object obj, @Nonnull Status status) {
     String msg = status.getMsg();
-    String className = (obj != null ? obj.getClass().getName() : "null");
+    String className = obj != null ? obj.getClass().getName() : "null";
     String result = "";
     boolean defaultMessage = true;
     if (StringUtils.isNotEmpty(msg)) {
@@ -649,12 +649,13 @@ public class Assert {
       }
     }
     if (defaultMessage) {
-      result = result + ("Object of class [" + className + "] must be an instance of " + type);
+      result = result + "Object of class [" + className + "] must be an instance of " + type;
     }
     throw BusinessException.of(Status.fail(status.getCode(), result));
   }
 
-  private static void assignableCheckFailed(Class<?> superType, @Nullable Class<?> subType, @Nonnull Status status) {
+  private static void assignableCheckFailed(final Class<?> superType, final @Nullable Class<?> subType,
+      @Nonnull Status status) {
     String msg = status.getMsg();
     String result = "";
     boolean defaultMessage = true;
@@ -667,22 +668,22 @@ public class Assert {
       }
     }
     if (defaultMessage) {
-      result = result + (subType + " is not assignable to " + superType);
+      result = result + subType + " is not assignable to " + superType;
     }
     throw BusinessException.of(Status.fail(status.getCode(), result));
   }
 
-  private static boolean endsWithSeparator(String msg) {
-    return (msg.endsWith(":") || msg.endsWith(";") || msg.endsWith(",") || msg.endsWith("."));
+  private static boolean endsWithSeparator(final String msg) {
+    return msg.endsWith(":") || msg.endsWith(";") || msg.endsWith(",") || msg.endsWith(".");
   }
 
-  private static String messageWithTypeName(String msg, @Nullable Object typeName) {
+  private static String messageWithTypeName(final String msg, final @Nullable Object typeName) {
     return msg + (msg.endsWith(" ") ? "" : ": ") + typeName;
   }
 
   @Nullable
-  private static <T> T nullSafeGet(@Nullable Supplier<T> messageSupplier) {
-    return (messageSupplier != null ? messageSupplier.get() : null);
+  private static <T> T nullSafeGet(final @Nullable Supplier<T> messageSupplier) {
+    return messageSupplier != null ? messageSupplier.get() : null;
   }
 
 }

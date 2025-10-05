@@ -14,11 +14,11 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
-import cn.dinodev.spring.commons.utils.TypeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.stereotype.Service;
 
+import cn.dinodev.spring.commons.utils.TypeUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -54,7 +54,8 @@ public class ProjectionService {
         return inst;
       } catch (IllegalArgumentException | UnsupportedOperationException | SecurityException e) {
         log.error("create instance of {} error", projectionType.getName(), e);
-        throw new IllegalArgumentException("instance of class:" + projectionType.getName() + " connot be created");
+        throw new IllegalArgumentException(
+            "instance of class: %s cannot be created".formatted(projectionType.getName()), e);
       }
     }
   }

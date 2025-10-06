@@ -55,7 +55,7 @@
       <property name="checkSetters" value="true" />
       <property name="checkPrefixedTransformMethods" value="true" />
       <property name="checkTransformMethods" value="false" />
-      <property name="booleanMethodPrefixes" value="is,has,can,have,will,should,not,non,un" />
+      <property name="booleanMethodPrefixes" value="is,has,can,have,will,should" />
       <property name="transformMethodNames" value="to,as" />
       <property name="checkFields" value="false" />
       <property name="checkVariables" value="true" />
@@ -115,6 +115,16 @@
     <exclude name="AvoidAccessibilityAlteration" />
     <exclude name="NullAssignment" />
     <exclude name="AvoidLiteralsInIfCondition" />
+    <exclude name="ConstructorCallsOverridableMethod" />
+    <exclude name="AvoidDuplicateLiterals" />
+  </rule>
+  <rule ref="category/java/errorprone.xml/AvoidDuplicateLiterals">
+    <properties>
+      <property name="maxDuplicateLiterals" value="6" />
+      <property name="minimumLength" value="4" />
+      <property name="skipAnnotations" value="true" />
+      <property name="exceptionList" value="" />
+    </properties>
   </rule>
 
   <rule ref="category/java/multithreading.xml">

@@ -80,6 +80,7 @@
     <exclude name="SignatureDeclareThrowsException" />
     <exclude name="UseObjectForClearerAPI" />
     <exclude name="CognitiveComplexity" />
+    <exclude name="AbstractClassWithoutAnyMethod" />
   </rule>
   <rule ref="category/java/design.xml/CognitiveComplexity">
     <properties>

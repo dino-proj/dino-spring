@@ -19,6 +19,11 @@ public class UniqMatcher<T extends Serializable & Comparable<T>> implements Scop
 
   private final T value;
 
+  /**
+   * 构造唯一值匹配器
+   * 
+   * @param value 要匹配的值
+   */
   public UniqMatcher(T value) {
     Objects.requireNonNull(value);
     this.value = value;

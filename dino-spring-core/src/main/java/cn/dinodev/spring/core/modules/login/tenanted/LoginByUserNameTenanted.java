@@ -59,8 +59,11 @@ public interface LoginByUserNameTenanted<U extends User<K>, K extends Serializab
     return Response.success(loginAuth(tenant, user, req.getPlt(), req.getGuid()));
   }
 
+  /**
+   * 用户名密码登录请求体
+   */
   @Data
-  public static class UserNameLoginBody {
+  class UserNameLoginBody {
     @Schema(description = "用户名", requiredMode = RequiredMode.REQUIRED)
     @Size(min = 4)
     @NotBlank

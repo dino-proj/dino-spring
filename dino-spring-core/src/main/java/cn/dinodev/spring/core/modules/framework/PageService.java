@@ -3,7 +3,11 @@
 
 package cn.dinodev.spring.core.modules.framework;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import cn.dinodev.spring.commons.context.ContextHelper;
 import cn.dinodev.spring.commons.response.Status;
 import cn.dinodev.spring.commons.utils.Assert;
@@ -11,8 +15,6 @@ import cn.dinodev.spring.core.modules.framework.template.Template;
 import cn.dinodev.spring.core.modules.framework.template.TemplateService;
 import cn.dinodev.spring.core.service.impl.ServiceBase;
 import cn.dinodev.spring.data.dao.CrudRepositoryBase;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  *
@@ -37,10 +39,24 @@ public class PageService extends ServiceBase<PageEntity, Long> {
     return pageRepository;
   }
 
+  /**
+   * 根据模板名称获取页面配置
+   *
+   * @param templateName 模板名称
+   * @return 页面配置对象
+   */
   public Page<PageConfig> getPageByTemplateName(String templateName) {
     return getPageByTemplateName(templateName, PageConfig.class);
   }
 
+  /**
+   * 根据模板名称获取指定类型的页面配置
+   *
+   * @param templateName 模板名称
+   * @param cls 配置类型的 Class 对象
+   * @param <T> 配置类型
+   * @return 页面配置对象
+   */
   @SuppressWarnings("unchecked")
   public <T extends PageConfig> Page<T> getPageByTemplateName(String templateName, Class<T> cls) {
     Template template = templateService.getByName(templateName);
@@ -60,6 +76,14 @@ public class PageService extends ServiceBase<PageEntity, Long> {
     return page;
   }
 
+  /**
+   * 根据页面 ID 获取指定类型的页面配置
+   *
+   * @param id 页面 ID
+   * @param cls 配置类型的 Class 对象
+   * @param <T> 配置类型
+   * @return 页面配置对象，如果不存在则返回 null
+   */
   @SuppressWarnings("unchecked")
   public <T extends PageConfig> Page<T> getPageById(Long id, Class<T> cls) {
     var entity = pageRepository.getOneById(ContextHelper.currentTenantId(), id);
@@ -78,10 +102,24 @@ public class PageService extends ServiceBase<PageEntity, Long> {
     return page;
   }
 
+  /**
+   * 根据页面 ID 获取页面配置
+   *
+   * @param id 页面 ID
+   * @return 页面配置对象
+   */
   public Page<PageConfig> getPageById(Long id) {
     return getPageById(id, PageConfig.class);
   }
 
+  /**
+   * 根据 ID 更新页面配置
+   *
+   * @param id 页面 ID
+   * @param title 页面标题
+   * @param config 页面配置
+   * @return 更新后的页面配置对象
+   */
   public Page<PageConfig> updatePageConfigById(Long id, String title, PageConfig config) {
     var entity = pageRepository.getOneById(ContextHelper.currentTenantId(), id);
     Assert.isTrue(entity.isPresent(), Status.CODE.FAIL_NOT_FOUND);
@@ -93,6 +131,14 @@ public class PageService extends ServiceBase<PageEntity, Long> {
     return this.getPageById(id);
   }
 
+  /**
+   * 根据模板更新页面配置
+   *
+   * @param template 模板对象
+   * @param title 页面标题
+   * @param config 页面配置
+   * @return 更新后的页面配置对象
+   */
   @SuppressWarnings("unchecked")
   public Page<PageConfig> updatePageConfigByTemplate(Template template, String title, PageConfig config) {
     PageEntity pageEntity;

@@ -38,7 +38,7 @@ public class TokenEntity extends TenantRowEntityBase<String> {
   @Column(length = 16)
   private String userType;
 
-  @Schema(description = "Token串")
+  @Schema(description = "访问Token串")
   @Column(length = 128)
   private String token;
 

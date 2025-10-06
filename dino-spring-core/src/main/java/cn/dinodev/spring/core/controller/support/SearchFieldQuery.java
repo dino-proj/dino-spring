@@ -27,7 +27,7 @@ public class SearchFieldQuery<M extends FieldEnum> implements CustomQuery {
     if (search == null) {
       return sql;
     }
-    List<String> fields = search.getField().stream().map(file -> file.getField()).collect(Collectors.toList());
-    return sql.someLike(fields.toArray(new String[fields.size()]), search.getKeyword());
+    List<String> fields = search.getField().stream().map(FieldEnum::getField).collect(Collectors.toList());
+    return sql.someLike(fields.toArray(String[]::new), search.getKeyword());
   }
 }

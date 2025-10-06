@@ -90,8 +90,8 @@ public class TencentSmsService extends SmsServiceBase {
     }
 
     // 设置发送手机号
-    req.setPhoneNumberSet(mobiles.toArray(new String[mobiles.size()]));
-    req.setTemplateParamSet(templateParamsList.toArray(new String[templateParamsList.size()]));
+    req.setPhoneNumberSet(mobiles.toArray(new String[0]));
+    req.setTemplateParamSet(templateParamsList.toArray(new String[0]));
     try {
       // 发送短信
       var resp = client.SendSms(req);

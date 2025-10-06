@@ -4,7 +4,6 @@
 package cn.dinodev.spring.core.modules.importandexport.dataimport;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -25,7 +24,11 @@ import lombok.SneakyThrows;
  * @author JL
  * @Date: 2021/9/30
  */
-public class DataImport {
+public final class DataImport {
+
+  private DataImport() {
+    // Utility class
+  }
 
   /**
    * 读取Excel文件并处理数据
@@ -44,7 +47,7 @@ public class DataImport {
    */
   public static <T> void doRead(InputStream in, Class<T> cls, Consumer<List<T>> cb) throws IOException {
     EasyExcel.read(in, cls, new ReadListener<T>() {
-      private List<T> list = new LinkedList<>();
+      private final List<T> list = new LinkedList<>();
 
       @Override
       public void invoke(T data, AnalysisContext context) {
@@ -75,7 +78,7 @@ public class DataImport {
    */
   public static <T> void doRead(String pathName, Class<T> cls, Consumer<List<T>> cb) throws IOException {
 
-    try (InputStream in = new FileInputStream(new File(pathName))) {
+    try (InputStream in = java.nio.file.Files.newInputStream(new File(pathName).toPath())) {
       doRead(in, cls, cb);
     }
 
@@ -122,7 +125,7 @@ public class DataImport {
    */
   public static <T> void repeatedRead(String pathName, List<Class<T>> list, Consumer<List<T>> cb) throws IOException {
 
-    try (InputStream in = new FileInputStream(new File(pathName))) {
+    try (InputStream in = java.nio.file.Files.newInputStream(new File(pathName).toPath())) {
       repeatedRead(in, list, cb);
     }
 
@@ -148,7 +151,7 @@ public class DataImport {
     List<ReadSheet> readSheets = new ArrayList<>();
     LambdaUtils.forEach(list, (index, item) -> {
       ReadSheet readSheet = EasyExcel.readSheet(index).head(item).registerReadListener(new ReadListener<T>() {
-        List<T> list = new LinkedList<>();
+        final List<T> list = new LinkedList<>();
 
         @Override
         public void invoke(T data, AnalysisContext context) {

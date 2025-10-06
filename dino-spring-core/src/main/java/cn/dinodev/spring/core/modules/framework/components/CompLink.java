@@ -36,6 +36,9 @@ public class CompLink implements Component, Action {
   @Schema(description = "给链接传的参数", required = false)
   private Map<String, String> params;
 
+  /**
+   * 链接类型
+   */
   @RequiredArgsConstructor
   enum LinkType implements ValueLabel<String> {
     //H5地址

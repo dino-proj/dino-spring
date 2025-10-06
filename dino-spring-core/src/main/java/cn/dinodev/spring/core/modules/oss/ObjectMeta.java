@@ -28,22 +28,36 @@ public class ObjectMeta {
   private boolean dir;
 
   @Schema(description = "对象大小")
-  @Builder.Default
-  private long size = 0L;
+  private long size;
 
   @Schema(description = "最后修改时间")
   private Date updateAt;
 
+  /**
+   * 判断是否是文件夹
+   * @return 如果是文件夹返回true，否则返回false
+   */
   @Schema(description = "是否是文件夹")
   public boolean isDir() {
     return dir;
   }
 
+  /**
+   * 判断是否是文件
+   * @return 如果是文件返回true，否则返回false
+   */
   @Schema(description = "是否是文件")
   public boolean isFile() {
     return !dir;
   }
 
+  /**
+   * 创建目录对象元数据
+   *
+   * @param name 对象名称
+   * @param updateAt 更新时间
+   * @return ObjectMeta 实例
+   */
   public static ObjectMeta ofDir(String name, Date updateAt) {
     var meta = new ObjectMeta();
     meta.setDir(true);
@@ -52,10 +66,25 @@ public class ObjectMeta {
     return meta;
   }
 
+  /**
+   * 创建目录对象元数据
+   *
+   * @param name 对象名称
+   * @param updateAt 更新时间（时间戳）
+   * @return ObjectMeta 实例
+   */
   public static ObjectMeta ofDir(String name, long updateAt) {
     return ofDir(name, new Date(updateAt));
   }
 
+  /**
+   * 创建文件对象元数据
+   *
+   * @param name 对象名称
+   * @param size 文件大小
+   * @param updateAt 更新时间
+   * @return ObjectMeta 实例
+   */
   public static ObjectMeta ofFile(String name, long size, Date updateAt) {
     var meta = new ObjectMeta();
     meta.setDir(false);
@@ -65,6 +94,14 @@ public class ObjectMeta {
     return meta;
   }
 
+  /**
+   * 创建文件对象元数据
+   *
+   * @param name 对象名称
+   * @param size 文件大小
+   * @param updateAt 更新时间（时间戳）
+   * @return ObjectMeta 实例
+   */
   public static ObjectMeta ofFile(String name, long size, long updateAt) {
     return ofFile(name, size, new Date(updateAt));
   }

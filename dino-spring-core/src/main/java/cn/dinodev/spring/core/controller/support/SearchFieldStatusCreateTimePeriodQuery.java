@@ -27,7 +27,7 @@ public class SearchFieldStatusCreateTimePeriodQuery<M extends FieldEnum> extends
   public SelectSqlBuilder buildSql(SelectSqlBuilder sql) {
     if (search != null) {
       List<String> fields = search.getField().stream().map(M::getField).collect(Collectors.toList());
-      sql.someLike(fields.toArray(new String[fields.size()]), search.getKeyword());
+      sql.someLike(fields.toArray(String[]::new), search.getKeyword());
     }
     return super.buildSql(sql);
   }

@@ -7,6 +7,7 @@ import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +22,13 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestMapping("${server.error.path:${error.path:/error}}")
 public class ErrorRethrowController implements ErrorController {
 
-  @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  /**
+   * 处理错误请求，重新抛出原始异常
+   * @param request HTTP请求对象
+   * @param response HTTP响应对象
+   * @throws Throwable 重新抛出的原始异常
+   */
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public void handleError(HttpServletRequest request, HttpServletResponse response) throws Throwable {
     if (request.getAttribute("jakarta.servlet.error.exception") != null) {
       response.setStatus(HttpStatus.OK.value());

@@ -40,8 +40,11 @@ public @interface BindDict {
    */
   Scope scope() default Scope.TENANT;
 
+  /**
+   * 字典字段枚举，定义字典项的不同字段类型
+   */
   @RequiredArgsConstructor
-  public enum DictFilds {
+  enum DictFilds {
     //item_code
     NAME("item_code"),
     //item_label
@@ -57,7 +60,10 @@ public @interface BindDict {
     }
   }
 
-  public enum Scope {
+  /**
+   * 作用域枚举，定义字典查找的范围级别
+   */
+  enum Scope {
     //系统级字典
     SYSTEM,
     //租户级字典

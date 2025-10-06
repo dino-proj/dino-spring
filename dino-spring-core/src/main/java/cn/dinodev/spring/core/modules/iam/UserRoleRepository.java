@@ -25,6 +25,11 @@ import cn.dinodev.spring.data.dao.CrudRepositoryBase;
 
 public interface UserRoleRepository extends CrudRepositoryBase<UserRoleEntity, Long> {
 
+  String COLUMN_TENANT_ID = "tenant_id";
+  String COLUMN_USER_TYPE = "user_type";
+  String COLUMN_USER_ID = "user_id";
+  String COLUMN_ROLE_ID = "role_id";
+
   /**
    * 添加用户的角色
    * @param tenantId
@@ -37,13 +42,13 @@ public interface UserRoleRepository extends CrudRepositoryBase<UserRoleEntity, L
   @Transactional(rollbackFor = Exception.class)
   default Optional<Integer> addUserRoles(String tenantId, String userType, String userId, List<Long> roleIds) {
     var sql = newSelect();
-    sql.eq("tenant_id", tenantId);
+    sql.eq(COLUMN_TENANT_ID, tenantId);
     sql.column("id, role_id");
-    sql.eq("user_type", userType);
-    sql.eq("user_id", userId);
-    sql.in("role_id", roleIds);
+    sql.eq(COLUMN_USER_TYPE, userType);
+    sql.eq(COLUMN_USER_ID, userId);
+    sql.in(COLUMN_ROLE_ID, roleIds);
 
-    var existRoles = this.queryForMap(sql, "role_id", Long.class, "id", Long.class);
+    var existRoles = this.queryForMap(sql, COLUMN_ROLE_ID, Long.class, "id", Long.class);
     var restRoles = roleIds.stream().filter(roleId -> !existRoles.containsKey(roleId)).collect(Collectors.toList());
     if (!restRoles.isEmpty()) {
       var entities = restRoles.stream()
@@ -60,7 +65,7 @@ public interface UserRoleRepository extends CrudRepositoryBase<UserRoleEntity, L
       this.saveAll(entities);
     }
 
-    return Optional.of(Integer.valueOf(roleIds.size()));
+    return Optional.of(roleIds.size());
   }
 
   /**
@@ -75,10 +80,10 @@ public interface UserRoleRepository extends CrudRepositoryBase<UserRoleEntity, L
   @Transactional(rollbackFor = Exception.class)
   default Optional<Integer> removeUserRoles(String tenantId, String userType, String userId, List<Long> roleIds) {
     var sql = newDelete();
-    sql.eq("tenant_id", tenantId);
-    sql.eq("user_type", userType);
-    sql.eq("user_id", userId);
-    sql.in("role_id", roleIds);
+    sql.eq(COLUMN_TENANT_ID, tenantId);
+    sql.eq(COLUMN_USER_TYPE, userType);
+    sql.eq(COLUMN_USER_ID, userId);
+    sql.in(COLUMN_ROLE_ID, roleIds);
 
     return Optional.of(this.delete(sql));
   }
@@ -92,12 +97,12 @@ public interface UserRoleRepository extends CrudRepositoryBase<UserRoleEntity, L
    */
   default List<Long> getUserRoles(String tenantId, String userType, String userId) {
     var sql = newSelect();
-    sql.column("role_id");
+    sql.column(COLUMN_ROLE_ID);
     if (StringUtils.isNoneBlank(tenantId)) {
-      sql.eq("tenant_id", tenantId);
+      sql.eq(COLUMN_TENANT_ID, tenantId);
     }
-    sql.eq("user_type", userType);
-    sql.eq("user_id", userId);
+    sql.eq(COLUMN_USER_TYPE, userType);
+    sql.eq(COLUMN_USER_ID, userId);
     return this.queryList(sql, Long.class);
   }
 
@@ -111,10 +116,10 @@ public interface UserRoleRepository extends CrudRepositoryBase<UserRoleEntity, L
    */
   default Page<Long> listUserRoles(String tenantId, String userType, String userId, Pageable pageable) {
     var sql = newSelect();
-    sql.column("role_id");
-    sql.eq("tenant_id", tenantId);
-    sql.eq("user_type", userType);
-    sql.eq("user_id", userId);
+    sql.column(COLUMN_ROLE_ID);
+    sql.eq(COLUMN_TENANT_ID, tenantId);
+    sql.eq(COLUMN_USER_TYPE, userType);
+    sql.eq(COLUMN_USER_ID, userId);
     return this.queryPage(sql, pageable, Long.class);
   }
 

@@ -20,6 +20,11 @@ public class AnyMatcher<T extends Serializable & Comparable<T>> implements Scope
 
   private final List<T> values;
 
+  /**
+   * 构造任意匹配器
+   *
+   * @param values 要匹配的值列表
+   */
   public AnyMatcher(List<T> values) {
     this.values = values;
   }

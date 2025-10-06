@@ -32,7 +32,7 @@ public enum DefaultUserType implements UserType {
 
   private final boolean tenantUser;
 
-  private DefaultUserType(String userType, boolean tenantUser) {
+  DefaultUserType(String userType, boolean tenantUser) {
     this.userType = userType;
     this.tenantUser = tenantUser;
   }
@@ -57,6 +57,11 @@ public enum DefaultUserType implements UserType {
     return Arrays.stream(DefaultUserType.values()).collect(Collectors.toList());
   }
 
+  /**
+   * 根据用户类型字符串获取对应的枚举值
+   * @param userType 用户类型字符串
+   * @return 对应的UserType枚举值
+   */
   public static UserType of(String userType) {
     return DefaultUserType.valueOf(userType.toUpperCase());
   }

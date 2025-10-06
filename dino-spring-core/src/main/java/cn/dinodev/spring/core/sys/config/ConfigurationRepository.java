@@ -75,12 +75,12 @@ public interface ConfigurationRepository<T extends Configuration> extends CrudRe
 
   /**
    * 属性优先级比较
-   * @param l
-   * @param r
-   * @return
+   * @param left 左侧属性
+   * @param right 右侧属性
+   * @return 优先级更高的属性
    */
-  default T prorityProperty(T l, T r) {
-    return l.getScope().getOrder() > r.getScope().getOrder() ? l : r;
+  default T prorityProperty(T left, T right) {
+    return left.getScope().getOrder() > right.getScope().getOrder() ? left : right;
   }
 
   /**

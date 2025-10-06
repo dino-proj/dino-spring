@@ -18,13 +18,14 @@ import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- *
+ * Flyway数据库迁移类，用于初始化DinoSpringCore的权限管理数据
  * @author Cody Lu
  * @date 2022-05-05 03:06:39
  */
 
 @Component
 @Slf4j
+@SuppressWarnings("PMD.ClassNamingConventions")
 public class V2_2__DinoSpringCore extends BaseJavaMigration {
 
   @Autowired

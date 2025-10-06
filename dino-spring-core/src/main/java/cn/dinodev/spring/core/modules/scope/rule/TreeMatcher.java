@@ -23,6 +23,11 @@ public class TreeMatcher<T extends Serializable & Comparable<T>> implements Scop
 
   private final List<T> reversePaths;
 
+  /**
+   * 构造树匹配器
+   * 
+   * @param paths 路径列表
+   */
   public TreeMatcher(List<T> paths) {
     if (CollectionUtils.isEmpty(paths)) {
       reversePaths = Collections.emptyList();
@@ -32,6 +37,11 @@ public class TreeMatcher<T extends Serializable & Comparable<T>> implements Scop
     }
   }
 
+  /**
+   * 构造树匹配器
+   * 
+   * @param paths 路径可变参数
+   */
   @SafeVarargs
   public TreeMatcher(T... paths) {
     this(Arrays.asList(paths));

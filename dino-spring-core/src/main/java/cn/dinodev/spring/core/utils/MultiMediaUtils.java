@@ -19,6 +19,7 @@ import com.drew.imaging.FileTypeDetector;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.imaging.png.PngChunkType;
+import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.MetadataException;
 import com.drew.metadata.avi.AviDirectory;
@@ -92,59 +93,93 @@ public class MultiMediaUtils {
 
   private static void fillMediaInfo(Metadata meta, MediaInfo media) throws MetadataException {
     for (var dir : meta.getDirectories()) {
-      if (dir instanceof JpegDirectory) {
-        var jpegDir = (JpegDirectory) dir;
-        media.setWidth(jpegDir.getImageWidth());
-        media.setHeight(jpegDir.getImageHeight());
+      if (processImageDirectory(dir, media)) {
         return;
-      } else if (dir instanceof PngDirectory) {
-        var pngDir = (PngDirectory) dir;
-        if (pngDir.getPngChunkType().equals(PngChunkType.IHDR)) {
-          media.setWidth(dir.getInt(PngDirectory.TAG_IMAGE_WIDTH));
-          media.setHeight(dir.getInt(PngDirectory.TAG_IMAGE_HEIGHT));
-        }
-        return;
-      } else if (dir instanceof GifHeaderDirectory) {
-        media.setWidth(dir.getInt(GifHeaderDirectory.TAG_IMAGE_WIDTH));
-        media.setHeight(dir.getInt(GifHeaderDirectory.TAG_IMAGE_HEIGHT));
-        return;
-      } else if (dir instanceof BmpHeaderDirectory) {
-        media.setWidth(dir.getInt(BmpHeaderDirectory.TAG_IMAGE_WIDTH));
-        media.setHeight(dir.getInt(BmpHeaderDirectory.TAG_IMAGE_HEIGHT));
-        return;
-      } else if (dir instanceof WebpDirectory) {
-        media.setWidth(dir.getInt(WebpDirectory.TAG_IMAGE_WIDTH));
-        media.setHeight(dir.getInt(WebpDirectory.TAG_IMAGE_HEIGHT));
-        return;
-      } else if (dir instanceof AviDirectory) {
-        media.setWidth(dir.getInt(AviDirectory.TAG_WIDTH));
-        media.setHeight(dir.getInt(AviDirectory.TAG_HEIGHT));
-        media.setDuration(dir.getLong(AviDirectory.TAG_DURATION));
-        media.setResolution(calResolution(media.getWidth(), media.getHeight()));
-        return;
-      } else if (dir instanceof QuickTimeDirectory) {
-        if (dir instanceof QuickTimeVideoDirectory) {
-          media.setWidth(dir.getInt(QuickTimeVideoDirectory.TAG_WIDTH));
-          media.setHeight(dir.getInt(QuickTimeVideoDirectory.TAG_HEIGHT));
-          media.setResolution(calResolution(media.getWidth(), media.getHeight()));
-        } else if (dir.hasTagName(QuickTimeDirectory.TAG_DURATION)) {
-          media.setDuration(dir.getLong(QuickTimeDirectory.TAG_DURATION) / 1000L);
-        }
-      } else if (dir instanceof Mp4Directory) {
-        if (dir instanceof Mp4VideoDirectory) {
-          media.setWidth(dir.getInt(Mp4VideoDirectory.TAG_WIDTH));
-          media.setHeight(dir.getInt(Mp4VideoDirectory.TAG_HEIGHT));
-          media.setResolution(calResolution(media.getWidth(), media.getHeight()));
-        } else if (dir.hasTagName(Mp4Directory.TAG_DURATION)) {
-          var timeScale = dir.hasTagName(Mp4Directory.TAG_TIME_SCALE) ? dir.getDouble(Mp4Directory.TAG_TIME_SCALE)
-              : 1000D;
-          media.setDuration(Math.round(dir.getLong(Mp4Directory.TAG_DURATION) / timeScale));
-        }
-      } else if (dir instanceof WavDirectory) {
-        media.setDuration(dir.getLong(WavDirectory.TAG_DURATION) / 1000L);
+      }
+      if (processVideoDirectory(dir, media)) {
+        // Video processing might not return immediately for some formats
+        continue;
+      }
+      if (processAudioDirectory(dir, media)) {
         return;
       }
     }
+  }
+
+  private static boolean processImageDirectory(Directory dir, MediaInfo media) throws MetadataException {
+    if (dir instanceof JpegDirectory) {
+      var jpegDir = (JpegDirectory) dir;
+      media.setWidth(jpegDir.getImageWidth());
+      media.setHeight(jpegDir.getImageHeight());
+      return true;
+    } else if (dir instanceof PngDirectory) {
+      var pngDir = (PngDirectory) dir;
+      if (pngDir.getPngChunkType().equals(PngChunkType.IHDR)) {
+        media.setWidth(dir.getInt(PngDirectory.TAG_IMAGE_WIDTH));
+        media.setHeight(dir.getInt(PngDirectory.TAG_IMAGE_HEIGHT));
+      }
+      return true;
+    } else if (dir instanceof GifHeaderDirectory) {
+      media.setWidth(dir.getInt(GifHeaderDirectory.TAG_IMAGE_WIDTH));
+      media.setHeight(dir.getInt(GifHeaderDirectory.TAG_IMAGE_HEIGHT));
+      return true;
+    } else if (dir instanceof BmpHeaderDirectory) {
+      media.setWidth(dir.getInt(BmpHeaderDirectory.TAG_IMAGE_WIDTH));
+      media.setHeight(dir.getInt(BmpHeaderDirectory.TAG_IMAGE_HEIGHT));
+      return true;
+    } else if (dir instanceof WebpDirectory) {
+      media.setWidth(dir.getInt(WebpDirectory.TAG_IMAGE_WIDTH));
+      media.setHeight(dir.getInt(WebpDirectory.TAG_IMAGE_HEIGHT));
+      return true;
+    }
+    return false;
+  }
+
+  private static boolean processVideoDirectory(Directory dir, MediaInfo media) throws MetadataException {
+    if (dir instanceof AviDirectory) {
+      media.setWidth(dir.getInt(AviDirectory.TAG_WIDTH));
+      media.setHeight(dir.getInt(AviDirectory.TAG_HEIGHT));
+      media.setDuration(dir.getLong(AviDirectory.TAG_DURATION));
+      media.setResolution(calResolution(media.getWidth(), media.getHeight()));
+      return true;
+    } else if (dir instanceof QuickTimeDirectory) {
+      processQuickTimeDirectory(dir, media);
+      return false; // Continue processing other directories
+    } else if (dir instanceof Mp4Directory) {
+      processMp4Directory(dir, media);
+      return false; // Continue processing other directories
+    }
+    return false;
+  }
+
+  private static void processQuickTimeDirectory(Directory dir, MediaInfo media) throws MetadataException {
+    if (dir instanceof QuickTimeVideoDirectory) {
+      media.setWidth(dir.getInt(QuickTimeVideoDirectory.TAG_WIDTH));
+      media.setHeight(dir.getInt(QuickTimeVideoDirectory.TAG_HEIGHT));
+      media.setResolution(calResolution(media.getWidth(), media.getHeight()));
+    } else if (dir.hasTagName(QuickTimeDirectory.TAG_DURATION)) {
+      media.setDuration(dir.getLong(QuickTimeDirectory.TAG_DURATION) / 1000L);
+    }
+  }
+
+  private static void processMp4Directory(Directory dir, MediaInfo media) throws MetadataException {
+    if (dir instanceof Mp4VideoDirectory) {
+      media.setWidth(dir.getInt(Mp4VideoDirectory.TAG_WIDTH));
+      media.setHeight(dir.getInt(Mp4VideoDirectory.TAG_HEIGHT));
+      media.setResolution(calResolution(media.getWidth(), media.getHeight()));
+    } else if (dir.hasTagName(Mp4Directory.TAG_DURATION)) {
+      var timeScale = dir.hasTagName(Mp4Directory.TAG_TIME_SCALE) ? dir.getDouble(Mp4Directory.TAG_TIME_SCALE)
+          : 1000D;
+      media.setDuration(Math.round(dir.getLong(Mp4Directory.TAG_DURATION) / timeScale));
+    }
+  }
+
+  private static boolean processAudioDirectory(Directory dir, MediaInfo media) throws MetadataException {
+    if (dir instanceof WavDirectory) {
+      media.setDuration(dir.getLong(WavDirectory.TAG_DURATION) / 1000L);
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -173,9 +208,9 @@ public class MultiMediaUtils {
       net.sf.image4j.codec.ico.ICOEncoder.write(image, out);
     } else {
       var ico = new java.awt.image.BufferedImage(size, size, java.awt.image.BufferedImage.TYPE_INT_RGB);
-      java.awt.Graphics2D g = ico.createGraphics();
-      g.setColor(java.awt.Color.WHITE);
-      g.drawImage(image.getScaledInstance(size, size, java.awt.Image.SCALE_SMOOTH), 0, 0, null);
+      java.awt.Graphics2D graphics = ico.createGraphics();
+      graphics.setColor(java.awt.Color.WHITE);
+      graphics.drawImage(image.getScaledInstance(size, size, java.awt.Image.SCALE_SMOOTH), 0, 0, null);
 
       net.sf.image4j.codec.ico.ICOEncoder.write(ico, out);
     }
@@ -190,11 +225,11 @@ public class MultiMediaUtils {
    */
   public String calResolution(int width, int height) {
     var min = Math.min(width, height);
-    if (min >= 71820) {
+    if (min >= 71_820) {
       return "128k";
-    } else if (min >= 35640) {
+    } else if (min >= 35_640) {
       return "64k";
-    } else if (min >= 17820) {
+    } else if (min >= 17_820) {
       return "32k";
     } else if (min >= 8640) {
       return "16k";
@@ -251,6 +286,10 @@ public class MultiMediaUtils {
     return StringUtils.startsWithAny(mime, "audio/", "video/", "image/");
   }
 
+  /**
+   * 多媒体信息类，用于存储和操作多媒体文件的元数据信息
+   * 包括文件类型、MIME类型、尺寸、时长、清晰度等信息
+   */
   @Data
   public static class MediaInfo {
     private final String typeName;
@@ -264,18 +303,34 @@ public class MultiMediaUtils {
     //清晰度["240", "360", "480", "720", "1080", "2k", "4k", "8k"]
     private String resolution;
 
+    /**
+     * 判断是否为图片文件
+     * @return true表示是图片文件，false表示不是
+     */
     public boolean isImage() {
       return isImageMime(mime);
     }
 
+    /**
+     * 判断是否为音频文件
+     * @return true表示是音频文件，false表示不是
+     */
     public boolean isAudio() {
       return isAudioMime(mime);
     }
 
+    /**
+     * 判断是否为视频文件
+     * @return true表示是视频文件，false表示不是
+     */
     public boolean isVideo() {
       return isVideoMime(mime);
     }
 
+    /**
+     * 判断是否为多媒体文件（图片、音频或视频）
+     * @return true表示是多媒体文件，false表示不是
+     */
     public boolean isMultiMedia() {
       return isMultiMediaMime(mime);
     }

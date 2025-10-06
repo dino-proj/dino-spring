@@ -6,13 +6,13 @@ package cn.dinodev.spring.core.pdf;
 import lombok.Data;
 
 /**
- * PDF模型抽象类，用于生成PDF文件。
+ * PDF模型基类，用于生成PDF文件。
  * @author Cody Lu
  * @date 2024-02-03 00:43:22
  */
 
 @Data
-public abstract class PdfModel {
+public class PdfModel {
 
   /**
    * 生成的PDF文件名，不带'.pdf'后缀。
@@ -22,12 +22,12 @@ public abstract class PdfModel {
   /**
    * 是否只读，默认为false。
    */
-  private boolean readOnly = false;
+  private boolean readOnly;
 
   /**
    * 是否设置密码保护，默认为false。
    */
-  private boolean protect = false;
+  private boolean protect;
 
   /**
    * 打开文档的密码。

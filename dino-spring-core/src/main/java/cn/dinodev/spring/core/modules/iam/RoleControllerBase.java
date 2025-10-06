@@ -41,8 +41,11 @@ public interface RoleControllerBase
     return RoleEntity.class;
   }
 
+  /**
+   * 角色请求对象
+   */
   @Data
-  public class RoleReq {
+  class RoleReq {
     @Schema(description = "角色编码", required = true, maxLength = 64)
     @NotBlank
     @Size(max = 64)

@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
-import cn.dinodev.spring.commons.utils.NamingUtils;
 import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import cn.dinodev.spring.commons.utils.NamingUtils;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
@@ -43,7 +43,7 @@ public class OpenApiAutoConfiguration {
   private String apiDescription;
 
   @Bean
-  public OpenApiCustomizer openApiCustomiser(ObjectProvider<Info> infoProvider, ObjectProvider<Contact> contactProvider,
+  OpenApiCustomizer openApiCustomiser(ObjectProvider<Info> infoProvider, ObjectProvider<Contact> contactProvider,
       ObjectProvider<License> licenseProvider, ObjectProvider<Server> serverProvider) {
     log.info("--->> api-doc: add info, contact:{}, license:{}", contactProvider.getIfAvailable(),
         licenseProvider.getIfAvailable());

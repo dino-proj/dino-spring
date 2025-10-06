@@ -42,6 +42,9 @@ public class LoginModuleProperties {
   @NestedConfigurationProperty
   private TokenProperties token;
 
+  /**
+   * Mock 配置属性（仅用于测试环境）
+   */
   @Data
   public static class MockProperties {
     /**
@@ -55,6 +58,9 @@ public class LoginModuleProperties {
     private String captcha;
   }
 
+  /**
+   * Token 配置属性
+   */
   @Data
   public static class TokenProperties {
 

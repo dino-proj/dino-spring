@@ -64,7 +64,7 @@ public abstract class ConfigurationService<T extends Configuration> extends Serv
    * @param value
    * @return
    */
-  public Property setProperty(String key, @Nonnull final Scope scope, String scopeValue, Object value) {
+  public Property saveProperty(String key, @Nonnull final Scope scope, String scopeValue, Object value) {
     var config = configRepository().queryOnePropertyByKeyInScope(ContextHelper.currentTenantId(), key, scope)
         .orElseGet(() -> {
           var entity = newEntity();

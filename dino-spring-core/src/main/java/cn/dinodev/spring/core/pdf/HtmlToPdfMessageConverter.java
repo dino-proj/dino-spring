@@ -4,20 +4,18 @@
 package cn.dinodev.spring.core.pdf;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
 import org.apache.pdfbox.pdmodel.encryption.StandardProtectionPolicy;
-import cn.dinodev.spring.commons.function.Resolver;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.AbstractHttpMessageConverter;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 
@@ -28,6 +26,7 @@ import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import com.openhtmltopdf.svgsupport.BatikSVGDrawer;
 import com.openhtmltopdf.swing.NaiveUserAgent.DefaultUriResolver;
 
+import cn.dinodev.spring.commons.function.Resolver;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -44,6 +43,9 @@ public class HtmlToPdfMessageConverter extends AbstractHttpMessageConverter<PdfF
   private static final String CLASS_MATH = "com.openhtmltopdf.mathmlsupport.MathMLDrawer";
   private static final String CLASS_LATEX = "com.openhtmltopdf.latexsupport.LaTeXDOMMutator";
 
+  /**
+   * 构造 HTML 转 PDF 消息转换器
+   */
   public HtmlToPdfMessageConverter() {
     super(MediaType.APPLICATION_PDF);
   }
@@ -59,14 +61,12 @@ public class HtmlToPdfMessageConverter extends AbstractHttpMessageConverter<PdfF
   }
 
   @Override
-  protected PdfFromHtmlModel readInternal(Class<? extends PdfFromHtmlModel> clazz, HttpInputMessage inputMessage)
-      throws IOException, HttpMessageNotReadableException {
+  protected PdfFromHtmlModel readInternal(Class<? extends PdfFromHtmlModel> clazz, HttpInputMessage inputMessage) {
     throw new UnsupportedOperationException("Unimplemented method 'readInternal'");
   }
 
   @Override
-  protected void writeInternal(PdfFromHtmlModel model, HttpOutputMessage outputMessage)
-      throws IOException, HttpMessageNotWritableException {
+  protected void writeInternal(PdfFromHtmlModel model, HttpOutputMessage outputMessage) throws IOException {
 
     String fileName = model.getFileName();
     if (StringUtils.isNotBlank(fileName)) {
@@ -77,23 +77,45 @@ public class HtmlToPdfMessageConverter extends AbstractHttpMessageConverter<PdfF
     }
 
     // 写出pdf
-    var pdfBuilder = this.createBuilder(model);
+    this.rendeAndOutput(model, outputMessage.getBody());
 
-    pdfBuilder.toStream(outputMessage.getBody());
-
-    pdfBuilder.run();
   }
 
-  private PdfRendererBuilder createBuilder(PdfFromHtmlModel model) throws IOException {
+  private void rendeAndOutput(PdfFromHtmlModel model, OutputStream outputStream) throws IOException {
     PdfRendererBuilder builder = new PdfRendererBuilder();
     builder.useFastMode();
 
+    builder.withProducer(model.getProducer());
+
+    // Configure Builder features
+    configureBuilderFeatures(builder);
+
     builder.withHtmlContent(model.getHtml(), model.getWorkDir());
 
-    var pdDocument = new PDDocument(MemoryUsageSetting.setupMixed(1024 * 1024L));
-    pdDocument.setAllSecurityToBeRemoved(false);
+    // PDDocument will be closed by PdfRendererBuilder.run()
+    try (var pdDocument = new PDDocument(MemoryUsageSetting.setupMixed(1024 * 1024L))) {
+      pdDocument.setAllSecurityToBeRemoved(false);
 
-    // add password protection
+      // Configure security settings
+      configureDocumentSecurity(model, pdDocument);
+
+      // Set document metadata
+      pdDocument.getDocumentInformation().setCreator(model.getCreator());
+
+      builder.usePDDocument(pdDocument);
+
+      // 添加自定义的uri解析器
+      if (model.getUriResolver() != null) {
+        builder.useUriResolver(new UriResolverWrraper(model.getUriResolver()));
+      }
+
+      builder.toStream(outputStream);
+      builder.run();
+    }
+
+  }
+
+  private void configureDocumentSecurity(PdfFromHtmlModel model, PDDocument pdDocument) throws IOException {
     if (model.isProtect() || model.isReadOnly() || StringUtils.isNotBlank(model.getUserPassword())) {
       AccessPermission ap = new AccessPermission();
       if (model.isReadOnly()) {
@@ -105,13 +127,9 @@ public class HtmlToPdfMessageConverter extends AbstractHttpMessageConverter<PdfF
       }
       pdDocument.protect(new StandardProtectionPolicy(null, model.getUserPassword(), ap));
     }
+  }
 
-    // 添加创建者
-    pdDocument.getDocumentInformation().setCreator(model.getCreator());
-    builder.withProducer(model.getProducer());
-
-    builder.usePDDocument(pdDocument);
-
+  private void configureBuilderFeatures(PdfRendererBuilder builder) {
     // 如果找到BatikSVGDrawer.class，这添加svg支持
     if (ClassUtils.isPresent(CLASS_SVG, this.getClass().getClassLoader())) {
       builder.useSVGDrawer(new BatikSVGDrawer());
@@ -124,21 +142,25 @@ public class HtmlToPdfMessageConverter extends AbstractHttpMessageConverter<PdfF
     if (ClassUtils.isPresent(CLASS_LATEX, this.getClass().getClassLoader())) {
       builder.addDOMMutator(LaTeXDOMMutator.INSTANCE);
     }
-
-    // 添加自定义的uri解析器
-    if (model.getUriResolver() != null) {
-      builder.useUriResolver(new UriResolverWrraper(model.getUriResolver()));
-    }
-
-    return builder;
   }
 
+  /**
+   * URI 解析器包装类
+   * <p>将自定义的 URI 解析器适配为 Flying Saucer 的 FSUriResolver 接口</p>
+   *
+   * @author Cody Lu
+   */
   private static class UriResolverWrraper implements FSUriResolver {
 
     private static final DefaultUriResolver DEFAULT_URI_RESOLVER = new DefaultUriResolver();
 
     private final Resolver<String> uriResolver;
 
+    /**
+     * 构造 URI 解析器包装对象
+     *
+     * @param uriResolver 自定义的 URI 解析器
+     */
     public UriResolverWrraper(Resolver<String> uriResolver) {
       this.uriResolver = uriResolver;
     }

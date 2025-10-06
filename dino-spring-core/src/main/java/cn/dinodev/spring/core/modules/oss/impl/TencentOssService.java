@@ -3,6 +3,23 @@
 
 package cn.dinodev.spring.core.modules.oss.impl;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
+
+import org.apache.commons.collections4.IteratorUtils;
+import org.apache.commons.collections4.iterators.LazyIteratorChain;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.auth.BasicCOSCredentials;
@@ -20,26 +37,11 @@ import com.qcloud.cos.model.ListObjectsRequest;
 import com.qcloud.cos.model.ObjectMetadata;
 import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.region.Region;
-import org.apache.commons.collections4.IteratorUtils;
-import org.apache.commons.collections4.iterators.LazyIteratorChain;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+
 import cn.dinodev.spring.core.modules.oss.BucketMeta;
 import cn.dinodev.spring.core.modules.oss.ObjectMeta;
 import cn.dinodev.spring.core.modules.oss.OssService;
 import cn.dinodev.spring.core.modules.oss.config.TencentCosProperties;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -49,8 +51,13 @@ import java.util.stream.Collectors;
 
 public class TencentOssService implements OssService {
 
-  private COSClient cosClient;
+  private final COSClient cosClient;
 
+  /**
+   * 构造腾讯云 COS 对象存储服务
+   *
+   * @param properties 腾讯云 COS 配置属性
+   */
   public TencentOssService(TencentCosProperties properties) {
 
     // 1 初始化用户身份信息（secretId, secretKey）。
@@ -133,7 +140,7 @@ public class TencentOssService implements OssService {
     // 设置最大遍历出多少个对象, 一次listobject最大支持1000
     listObjectsRequest.setMaxKeys(1000);
     AtomicBoolean hasMore = new AtomicBoolean(true);
-    return IteratorUtils.asIterable(new LazyIteratorChain<ObjectMeta>() {
+    return IteratorUtils.asIterable(new LazyIteratorChain<>() {
 
       @Override
       protected Iterator<? extends ObjectMeta> nextIterator(int count) {
@@ -165,10 +172,7 @@ public class TencentOssService implements OssService {
       var obj = cosClient.getObjectMetadata(bucket, objectName);
       return ObjectMeta.ofFile(objectName, obj.getContentLength(), obj.getLastModified());
     } catch (CosServiceException cse) {
-      if (cse.getStatusCode() == 404) {
-        throw new FileNotFoundException(bucket + ": " + objectName);
-      }
-      throw new IOException("Error occured while stat file:" + objectName, cse);
+      throw handleCosServiceException(cse, bucket, objectName);
     }
 
   }
@@ -197,16 +201,15 @@ public class TencentOssService implements OssService {
   }
 
   @Override
+  @SuppressWarnings("PMD.CloseResource")
   public InputStream getObject(String bucket, String objectName) throws IOException {
     try {
       var getObjectRequest = new GetObjectRequest(bucket, objectName);
       COSObject cosObject = cosClient.getObject(getObjectRequest);
+      // 注意：调用者负责关闭返回的 InputStream，这会自动关闭底层的 COSObject
       return cosObject.getObjectContent();
     } catch (CosServiceException cse) {
-      if (cse.getStatusCode() == 404) {
-        throw new FileNotFoundException(bucket + ": " + objectName);
-      }
-      throw new IOException("Error occured while get file:" + objectName, cse);
+      throw handleCosServiceException(cse, bucket, objectName);
     }
   }
 
@@ -214,13 +217,11 @@ public class TencentOssService implements OssService {
   public int trasferObject(String bucket, String objectName, OutputStream out) throws IOException {
     try {
       var getObjectRequest = new GetObjectRequest(bucket, objectName);
-      COSObject cosObject = cosClient.getObject(getObjectRequest);
-      return IOUtils.copy(cosObject.getObjectContent(), out);
-    } catch (CosServiceException cse) {
-      if (cse.getStatusCode() == 404) {
-        throw new FileNotFoundException(bucket + ": " + objectName);
+      try (COSObject cosObject = cosClient.getObject(getObjectRequest)) {
+        return IOUtils.copy(cosObject.getObjectContent(), out);
       }
-      throw new IOException("Error occured while trasfer file:" + objectName, cse);
+    } catch (CosServiceException cse) {
+      throw handleCosServiceException(cse, bucket, objectName);
     }
   }
 
@@ -229,10 +230,7 @@ public class TencentOssService implements OssService {
     try {
       cosClient.deleteObject(bucket, objectName);
     } catch (CosServiceException cse) {
-      if (cse.getStatusCode() == 404) {
-        throw new FileNotFoundException(bucket + ": " + objectName);
-      }
-      throw new IOException("Error occured while delete file:" + objectName, cse);
+      throw handleCosServiceException(cse, bucket, objectName);
     }
   }
 
@@ -249,10 +247,7 @@ public class TencentOssService implements OssService {
     try {
       cosClient.copyObject(srcBucket, srcObjectName, destBucket, destObjectName);
     } catch (CosServiceException cse) {
-      if (cse.getStatusCode() == 404) {
-        throw new FileNotFoundException(srcBucket + ": " + srcObjectName);
-      }
-      throw new IOException("Error occured while copy file:" + srcObjectName, cse);
+      throw handleCosServiceException(cse, srcBucket, srcObjectName);
     }
 
   }
@@ -271,5 +266,16 @@ public class TencentOssService implements OssService {
     }
 
     return cosClient.generatePresignedUrl(urlRequest).toString();
+  }
+
+  private IOException handleCosServiceException(CosServiceException cse, String bucket, String objectName)
+      throws IOException {
+    if (cse.getStatusCode() == 404) {
+      var fnfe = new FileNotFoundException(bucket + ": " + objectName + " - " + cse.getMessage());
+      fnfe.initCause(cse);
+      return fnfe;
+    }
+    return new IOException("Error occured while get file:" + objectName, cse);
+
   }
 }

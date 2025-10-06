@@ -3,9 +3,7 @@
 
 package cn.dinodev.spring.core.modules.oss.impl;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -16,18 +14,18 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import jakarta.annotation.Nonnull;
-
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.file.PathUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
+
 import cn.dinodev.spring.core.modules.oss.BucketMeta;
 import cn.dinodev.spring.core.modules.oss.ObjectMeta;
 import cn.dinodev.spring.core.modules.oss.OssService;
 import cn.dinodev.spring.core.modules.oss.config.LocalOssProperties;
+import jakarta.annotation.Nonnull;
 
 /**
  *
@@ -37,8 +35,14 @@ import cn.dinodev.spring.core.modules.oss.config.LocalOssProperties;
 
 public class LocalOssService implements OssService {
 
-  private Path basePath;
+  private final Path basePath;
 
+  /**
+   * 构造本地对象存储服务
+   *
+   * @param properties 本地 OSS 配置属性
+   * @throws IOException 如果创建基础路径失败
+   */
   public LocalOssService(@Nonnull LocalOssProperties properties) throws IOException {
     basePath = Path.of(properties.getBaseDir());
     PathUtils.createParentDirectories(basePath);
@@ -46,20 +50,20 @@ public class LocalOssService implements OssService {
 
   @Override
   public boolean hasBucket(String bucketName) throws IOException {
-    var f = FileUtils.getFile(basePath.toFile(), bucketName);
-    return f.exists() && f.isDirectory();
+    var bucketDir = FileUtils.getFile(basePath.toFile(), bucketName);
+    return bucketDir.exists() && bucketDir.isDirectory();
   }
 
   @Override
   public void createBucket(String bucketName) throws IOException {
-    var f = FileUtils.getFile(basePath.toFile(), bucketName);
-    FileUtils.forceMkdir(f);
+    var bucketDir = FileUtils.getFile(basePath.toFile(), bucketName);
+    FileUtils.forceMkdir(bucketDir);
   }
 
   @Override
   public void deleteBucket(String bucketName) throws IOException {
-    var f = FileUtils.getFile(basePath.toFile(), bucketName);
-    FileUtils.forceDelete(f);
+    var bucketDir = FileUtils.getFile(basePath.toFile(), bucketName);
+    FileUtils.forceDelete(bucketDir);
 
   }
 
@@ -104,7 +108,7 @@ public class LocalOssService implements OssService {
     if (!file.createNewFile()) {
       throw new FileAlreadyExistsException(bucket + ": " + objectName);
     }
-    try (var out = new FileOutputStream(file, false)) {
+    try (var out = Files.newOutputStream(file.toPath())) {
       IOUtils.copy(stream, out);
     }
   }
@@ -116,7 +120,7 @@ public class LocalOssService implements OssService {
     if (!file.createNewFile()) {
       throw new FileAlreadyExistsException(bucket + ": " + objectName);
     }
-    try (var out = new FileOutputStream(file, false)) {
+    try (var out = Files.newOutputStream(file.toPath())) {
       IOUtils.copy(stream, out);
     }
   }
@@ -127,7 +131,7 @@ public class LocalOssService implements OssService {
     if (!file.exists()) {
       throw new FileNotFoundException(bucket + ": " + objectName);
     }
-    return new FileInputStream(file);
+    return Files.newInputStream(file.toPath());
   }
 
   @Override
@@ -136,7 +140,7 @@ public class LocalOssService implements OssService {
     if (!file.exists()) {
       throw new FileNotFoundException(bucket + ": " + objectName);
     }
-    try (var in = new FileInputStream(file)) {
+    try (var in = Files.newInputStream(file.toPath())) {
       return IOUtils.copy(in, out);
     }
   }

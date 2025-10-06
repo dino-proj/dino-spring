@@ -6,11 +6,12 @@ package cn.dinodev.spring.core.modules.scope;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import cn.dinodev.spring.core.modules.scope.ScopeRuleMatcher.HIT;
 import cn.dinodev.spring.core.service.impl.ServiceBase;
 import cn.dinodev.spring.data.dao.CrudRepositoryBase;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  *
@@ -32,14 +33,22 @@ public class ScopeService extends ServiceBase<ScopeEntity, Long> {
   public Long saveRule(ScopeRule rule) {
     var hash = rule.hash();
     return scopeRepository.getByRuleHash(hash).orElseGet(() -> {
-      var e = new ScopeEntity();
-      e.setScopeRule(rule);
-      e.setRuleHash(hash);
-      beforeSaveEntity(e);
-      return scopeRepository.save(e).getId();
+      var entity = new ScopeEntity();
+      entity.setScopeRule(rule);
+      entity.setRuleHash(hash);
+      beforeSaveEntity(entity);
+      return scopeRepository.save(entity).getId();
     });
   }
 
+  /**
+   * 根据匹配器查找命中的范围规则ID列表
+   *
+   * @param <T> 规则类型
+   * @param matcher 规则匹配器
+   * @param ruleClass 规则类的Class对象
+   * @return 匹配成功的范围ID列表
+   */
   public <T> List<Long> hit(ScopeRuleMatcher<T> matcher, Class<T> ruleClass) {
     var sql = scopeRepository.newSelect();
     var maps = scopeRepository.queryForMap(sql, "id", Long.class, "scope_rule", ruleClass);

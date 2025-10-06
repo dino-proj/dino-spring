@@ -17,7 +17,7 @@ import jakarta.annotation.Nonnull;
 
 public interface ServiceBeanResolver<S extends ServiceBase<?, ?>> {
 
-  static final BeanSafeCache<Service<?, ?>> SERVICE_MAPPING_CACHE = new BeanSafeCache<>();
+  BeanSafeCache<Service<?, ?>> SERVICE_MAPPING_CACHE = new BeanSafeCache<>();
 
   /**
   * Service 服务实例

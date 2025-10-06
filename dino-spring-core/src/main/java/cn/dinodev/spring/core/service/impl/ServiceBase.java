@@ -62,14 +62,14 @@ public abstract class ServiceBase<T, K extends Serializable> implements Service<
       } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
           | NoSuchMethodException | SecurityException e) {
         log.error("create instance of {} error", cls.getName(), e);
-        throw new IllegalArgumentException("instance of class:" + cls.getName() + " connot be created");
+        throw new IllegalArgumentException("instance of class:" + cls.getName() + " connot be created", e);
       }
     }
   }
 
   @Override
-  public <P, R> R projection(final Class<R> cls, Optional<P> p) {
-    return projection(cls, p.orElse(null));
+  public <P, R> R projection(final Class<R> cls, Optional<P> optional) {
+    return projection(cls, optional.orElse(null));
   }
 
   @Override
@@ -77,7 +77,7 @@ public abstract class ServiceBase<T, K extends Serializable> implements Service<
     if (CollectionUtils.isEmpty(list)) {
       return Collections.emptyList();
     }
-    return list.stream().map(p -> projection(cls, p)).collect(Collectors.toList());
+    return list.stream().map(item -> projection(cls, item)).collect(Collectors.toList());
   }
 
   @Override
@@ -176,9 +176,15 @@ public abstract class ServiceBase<T, K extends Serializable> implements Service<
     return Service.super.updateById(entity);
   }
 
+  /**
+   * 更新实体前的预处理
+   * <p>为实体设置更新时间等通用操作</p>
+   *
+   * @param entity 待更新的实体
+   */
   protected void beforeUpdateEntity(T entity) {
-    if (entity instanceof EntityBase) {
-      ((EntityBase<?>) entity).setUpdateAt(new Date());
+    if (entity instanceof EntityBase entityBase) {
+      entityBase.setUpdateAt(new Date());
     }
   }
 }

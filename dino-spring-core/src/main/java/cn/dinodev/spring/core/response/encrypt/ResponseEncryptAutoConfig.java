@@ -23,10 +23,12 @@ public class ResponseEncryptAutoConfig {
 
   @Bean
   @ConditionalOnProperty(prefix = ResponseEncryptProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
-  public ResponseDataEncryptor responseDataEncryptor(ResponseEncryptProperties props) {
+  ResponseDataEncryptor responseDataEncryptor(ResponseEncryptProperties props) {
     // 打印日志，方便调试
-    log.debug("---->> response-encrypt: enabled， aesKey length: {}",
-        props.getAesKey() == null ? 0 : props.getAesKey().length());
+    if (log.isDebugEnabled()) {
+      log.debug("---->> response-encrypt: enabled， aesKey length: {}",
+          props.getAesKey() == null ? 0 : props.getAesKey().length());
+    }
 
     // 初始化默认的加密器, 这里可以根据配置选择不同的加密实现
     return new ResponseDataAesEncryptor(props.getAesKey());

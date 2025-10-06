@@ -22,9 +22,14 @@ import org.springframework.data.convert.WritingConverter;
 
 public class PageConfigConverter {
 
+  /**
+   * PageConfig写入转换器，将PageConfig对象转换为PostgreSQL的JSONB类型
+   */
   @WritingConverter
   enum PageConfigWritingConverter implements Converter<PageConfig, PGobject> {
-    //PageConfig WritingConverter
+    /**
+     * 单例实例
+     */
     INSTANCE;
 
     @Autowired
@@ -43,9 +48,14 @@ public class PageConfigConverter {
     }
   }
 
+  /**
+   * PageConfig读取转换器，将PostgreSQL的JSONB类型转换为PageConfig对象
+   */
   @ReadingConverter
   enum PageConfigReadingConverter implements Converter<PGobject, PageConfig> {
-    //PageConfig ReadingConverter
+    /**
+     * 单例实例
+     */
     INSTANCE;
 
     @Autowired

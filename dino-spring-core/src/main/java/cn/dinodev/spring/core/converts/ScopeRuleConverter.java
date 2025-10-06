@@ -20,9 +20,14 @@ import org.springframework.data.convert.WritingConverter;
  */
 
 public class ScopeRuleConverter {
+  /**
+   * ScopeRule写入转换器，将ScopeRule对象转换为PostgreSQL的JSONB类型
+   */
   @WritingConverter
   enum ScopeRuleWritingConverter implements Converter<ScopeRule, PGobject> {
-    //ScopeRule WritingConverter
+    /**
+     * 单例实例
+     */
     INSTANCE;
 
     @Autowired

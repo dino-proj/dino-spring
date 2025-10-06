@@ -98,7 +98,7 @@ public class AliSmsService extends SmsServiceBase {
     // 如果是Collection或array, 则转为Index-Value的Map
 
     if (params instanceof Collection) {
-      var paramsCol = ((Collection<?>) params);
+      var paramsCol = (Collection<?>) params;
       var paramsMap = new HashMap<String, Object>(paramsCol.size());
       for (var i = 0; i < paramsCol.size(); i++) {
         paramsMap.put(String.valueOf(i + 1), paramsCol.toArray()[i]);

@@ -11,7 +11,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
-import cn.dinodev.spring.data.domain.LogicalDelete;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -145,20 +144,10 @@ public interface Service<T, K extends Serializable> extends ListServiceBase<T, K
       return;
     }
 
-    boolean isDelete = false;
-    Class<T> entityClass = getEntityClass();
-    Class<?>[] interfaces = entityClass.getInterfaces();
-    for (Class<?> anInterface : interfaces) {
-      if (anInterface == LogicalDelete.class) {
-        isDelete = true;
-        break;
-      }
-    }
-
-    if (!isDelete) {
-      repository().deleteAllById(idList);
-    } else {
+    if (getEntityMeta().isLogicalDelete()) {
       repository().updateStatusByIds(idList, "deleted");
+    } else {
+      repository().deleteAllById(idList);
     }
 
   }

@@ -18,10 +18,10 @@ public enum PageType {
   DETAIL(4, "DETAIL"),
   ;
 
-  private int id;
-  private String type;
+  private final int id;
+  private final String type;
 
-  private PageType(int id, String type) {
+  PageType(int id, String type) {
     this.id = id;
     this.type = type;
   }

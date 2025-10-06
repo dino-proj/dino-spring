@@ -40,9 +40,9 @@ public class DictionaryEntity extends TenantRowEntityBase<Long> {
   private String description;
 
   @Schema(description = "是否为系统预置（预置不可删除）")
-  private boolean deletable = false;
+  private boolean deletable;
 
   @Schema(description = "是否可编辑")
-  private boolean editable = false;
+  private boolean editable;
 
 }

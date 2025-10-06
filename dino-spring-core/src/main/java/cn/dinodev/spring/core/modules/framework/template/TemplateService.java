@@ -28,8 +28,13 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class TemplateService {
-  private Map<String, Template> templatesMap = new HashMap<>();
+  private final Map<String, Template> templatesMap = new HashMap<>();
 
+  /**
+   * 初始化模板，扫描并加载所有带有 @PageTemplate 注解的类
+   *
+   * @throws IOException 如果读取资源时发生错误
+   */
   @PostConstruct
   public void init() throws IOException {
     ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
@@ -47,16 +52,16 @@ public class TemplateService {
         //判断是否有指定主解
         PageTemplate anno = clazz.getAnnotation(PageTemplate.class);
         if (anno != null) {
-          var t = new Template();
-          t.setName(anno.name());
-          t.setTitle(anno.title());
-          t.setType(anno.type());
-          t.setIcon(anno.icon());
-          t.setAppPath(anno.appPath());
-          t.setPcPath(anno.pcPath());
-          t.setDescription(anno.description());
-          t.setConfClass(clazz);
-          templatesMap.put(anno.name(), t);
+          var template = new Template();
+          template.setName(anno.name());
+          template.setTitle(anno.title());
+          template.setType(anno.type());
+          template.setIcon(anno.icon());
+          template.setAppPath(anno.appPath());
+          template.setPcPath(anno.pcPath());
+          template.setDescription(anno.description());
+          template.setConfClass(clazz);
+          templatesMap.put(anno.name(), template);
         }
       } catch (ClassNotFoundException | NoClassDefFoundError | ExceptionInInitializerError e) {
         log.error("class:{} not found", classname);
@@ -64,6 +69,12 @@ public class TemplateService {
     }
   }
 
+  /**
+   * 根据模板名称获取模板
+   *
+   * @param templateName 模板名称
+   * @return 模板对象，如果不存在则返回 null
+   */
   public Template getByName(String templateName) {
     return templatesMap.get(templateName);
   }

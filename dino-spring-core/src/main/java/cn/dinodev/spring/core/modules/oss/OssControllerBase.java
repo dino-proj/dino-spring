@@ -46,6 +46,10 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 
 public interface OssControllerBase {
+
+  String PARAM_SERVICE = "service";
+  String PARAM_SERVICE_DESC = "服务名字";
+
   /**
    * Logger
    * @return
@@ -94,7 +98,7 @@ public interface OssControllerBase {
    */
   @Operation(summary = "上传文件到Tmp")
   @ParamTenant
-  @Parameter(name = "service", required = false, description = "服务名字")
+  @Parameter(name = PARAM_SERVICE, required = false, description = PARAM_SERVICE_DESC)
   @PostMapping(value = "/upload/FILE", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   default Response<FileMeta> uploadFile(Tenant tenant,
       String service, MultipartFile file) throws IOException {
@@ -148,7 +152,7 @@ public interface OssControllerBase {
    */
   @Operation(summary = "上传音频")
   @ParamTenant
-  @Parameter(name = "service", required = false, description = "服务名字")
+  @Parameter(name = PARAM_SERVICE, required = false, description = PARAM_SERVICE_DESC)
   @PostMapping(value = "/upload/AUDIO", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   default Response<AudioFileMeta> uploadAudio(Tenant tenant, String service,
       MultipartFile file) throws IOException {
@@ -178,7 +182,7 @@ public interface OssControllerBase {
    */
   @Operation(summary = "上传视频")
   @ParamTenant
-  @Parameter(name = "service", required = false, description = "服务名字")
+  @Parameter(name = PARAM_SERVICE, required = false, description = PARAM_SERVICE_DESC)
   @PostMapping(value = "/upload/VIDEO", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   default Response<VideoFileMeta> uploadVideo(Tenant tenant, String service,
       MultipartFile file) throws IOException {
@@ -212,7 +216,7 @@ public interface OssControllerBase {
    */
   @Operation(summary = "上传图片")
   @ParamTenant
-  @Parameter(name = "service", required = false, description = "服务名字")
+  @Parameter(name = PARAM_SERVICE, required = false, description = PARAM_SERVICE_DESC)
   @PostMapping(value = "/upload/IMAGE", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   default Response<ImageFileMeta> uploadImage(Tenant tenant, String service,
       MultipartFile file) throws IOException {
@@ -254,8 +258,9 @@ public interface OssControllerBase {
     if (Objects.nonNull(tenant)) {
       objectName.append(tenant.getId()).append('/');
     }
-    objectName.append(idService().genUUID());
-    objectName.append('.').append(FilenameUtils.getExtension(file.getOriginalFilename()));
+    var uuid = idService().genUUID();
+    var extension = FilenameUtils.getExtension(file.getOriginalFilename());
+    objectName.append(uuid).append('.').append(extension);
     var objectKey = objectName.toString();
 
     meta.setBucket(serviceId);
@@ -268,7 +273,7 @@ public interface OssControllerBase {
 
     } catch (IOException e) {
       log().error("Error occured while upload file[{}]", objectKey, e);
-      throw BusinessException.of(Status.CODE.FAIL_EXCEPTION);
+      throw BusinessException.of(Status.CODE.FAIL_EXCEPTION, e);
     }
   }
 
@@ -282,7 +287,7 @@ public interface OssControllerBase {
    */
   @Operation(summary = "获取文件上传信息")
   @ParamTenant
-  @Parameter(name = "service", required = false, description = "服务名字")
+  @Parameter(name = PARAM_SERVICE, required = false, description = PARAM_SERVICE_DESC)
   @Parameter(name = "file_type", required = true, description = "文件类型")
   @GetMapping("/upload_meta")
   default Response<UploadMeta> requestUpload(Tenant tenant,

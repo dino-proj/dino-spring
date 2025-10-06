@@ -6,6 +6,7 @@ package cn.dinodev.spring.core.service;
 import java.io.Serializable;
 
 import cn.dinodev.spring.data.dao.CrudRepositoryBase;
+import cn.dinodev.spring.data.dao.EntityMeta;
 
 /**
  *
@@ -28,5 +29,13 @@ public interface ServiceBase<T, K extends Serializable> {
    */
   default Class<T> getEntityClass() {
     return repository().entityClass();
+  }
+
+  /**
+   * 获取 Entity 的 Meta 信息
+   * @return entity 元信息
+   */
+  default EntityMeta getEntityMeta() {
+    return repository().entityMeta();
   }
 }

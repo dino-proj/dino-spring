@@ -44,17 +44,23 @@ import io.minio.errors.ServerException;
 import io.minio.errors.XmlParserException;
 import io.minio.http.Method;
 import io.minio.messages.Item;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
  * @author Cody Lu
  * @author JL
  */
-
+@Slf4j
 public class MinioOssService implements OssService {
 
-  private MinioClient minioClient;
+  private final MinioClient minioClient;
 
+  /**
+   * 构造 Minio 对象存储服务
+   *
+   * @param properties Minio 配置属性
+   */
   public MinioOssService(@Nonnull MinioProperties properties) {
     minioClient = MinioClient.builder().endpoint(properties.getUri())
         .credentials(properties.getAccessKey(), properties.getSecretKey()).build();
@@ -266,7 +272,7 @@ public class MinioOssService implements OssService {
       url = minioClient.getPresignedObjectUrl(builder.build());
     } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException
         | InvalidResponseException | IOException | NoSuchAlgorithmException | XmlParserException | ServerException e) {
-      e.printStackTrace();
+      log.error("Failed to get presigned URL for object: {}/{}", bucket, objectName, e);
     }
     return url;
   }

@@ -40,6 +40,10 @@ public class DinoCoreAutoConfiguration {
   @Autowired
   Environment environment;
 
+  /**
+   * 初始化方法，配置JSON类型解析器
+   * @throws IOException IO异常
+   */
   @PostConstruct
   public void init() throws IOException {
     //添加Json的继承多态支持器
@@ -49,7 +53,7 @@ public class DinoCoreAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean(RestTemplate.class)
-  public RestTemplate restTemplate() {
+  RestTemplate restTemplate() {
     log.info("--->> create restTemplate");
     SimpleClientHttpRequestFactory simpleClientHttpRequestFactory = new SimpleClientHttpRequestFactory();
     simpleClientHttpRequestFactory.setConnectTimeout(5000);

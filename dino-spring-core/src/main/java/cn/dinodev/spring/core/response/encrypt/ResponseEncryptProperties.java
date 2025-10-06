@@ -18,7 +18,7 @@ public class ResponseEncryptProperties {
   /**
    * 是否启用响应数据加密功能
    */
-  private boolean enabled = false;
+  private boolean enabled;
 
   /**
    * 用于加密的secretKey, 长度必须为16, 24, 或32个字符

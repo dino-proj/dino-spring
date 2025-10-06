@@ -7,10 +7,10 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import cn.dinodev.spring.commons.exception.BusinessException;
-import cn.dinodev.spring.commons.response.Response;
 import org.springframework.stereotype.Component;
 
+import cn.dinodev.spring.commons.exception.BusinessException;
+import cn.dinodev.spring.commons.response.Response;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -23,16 +23,28 @@ import lombok.extern.slf4j.Slf4j;
 @Aspect
 public class CostAdvice {
 
-  @Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping)"
-      + " || @annotation(org.springframework.web.bind.annotation.GetMapping)"
-      + " || @annotation(org.springframework.web.bind.annotation.PostMapping)"
-      + " || @annotation(org.springframework.web.bind.annotation.DeleteMapping)"
-      + " || @annotation(org.springframework.web.bind.annotation.PutMapping)")
+  /**
+   * 定义切入点，拦截所有Controller的请求映射方法
+   */
+  @Pointcut("""
+      @annotation(org.springframework.web.bind.annotation.RequestMapping)
+      || @annotation(org.springframework.web.bind.annotation.GetMapping)
+      || @annotation(org.springframework.web.bind.annotation.PostMapping)
+      || @annotation(org.springframework.web.bind.annotation.DeleteMapping)
+      || @annotation(org.springframework.web.bind.annotation.PutMapping)
+      """)
   public void costPointcut() {
     //do nothing
   }
 
+  /**
+   * 环绕通知，用于统计请求执行时间
+   * @param joinPoint 连接点
+   * @return 方法执行结果
+   * @throws Throwable 方法执行异常
+   */
   @Around("costPointcut()")
+  @SuppressWarnings("PMD.AvoidRethrowingException")
   public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
     long start = System.currentTimeMillis();
     try {
@@ -55,8 +67,12 @@ public class CostAdvice {
       resp.setCost(cost);
       return result;
 
-    } catch (Throwable e) {
-      if (!BusinessException.class.isAssignableFrom(e.getClass())) {
+    } catch (BusinessException e) {
+      // 业务异常不记录日志，直接抛出
+      throw e;
+    } catch (Exception e) {
+      // 非业务异常记录日志后抛出
+      if (log.isErrorEnabled()) {
         log.error("around {} Use time: {}ms with exception ", joinPoint, System.currentTimeMillis() - start, e);
       }
       throw e;

@@ -32,6 +32,9 @@ public class CompAlert implements Component, Action {
   @Schema(description = "按钮文字")
   private String buttonLabel;
 
+  /**
+   * 提示类型
+   */
   public enum AlertType {
     //警告
     WARN,

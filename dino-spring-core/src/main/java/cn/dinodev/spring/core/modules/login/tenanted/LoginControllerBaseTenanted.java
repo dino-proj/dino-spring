@@ -35,6 +35,7 @@ public interface LoginControllerBaseTenanted<U extends User<K>, K extends Serial
    * 生成LoginAuth对象
    * @return
    */
+  @Override
   default LoginAuthTenanted<U, K> newLoginAuth() {
     return new LoginAuthTenanted<>();
   }
@@ -50,7 +51,7 @@ public interface LoginControllerBaseTenanted<U extends User<K>, K extends Serial
   default LoginAuthTenanted<U, K> loginAuth(Tenant tenant, U user, String plt, String guid) {
     Assert.notNull(user, Status.CODE.FAIL_USER_NOT_EXIST);
 
-    Assert.isTrue(user.getStatus().equals(Code.STATUS.OK.name().toLowerCase()), Status.CODE.FAIL_LOGIN_DENNY);
+    Assert.isTrue(user.getStatus().equalsIgnoreCase(Code.STATUS.OK.name()), Status.CODE.FAIL_LOGIN_DENNY);
 
     var auth = this.newLoginAuth();
     auth.setUser(user);

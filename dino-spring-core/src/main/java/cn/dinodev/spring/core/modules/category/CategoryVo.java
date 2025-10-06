@@ -3,11 +3,11 @@
 
 package cn.dinodev.spring.core.modules.category;
 
+import cn.dinodev.spring.core.vo.VoImplBase;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldNameConstants;
-import cn.dinodev.spring.core.vo.VoImplBase;
 
 /**
  *
@@ -30,6 +30,10 @@ public class CategoryVo extends VoImplBase<Long> {
   @Schema(description = "父分类")
   private CategoryVo parentCategory;
 
+  /**
+   * 判断是否是根节点
+   * @return 如果父分类ID为空或为0，则返回true
+   */
   @Schema(description = "是否是根节点")
   public boolean isRoot() {
     return parentId == null || parentId == 0L;

@@ -46,6 +46,9 @@ public class ResponseEncryptAdvice implements ResponseBodyAdvice<Object> {
   private static final TypeReference<Map<String, Object>> MAP_TYPE_REF = new TypeReference<>() {
   };
 
+  /**
+   * 构造响应加密通知处理器
+   */
   public ResponseEncryptAdvice() {
     log.info("---->> response-encrypt: ResponseEncryptAdvice loaded.");
   }
@@ -55,7 +58,8 @@ public class ResponseEncryptAdvice implements ResponseBodyAdvice<Object> {
     var isSupport = returnType.getMethod() != null &&
     // returnType是Response类型或者其子类
         Response.class.isAssignableFrom(returnType.getParameterType()) &&
-        (returnType.getMethod().isAnnotationPresent(ResponseEncrypt.class));
+        // 是否有加密注解
+        returnType.getMethod().isAnnotationPresent(ResponseEncrypt.class);
 
     // 打印日志，方便调试
     if (log.isDebugEnabled()) {
@@ -72,37 +76,28 @@ public class ResponseEncryptAdvice implements ResponseBodyAdvice<Object> {
       Class<? extends HttpMessageConverter<?>> selectedConverterType,
       ServerHttpRequest request, ServerHttpResponse response) {
 
-    if (body instanceof Response<?> responseObj) {
+    Response<?> responseObj = (Response<?>) body;
 
-      // 检查是否需要加密
-      ResponseEncrypt responseEncrypt = returnType.getMethod().getAnnotation(ResponseEncrypt.class);
-      boolean shouldEncrypt = responseEncrypt != null;
-
-      if (shouldEncrypt) {
-        // 这里ObjectMapper对data字段进行加密，并将加密后的数据设置回data字段
-        var data = responseObj.getData();
-        if (Objects.isNull(data)) {
-          return body;
-        }
-
-        try {
-          var jsonData = objectMapper.writeValueAsBytes(data);
-          // 这里进行加密操作，假设encryptData是一个加密方法
-          String encryptedData = responseDataEncryptor.encryptData(jsonData);
-
-          var omCopy = objectMapper.copy();
-          omCopy.addMixIn(Response.class, ResponseMixin.class);
-          var exPropMap = omCopy.convertValue(responseObj, MAP_TYPE_REF);
-
-          return new ResponseWithEncryptedData(responseObj, encryptedData, exPropMap);
-        } catch (Exception e) {
-          throw new RuntimeException("Failed to encrypt response data", e);
-        }
-
-      }
+    // 获取响应数据
+    var data = responseObj.getData();
+    if (Objects.isNull(data)) {
+      return body;
     }
 
-    return body;
+    // 加密响应数据
+    try {
+      var jsonData = objectMapper.writeValueAsBytes(data);
+      // 这里进行加密操作，假设encryptData是一个加密方法
+      String encryptedData = responseDataEncryptor.encryptData(jsonData);
+
+      var omCopy = objectMapper.copy();
+      omCopy.addMixIn(Response.class, ResponseMixin.class);
+      var exPropMap = omCopy.convertValue(responseObj, MAP_TYPE_REF);
+
+      return new ResponseWithEncryptedData(responseObj, encryptedData, exPropMap);
+    } catch (Exception e) {
+      throw new IllegalStateException("Failed to encrypt response data", e);
+    }
   }
 
   /**
@@ -111,7 +106,7 @@ public class ResponseEncryptAdvice implements ResponseBodyAdvice<Object> {
    * 该接口定义了响应对象中需要被忽略的字段方法，通过@JsonIgnore注解
    * 确保这些字段在JSON序列化过程中不会被包含在输出结果中
    */
-  private static interface ResponseMixin {
+  private interface ResponseMixin {
 
     /**
      * 获取响应状态码
@@ -159,10 +154,17 @@ public class ResponseEncryptAdvice implements ResponseBodyAdvice<Object> {
    * @author Cody Lu
    * @date 2025-09-17 19:20:45
    */
-  private static class ResponseWithEncryptedData extends Response<String> {
+  private static final class ResponseWithEncryptedData extends Response<String> {
 
-    private Map<String, Object> extensions;
+    private final Map<String, Object> extensions;
 
+    /**
+     * 构造加密响应数据包装对象
+     *
+     * @param originalResponse 原始响应对象
+     * @param encryptedData 加密后的数据
+     * @param extensions 扩展字段映射
+     */
     public ResponseWithEncryptedData(Response<?> originalResponse, String encryptedData,
         Map<String, Object> extensions) {
       super(originalResponse.getCode(), originalResponse.getMsg());
@@ -171,13 +173,23 @@ public class ResponseEncryptAdvice implements ResponseBodyAdvice<Object> {
       this.extensions = extensions;
     }
 
+    /**
+     * 获取扩展字段
+     *
+     * @return 扩展字段映射
+     */
     @JsonAnyGetter
     public Map<String, Object> getExtensions() {
       return extensions;
     }
 
+    /**
+     * 获取加密标识
+     *
+     * @return 是否加密，始终返回 true
+     */
     @JsonProperty("_enc")
-    public boolean getEncrypted() {
+    public boolean isEncrypted() {
       return true;
     }
 

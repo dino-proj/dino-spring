@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -72,6 +71,10 @@ public class WebMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
     return corsConfiguration;
   }
 
+  /**
+   * 创建CORS过滤器Bean
+   * @return CORS过滤器实例
+   */
   @Bean
   public CorsFilter corsFilter() {
     log.info("--->> mvc: config cors filter");
@@ -81,6 +84,10 @@ public class WebMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
     return new CorsFilter(source);
   }
 
+  /**
+   * 添加拦截器，注册TenantSupportInterceptor用于租户上下文处理
+   * @param registry 拦截器注册器
+   */
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
     WebMvcConfigurer.super.addInterceptors(registry);
@@ -106,13 +113,12 @@ public class WebMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
     converters.add(new BufferedImageHttpMessageConverter());
 
     // 添加自定义的jackson转换器
-    for (var i = 0; i < converters.size(); i++) {
-      if (converters.get(i) instanceof MappingJackson2HttpMessageConverter) {
-        var converter = (MappingJackson2HttpMessageConverter) converters.get(i);
+    for (HttpMessageConverter<?> converter : converters) {
+      if (converter instanceof MappingJackson2HttpMessageConverter jacksonConverter) {
         var objectMapper = this.applicationContext.getBean("objectMapper", ObjectMapper.class);
 
-        log.info("--->> mvc: config objectMapper to {}", converter);
-        converter.setObjectMapper(objectMapper);
+        log.info("--->> mvc: config objectMapper to {}", jacksonConverter);
+        jacksonConverter.setObjectMapper(objectMapper);
         break;
       }
     }
@@ -127,11 +133,18 @@ public class WebMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
     resolvers.add(new UserArgumentResolver());
   }
 
+  /**
+   * 创建租户支持拦截器Bean
+   * @return TenantSupportInterceptor实例
+   */
   @Bean
   public TenantSupportInterceptor tenantSupportInterceptor() {
     return new TenantSupportInterceptor();
   }
 
+  /**
+   * 租户支持拦截器，用于处理请求中的租户信息并设置到上下文中
+   */
   public static class TenantSupportInterceptor implements HandlerInterceptor {
 
     private static final String TENANT_VAR_NAME = "tenant_id";
@@ -170,7 +183,7 @@ public class WebMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
   }
 
   @Override
-  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+  public void setApplicationContext(ApplicationContext applicationContext) {
     this.applicationContext = applicationContext;
     log.info("--->> setup ContextHelper with applicationContext[id={}]", applicationContext.getId());
     ContextHelper.setApplicationContext(applicationContext);

@@ -104,8 +104,8 @@ public interface TenantControllerBase extends ControllerBase<TenantService, Tena
    */
   @Operation(summary = "根据域名查询favorit.ico")
   @Parameter(name = "domain", description = "域名")
-  @GetMapping(value = "/favicon.ico")
-  default void getFavicon(String domain, HttpServletResponse response) throws IOException {
+  @GetMapping("/favicon.ico")
+  default void serveFavicon(String domain, HttpServletResponse response) throws IOException {
     var tenant = service().findTenantByDomain(domain, TenantEntity.class);
 
     Assert.notNull(tenant, Status.CODE.FAIL_INVALID_PARAM.withMsg("domain 不存在"));

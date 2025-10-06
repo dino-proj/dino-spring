@@ -19,16 +19,16 @@ import org.springframework.stereotype.Service;
 @Service("tenantService")
 public class TenantServiceImpl extends ServiceBase<TenantEntity, String> implements TenantService {
   @Autowired
-  private TenantRepository tenantRepository;
+  private TenantRepository tRepository;
 
   @Override
   public CrudRepositoryBase<TenantEntity, String> repository() {
-    return tenantRepository;
+    return tRepository;
   }
 
   @Override
   public TenantRepository tenantRepository() {
-    return tenantRepository;
+    return tRepository;
   }
 
 }

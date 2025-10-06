@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- *
+ * 应用客户端服务类
  * @author Cody Lu
  */
 
@@ -22,6 +22,11 @@ public class AppClientService extends ServiceBase<AppClientEntity, String> {
   @Autowired
   private AppClientRepository appClientRepository;
 
+  /**
+   * 查找应用客户端绑定的租户列表
+   * @param appClientId 应用客户端ID
+   * @return 租户列表
+   */
   public List<Tenant> findBindTenants(String appClientId) {
     return projection(Tenant.class, appClientRepository.findBindTenants(appClientId));
   }

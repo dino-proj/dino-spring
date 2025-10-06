@@ -59,8 +59,11 @@ public interface LoginByRefreshtoken<U extends User<K>, K extends Serializable>
     return Response.success(auth);
   }
 
+  /**
+   * Refresh Token 登录请求体
+   */
   @Data
-  public static class RefreshtokenLoginBody {
+  class RefreshtokenLoginBody {
     @Schema(description = "用户类型", requiredMode = RequiredMode.REQUIRED)
     @NotBlank(message = "用户类型不能为空")
     private String userType;

@@ -26,10 +26,24 @@ public class BucketMeta {
   @Schema(description = "Bucket创建时间")
   private Date createAt;
 
+  /**
+   * 创建 Bucket 元数据
+   *
+   * @param name Bucket 名称
+   * @param createAt 创建时间
+   * @return BucketMeta 实例
+   */
   public static BucketMeta of(String name, Date createAt) {
     return new BucketMeta(name, createAt);
   }
 
+  /**
+   * 创建 Bucket 元数据
+   *
+   * @param name Bucket 名称
+   * @param createAt 创建时间（时间戳）
+   * @return BucketMeta 实例
+   */
   public static BucketMeta of(String name, long createAt) {
     return new BucketMeta(name, new Date(createAt));
   }

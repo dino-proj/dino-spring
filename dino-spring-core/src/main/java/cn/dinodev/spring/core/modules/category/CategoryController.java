@@ -3,17 +3,16 @@
 
 package cn.dinodev.spring.core.modules.category;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
 import cn.dinodev.spring.commons.context.ContextHelper;
 import cn.dinodev.spring.commons.utils.TypeUtils;
 import cn.dinodev.spring.core.controller.CategoryControllerBase;
 import cn.dinodev.spring.core.controller.CrudControllerBase;
-
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 
 /**
  *
@@ -62,8 +61,11 @@ public interface CategoryController<S extends CategoryService<E, N>, E extends C
     return TypeUtils.getGenericParamClass(this, CategoryController.class, 2);
   }
 
+  /**
+   * 分类请求对象
+   */
   @Data
-  public static class CategoryReq {
+  class CategoryReq {
     @Schema(description = "分类名字")
     @Size(max = 100)
     @NotBlank

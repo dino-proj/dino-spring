@@ -45,6 +45,11 @@ public class TaskServiceImpl extends ServiceBase<TaskEntity, String> implements 
 
   private final JdbcAggregateTemplate jdbcAggregateTemplate;
 
+  /**
+   * 构造任务服务实现
+   * 
+   * @param jdbcAggregateTemplate JDBC 聚合模板
+   */
   public TaskServiceImpl(JdbcAggregateTemplate jdbcAggregateTemplate) {
     this.jdbcAggregateTemplate = jdbcAggregateTemplate;
   }
@@ -124,6 +129,12 @@ public class TaskServiceImpl extends ServiceBase<TaskEntity, String> implements 
     return updateById == null ? 0 : 1;
   }
 
+  /**
+   * 任务观察者实现
+   * <p>用于监控和更新任务的执行状态、进度和超时</p>
+   * 
+   * @author Cody Lu
+   */
   @RequiredArgsConstructor
   private class TaskObserverImpl implements TaskObserver {
     @Nonnull
@@ -132,7 +143,7 @@ public class TaskServiceImpl extends ServiceBase<TaskEntity, String> implements 
     @Nonnull
     private final Duration timeout;
 
-    private Long startAt = System.currentTimeMillis();
+    private final Long startAt = System.currentTimeMillis();
 
     @Override
     public String getId() {

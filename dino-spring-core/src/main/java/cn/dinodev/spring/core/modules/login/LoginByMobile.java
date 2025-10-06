@@ -77,8 +77,11 @@ public interface LoginByMobile<U extends User<K>, K extends Serializable>
     return Response.success(this.loginAuth(user, req.getPlt(), req.getGuid()));
   }
 
+  /**
+   * 手机号验证码登录请求体
+   */
   @Data
-  public static class MobileLoginBody {
+  class MobileLoginBody {
     @Schema(description = "用户手机号", requiredMode = RequiredMode.REQUIRED)
     @Size(min = 13)
     @NotBlank

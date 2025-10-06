@@ -27,13 +27,13 @@ public interface Component extends Serializable {
    * 入参处理
    */
   default void processReq() {
-
+    // 默认不做任何处理
   }
 
   /**
    * 出参处理
    */
   default void processVo() {
-
+    // 默认不做任何处理
   }
 }

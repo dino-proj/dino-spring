@@ -47,7 +47,7 @@ public class IncludeExcludeRule<T extends Serializable & Comparable<T>> implemen
           + objectMapper.writeValueAsString(Objects.requireNonNullElseGet(exclude, Collections::emptyList))
           + "}";
     } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
+      throw new IllegalStateException("Failed to serialize include/exclude rule to JSON", e);
     }
   }
 

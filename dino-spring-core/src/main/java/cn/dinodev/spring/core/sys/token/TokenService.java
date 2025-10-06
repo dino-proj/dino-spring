@@ -54,15 +54,19 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
   @Autowired
   private TokenRepository tokenRepository;
 
+  private final JdbcAggregateTemplate jdbcAggregateTemplate;
+
+  /**
+   * 构造函数
+   * @param jdbcAggregateTemplate JDBC聚合模板
+   */
+  public TokenService(JdbcAggregateTemplate jdbcAggregateTemplate) {
+    this.jdbcAggregateTemplate = jdbcAggregateTemplate;
+  }
+
   @Override
   public CrudRepositoryBase<TokenEntity, String> repository() {
     return this.tokenRepository;
-  }
-
-  private final JdbcAggregateTemplate jdbcAggregateTemplate;
-
-  public TokenService(JdbcAggregateTemplate jdbcAggregateTemplate) {
-    this.jdbcAggregateTemplate = jdbcAggregateTemplate;
   }
 
   /**
@@ -86,21 +90,21 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
     token.setUserType(princ.getUserType());
     token.setUpdateAt(new Date(time));
 
-    if (!dbOptional.isEmpty()) {
+    if (dbOptional.isPresent()) {
       this.save(token);
     } else {
       this.beforeSaveEntity(token);
       this.jdbcAggregateTemplate.insert(token);
     }
 
-    var t = this.projection(Token.class, token);
+    var tokenResult = this.projection(Token.class, token);
     try {
-      t.setPrinc(Base64.getUrlEncoder().encodeToString(this.objectMapper.writeValueAsBytes(princ)));
-      t.setAuthHeaderName(this.securityProperties.getAuthHeaderName());
+      tokenResult.setPrinc(Base64.getUrlEncoder().encodeToString(this.objectMapper.writeValueAsBytes(princ)));
+      tokenResult.setAuthHeaderName(this.securityProperties.getAuthHeaderName());
     } catch (JsonProcessingException e) {
       log.error("Impossible!", e);
     }
-    return t;
+    return tokenResult;
   }
 
   /**
@@ -125,12 +129,12 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
     if (tokenEntity.isEmpty()) {
       return false;
     }
-    var t = tokenEntity.get();
+    var existingToken = tokenEntity.get();
     // 已过期
-    if (t.getUpdateAt().getTime() + t.getExpiresIn() * 1000 < System.currentTimeMillis()) {
+    if (existingToken.getUpdateAt().getTime() + existingToken.getExpiresIn() * 1000 < System.currentTimeMillis()) {
       return Boolean.FALSE;
     }
-    return t.getToken().equalsIgnoreCase(token);
+    return existingToken.getToken().equalsIgnoreCase(token);
   }
 
   /**
@@ -147,12 +151,13 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
     if (tokenEntity.isEmpty()) {
       return Optional.empty();
     }
-    var t = tokenEntity.get();
+    var existingToken = tokenEntity.get();
     // 已过期
-    if (t.getUpdateAt().getTime() + t.getRefreshExpiresIn() * 1000 < System.currentTimeMillis()) {
+    if (existingToken.getUpdateAt().getTime() + existingToken.getRefreshExpiresIn() * 1000 < System
+        .currentTimeMillis()) {
       return Optional.empty();
     }
-    if (!t.getRefreshToken().equalsIgnoreCase(refreshToken)) {
+    if (!existingToken.getRefreshToken().equalsIgnoreCase(refreshToken)) {
       return Optional.empty();
     }
 
@@ -160,6 +165,11 @@ public class TokenService extends ServiceBase<TokenEntity, String> {
 
   }
 
+  /**
+   * 生成Token ID
+   * @param princ 用户主体信息
+   * @return 生成的Token ID字符串
+   */
   public String generateTokenId(TokenPrincaple princ) {
     var idBuilder = new StringBuilder();
     idBuilder.append(princ.getTenantId()).append('_').append(princ.getUserId()).append('@').append(princ.getUserType());

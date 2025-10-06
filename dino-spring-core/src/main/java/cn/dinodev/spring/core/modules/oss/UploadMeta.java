@@ -22,6 +22,7 @@ public class UploadMeta {
   @Schema(description = "上传URL地址")
   private String uploadUrl;
 
+  @Schema(description = "上传HTTP方法")
   private Method method;
 
   @Schema(description = "上传附带的Header头")
@@ -30,6 +31,9 @@ public class UploadMeta {
   @Schema(description = "上传附带的data信息")
   private Map<String, Object> data;
 
+  /**
+   * 对象存储服务类型
+   */
   public enum OssType {
     //本地
     LOCAL,
@@ -39,6 +43,9 @@ public class UploadMeta {
     TENCENT,
   }
 
+  /**
+   * HTTP 上传方法
+   */
   public enum Method {
     //PUT方法
     PUT,

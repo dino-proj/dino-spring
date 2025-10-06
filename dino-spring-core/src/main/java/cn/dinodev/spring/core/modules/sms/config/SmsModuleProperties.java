@@ -46,6 +46,12 @@ public class SmsModuleProperties {
   @NestedConfigurationProperty
   private TencentSmsProperties tencent;
 
+  /**
+   * 验证码相关配置属性
+   *
+   * @author Cody Lu
+   * @date 2022-03-07
+   */
   @Data
   public static class CaptchaProperties {
     /**
@@ -70,7 +76,13 @@ public class SmsModuleProperties {
     private String signName;
   }
 
-  public static enum SmsVendor {
+  /**
+   * 短信服务供应商枚举
+   *
+   * @author Cody Lu
+   * @date 2022-03-07
+   */
+  public enum SmsVendor {
     /**
      * 阿里巴巴短信通道
      */

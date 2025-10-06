@@ -41,21 +41,47 @@ public class WalletService
     return walletRepository;
   }
 
+  /**
+   * 根据所有者获取或创建钱包账户
+   *
+   * @param tenantId 租户ID
+   * @param ownerId 所有者ID
+   * @param walletType 钱包类型
+   * @return 钱包实体
+   */
   public WalletEntity getOrCreateAccountByOwner(String tenantId, String ownerId, WalletType walletType) {
     return walletRepository.findByOwnerId(ownerId, walletType.getName()).orElseGet(() -> {
-      var e = newEntity();
-      e.setOwnerId(ownerId);
-      e.setType(walletType.getName());
-      e.setTenantId(tenantId);
-      return this.save(e);
+      var wallet = newEntity();
+      wallet.setOwnerId(ownerId);
+      wallet.setType(walletType.getName());
+      wallet.setTenantId(tenantId);
+      return this.save(wallet);
     });
 
   }
 
+  /**
+   * 列出钱包账单
+   *
+   * @param tenantId 租户ID
+   * @param accountId 账户ID
+   * @param page 分页参数
+   * @return 钱包账单分页结果
+   */
   public Page<WalletBillEntity> listBills(String tenantId, Long accountId, Pageable page) {
     return listBills(tenantId, accountId, page, WalletBillEntity.class);
   }
 
+  /**
+   * 列出钱包账单（指定返回类型）
+   *
+   * @param <T> 返回类型
+   * @param tenantId 租户ID
+   * @param accountId 账户ID
+   * @param page 分页参数
+   * @param cls 返回类型的Class
+   * @return 指定类型的钱包账单分页结果
+   */
   public <T> Page<T> listBills(String tenantId, Long accountId, Pageable page, Class<T> cls) {
     var sql = walletBillRepository.newSelect();
     sql.eq("account_id", accountId);
@@ -63,6 +89,15 @@ public class WalletService
     return walletBillRepository.queryPage(sql, page, cls);
   }
 
+  /**
+   * 更新账户余额
+   *
+   * @param tenantId 租户ID
+   * @param accountId 账户ID
+   * @param change 余额变动金额
+   * @param bill 钱包账单实体
+   * @return 是否更新成功
+   */
   @Transactional(rollbackFor = Exception.class)
   public boolean updateBalance(String tenantId, Long accountId, Long change, WalletBillEntity bill) {
     //最大重试5次
@@ -98,6 +133,15 @@ public class WalletService
     return ret.getOrElse(false);
   }
 
+  /**
+   * 锁定账户余额
+   *
+   * @param tenantId 租户ID
+   * @param accountId 账户ID
+   * @param amount 锁定金额
+   * @param bill 钱包账单实体
+   * @return 是否锁定成功
+   */
   @Transactional(rollbackFor = Exception.class)
   public boolean lockBalance(String tenantId, Long accountId, Long amount, WalletBillEntity bill) {
     Assert.isTrue(amount > 0L, Status.fail("锁定金额须>0"));

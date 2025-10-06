@@ -67,6 +67,11 @@ public class DinoAuthSessionResolver implements AuthSessionResolver<DinoAuthSess
   @Getter
   private final String authHeader;
 
+  /**
+   * 构造认证会话解析器
+   *
+   * @param authHeader 认证请求http-header头名称
+   */
   public DinoAuthSessionResolver(String authHeader) {
     this.authHeader = authHeader;
   }
@@ -125,6 +130,13 @@ public class DinoAuthSessionResolver implements AuthSessionResolver<DinoAuthSess
     this.context.currentUser(null);
   }
 
+  /**
+   * Dino 认证会话实现
+   * <p>封装了用户认证信息、权限和角色信息的会话对象</p>
+   *
+   * @author Cody Lu
+   * @date 2022-03-07
+   */
   public static class DinoAuthSession implements AuthSession {
 
     private final String sessionId;

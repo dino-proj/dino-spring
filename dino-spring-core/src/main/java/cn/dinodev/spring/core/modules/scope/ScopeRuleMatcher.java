@@ -18,12 +18,15 @@ public interface ScopeRuleMatcher<T> {
    */
   HIT test(T rule);
 
-  public enum HIT {
-    //不命中
+  /**
+   * 规则匹配命中结果枚举
+   */
+  enum HIT {
+    /** 不命中 */
     MISS,
-    //命中，且通过
+    /** 命中，且通过 */
     ACCEPT,
-    //命中，且拒绝
+    /** 命中，且拒绝 */
     REJECT
   }
 }

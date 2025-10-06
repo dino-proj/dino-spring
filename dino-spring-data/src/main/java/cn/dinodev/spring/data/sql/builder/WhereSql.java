@@ -859,7 +859,6 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * @param values
    * @return
    */
-  @SuppressWarnings(PMD_LINGUISTIC_NAMING)
   public T notIn(final String column, final Collection<?> values) {
     return notIn(column, values, Logic.AND);
   }
@@ -876,7 +875,6 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
   * @param logic
   * @return
   */
-  @SuppressWarnings(PMD_LINGUISTIC_NAMING)
   public T notIn(final String column, final Collection<?> values, final Logic logic) {
     if (values == null || values.isEmpty()) {
       return that;
@@ -901,7 +899,6 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * @param values
    * @return
    */
-  @SuppressWarnings(PMD_LINGUISTIC_NAMING)
   public T notIn(final String column, final Object[] values) {
     return notIn(column, values, Logic.AND);
   }
@@ -918,7 +915,6 @@ public abstract class WhereSql<T extends SqlBuilder> implements SqlBuilder {
    * @param logic
    * @return
    */
-  @SuppressWarnings(PMD_LINGUISTIC_NAMING)
   public T notIn(final String column, final Object[] values, final Logic logic) {
     if (values == null || values.length == 0) {
       return that;

@@ -20,7 +20,7 @@ import org.springframework.lang.Nullable;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import cn.dinodev.spring.commons.utils.CastUtils;
+import cn.dinodev.spring.commons.utils.TypeUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -37,7 +37,7 @@ public class JsonbPropertyValueConverter implements PropertyValueConverter {
 
   @Override
   public Object read(@NonNull Object value, @NonNull ValueConversionContext context) {
-    PGobject sourceData = CastUtils.cast(value);
+    PGobject sourceData = TypeUtils.cast(value);
 
     var targetType = TypeDescriptor.valueOf(context.getProperty().getType());
     try {

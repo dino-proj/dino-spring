@@ -24,7 +24,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.JdbcUtils;
 
 import cn.dinodev.spring.commons.context.ContextHelper;
-import cn.dinodev.spring.commons.utils.CastUtils;
 import cn.dinodev.spring.commons.utils.TypeUtils;
 import cn.dinodev.spring.data.dao.EntityMeta;
 import cn.dinodev.spring.data.dao.JdbcSelectExecutor;
@@ -131,10 +130,10 @@ public class DinoJdbcRepositoryBase<T, K> extends SimpleJdbcRepository<T, K> imp
     Map<MK, MV> result = new HashMap<>(20);
     this.jdbcTemplate.query(sql.getSql(), (RowCallbackHandler) rs -> {
 
-      MK key = CastUtils
+      MK key = TypeUtils
           .cast(Objects.requireNonNull(JdbcUtils.getResultSetValue(rs, rs.findColumn(keyColumn), keyClass)));
       if (isPrimitiveForValueColumn) {
-        MV value = CastUtils
+        MV value = TypeUtils
             .cast(Objects.requireNonNull(JdbcUtils.getResultSetValue(rs, rs.findColumn(valueColumn), valueClass)));
         result.put(key, value);
       } else {

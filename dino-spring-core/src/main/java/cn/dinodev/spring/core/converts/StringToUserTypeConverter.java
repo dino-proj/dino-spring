@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import cn.dinodev.spring.commons.context.ContextHelper;
 import cn.dinodev.spring.commons.sys.UserType;
-import cn.dinodev.spring.commons.utils.CastUtils;
+import cn.dinodev.spring.commons.utils.TypeUtils;
 import cn.dinodev.spring.core.sys.user.UserServiceProvider;
 
 /**
@@ -33,7 +33,7 @@ public class StringToUserTypeConverter implements GenericConverter {
     if (source == null) {
       return null;
     }
-    return ContextHelper.findBean(UserServiceProvider.class).resolveUserType(CastUtils.cast(source));
+    return ContextHelper.findBean(UserServiceProvider.class).resolveUserType(TypeUtils.cast(source));
 
   }
 

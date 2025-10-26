@@ -11,7 +11,7 @@ import org.springframework.data.convert.WritingConverter;
 import org.springframework.stereotype.Component;
 
 import cn.dinodev.spring.commons.sys.UserType;
-import cn.dinodev.spring.commons.utils.CastUtils;
+import cn.dinodev.spring.commons.utils.TypeUtils;
 
 /**
  *
@@ -35,7 +35,7 @@ public class UserTypeToStringConverter implements GenericConverter {
     if (source == null) {
       return null;
     }
-    return this.convertToDatabaseColumn(CastUtils.cast(source));
+    return this.convertToDatabaseColumn(TypeUtils.cast(source));
 
   }
 

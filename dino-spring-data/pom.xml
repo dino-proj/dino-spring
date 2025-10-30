@@ -18,10 +18,12 @@
 
   <properties>
     <java.version>21</java.version>
-    <maven.compiler.source>21</maven.compiler.source>
-    <maven.compiler.target>21</maven.compiler.target>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <dino-sql.version>2.1</dino-sql.version>
   </properties>
 
   <dependencies>
@@ -29,6 +31,12 @@
       <groupId>cn.dinodev</groupId>
       <artifactId>dinodev-spring-commons</artifactId>
       <version>${dino-spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>cn.dinodev</groupId>
+      <artifactId>dino-sql-builder</artifactId>
+      <version>${dino-sql.version}</version>
     </dependency>
 
     <dependency>

@@ -3,12 +3,12 @@
 
 package cn.dinodev.spring.core.controller.support;
 
+import org.apache.commons.lang3.StringUtils;
+
+import cn.dinodev.sql.builder.SelectSqlBuilder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import org.apache.commons.lang3.StringUtils;
-import cn.dinodev.spring.data.sql.builder.SelectSqlBuilder;
 
 /**
  * @author JL

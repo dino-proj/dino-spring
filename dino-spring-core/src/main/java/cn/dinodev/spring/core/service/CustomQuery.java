@@ -5,7 +5,7 @@ package cn.dinodev.spring.core.service;
 
 import java.io.Serializable;
 
-import cn.dinodev.spring.data.sql.builder.SelectSqlBuilder;
+import cn.dinodev.sql.builder.SelectSqlBuilder;
 
 /**
  *

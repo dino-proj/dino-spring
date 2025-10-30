@@ -6,8 +6,7 @@ package cn.dinodev.spring.core.controller.support;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import cn.dinodev.spring.data.sql.builder.SelectSqlBuilder;
-
+import cn.dinodev.sql.builder.SelectSqlBuilder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

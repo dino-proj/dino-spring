@@ -5,8 +5,8 @@ package cn.dinodev.spring.core.controller.support;
 
 import cn.dinodev.spring.commons.data.TimePeriod;
 import cn.dinodev.spring.core.service.CustomQuery;
-import cn.dinodev.spring.data.sql.builder.SelectSqlBuilder;
-
+import cn.dinodev.sql.Range;
+import cn.dinodev.sql.builder.SelectSqlBuilder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -25,6 +25,6 @@ public class CreateTimePeriodQuery implements CustomQuery {
     if (createPeriod == null) {
       return sql;
     }
-    return sql.between("create_at", createPeriod);
+    return sql.between("create_at", Range.of(createPeriod.getBegin(), createPeriod.getEnd()));
   }
 }

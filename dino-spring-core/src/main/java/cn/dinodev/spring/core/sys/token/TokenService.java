@@ -16,13 +16,6 @@ import org.apache.commons.codec.digest.HmacAlgorithms;
 import org.apache.commons.codec.digest.HmacUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import cn.dinodev.spring.commons.sys.Tenant;
-import cn.dinodev.spring.commons.sys.User;
-import cn.dinodev.spring.core.modules.login.config.LoginModuleProperties;
-import cn.dinodev.spring.core.security.config.SecurityProperties;
-import cn.dinodev.spring.core.service.impl.ServiceBase;
-import cn.dinodev.spring.data.dao.CrudRepositoryBase;
-import cn.dinodev.spring.data.sql.builder.SelectSqlBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.stereotype.Service;
@@ -30,6 +23,13 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import cn.dinodev.spring.commons.sys.Tenant;
+import cn.dinodev.spring.commons.sys.User;
+import cn.dinodev.spring.core.modules.login.config.LoginModuleProperties;
+import cn.dinodev.spring.core.security.config.SecurityProperties;
+import cn.dinodev.spring.core.service.impl.ServiceBase;
+import cn.dinodev.spring.data.dao.CrudRepositoryBase;
+import cn.dinodev.sql.builder.SelectSqlBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 /**

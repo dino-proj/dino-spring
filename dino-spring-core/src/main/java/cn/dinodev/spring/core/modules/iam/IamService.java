@@ -14,7 +14,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import cn.dinodev.spring.data.sql.builder.SelectSqlBuilder;
+import cn.dinodev.sql.builder.SelectSqlBuilder;
 
 /**
  * @author Cody Lu

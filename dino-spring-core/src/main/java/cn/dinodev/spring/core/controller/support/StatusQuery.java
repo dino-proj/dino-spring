@@ -4,9 +4,9 @@
 package cn.dinodev.spring.core.controller.support;
 
 import org.apache.commons.lang3.ArrayUtils;
-import cn.dinodev.spring.core.service.CustomQuery;
-import cn.dinodev.spring.data.sql.builder.SelectSqlBuilder;
 
+import cn.dinodev.spring.core.service.CustomQuery;
+import cn.dinodev.sql.builder.SelectSqlBuilder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

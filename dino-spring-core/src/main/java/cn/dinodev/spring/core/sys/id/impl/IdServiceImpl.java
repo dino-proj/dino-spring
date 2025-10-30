@@ -5,11 +5,12 @@ package cn.dinodev.spring.core.sys.id.impl;
 
 import java.util.UUID;
 
-import cn.dinodev.spring.data.domain.IdService;
-import cn.dinodev.spring.data.sql.dialect.Dialect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import cn.dinodev.spring.data.domain.IdService;
+import cn.dinodev.sql.dialect.Dialect;
 
 /**
  *

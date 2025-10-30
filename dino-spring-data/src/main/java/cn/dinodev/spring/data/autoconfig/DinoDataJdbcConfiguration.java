@@ -3,10 +3,8 @@
 
 package cn.dinodev.spring.data.autoconfig;
 
-import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
@@ -35,10 +33,7 @@ import org.springframework.lang.NonNull;
 import cn.dinodev.spring.data.jdbc.DinoJdbcMappingContext;
 import cn.dinodev.spring.data.jdbc.DinoJdbcSimpleTypeHolder;
 import cn.dinodev.spring.data.jdbc.mapping.DinoJdbcCustomConversions;
-import cn.dinodev.spring.data.sql.dialect.Dialect;
-import cn.dinodev.spring.data.sql.dialect.MysqlDialect;
-import cn.dinodev.spring.data.sql.dialect.PostgreSQLDialect;
-import cn.dinodev.spring.data.sql.dialect.SnakeNamingConversition;
+import cn.dinodev.sql.dialect.Dialect;
 import jakarta.persistence.Table;
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,19 +54,8 @@ public class DinoDataJdbcConfiguration extends AbstractJdbcConfiguration {
   Dialect dialect(JdbcOperations jdbcOperations) {
 
     return jdbcOperations.execute((ConnectionCallback<Dialect>) conn -> {
-      DatabaseMetaData metaData = conn.getMetaData();
-      Dialect dialect = Dialect.ofDefault();
 
-      String name = metaData.getDatabaseProductName().toLowerCase(Locale.ENGLISH);
-
-      if (name.contains("mysql") || name.contains("mariadb")) {
-        dialect = new MysqlDialect(metaData, new SnakeNamingConversition());
-      }
-      if (name.contains("postgresql")) {
-        dialect = new PostgreSQLDialect(metaData, new SnakeNamingConversition());
-      }
-
-      log.warn("Couldn't determine DB Dialect for {}", name);
+      Dialect dialect = Dialect.fromConnection(conn);
 
       log.info("--->> database: setup dialect:{}", dialect.getClass().getSimpleName());
       return dialect;

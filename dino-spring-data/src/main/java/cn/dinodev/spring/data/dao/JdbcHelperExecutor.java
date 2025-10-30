@@ -8,8 +8,8 @@ import java.util.Map;
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.dinodev.spring.data.sql.builder.DeleteSqlBuilder;
-import cn.dinodev.spring.data.sql.builder.UpdateSqlBuilder;
+import cn.dinodev.sql.builder.DeleteSqlBuilder;
+import cn.dinodev.sql.builder.UpdateSqlBuilder;
 import jakarta.annotation.Nullable;
 
 /**

@@ -19,7 +19,7 @@ import cn.dinodev.spring.data.domain.TenantLevel;
 import cn.dinodev.spring.data.domain.TenantRowEntity;
 import cn.dinodev.spring.data.domain.TenantTableEntity;
 import cn.dinodev.spring.data.domain.Versioned;
-import cn.dinodev.spring.data.sql.dialect.Dialect;
+import cn.dinodev.sql.dialect.Dialect;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

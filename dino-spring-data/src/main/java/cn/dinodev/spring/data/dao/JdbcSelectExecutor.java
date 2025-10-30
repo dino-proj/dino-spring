@@ -18,11 +18,11 @@ import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.util.Assert;
 
 import cn.dinodev.spring.commons.context.ContextHelper;
-import cn.dinodev.spring.data.sql.builder.DeleteSqlBuilder;
-import cn.dinodev.spring.data.sql.builder.InsertSqlBuilder;
-import cn.dinodev.spring.data.sql.builder.SelectSqlBuilder;
-import cn.dinodev.spring.data.sql.builder.UpdateSqlBuilder;
-import cn.dinodev.spring.data.sql.dialect.Dialect;
+import cn.dinodev.sql.builder.DeleteSqlBuilder;
+import cn.dinodev.sql.builder.InsertSqlBuilder;
+import cn.dinodev.sql.builder.SelectSqlBuilder;
+import cn.dinodev.sql.builder.UpdateSqlBuilder;
+import cn.dinodev.sql.dialect.Dialect;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

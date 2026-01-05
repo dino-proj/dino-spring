@@ -11,7 +11,6 @@ import org.springframework.boot.convert.ApplicationConversionService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.GenericConverter;
@@ -26,14 +25,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import cn.dinodev.spring.commons.autoconfig.DinoCommonsAutoConfiguration;
 import cn.dinodev.spring.commons.context.ContextHelper;
 import cn.dinodev.spring.commons.json.JsonDiscriminatorModule;
-import cn.dinodev.spring.data.converts.JacksonCustomerModule;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 
@@ -80,17 +75,8 @@ public class DinoDataAutoConfiguration {
     var objectMapper = builder.build();
 
     objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
-    objectMapper.registerModule(JacksonCustomerModule.create());
     objectMapper.registerModule(new JsonDiscriminatorModule());
     return objectMapper;
-  }
-
-  @Bean
-  @Lazy
-  @ConditionalOnMissingBean
-  Gson gson() {
-    log.info("--->> json: setup gson");
-    return new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
   }
 
   @Bean

@@ -35,7 +35,6 @@ public class DinoJdbcCustomConversions extends JdbcCustomConversions {
   @Override
   @NonNull
   public Optional<Class<?>> getCustomWriteTarget(@NonNull Class<?> sourceType) {
-    // TODO Auto-generated method stub
     // simple 类型返回null
     return super.getCustomWriteTarget(sourceType);
   }

@@ -224,7 +224,7 @@ public class DinoJdbcRepositoryBase<T, K> extends SimpleJdbcRepository<T, K> imp
   @Override
   public boolean updateById(K id, Map<String, Object> columnValue) {
 
-    var sql = UpdateSqlBuilder.create(this.tableName());
+    var sql = UpdateSqlBuilder.create(this.dialect(), this.tableName());
     sql.eq("id", id);
     for (var kv : columnValue.entrySet()) {
       var colProp = this.entity.getPersistentProperty(kv.getKey());
@@ -238,7 +238,7 @@ public class DinoJdbcRepositoryBase<T, K> extends SimpleJdbcRepository<T, K> imp
   public boolean updateByIdWithVersion(K id, Map<String, Object> columnValue, Number version) {
     org.springframework.util.Assert.isTrue(this.entityInfo.isVersioned(),
         this.entityInfo.getDomainClass() + " must implements " + Versioned.class);
-    var sql = UpdateSqlBuilder.create(this.tableName());
+    var sql = UpdateSqlBuilder.create(this.dialect(), this.tableName());
     sql.eq("id", id);
     sql.eq("version", version);
     for (var kv : columnValue.entrySet()) {

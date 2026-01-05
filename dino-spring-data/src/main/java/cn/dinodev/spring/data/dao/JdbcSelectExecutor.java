@@ -103,7 +103,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExecutor<T, K> {
    * @return
    */
   default DeleteSqlBuilder newDelete() {
-    var delete = DeleteSqlBuilder.create(this.tableName());
+    var delete = DeleteSqlBuilder.create(this.dialect(), this.tableName());
     if (this.entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
       delete.eq(TENANT_ID_COLUMN, ContextHelper.currentTenantId());
     }
@@ -117,7 +117,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExecutor<T, K> {
    */
   default DeleteSqlBuilder newDelete(String tableAlias) {
     Assert.hasText(tableAlias, "tableAlias is empty");
-    var delete = DeleteSqlBuilder.create(this.tableName(), tableAlias);
+    var delete = DeleteSqlBuilder.create(this.dialect(), this.tableName(), tableAlias);
     if (this.entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
       delete.eq(String.format("%s.%s", tableAlias, TENANT_ID_COLUMN), ContextHelper.currentTenantId());
     }
@@ -129,7 +129,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExecutor<T, K> {
    * @return
    */
   default UpdateSqlBuilder newUpdate() {
-    var update = UpdateSqlBuilder.create(this.tableName());
+    var update = UpdateSqlBuilder.create(this.dialect(), this.tableName());
     if (this.entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
       update.eq(TENANT_ID_COLUMN, ContextHelper.currentTenantId());
     }
@@ -142,7 +142,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExecutor<T, K> {
    * @return
    */
   default UpdateSqlBuilder newUpdate(String alias) {
-    var update = UpdateSqlBuilder.create(this.tableName(), alias);
+    var update = UpdateSqlBuilder.create(this.dialect(), this.tableName(), alias);
     if (this.entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
       update.eq(String.format("%s.%s", alias, TENANT_ID_COLUMN), ContextHelper.currentTenantId());
     }
@@ -154,7 +154,7 @@ public interface JdbcSelectExecutor<T, K> extends JdbcHelperExecutor<T, K> {
    * @return
    */
   default InsertSqlBuilder newInsert() {
-    var insert = new InsertSqlBuilder(this.tableName());
+    var insert = InsertSqlBuilder.create(this.dialect(), this.tableName());
     if (this.entityMeta().isTenantRow() && Objects.nonNull(ContextHelper.currentTenantId())) {
       insert.set(TENANT_ID_COLUMN, ContextHelper.currentTenantId());
     }

@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import cn.dinodev.spring.commons.data.ValueLabel;
 import cn.dinodev.spring.core.modules.framework.Component;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -24,16 +23,16 @@ import lombok.RequiredArgsConstructor;
 public class CompLink implements Component, Action {
   public static final String T_NAME = "link";
 
-  @Schema(description = "链接的类型", required = true)
+  @Schema(description = "链接的类型", requiredMode = Schema.RequiredMode.REQUIRED)
   private LinkType linkType;
 
   @Schema(description = "链接的路径")
   private String path;
 
-  @Schema(description = "链接标题", required = false)
+  @Schema(description = "链接标题", requiredMode = Schema.RequiredMode.REQUIRED)
   private String title;
 
-  @Schema(description = "给链接传的参数", required = false)
+  @Schema(description = "给链接传的参数", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   private Map<String, String> params;
 
   /**

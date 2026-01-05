@@ -21,7 +21,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class Response<T> {
 
-  @Schema(description = "响应状态码:0为成功,其他码值为失败", required = true, example = "0")
+  @Schema(description = "响应状态码:0为成功,其他码值为失败", requiredMode = Schema.RequiredMode.REQUIRED, example = "0")
   private Integer code;
 
   @Schema(description = "响应提示信息:成功为success,其余为对应的错误信息", example = "success")
@@ -30,7 +30,7 @@ public class Response<T> {
   @Schema(description = "业务响应数据")
   private T data;
 
-  @Schema(description = "响应耗时(毫秒)", required = true, example = "50")
+  @Schema(description = "响应耗时(毫秒)", requiredMode = Schema.RequiredMode.REQUIRED, example = "50")
   private Long cost;
 
   /**

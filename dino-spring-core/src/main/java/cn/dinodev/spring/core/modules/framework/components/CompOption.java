@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import cn.dinodev.spring.commons.data.ValueLabel;
 import cn.dinodev.spring.core.modules.framework.Component;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -21,10 +20,10 @@ import lombok.Data;
 public class CompOption implements Component, ValueLabel<String> {
   public static final String T_NAME = "option";
 
-  @Schema(description = "选项值", required = true)
+  @Schema(description = "选项值", requiredMode = Schema.RequiredMode.REQUIRED)
   private String value;
 
-  @Schema(description = "选项标签", required = true)
+  @Schema(description = "选项标签", requiredMode = Schema.RequiredMode.REQUIRED)
   private String label;
 
   @Schema(description = "选项的图标")

@@ -2,16 +2,16 @@
 // SPDX-License-Identifier: Apache-2.0
 package cn.dinodev.spring.core.modules.iam;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
+import java.util.List;
+
 import cn.dinodev.spring.core.controller.CrudControllerBase;
 import cn.dinodev.spring.core.modules.iam.RoleControllerBase.RoleReq;
-
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import java.util.List;
+import lombok.Data;
 
 /**
  *
@@ -46,17 +46,17 @@ public interface RoleControllerBase
    */
   @Data
   class RoleReq {
-    @Schema(description = "角色编码", required = true, maxLength = 64)
+    @Schema(description = "角色编码", requiredMode = Schema.RequiredMode.REQUIRED, maxLength = 64)
     @NotBlank
     @Size(max = 64)
     private String code;
 
-    @Schema(description = "角色名称", required = true, maxLength = 64)
+    @Schema(description = "角色名称", requiredMode = Schema.RequiredMode.REQUIRED, maxLength = 64)
     @NotBlank
     @Size(max = 64)
     private String name;
 
-    @Schema(description = "角色备注", required = false, maxLength = 255)
+    @Schema(description = "角色备注", requiredMode = Schema.RequiredMode.NOT_REQUIRED, maxLength = 255)
     @Nullable
     @Size(max = 255)
     private String remark;

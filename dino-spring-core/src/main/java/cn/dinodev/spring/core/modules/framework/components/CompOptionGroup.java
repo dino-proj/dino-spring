@@ -8,7 +8,6 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import cn.dinodev.spring.core.modules.framework.Component;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -22,7 +21,7 @@ import lombok.Data;
 public class CompOptionGroup implements Component {
   public static final String T_NAME = "option-group";
 
-  @Schema(description = "组的名字", required = true)
+  @Schema(description = "组的名字", requiredMode = Schema.RequiredMode.REQUIRED)
   private String name;
 
   @Schema(description = "组的图标")

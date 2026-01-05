@@ -25,10 +25,10 @@ public class Option<V extends Serializable> implements ValueLabel<V> {
    *
    * @param <V> 选项值的类型
    */
-  @Schema(description = "选项值", required = true)
+  @Schema(description = "选项值", requiredMode = Schema.RequiredMode.REQUIRED)
   private V value;
 
-  @Schema(description = "选项标签", required = true)
+  @Schema(description = "选项标签", requiredMode = Schema.RequiredMode.REQUIRED)
   private String label;
 
   @Schema(description = "选项的图标")

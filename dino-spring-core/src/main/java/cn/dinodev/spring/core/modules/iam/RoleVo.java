@@ -3,14 +3,14 @@
 
 package cn.dinodev.spring.core.modules.iam;
 
+import java.io.Serializable;
+import java.util.List;
+
+import cn.dinodev.spring.commons.sys.User;
+import cn.dinodev.spring.core.vo.VoImplBase;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import cn.dinodev.spring.commons.sys.User;
-import cn.dinodev.spring.core.vo.VoImplBase;
-
-import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author Cody Lu
@@ -34,13 +34,13 @@ public class RoleVo extends VoImplBase<Long> {
   @Schema(description = "包含的用户")
   private List<User<Serializable>> users;
 
-  @Schema(description = "角色操作权限", required = false)
+  @Schema(description = "角色操作权限", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   private List<String> permissions;
 
-  @Schema(name = "data_permissions", description = "角色数据权限", required = false)
+  @Schema(name = "data_permissions", description = "角色数据权限", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   private List<String> dataPermissions;
 
-  @Schema(name = "menu_permissions", description = "角色菜单权限", required = false)
+  @Schema(name = "menu_permissions", description = "角色菜单权限", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   private List<String> menuPermissions;
 
 }

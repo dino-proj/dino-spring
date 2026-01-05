@@ -23,7 +23,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <dino-sql.version>2.1</dino-sql.version>
+    <dino-sql.version>3.0</dino-sql.version>
   </properties>
 
   <dependencies>
@@ -51,11 +51,6 @@
     <dependency>
       <groupId>org.flywaydb</groupId>
       <artifactId>flyway-core</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
     </dependency>
 
     <dependency>

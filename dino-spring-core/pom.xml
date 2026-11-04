@@ -6,12 +6,12 @@
   <parent>
     <groupId>org.dinospring</groupId>
     <artifactId>dino-spring-boot-starter-parent</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.5</version>
     <relativePath>../dino-spring-boot-starter-parent/pom.xml</relativePath>
   </parent>
   <groupId>org.dinospring</groupId>
   <artifactId>dino-spring-core</artifactId>
-  <version>3.0.0</version>
+  <version>3.0.5</version>
   <name>dino-spring-core</name>
   <description>dino-spring Mvc核心模块</description>
   <url>https://dinodev.cn/</url>

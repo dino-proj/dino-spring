@@ -10,7 +10,7 @@
   </parent>
   <groupId>org.dinospring</groupId>
   <artifactId>dino-spring-boot-starter-parent</artifactId>
-  <version>3.0.0</version>
+  <version>3.0.5</version>
   <packaging>pom</packaging>
   <description>dino-spring项目boot starter parent</description>
   <url>https://dinodev.cn/</url>
@@ -20,7 +20,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>17</java.version>
 
-    <dino-spring.version>3.0.0</dino-spring.version>
+    <dino-spring.version>3.0.5</dino-spring.version>
 
     <!-- plugin -->
     <maven-pmd-plugin.version>3.21.0</maven-pmd-plugin.version>

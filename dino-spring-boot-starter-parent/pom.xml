@@ -27,7 +27,7 @@
     <maven-nexus-staging-plugin.version>1.6.13</maven-nexus-staging-plugin.version>
     <p3c-pmd.version>2.1.1</p3c-pmd.version>
     <mapstruct.version>1.5.5.Final</mapstruct.version>
-    <lombok.version>1.18.28</lombok.version>
+    <lombok.version>1.18.48</lombok.version>
 
     <!-- open api-->
     <springdoc.version>2.3.0</springdoc.version>

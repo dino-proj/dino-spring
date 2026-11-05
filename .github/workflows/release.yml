@@ -68,14 +68,26 @@ jobs:
     env:
       MVN_OPT: '--errors --no-transfer-progress --batch-mode'
       BUILD_OPT: '-Dmaven.test.skip=true -P publish'
-      MVN_NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
-      MVN_NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-      AUTO_PUBLISH: ${{ github.event.inputs.autoPublish || true }}
-      WAIT_UNTIL: ${{ github.event.inputs.waitUntil }}
+      CENTRAL_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+      CENTRAL_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+      GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      AUTO_PUBLISH: ${{ github.event_name != 'workflow_dispatch' || inputs.autoPublish }}
+      WAIT_UNTIL: ${{ inputs.waitUntil }}
 
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v5
+
+      - name: Validate publishing configuration
+        run: |
+          if [[ -z "$CENTRAL_USERNAME" || -z "$CENTRAL_PASSWORD" ]]; then
+            echo "::error::NEXUS_USERNAME and NEXUS_PASSWORD must contain a Central Portal user token."
+            exit 1
+          fi
+          if [[ "$AUTO_PUBLISH" = false && "$WAIT_UNTIL" = published ]]; then
+            echo "::error::waitUntil=published requires autoPublish=true. Select uploaded or validated for manual publishing."
+            exit 1
+          fi
 
       - name: Install Java and Maven
         uses: actions/setup-java@v5
@@ -83,16 +95,14 @@ jobs:
           java-version: 17
           distribution: 'temurin'
           server-id: central
-          server-username: MVN_NEXUS_USERNAME
-          server-password: MVN_NEXUS_PASSWORD
+          server-username: CENTRAL_USERNAME
+          server-password: CENTRAL_PASSWORD
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: GPG_PASSPHRASE
           cache: 'maven'
 
       - name: Package & Install to Local Repository
         run: |
-          touch /home/runner/.m2/settings-security.xml
-          # 将secrets.MVN_SETTINGS_SECURITY写入到settings-security.xml文件
-          echo "${{ secrets.MVN_SETTINGS_SECURITY }}" > /home/runner/.m2/settings-security.xml
           # 定义项目数组
           projects=(
             "dino-dependencies-root"
@@ -111,7 +121,7 @@ jobs:
             # 输出开始打包信息
             echo "=============== 开始打包 $project ==============="
             # 执行mvn命令
-            mvn clean package install $MVN_OPT $BUILD_OPT
+            mvn clean install $MVN_OPT $BUILD_OPT -Dgpg.skip=true
             # 返回到上一级目录
             cd ..
           done
@@ -179,7 +189,9 @@ jobs:
             # 输出开始发布信息
             echo "=============== 开始发布 $project ==============="
             # 执行mvn命令
-            mvn deploy $MVN_OPT $BUILD_OPT $DEPLOY_OPT
+            mvn deploy $MVN_OPT $BUILD_OPT \
+              -Dcentral.autoPublish="$DEPLOY_AUTO_PUBLISH" \
+              -Dcentral.waitUntil="$DEPLOY_WAIT_UNTIL"
             # 返回到上一级目录
             cd ..
           done

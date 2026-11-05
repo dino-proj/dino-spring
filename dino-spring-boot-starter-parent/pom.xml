@@ -38,7 +38,7 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.dino</groupId>
+        <groupId>cn.dinodev</groupId>
         <artifactId>dino-dependencies-root</artifactId>
         <version>${dino-spring.version}</version>
         <type>pom</type>

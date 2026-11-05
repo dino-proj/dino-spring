@@ -72,8 +72,26 @@ OSSRH 已于 2025-06-30 关闭，发布使用 [Central Portal](https://central.s
 - `GPG_PRIVATE_KEY`：用于签名的 ASCII-armored 私钥；对应公钥需发布到公共 keyserver。
 - `GPG_PASSPHRASE`：私钥口令（无口令时可留空）。
 
-确认 token 所属账号有 `org.dino` 和 `org.dinospring` 两个 namespace 的发布权限。
+确认 token 所属账号有 `cn.dinodev` 和 `org.dinospring` 两个 namespace 的发布权限。
 不再需要 `MVN_SETTINGS_SECURITY`。
+
+`dino-dependencies-root` 的 Maven groupId 从 `org.dino` 迁移到 `cn.dinodev`，
+其他模块保留 `org.dinospring`，Java 包名及 API 不变。使用 boot parent 的项目
+无需修改坐标；直接导入该 BOM 的项目只需将其 groupId 改为 `cn.dinodev`：
+
+```xml
+<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>cn.dinodev</groupId>
+      <artifactId>dino-dependencies-root</artifactId>
+      <version>3.0.5</version>
+      <type>pom</type>
+      <scope>import</scope>
+    </dependency>
+  </dependencies>
+</dependencyManagement>
+```
 
 推送 `RELEASE-*` tag 会自动发布并等待 `published`；手动运行时可关闭 `autoPublish`，
 此时 `waitUntil` 必须选择 `uploaded` 或 `validated`，之后在 Portal 中手动发布。
